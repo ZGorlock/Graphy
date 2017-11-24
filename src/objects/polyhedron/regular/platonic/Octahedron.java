@@ -1,0 +1,137 @@
+/*
+ * File:    Octahedron.java
+ * Package: objects.polyhedron.regular.platonic
+ * Author:  Zachary Gill
+ */
+
+package objects.polyhedron.regular.platonic;
+
+import math.vector.Vector;
+import objects.base.AbstractObject;
+import objects.base.polygon.Triangle;
+import objects.polyhedron.regular.RegularPolyhedron;
+
+import java.awt.*;
+
+/**
+ * Defines an Octahedron.
+ */
+public class Octahedron extends RegularPolyhedron
+{
+    
+    //Constants
+    
+    /**
+     * The number of faces of an Octahedron.
+     */
+    public static int OCTAHEDRON_FACES = 8;
+    
+    /**
+     * The number of vertices of an Octahedron.
+     */
+    public static int OCTAHEDRON_VERTICES = 6;
+    
+    
+    //Constructors
+    
+    /**
+     * The constructor for an Octahedron.
+     *
+     * @param parent The parent of the Octahedron.
+     * @param center The center point of the Octahedron.
+     * @param color  The color of the Octahedron.
+     * @param radius The radius of the bounding sphere of the Octahedron.
+     */
+    public Octahedron(AbstractObject parent, Vector center, Color color, double radius)
+    {
+        super(parent, center, color, OCTAHEDRON_FACES, radius);
+    }
+    
+    /**
+     * The constructor for an Octahedron.
+     *
+     * @param parent The parent of the Octahedron.
+     * @param center The center point of the Octahedron.
+     * @param radius The radius of the bounding sphere of the Octahedron.
+     */
+    public Octahedron(AbstractObject parent, Vector center, double radius)
+    {
+        this(parent, center, Color.BLACK, radius);
+    }
+    
+    /**
+     * The constructor for an Octahedron.
+     *
+     * @param center The center point of the Octahedron.
+     * @param color  The color of the Octahedron.
+     * @param radius The radius of the bounding sphere of the Octahedron.
+     */
+    public Octahedron(Vector center, Color color, double radius)
+    {
+        this(null, center, color, radius);
+    }
+    
+    
+    //Methods
+    
+    /**
+     * Calculates the structure of the Octahedron.
+     */
+    @Override
+    protected void calculate()
+    {
+        components.clear();
+        
+        Vector[] vertices = new Vector[OCTAHEDRON_VERTICES];
+        int v = 0;
+        for (int i : new int[] {-1, 1}) {
+            vertices[v++] = new Vector(0, 0, i).scale(radius).plus(center);
+            vertices[v++] = new Vector(0, i, 0).scale(radius).plus(center);
+            vertices[v++] = new Vector(i, 0, 0).scale(radius).plus(center);
+        }
+    
+        new Triangle(this, color,
+                vertices[1],
+                vertices[2],
+                vertices[3]
+        );
+        new Triangle(this, color,
+                vertices[1],
+                vertices[3],
+                vertices[5]
+        );
+        new Triangle(this, color,
+                vertices[1],
+                vertices[5],
+                vertices[0]
+        );
+        new Triangle(this, color,
+                vertices[1],
+                vertices[0],
+                vertices[2]
+        );
+        new Triangle(this, color,
+                vertices[4],
+                vertices[2],
+                vertices[3]
+        );
+        new Triangle(this, color,
+                vertices[4],
+                vertices[3],
+                vertices[5]
+        );
+        new Triangle(this, color,
+                vertices[4],
+                vertices[5],
+                vertices[0]
+        );
+        new Triangle(this, color,
+                vertices[4],
+                vertices[0],
+                vertices[2]
+        );
+        
+        setVisible(visible);
+    }
+    
+}

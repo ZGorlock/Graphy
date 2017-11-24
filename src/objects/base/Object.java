@@ -218,7 +218,7 @@ public class Object extends AbstractObject
      * @param process The process to execute.
      * @param delay   The delay between executions.
      */
-    public void addProcess(Runnable process, long delay) //TODO
+    public void addProcess(Runnable process, long delay)
     {
         Timer processTimer = new Timer();
         processTimer.scheduleAtFixedRate(new TimerTask()

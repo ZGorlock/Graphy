@@ -1,15 +1,15 @@
 /*
  * File:    Axes.java
- * Package: objects
+ * Package: objects.system
  * Author:  Zachary Gill
  */
 
-package objects;
+package objects.system;
 
 import main.Environment;
 import math.vector.Vector;
-import objects.base.*;
 import objects.base.Object;
+import objects.base.simple.Edge;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -86,13 +86,13 @@ public class Axes extends Object
 //        for (int xg = xMin; xg <= xMax; xg += 1) {
 //            for (int yg = yMin; yg <= yMax; yg += 1) {
 //                if (xg != 0 || yg != 0) {
-//                    edges.add(new objects.base.Edge(new Vertex(xg, yg, zMin),
+//                    edges.add(new objects.base.simple.Edge(new Vertex(xg, yg, zMin),
 //                            new Vertex(xg, yg, zMax), subAxis));
 //                }
 //            }
 //            for (int zg = zMin; zg <= zMax; zg += 1) {
 //                if (xg != 0 || zg != 0) {
-//                    edges.add(new objects.base.Edge(new Vertex(xg, yMin, zg),
+//                    edges.add(new objects.base.simple.Edge(new Vertex(xg, yMin, zg),
 //                            new Vertex(xg, yMax, zg), subAxis));
 //                }
 //            }
@@ -100,13 +100,13 @@ public class Axes extends Object
 //        for (int yg = yMin; yg <= yMax; yg += 1) {
 //            for (int xg = xMin; xg <= xMax; xg += 1) {
 //                if (yg != 0 || xg != 0) {
-//                    edges.add(new objects.base.Edge(new Vertex(xg, yg, zMin),
+//                    edges.add(new objects.base.simple.Edge(new Vertex(xg, yg, zMin),
 //                            new Vertex(xg, yg, zMax), subAxis));
 //                }
 //            }
 //            for (int zg = zMin; zg <= zMax; zg += 1) {
 //                if (yg != 0 || zg != 0) {
-//                    edges.add(new objects.base.Edge(new Vertex(xMin, yg, zg),
+//                    edges.add(new objects.base.simple.Edge(new Vertex(xMin, yg, zg),
 //                            new Vertex(xMax, yg, zg), subAxis));
 //                }
 //            }

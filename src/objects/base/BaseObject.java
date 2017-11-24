@@ -7,6 +7,7 @@
 package objects.base;
 
 import camera.Camera;
+import main.Environment;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 
@@ -30,11 +31,6 @@ public abstract class BaseObject extends AbstractObject
     protected Vector[] vertices;
     
     /**
-     * The type of the Object.
-     */
-    protected Class<? extends BaseObject> type;
-    
-    /**
      * A list of the Vectors of the Object that have been prepared for rendering.
      */
     protected final List<Vector> prepared = new ArrayList<>();
@@ -45,10 +41,13 @@ public abstract class BaseObject extends AbstractObject
     /**
      * The constructor for a BaseObject.
      *
+     * @param parent   The parent of the Object.
+     * @param color    The color of the Object.
+     * @param center   The center of the Object.
      * @param vertices The vertices that define the Object.
      * @throws ArithmeticException When the vertices are not all of the same spacial dimension.
      */
-    public BaseObject(Color color, Vector... vertices) throws ArithmeticException {
+    public BaseObject(AbstractObject parent, Color color, Vector center, Vector... vertices) throws ArithmeticException {
         if (vertices.length > 0) {
             int dim = vertices[0].getDimension();
             for (Vector vertex : vertices) {
@@ -62,7 +61,43 @@ public abstract class BaseObject extends AbstractObject
         System.arraycopy(vertices, 0, this.vertices, 0, vertices.length);
         
         this.color = color;
-        this.type = BaseObject.class;
+        this.center = center;
+        setParent(parent);
+    }
+    
+    /**
+     * The constructor for a BaseObject from a list of vertices.
+     *
+     * @param parent   The parent of the Object.
+     * @param center   The center of the Object.
+     * @param vertices The vertices that define the Object, as a list.
+     * @throws ArithmeticException When the vertices are not all of the same spacial dimension.
+     */
+    public BaseObject(AbstractObject parent, Vector center, List<Vector> vertices) throws ArithmeticException {
+        this(parent, Color.BLACK, center, vertices.toArray(new Vector[]{}));
+    }
+    
+    /**
+     * The constructor for a BaseObject from a list of vertices.
+     *
+     * @param color    The color of the Object.
+     * @param center   The center of the Object.
+     * @param vertices The vertices that define the Object, as a list.
+     * @throws ArithmeticException When the vertices are not all of the same spacial dimension.
+     */
+    public BaseObject(Color color, Vector center, List<Vector> vertices) throws ArithmeticException {
+        this(null, color, center, vertices.toArray(new Vector[]{}));
+    }
+    
+    /**
+     * The constructor for a BaseObject from a list of vertices.
+     *
+     * @param center   The center of the Object.
+     * @param vertices The vertices that define the Object, as a list.
+     * @throws ArithmeticException When the vertices are not all of the same spacial dimension.
+     */
+    public BaseObject(Vector center, List<Vector> vertices) throws ArithmeticException {
+        this(null, Color.BLACK, center, vertices.toArray(new Vector[]{}));
     }
     
     /**
@@ -71,18 +106,8 @@ public abstract class BaseObject extends AbstractObject
      * @param vertices The vertices that define the Object, as a list.
      * @throws ArithmeticException When the vertices are not all of the same spacial dimension.
      */
-    public BaseObject(Color color, java.util.List<Vector> vertices) throws ArithmeticException {
-        this(color, vertices.toArray(new Vector[]{}));
-    }
-    
-    /**
-     * The constructor for a BaseObject from a list of vertices.
-     *
-     * @param vertices The vertices that define the Object, as a list.
-     * @throws ArithmeticException When the vertices are not all of the same spacial dimension.
-     */
-    public BaseObject(java.util.List<Vector> vertices) throws ArithmeticException {
-        this(Color.BLACK, vertices.toArray(new Vector[]{}));
+    public BaseObject(List<Vector> vertices) throws ArithmeticException {
+        this(null, Color.BLACK, Environment.origin, vertices.toArray(new Vector[]{}));
     }
     
     
@@ -165,16 +190,6 @@ public abstract class BaseObject extends AbstractObject
     public Vector[] getVertices()
     {
         return vertices;
-    }
-    
-    /**
-     * Returns the type of the Object.
-     *
-     * @return The type of the Object.
-     */
-    public Class< ? extends BaseObject> getType()
-    {
-        return type;
     }
     
 }

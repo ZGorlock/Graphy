@@ -1,14 +1,15 @@
 /*
- * File:    pieces.Vertex.java
- * Package: objects.base.piece
+ * File:    Vertex.java
+ * Package: objects.base.simple
  * Author:  Zachary Gill
  */
 
-package objects.base;
+package objects.base.simple;
 
 import camera.Camera;
-import main.Environment;
 import math.vector.Vector;
+import objects.base.AbstractObject;
+import objects.base.BaseObject;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -30,10 +31,8 @@ public class Vertex extends BaseObject
      * @param v      The Vector defining the point of the Vertex.
      */
     public Vertex(AbstractObject parent, Color color, Vector v) {
-        super(color, v);
+        super(parent, color, v, v);
         center = v;
-        type = Vertex.class;
-        setParent(parent);
     }
     
     /**
@@ -67,7 +66,6 @@ public class Vertex extends BaseObject
     
     
     //Methods
-    
     
     /**
      * Prepares the Vertex to be rendered.

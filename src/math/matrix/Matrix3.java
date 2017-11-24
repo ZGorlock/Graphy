@@ -1,9 +1,6 @@
 package math.matrix;
 
-import main.Environment;
 import math.vector.Vector;
-import math.vector.Vector3;
-import objects.base.Vertex;
 
 public class Matrix3 {
     

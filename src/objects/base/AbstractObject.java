@@ -9,7 +9,6 @@ package objects.base;
 import main.Environment;
 import math.matrix.Matrix3;
 import math.vector.Vector;
-import objects.Pyramid;
 import utility.ColorUtility;
 import utility.RotationUtility;
 
@@ -45,7 +44,7 @@ public abstract class AbstractObject implements ObjectInterface
     /**
      * The frame of the Object.
      */
-    public Frame frame; //TODO make protected
+    protected Frame frame;
     
     /**
      * The angles that define the rotation of the Object.
@@ -541,6 +540,18 @@ public abstract class AbstractObject implements ObjectInterface
     public void setClippingEnabled(boolean clippingEnabled)
     {
         this.clippingEnabled = clippingEnabled;
+    }
+    
+    /**
+     * Sets the color of the Frame of the Object.
+     *
+     * @param color The new color of the Frame of the Object.
+     */
+    public void setFrameColor(Color color)
+    {
+        if (frame != null) {
+            frame.setColor(color);
+        }
     }
     
 }

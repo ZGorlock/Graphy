@@ -1,14 +1,16 @@
 /*
- * File:    pieces.Edge.java
- * Package: objects.base.piece
+ * File:    Edge.java
+ * Package: objects.base.simple
  * Author:  Zachary Gill
  */
 
-package objects.base;
+package objects.base.simple;
 
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
+import objects.base.AbstractObject;
+import objects.base.BaseObject;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -31,10 +33,7 @@ public class Edge extends BaseObject
      * @param v2     The ending point of the Edge.
      */
     public Edge(AbstractObject parent, Color color, Vector v1, Vector v2) {
-        super(color, v1, v2);
-        center = v1.midpoint(v2);
-        type = Edge.class;
-        setParent(parent);
+        super(parent, color, v1.midpoint(v2), v1, v2);
     }
     
     /**

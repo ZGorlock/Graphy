@@ -523,4 +523,39 @@ public class Vector
         components[i] = value;
     }
     
+    
+    //Functions
+    
+    /**
+     * Calculates the average of a set of Vectors.
+     *
+     * @param vs The set of Vectors.
+     * @return The average of the Vectors.
+     * @throws ArithmeticException  When the Vectors are not all of the same dimension.
+     */
+    public static Vector averageVector(Vector... vs) throws ArithmeticException
+    {
+        int dim = 0;
+        for (Vector v : vs) {
+            if (dim == 0) {
+                dim = v.getDimension();
+            } else if (v.getDimension() != dim) {
+                throw new ArithmeticException("The vectors: " + vs[0].toString() + " and " + v.toString() + " are of different dimensions.");
+            }
+        }
+        if (dim == 0) {
+            return new Vector(0, 0, 0);
+        }
+        
+        double[] newComponents = new double[vs[0].getDimension()];
+        for (int c = 0; c < vs[0].components.length; c++) {
+            double component = 0;
+            for (Vector v : vs) {
+                component += v.components[c];
+            }
+            newComponents[c] = component / vs.length;
+        }
+        return new Vector(newComponents);
+    }
+    
 }

@@ -10,7 +10,6 @@ import main.Environment;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import math.vector.Vector3;
-import objects.Pyramid;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -70,12 +69,12 @@ public class Camera
     /**
      * The Camera Object rendered in the Environment.
      */
-    private objects.Camera cameraObject = new objects.Camera();
+    private objects.system.Camera cameraObject = new objects.system.Camera();
     
     /**
      * The current location of the Camera in spherical coordinates.
      */
-    private double rho = 5;
+    private double rho = 7;
     private double phi = Math.PI / 2;
     private double theta = Math.PI;
     

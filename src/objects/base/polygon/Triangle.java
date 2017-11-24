@@ -1,17 +1,22 @@
-package objects.base;
+/*
+ * File:    Triangle.java
+ * Package: objects.base.polygon
+ * Author:  Zachary Gill
+ */
+
+package objects.base.polygon;
 
 import camera.Camera;
-import main.Environment;
 import math.vector.Vector;
+import objects.base.AbstractObject;
+import objects.base.polygon.Polygon;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines a Triangle.
  */
-public class Triangle extends BaseObject
+public class Triangle extends Polygon
 {
     
     //Constructors
@@ -27,10 +32,7 @@ public class Triangle extends BaseObject
      */
     public Triangle(AbstractObject parent, Color color, Vector v1, Vector v2, Vector v3)
     {
-        super(color, v1, v2, v3);
-        center = v1.average(v2, v3);
-        type = Triangle.class;
-        setParent(parent);
+        super(parent, color, v1, v2, v3);
     }
     
     /**
@@ -72,76 +74,6 @@ public class Triangle extends BaseObject
     }
     
     
-    //Methods
-    
-    /**
-     * Prepares the Triangle to be rendered.
-     *
-     * @return The list of BaseObjects that were prepared.
-     */
-    @Override
-    public List<BaseObject> prepare()
-    {
-        List<BaseObject> preparedBases = new ArrayList<>();
-        if (!visible) {
-            return preparedBases;
-        }
-        
-        prepared.clear();
-        prepared.add(vertices[0].clone());
-        prepared.add(vertices[1].clone());
-        prepared.add(vertices[2].clone());
-    
-        performRotationTransformation(prepared);
-        
-        preparedBases.add(this);
-        return preparedBases;
-    }
-    
-    /**
-     * Renders the Triangle on the screen.
-     *
-     * @param g2 The 2D Graphics entity.
-     */
-    public void render(Graphics2D g2)
-    {
-        if (!visible || prepared.size() != 3) {
-            return;
-        }
-    
-        Camera.projectVectorToCamera(prepared);
-        Camera.collapseVectorToViewport(prepared);
-    
-        if (!clippingEnabled || Camera.hasVectorInView(prepared, vertices)) {
-            Camera.scaleVectorToScreen(prepared);
-        
-            g2.setColor(getColor());
-            switch (displayMode) {
-                case VERTEX:
-                    g2.drawRect((int) prepared.get(0).getX(), (int) prepared.get(0).getY(), 1, 1);
-                    g2.drawRect((int) prepared.get(1).getX(), (int) prepared.get(1).getY(), 1, 1);
-                    g2.drawRect((int) prepared.get(2).getX(), (int) prepared.get(2).getY(), 1, 1);
-                    break;
-                case EDGE:
-                    g2.drawLine((int) prepared.get(0).getX(), (int) prepared.get(0).getY(), (int) prepared.get(1).getX(), (int) prepared.get(1).getY());
-                    g2.drawLine((int) prepared.get(1).getX(), (int) prepared.get(1).getY(), (int) prepared.get(2).getX(), (int) prepared.get(2).getY());
-                    g2.drawLine((int) prepared.get(2).getX(), (int) prepared.get(2).getY(), (int) prepared.get(0).getX(), (int) prepared.get(0).getY());
-                    break;
-                case FACE:
-                    Polygon face = new Polygon(
-                            new int[] {(int) prepared.get(0).getX(), (int) prepared.get(1).getX(), (int) prepared.get(2).getX()},
-                            new int[] {(int) prepared.get(0).getY(), (int) prepared.get(1).getY(), (int) prepared.get(2).getY()},
-                            3
-                    );
-                    g2.fillPolygon(face);
-                    break;
-            }
-    
-            addFrame(g2);
-        }
-    }
-    
-    
     //Getters
     
     /**
@@ -151,7 +83,7 @@ public class Triangle extends BaseObject
      */
     public Vector getP1()
     {
-        return vertices[0];
+        return getVertex(1);
     }
     
     /**
@@ -161,7 +93,7 @@ public class Triangle extends BaseObject
      */
     public Vector getP2()
     {
-        return vertices[1];
+        return getVertex(2);
     }
     
     /**
@@ -171,7 +103,7 @@ public class Triangle extends BaseObject
      */
     public Vector getP3()
     {
-        return vertices[2];
+        return getVertex(3);
     }
     
     
@@ -198,7 +130,7 @@ public class Triangle extends BaseObject
      */
     public void setP1(Vector p1)
     {
-        vertices[0] = p1;
+        setVertex(1, p1);
     }
     
     /**
@@ -208,7 +140,7 @@ public class Triangle extends BaseObject
      */
     public void setP2(Vector p2)
     {
-        vertices[1] = p2;
+        setVertex(2, p2);
     }
     
     /**
@@ -218,7 +150,7 @@ public class Triangle extends BaseObject
      */
     public void setP3(Vector p3)
     {
-        vertices[2] = p3;
+        setVertex(3, p3);
     }
     
 }

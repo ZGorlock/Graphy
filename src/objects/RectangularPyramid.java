@@ -1,34 +1,32 @@
 /*
- * File:    TriangularPyramid.java
+ * File:    Pyramid.java
  * Package: objects
  * Author:  Zachary Gill
  */
 
 package objects;
 
-import main.Environment;
 import math.vector.Vector;
-import math.vector.Vector3;
-import objects.base.AbstractObject;
+import objects.base.*;
 import objects.base.Object;
-import objects.base.Rect;
-import objects.base.Triangle;
+import objects.base.polygon.Rectangle;
+import objects.base.polygon.Triangle;
 
 import java.awt.*;
 import java.util.Arrays;
 
 /**
- * Defines a Triangular Pyramid Object.
+ * Defines a Pyramid Object.
  */
-public class TriangularPyramid extends Object
+public class RectangularPyramid extends Object
 {
     
     //Fields
     
     /**
-     * The Triangle defining the base of the Pyramid.
+     * The Rectangle defining the base of the Pyramid.
      */
-    protected Triangle base;
+    protected Rectangle base;
     
     /**
      * The Vector defining the apex of the Pyramid.
@@ -43,10 +41,10 @@ public class TriangularPyramid extends Object
      *
      * @param parent The parent of the Pyramid.
      * @param color  The color of the Pyramid.
-     * @param base   The Triangle defining the base of the Pyramid.
+     * @param base   The Rectangle defining the base of the Pyramid.
      * @param apex   The Vector defining the apex of the Pyramid.
      */
-    public TriangularPyramid(AbstractObject parent, Color color, Triangle base, Vector apex)
+    public RectangularPyramid(AbstractObject parent, Color color, Rectangle base, Vector apex)
     {
         super(color);
         
@@ -60,10 +58,10 @@ public class TriangularPyramid extends Object
      * The constructor for an Pyramid.
      *
      * @param parent The parent of the Pyramid.
-     * @param base   The Triangle defining the base of the Pyramid.
+     * @param base   The Rectangle defining the base of the Pyramid.
      * @param apex   The Vector defining the apex of the Pyramid.
      */
-    public TriangularPyramid(AbstractObject parent, Triangle base, Vector apex)
+    public RectangularPyramid(AbstractObject parent, Rectangle base, Vector apex)
     {
         this(null, Color.BLACK, base, apex);
     }
@@ -72,68 +70,59 @@ public class TriangularPyramid extends Object
      * The constructor for an Pyramid.
      *
      * @param color The color of the Pyramid.
-     * @param base  The Triangle defining the base of the Pyramid.
+     * @param base  The Rectangle defining the base of the Pyramid.
      * @param apex  The Vector defining the apex of the Pyramid.
      */
-    public TriangularPyramid(Color color, Triangle base, Vector apex)
+    public RectangularPyramid(Color color, Rectangle base, Vector apex)
     {
         this(null, color, base, apex);
     }
-    
-    /**
-     * The constructor for an Pyramid.
-     *
-     * @param parent The parent of the Pyramid.
-     * @param color  The color of the Pyramid.
-     * @param base   The Triangle defining the base of the Pyramid.
-     * @param height The height of the apex of the Pyramid.
-     */
-    public TriangularPyramid(AbstractObject parent, Color color, Triangle base, double height)
-    {
-        this(parent, color, base, TriangularPyramid.calculateApexFromHeight(base, height));
-    }
-    
     
     
     //Methods
     
     /**
-     * Calculates the structure of the Triangular Pyramid.
+     * Calculates the structure of the Pyramid.
      */
     @Override
     protected void calculate()
     {
         components.clear();
+    
+        this.center = apex.average(base.getVertices()[0].average(Arrays.copyOfRange(base.getVertices(), 1, base.getVertices().length)));
         
-        this.center = apex.average(base.getVertices()[0].average(Arrays.copyOfRange(base.getVertices(), 1, base.getVertices().length - 1)));
-        
-        new Triangle(this,
+        new Triangle(this, color,
                 apex,
                 base.getP1(),
                 base.getP2()
         );
-        new Triangle(this,
+        new Triangle(this, color,
                 apex,
                 base.getP2(),
                 base.getP3()
         );
-        new Triangle(this,
+        new Triangle(this, color,
                 apex,
                 base.getP3(),
+                base.getP4()
+        );
+        new Triangle(this, color,
+                apex,
+                base.getP4(),
                 base.getP1()
         );
-        new Triangle(this,
+        new Rectangle(this, color,
                 base.getP1(),
                 base.getP2(),
-                base.getP3()
+                base.getP3(),
+                base.getP4()
         );
         
-        setColor(color);
         setVisible(visible);
     }
     
     /**
-     * Recalculates the structure of the Triangular Pyramid.
+     * Recalculates the structure of the Pyramid.
      */
     protected void recalculate()
     {
@@ -152,40 +141,30 @@ public class TriangularPyramid extends Object
         ((Triangle) components.get(2)).setPoints(
                 apex,
                 base.getP3(),
+                base.getP4()
+        );
+        ((Triangle) components.get(3)).setPoints(
+                apex,
+                base.getP4(),
                 base.getP1()
         );
-        ((Triangle) components.get(4)).setPoints(
+        ((Rectangle) components.get(4)).setPoints(
                 base.getP1(),
                 base.getP2(),
-                base.getP3()
+                base.getP3(),
+                base.getP4()
         );
-    }
-    
-    public static Vector calculateApexFromHeight(Triangle base, double height) //TODO
-    {
-        Vector a = base.getP2().minus(base.getP1());
-        Vector b = base.getP3().minus(base.getP1());
-        Vector c = new Vector3(a).cross(b);
-        
-        Vector m = base.getP1().average(base.getP2(), base.getP3());
-        
-        c = c.normalize();
-        if ((m.plus(c)).distance(Environment.origin) < m.distance(Environment.origin)) {
-            c = c.scale(-1);
-        }
-        
-        return m.plus(c.scale(height));
     }
     
     
     //Getters
     
     /**
-     * Returns the Triangle that defines the base of the Pyramid.
+     * Returns the Rectangle that defines the base of the Pyramid.
      *
-     * @return The Triangle that defines the base of the Pyramid.
+     * @return The Rectangle that defines the base of the Pyramid.
      */
-    public Triangle getBase()
+    public Rectangle getBase()
     {
         return base;
     }
@@ -206,10 +185,10 @@ public class TriangularPyramid extends Object
     /**
      * Sets the components that defines the Pyramid.
      *
-     * @param base The Triangle that defines the base of the Pyramid.
+     * @param base The Rectangle that defines the base of the Pyramid.
      * @param apex The Vector that defines the apex of the Pyramid.
      */
-    public void setComponents(Triangle base, Vector apex)
+    public void setComponents(Rectangle base, Vector apex)
     {
         this.base = base;
         this.apex = apex;
@@ -217,11 +196,11 @@ public class TriangularPyramid extends Object
     }
     
     /**
-     * Sets the Triangle that defines the base of the Pyramid.
+     * Sets the Rectangle that defines the base of the Pyramid.
      *
      * @param base The Rectangle that defines the base of the Pyramid.
      */
-    public void setBase(Triangle base)
+    public void setBase(Rectangle base)
     {
         this.base = base;
         recalculate();
@@ -246,7 +225,7 @@ public class TriangularPyramid extends Object
      */
     public void setFaceColor(int face, Color color)
     {
-        if (face < 1 || face > 4) {
+        if (face < 1 || face > 5) {
             return;
         }
         face--;

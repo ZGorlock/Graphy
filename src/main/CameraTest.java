@@ -7,9 +7,8 @@
 package main;
 
 import math.vector.Vector;
-import objects.Cube;
-import objects.base.Edge;
-import objects.base.Vertex;
+import objects.base.simple.Edge;
+import objects.base.simple.Vertex;
 import math.matrix.Matrix3;
 
 import javax.swing.*;
@@ -92,11 +91,11 @@ public class CameraTest {
         List<Edge> edges = new ArrayList<>();
         
         //main axes
-//        edges.add(new objects.base.Edge(new Vertex(xMin, 0, 0),
+//        edges.add(new objects.base.simple.Edge(new Vertex(xMin, 0, 0),
 //                new Vertex(xMax,0,0), Color.RED));
-//        edges.add(new objects.base.Edge(new Vertex(0, yMin, 0),
+//        edges.add(new objects.base.simple.Edge(new Vertex(0, yMin, 0),
 //                new Vertex(0,yMax,0), Color.GREEN));
-//        edges.add(new objects.base.Edge(new Vertex(0, 0, zMin),
+//        edges.add(new objects.base.simple.Edge(new Vertex(0, 0, zMin),
 //                new Vertex(0,0, zMax), Color.BLUE));
 //
 //
@@ -107,13 +106,13 @@ public class CameraTest {
 //        for (int xg = xMin; xg <= xMax; xg += 1) {
 //            for (int yg = yMin; yg <= yMax; yg += 1) {
 //                if (xg != 0 || yg != 0) {
-//                    edges.add(new objects.base.Edge(new Vertex(xg, yg, zMin),
+//                    edges.add(new objects.base.simple.Edge(new Vertex(xg, yg, zMin),
 //                            new Vertex(xg, yg, zMax), subAxis));
 //                }
 //            }
 //            for (int zg = zMin; zg <= zMax; zg += 1) {
 //                if (xg != 0 || zg != 0) {
-//                    edges.add(new objects.base.Edge(new Vertex(xg, yMin, zg),
+//                    edges.add(new objects.base.simple.Edge(new Vertex(xg, yMin, zg),
 //                            new Vertex(xg, yMax, zg), subAxis));
 //                }
 //            }
@@ -121,13 +120,13 @@ public class CameraTest {
 //        for (int yg = yMin; yg <= yMax; yg += 1) {
 //            for (int xg = xMin; xg <= xMax; xg += 1) {
 //                if (yg != 0 || xg != 0) {
-//                    edges.add(new objects.base.Edge(new Vertex(xg, yg, zMin),
+//                    edges.add(new objects.base.simple.Edge(new Vertex(xg, yg, zMin),
 //                            new Vertex(xg, yg, zMax), subAxis));
 //                }
 //            }
 //            for (int zg = zMin; zg <= zMax; zg += 1) {
 //                if (yg != 0 || zg != 0) {
-//                    edges.add(new objects.base.Edge(new Vertex(xMin, yg, zg),
+//                    edges.add(new objects.base.simple.Edge(new Vertex(xMin, yg, zg),
 //                            new Vertex(xMax, yg, zg), subAxis));
 //                }
 //            }
@@ -275,7 +274,7 @@ public class CameraTest {
     
     
                 
-//                Cube cube = new Cube(new Vertex(0, 0, 0), 1, Color.BLUE);
+//                Hexahedron cube = new Hexahedron(new Vertex(0, 0, 0), 1, Color.BLUE);
 //                objects.add(cube);
 //
 //

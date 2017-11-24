@@ -9,13 +9,11 @@ package main;
 import camera.Camera;
 import math.matrix.Matrix3;
 import math.vector.Vector;
-import math.vector.Vector3;
-import objects.Cube;
-import objects.Pyramid;
-import objects.TriangularPyramid;
 import objects.base.*;
 import objects.base.Frame;
-import objects.base.Object;
+import objects.base.simple.BigVertex;
+import objects.base.simple.Text;
+import objects.polyhedron.regular.platonic.*;
 import utility.ColorUtility;
 
 import javax.swing.*;
@@ -27,6 +25,10 @@ import java.util.*;
 import java.util.List;
 import java.util.Timer;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static objects.polyhedron.Polyhedron.GOLDEN_RATIO;
+import static objects.polyhedron.regular.platonic.Dodecahedron.DODECAHEDRON_VERTICES;
 
 /**
  * The main Environment.
@@ -95,18 +97,37 @@ public class Environment
      */
     private static void createObjects()
     {
-//        Axes axes = new Axes(false);
-//        objects.add(axes);
-        
-        
         //Example 1
-//        Cube cube = new Cube(Environment.origin, Color.BLUE, 2);
-//        cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-//        objects.add(cube);
+    
+//        Octahedron diamond = new Octahedron(Environment.origin, new Color(255, 0, 0, 64), 1);
+//        diamond.addFrame(Color.BLACK);
+//        objects.add(diamond);
+//
+//        Tetrahedron pyramid = new Tetrahedron(Environment.origin, new Color(255, 165, 0, 64), 1);
+//        pyramid.addFrame(Color.BLACK);
+//        objects.add(pyramid);
+//
+//        Hexahedron x1 = new Hexahedron(Environment.origin, new Color(0, 255, 0, 64), 1);
+//        x1.addFrame(Color.BLACK);
+//        objects.add(x1);
+//
+//        Dodecahedron d12 = new Dodecahedron(Environment.origin, new Color(0, 0, 255, 64), 1);
+//        d12.addFrame(Color.BLACK);
+//        objects.add(d12);
+//
+//        Icosahedron d20 = new Icosahedron(Environment.origin, new Color(165, 0, 165, 64), 1);
+//        d20.addFrame(Color.BLACK);
+//        objects.add(d20);
+    
+    
+//
+//        for (int i = 0; i < ICOSAHEDRON_VERTICES; i++) {
+//            new Text(this, Color.RED, vertices[i], String.valueOf(i));
+//        }
         
         
         //Example 2
-//        Cube cube = new Cube(Environment.origin, Color.BLUE, 2);
+//        Hexahedron cube = new Hexahedron(Environment.origin, Color.BLUE, 2);
 //        cube.addRotationAnimation(Math.PI / 4, Math.PI / 4, Math.PI / 4);
 //
 //        for (int f = 1; f < 6; f++) {
@@ -120,92 +141,347 @@ public class Environment
 
         
         
+        
+        
+        
         //Example 3
-        AtomicBoolean cameraInMotion = new AtomicBoolean(false);
-        for (int i = 0; i < 1250; i++) {
-            Cube cube = new Cube(Environment.origin, ColorUtility.getRandomColor(), .1);
-            Frame frame = new Frame(cube);
-            Timer waiter = new Timer();
-            waiter.schedule(new TimerTask()
-            {
-                @Override
-                public void run()
-                {
-                    cube.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
-                    cube.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
-                    cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-                    cube.frame.setColor(new Color(0, 0, 0, 0));
-                    cube.addProcess(new Runnable() {
-                        private int count = 0;
-
-                        @Override
-                        public void run()
-                        {
-                            count++;
-
-                            if (count == 14) {
-                                if (cameraInMotion.compareAndSet(false, true)) {
-                                    Camera.getActiveCameraView().addFluidTransition(0, Math.PI / 2, 0, 5000);
-                                }
-                            } else if (count == 20) {
-                                cube.animationTimers.get(1).purge();
-                                cube.animationTimers.get(1).cancel();
-                                cube.animationTimers.remove(1);
-
-                                double[] values = cube.movementAnimations.get(0);
-                                cube.movementAnimations.remove(0);
-
-                                cube.addMovementAnimation(values[0] * -20, values[1] * -20, values[2] * -20);
-
-                            } else if (count == 21) {
-                                cube.animationTimers.get(1).purge();
-                                cube.animationTimers.get(1).cancel();
-                                cube.animationTimers.remove(1);
-
-                                cube.movementAnimations.remove(0);
-
-                                cube.reposition(Environment.origin);
-                                cube.registerFrame(frame);
-                                if (cube.getDisplayMode() == AbstractObject.DisplayMode.EDGE) {
-                                    cube.setDisplayMode(AbstractObject.DisplayMode.FACE);
-                                    cube.frame.setColor(Color.BLACK);
-                                    cube.registerFrame(frame);
-                                } else {
-                                    cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-                                    cube.frame.setColor(new Color(0, 0, 0, 0));
-                                }
-                                cube.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
-    
-                                cameraInMotion.set(false);
-                                count = 0;
-                            }
-                        }
-                    }, 1000);
-                    //cube.addColorAnimation(3000, Math.random() * 3000 + 1);
-                }
-            }, 0);
-            cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-            //objects.add(cube);
-            objects.add(cube);
-        }
+//        AtomicBoolean cameraInMotion = new AtomicBoolean(false);
+//        final AtomicInteger[] loop = {new AtomicInteger(1)};
+//        for (int i = 0; i < 200; i++) {
+//            Color c =  new Color(0, 255, 0); //ColorUtility.getRandomColor()
+//            Hexahedron cube = new Hexahedron(Environment.origin, c, .1);
+//            Frame frame = new Frame(cube);
+//            Timer waiter = new Timer();
+//            waiter.schedule(new TimerTask()
+//            {
+//                @Override
+//                public void run()
+//                {
+//                    cube.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
+//                    cube.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
+//                    cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+//                    cube.setFrameColor(new Color(0, 0, 0, 0));
+//                    cube.addProcess(new Runnable() {
+//                        private int count = 0;
+//
+//                        @Override
+//                        public void run()
+//                        {
+//                            count++;
+//
+//                            if (count == 9) {
+//                                if (cameraInMotion.compareAndSet(false, true)) {
+//                                    if ((loop[0].compareAndSet(0, 1)) || (loop[0].compareAndSet(1, 2))) {
+//                                        Camera.getActiveCameraView().addFluidTransition(Math.PI / 4, Math.PI / 2, 0, 10000);
+//                                    } else if ((loop[0].compareAndSet(2, 3)) || (loop[0].compareAndSet(3, 0))) {
+//                                        Camera.getActiveCameraView().addFluidTransition(-Math.PI / 4, Math.PI / 2, 0, 10000);
+//                                    }
+//                                }
+//                            } else if (count == 20) {
+//                                cube.animationTimers.get(1).purge();
+//                                cube.animationTimers.get(1).cancel();
+//                                cube.animationTimers.remove(1);
+//
+//                                double[] values = cube.movementAnimations.get(0);
+//                                cube.movementAnimations.remove(0);
+//
+//                                cube.addMovementAnimation(values[0] * -20, values[1] * -20, values[2] * -20);
+//
+//                            } else if (count == 21) {
+//                                cube.animationTimers.get(1).purge();
+//                                cube.animationTimers.get(1).cancel();
+//                                cube.animationTimers.remove(1);
+//
+//                                cube.movementAnimations.remove(0);
+//
+//                                cube.reposition(Environment.origin);
+//                                cube.registerFrame(frame);
+//                                if (cube.getDisplayMode() == AbstractObject.DisplayMode.EDGE) {
+//                                    cube.setDisplayMode(AbstractObject.DisplayMode.FACE);
+//                                    cube.setFrameColor(Color.BLACK);
+//                                    cube.registerFrame(frame);
+//                                } else {
+//                                    cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+//                                    cube.setFrameColor(new Color(0, 0, 0, 0));
+//                                }
+//                                cube.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
+//
+//                                cameraInMotion.set(false);
+//                                count = 0;
+//                            }
+//                        }
+//                    }, 1000);
+//                }
+//            }, 0);
+//            cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+//            objects.add(cube);
+//        }
+//
+//        for (int i = 0; i < 200; i++) {
+//            Color c = new Color(255, 165, 0); //ColorUtility.getRandomColor()
+//            Tetrahedron cube = new Tetrahedron(Environment.origin, c, .1);
+//            Frame frame = new Frame(cube);
+//            Timer waiter = new Timer();
+//            waiter.schedule(new TimerTask()
+//            {
+//                @Override
+//                public void run()
+//                {
+//                    cube.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
+//                    cube.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
+//                    cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+//                    cube.setFrameColor(new Color(0, 0, 0, 0));
+//                    cube.addProcess(new Runnable() {
+//                        private int count = 0;
+//                        private boolean loop = false;
+//
+//                        @Override
+//                        public void run()
+//                        {
+//                            count++;
+//
+//                            if (count == 20) {
+//                                cube.animationTimers.get(1).purge();
+//                                cube.animationTimers.get(1).cancel();
+//                                cube.animationTimers.remove(1);
+//
+//                                double[] values = cube.movementAnimations.get(0);
+//                                cube.movementAnimations.remove(0);
+//
+//                                cube.addMovementAnimation(values[0] * -20, values[1] * -20, values[2] * -20);
+//
+//                            } else if (count == 21) {
+//                                cube.animationTimers.get(1).purge();
+//                                cube.animationTimers.get(1).cancel();
+//                                cube.animationTimers.remove(1);
+//
+//                                cube.movementAnimations.remove(0);
+//
+//                                cube.reposition(Environment.origin);
+//                                cube.registerFrame(frame);
+//                                if (cube.getDisplayMode() == AbstractObject.DisplayMode.EDGE) {
+//                                    cube.setDisplayMode(AbstractObject.DisplayMode.FACE);
+//                                    cube.setFrameColor(Color.BLACK);
+//                                    cube.registerFrame(frame);
+//                                } else {
+//                                    cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+//                                    cube.setFrameColor(new Color(0, 0, 0, 0));
+//                                }
+//                                cube.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
+//
+//                                count = 0;
+//                            }
+//                        }
+//                    }, 1000);
+//                }
+//            }, 0);
+//            cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+//            objects.add(cube);
+//        }
+//
+//        for (int i = 0; i < 200; i++) {
+//            Color c = new Color(255, 0, 0); //ColorUtility.getRandomColor()
+//            Octahedron cube = new Octahedron(Environment.origin, c, .1);
+//            Frame frame = new Frame(cube);
+//            Timer waiter = new Timer();
+//            waiter.schedule(new TimerTask()
+//            {
+//                @Override
+//                public void run()
+//                {
+//                    cube.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
+//                    cube.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
+//                    cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+//                    cube.setFrameColor(new Color(0, 0, 0, 0));
+//                    cube.addProcess(new Runnable() {
+//                        private int count = 0;
+//                        private boolean loop = false;
+//
+//                        @Override
+//                        public void run()
+//                        {
+//                            count++;
+//
+//                            if (count == 20) {
+//                                cube.animationTimers.get(1).purge();
+//                                cube.animationTimers.get(1).cancel();
+//                                cube.animationTimers.remove(1);
+//
+//                                double[] values = cube.movementAnimations.get(0);
+//                                cube.movementAnimations.remove(0);
+//
+//                                cube.addMovementAnimation(values[0] * -20, values[1] * -20, values[2] * -20);
+//
+//                            } else if (count == 21) {
+//                                cube.animationTimers.get(1).purge();
+//                                cube.animationTimers.get(1).cancel();
+//                                cube.animationTimers.remove(1);
+//
+//                                cube.movementAnimations.remove(0);
+//
+//                                cube.reposition(Environment.origin);
+//                                cube.registerFrame(frame);
+//                                if (cube.getDisplayMode() == AbstractObject.DisplayMode.EDGE) {
+//                                    cube.setDisplayMode(AbstractObject.DisplayMode.FACE);
+//                                    cube.setFrameColor(Color.BLACK);
+//                                    cube.registerFrame(frame);
+//                                } else {
+//                                    cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+//                                    cube.setFrameColor(new Color(0, 0, 0, 0));
+//                                }
+//                                cube.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
+//
+//                                count = 0;
+//                            }
+//                        }
+//                    }, 1000);
+//                }
+//            }, 0);
+//            cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+//            objects.add(cube);
+//        }
+//
+//        for (int i = 0; i < 200; i++) {
+//            Color c = new Color(0, 0, 255); //ColorUtility.getRandomColor()
+//            Dodecahedron cube = new Dodecahedron(Environment.origin, c, .1);
+//            Frame frame = new Frame(cube);
+//            Timer waiter = new Timer();
+//            waiter.schedule(new TimerTask()
+//            {
+//                @Override
+//                public void run()
+//                {
+//                    cube.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
+//                    cube.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
+//                    cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+//                    cube.setFrameColor(new Color(0, 0, 0, 0));
+//                    cube.addProcess(new Runnable() {
+//                        private int count = 0;
+//                        private boolean loop = false;
+//
+//                        @Override
+//                        public void run()
+//                        {
+//                            count++;
+//
+//                            if (count == 20) {
+//                                cube.animationTimers.get(1).purge();
+//                                cube.animationTimers.get(1).cancel();
+//                                cube.animationTimers.remove(1);
+//
+//                                double[] values = cube.movementAnimations.get(0);
+//                                cube.movementAnimations.remove(0);
+//
+//                                cube.addMovementAnimation(values[0] * -20, values[1] * -20, values[2] * -20);
+//
+//                            } else if (count == 21) {
+//                                cube.animationTimers.get(1).purge();
+//                                cube.animationTimers.get(1).cancel();
+//                                cube.animationTimers.remove(1);
+//
+//                                cube.movementAnimations.remove(0);
+//
+//                                cube.reposition(Environment.origin);
+//                                cube.registerFrame(frame);
+//                                if (cube.getDisplayMode() == AbstractObject.DisplayMode.EDGE) {
+//                                    cube.setDisplayMode(AbstractObject.DisplayMode.FACE);
+//                                    cube.setFrameColor(Color.BLACK);
+//                                    cube.registerFrame(frame);
+//                                } else {
+//                                    cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+//                                    cube.setFrameColor(new Color(0, 0, 0, 0));
+//                                }
+//                                cube.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
+//
+//                                count = 0;
+//                            }
+//                        }
+//                    }, 1000);
+//                }
+//            }, 0);
+//            cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+//            objects.add(cube);
+//        }
+//
+//        for (int i = 0; i < 200; i++) {
+//            Color c = new Color(165, 0, 165); //ColorUtility.getRandomColor()
+//            Icosahedron cube = new Icosahedron(Environment.origin, c, .1);
+//            Frame frame = new Frame(cube);
+//            Timer waiter = new Timer();
+//            waiter.schedule(new TimerTask()
+//            {
+//                @Override
+//                public void run()
+//                {
+//                    cube.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
+//                    cube.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
+//                    cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+//                    cube.setFrameColor(new Color(0, 0, 0, 0));
+//                    cube.addProcess(new Runnable() {
+//                        private int count = 0;
+//                        private boolean loop = false;
+//
+//                        @Override
+//                        public void run()
+//                        {
+//                            count++;
+//
+//                            if (count == 20) {
+//                                cube.animationTimers.get(1).purge();
+//                                cube.animationTimers.get(1).cancel();
+//                                cube.animationTimers.remove(1);
+//
+//                                double[] values = cube.movementAnimations.get(0);
+//                                cube.movementAnimations.remove(0);
+//
+//                                cube.addMovementAnimation(values[0] * -20, values[1] * -20, values[2] * -20);
+//
+//                            } else if (count == 21) {
+//                                cube.animationTimers.get(1).purge();
+//                                cube.animationTimers.get(1).cancel();
+//                                cube.animationTimers.remove(1);
+//
+//                                cube.movementAnimations.remove(0);
+//
+//                                cube.reposition(Environment.origin);
+//                                cube.registerFrame(frame);
+//                                if (cube.getDisplayMode() == AbstractObject.DisplayMode.EDGE) {
+//                                    cube.setDisplayMode(AbstractObject.DisplayMode.FACE);
+//                                    cube.setFrameColor(Color.BLACK);
+//                                    cube.registerFrame(frame);
+//                                } else {
+//                                    cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+//                                    cube.setFrameColor(new Color(0, 0, 0, 0));
+//                                }
+//                                cube.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
+//
+//                                count = 0;
+//                            }
+//                        }
+//                    }, 1000);
+//                }
+//            }, 0);
+//            cube.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+//            objects.add(cube);
+//        }
         
         
         //Example 4
 //        Object group = new Object(Environment.origin, Color.YELLOW);
-//        Cube cube = new Cube(group, Environment.origin, ColorUtility.getRandomColor(), 1);
+//        Hexahedron cube = new Hexahedron(group, Environment.origin, ColorUtility.getRandomColor(), 1);
 //
 //        Color color2 = ColorUtility.getRandomColor();
-//        List<Pyramid> pyramids = new ArrayList<>();
-//        pyramids.add(new Pyramid(group, color2, (Rect) cube.getComponents().get(0), new Vector(0, 0, 1.5)));
-//        pyramids.add(new Pyramid(group, color2, (Rect) cube.getComponents().get(1), new Vector(0, 0, -1.5)));
-//        pyramids.add(new Pyramid(group, color2, (Rect) cube.getComponents().get(2), new Vector(0, 1.5, 0)));
-//        pyramids.add(new Pyramid(group, color2, (Rect) cube.getComponents().get(3), new Vector(0, -1.5, 0)));
-//        pyramids.add(new Pyramid(group, color2, (Rect) cube.getComponents().get(4), new Vector(1.5, 0, 0)));
-//        pyramids.add(new Pyramid(group, color2, (Rect) cube.getComponents().get(5), new Vector(-1.5, 0, 0)));
+//        List<RectangularPyramid> pyramids = new ArrayList<>();
+//        pyramids.add(new RectangularPyramid(group, color2, (Rectangle) cube.getComponents().get(0), new Vector(0, 0, 1.5)));
+//        pyramids.add(new RectangularPyramid(group, color2, (Rectangle) cube.getComponents().get(1), new Vector(0, 0, -1.5)));
+//        pyramids.add(new RectangularPyramid(group, color2, (Rectangle) cube.getComponents().get(2), new Vector(0, 1.5, 0)));
+//        pyramids.add(new RectangularPyramid(group, color2, (Rectangle) cube.getComponents().get(3), new Vector(0, -1.5, 0)));
+//        pyramids.add(new RectangularPyramid(group, color2, (Rectangle) cube.getComponents().get(4), new Vector(1.5, 0, 0)));
+//        pyramids.add(new RectangularPyramid(group, color2, (Rectangle) cube.getComponents().get(5), new Vector(-1.5, 0, 0)));
 //
 //        Color color3 = ColorUtility.getRandomColor();
-//        List<TriangularPyramid> subPyramids = new ArrayList<>();
-//        for (Pyramid pyramid : pyramids) {
+//        List<Tetrahedron> subPyramids = new ArrayList<>();
+//        for (RectangularPyramid pyramid : pyramids) {
 //            for (int i = 0; i < 4; i++) {
 //                Triangle face = (Triangle) pyramid.getComponents().get(i);
 //
@@ -221,12 +497,12 @@ public class Environment
 //                }
 //
 //                Vector faceCenter = m.plus(c.scale(.01));
-//                subPyramids.add(new TriangularPyramid(group, color3, new Triangle(face.getP1().midpoint(faceCenter), face.getP2().midpoint(faceCenter), face.getP3().midpoint(faceCenter)), .75));
+//                subPyramids.add(new Tetrahedron(group, color3, new Triangle(face.getP1().midpoint(faceCenter), face.getP2().midpoint(faceCenter), face.getP3().midpoint(faceCenter)), .75));
 //            }
 //        }
 //
 //        Color color4 = ColorUtility.getRandomColor();
-//        for (TriangularPyramid subPyramid : subPyramids) {
+//        for (Tetrahedron subPyramid : subPyramids) {
 //            for (int i = 0; i < 3; i++) {
 //                Triangle face = (Triangle) subPyramid.getComponents().get(i);
 //
@@ -242,7 +518,7 @@ public class Environment
 //                }
 //
 //                Vector faceCenter = m.plus(c.scale(.01));
-//                new TriangularPyramid(group, color4, new Triangle(face.getP1().midpoint(faceCenter), face.getP2().midpoint(faceCenter), face.getP3().midpoint(faceCenter)), .25);
+//                new Tetrahedron(group, color4, new Triangle(face.getP1().midpoint(faceCenter), face.getP2().midpoint(faceCenter), face.getP3().midpoint(faceCenter)), .25);
 //            }
 //        }
 //

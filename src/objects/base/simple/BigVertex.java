@@ -1,19 +1,16 @@
 /*
  * File:    BigVertex.java
- * Package: objects.base
+ * Package: objects.base.simple
  * Author:  Zachary Gill
  */
 
-package objects.base;
+package objects.base.simple;
 
 import camera.Camera;
-import main.Environment;
 import math.vector.Vector;
-import objects.base.Vertex;
+import objects.base.AbstractObject;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines a Vertex of a certain size.
@@ -41,10 +38,8 @@ public class BigVertex extends Vertex
      */
     public BigVertex(AbstractObject parent, Color color, Vector v, int size)
     {
-        super(color, v);
+        super(parent, color, v);
         this.size = size;
-        this.type = BigVertex.class;
-        setParent(parent);
     }
     
     /**
@@ -74,8 +69,8 @@ public class BigVertex extends Vertex
     /**
      * The constructor for a Vertex.
      *
-     * @param v      The Vector defining the point of the Vertex.
-     * @param size   The size of the Vertex.
+     * @param v    The Vector defining the point of the Vertex.
+     * @param size The size of the Vertex.
      */
     public BigVertex(Vector v, int size)
     {
@@ -107,11 +102,10 @@ public class BigVertex extends Vertex
             g2.setColor(getColor());
             for (int i = -size; i <= size; i++) {
                 for (int j = -size; j <= size; j++) {
-                    g2.drawRect((int) prepared.get(0).get(0) + i, (int) prepared.get(0).get(1) + j, 1, 1);
+                    g2.drawRect((int) prepared.get(0).getX() + i, (int) prepared.get(0).getY() + j, 1, 1);
                 }
             }
         }
     }
-    
     
 }

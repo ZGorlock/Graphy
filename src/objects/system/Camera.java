@@ -1,20 +1,20 @@
 /*
  * File:    Camera.java
- * Package: objects
+ * Package: objects.system
  * Author:  Zachary Gill
  */
 
-package objects;
+package objects.system;
 
 import main.Environment;
-import math.vector.Vector;
-import objects.base.*;
+import objects.RectangularPyramid;
 import objects.base.Frame;
 import objects.base.Object;
+import objects.base.polygon.Rectangle;
+import objects.base.simple.BigVertex;
+import objects.base.simple.Edge;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines a Camera Object.
@@ -30,9 +30,9 @@ public class Camera extends Object
     public BigVertex camera;
     
     /**
-     * The Rect of the Screen.
+     * The Rectangle of the Screen.
      */
-    public Rect screen;
+    public Rectangle screen;
     
     /**
      * The Edges for the three normal Vectors defining the Screen's local coordinate system.
@@ -42,7 +42,7 @@ public class Camera extends Object
     /**
      * The Triangles that make up the Camera enclosure.
      */
-    public Pyramid cameraEnclosure;
+    public RectangularPyramid cameraEnclosure;
     
     
     //Constructors
@@ -59,8 +59,8 @@ public class Camera extends Object
         screenXNormal = new Edge(this, Color.RED, Environment.origin, Environment.origin);
         screenYNormal = new Edge(this, Color.GREEN, Environment.origin, Environment.origin);
     
-        screen = new Rect(Color.RED, Environment.origin, Environment.origin, Environment.origin, Environment.origin); //not rendered
-        cameraEnclosure = new Pyramid(this, new Color(192, 192, 192, 64), screen, Environment.origin);
+        screen = new Rectangle(Color.RED, Environment.origin, Environment.origin, Environment.origin, Environment.origin); //not rendered
+        cameraEnclosure = new RectangularPyramid(this, new Color(192, 192, 192, 64), screen, Environment.origin);
         frame = new Frame(cameraEnclosure);
         
         setDisplayMode(DisplayMode.FACE);

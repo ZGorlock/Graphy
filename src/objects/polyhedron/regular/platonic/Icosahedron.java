@@ -26,7 +26,7 @@ public class Icosahedron extends RegularPolyhedron
     /**
      * The number of faces of a Icosahedron.
      */
-    public static int ICOSAHEDRON_FACES = 60;
+    public static int ICOSAHEDRON_FACES = 20;
     
     /**
      * The number of vertices of a Icosahedron.
@@ -46,7 +46,7 @@ public class Icosahedron extends RegularPolyhedron
      */
     public Icosahedron(AbstractObject parent, Vector center, Color color, double radius)
     {
-        super(parent, center, color, ICOSAHEDRON_FACES, radius);
+        super(parent, center, color, ICOSAHEDRON_FACES, ICOSAHEDRON_VERTICES, radius);
     }
     
     /**
@@ -87,7 +87,7 @@ public class Icosahedron extends RegularPolyhedron
         double a = GOLDEN_RATIO;
         double b = 1 + a;
         
-        Vector[] vertices = new Vector[ICOSAHEDRON_VERTICES];
+        vertices = new Vector[ICOSAHEDRON_VERTICES];
         int v = 0;
         for (int i : new int[] {-1, 1}) {
             for (int j : new int[] {-1, 1}) {

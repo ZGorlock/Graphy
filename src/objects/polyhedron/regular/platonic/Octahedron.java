@@ -44,7 +44,7 @@ public class Octahedron extends RegularPolyhedron
      */
     public Octahedron(AbstractObject parent, Vector center, Color color, double radius)
     {
-        super(parent, center, color, OCTAHEDRON_FACES, radius);
+        super(parent, center, color, OCTAHEDRON_FACES, OCTAHEDRON_VERTICES, radius);
     }
     
     /**
@@ -82,7 +82,7 @@ public class Octahedron extends RegularPolyhedron
     {
         components.clear();
         
-        Vector[] vertices = new Vector[OCTAHEDRON_VERTICES];
+        vertices = new Vector[OCTAHEDRON_VERTICES];
         int v = 0;
         for (int i : new int[] {-1, 1}) {
             vertices[v++] = new Vector(0, 0, i).scale(radius).plus(center);

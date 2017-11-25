@@ -74,7 +74,7 @@ public class Camera
     /**
      * The current location of the Camera in spherical coordinates.
      */
-    private double rho = 7;
+    private double rho = 10;
     private double phi = Math.PI / 2;
     private double theta = Math.PI;
     

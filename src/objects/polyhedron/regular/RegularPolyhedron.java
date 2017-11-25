@@ -8,6 +8,8 @@ package objects.polyhedron.regular;
 
 import math.vector.Vector;
 import objects.base.AbstractObject;
+import objects.base.polygon.Polygon;
+import objects.base.simple.Text;
 import objects.polyhedron.Polyhedron;
 
 import java.awt.*;
@@ -26,9 +28,29 @@ public class RegularPolyhedron extends Polyhedron
     protected int numFaces;
     
     /**
+     * The number of vertices of the Polyhedron.
+     */
+    protected int numVertices;
+    
+    /**
      * The radius of the bounding sphere of the Polyhedron.
      */
     protected double radius;
+    
+    /**
+     * The list of vertices of the Polyhedron.
+     */
+    protected Vector[] vertices;
+    
+    /**
+     * The list of vertex indices of the Polyhedron.
+     */
+    protected Text[] vertexIndices;
+    
+    /**
+     * The list of face indices of the Polyhedron.
+     */
+    protected Text[] faceIndices;
     
     
     //Constructors
@@ -36,20 +58,87 @@ public class RegularPolyhedron extends Polyhedron
     /**
      * The constructor for a RegularPolyhedron.
      *
-     * @param parent   The parent of the RegularPolyhedron.
-     * @param center   The center of the RegularPolyhedron.
-     * @param color    The color of the RegularPolyhedron.
-     * @param numFaces The number of faces of the RegularPolyhedron
-     * @param radius   The radius of the bounding sphere of the RegularPolyhedron.
+     * @param parent      The parent of the RegularPolyhedron.
+     * @param center      The center of the RegularPolyhedron.
+     * @param color       The color of the RegularPolyhedron.
+     * @param numFaces    The number of faces of the RegularPolyhedron
+     * @param numVertices The number of vertices of the RegularPolyhedron
+     * @param radius      The radius of the bounding sphere of the RegularPolyhedron.
      */
-    public RegularPolyhedron(AbstractObject parent, Vector center, Color color, int numFaces, double radius)
+    public RegularPolyhedron(AbstractObject parent, Vector center, Color color, int numFaces, int numVertices, double radius)
     {
         super(center, color);
-        
+    
         this.numFaces = numFaces;
+        this.numVertices = numVertices;
         this.radius = radius;
         setParent(parent);
         calculate();
+    }
+    
+    
+    //Methods
+    
+    /**
+     * Displays the indices of the vertices of the Polyhedron.
+     */
+    public void displayVertexIndices()
+    {
+        if (vertexIndices == null) {
+            vertexIndices = new Text[numVertices];
+            
+            for (int i = 0; i < numVertices; i++) {
+                vertexIndices[i] = new Text(this, Color.BLACK, vertices[i], String.valueOf(i));
+            }
+        }
+        
+        for (Text vertex : vertexIndices) {
+            vertex.setVisible(true);
+        }
+    }
+    
+    /**
+     * Hides the indices of the vertices of the Polyhedron.
+     */
+    public void hideVertexIndices()
+    {
+        if (vertexIndices != null) {
+            for (Text vertex : vertexIndices) {
+                vertex.setVisible(false);
+            }
+        }
+    }
+    
+    /**
+     * Displays the indices of the faces of the Polyhedron.
+     */
+    public void displayFaceIndices()
+    {
+        if (faceIndices == null) {
+            faceIndices = new Text[numFaces];
+        
+            for (int i = 0; i < numFaces; i++) {
+                if (components.get(i) instanceof Polygon) {
+                    faceIndices[i] = new Text(this, Color.RED, Vector.averageVector(((Polygon) components.get(i)).getVertices()), String.valueOf(i));
+                }
+            }
+        }
+    
+        for (Text face : faceIndices) {
+            face.setVisible(true);
+        }
+    }
+    
+    /**
+     * Hides the indices of the faces of the Polyhedron.
+     */
+    public void hideFaceIndices()
+    {
+        if (faceIndices != null) {
+            for (Text face : faceIndices) {
+                face.setVisible(false);
+            }
+        }
     }
     
     

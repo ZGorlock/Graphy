@@ -47,7 +47,7 @@ public class Hexahedron extends RegularPolyhedron
      */
     public Hexahedron(AbstractObject parent, Vector center, Color color, double radius)
     {
-        super(parent, center, color, HEXAHEDRON_FACES, radius);
+        super(parent, center, color, HEXAHEDRON_FACES, HEXAHEDRON_VERTICES, radius);
     }
     
     /**
@@ -85,7 +85,7 @@ public class Hexahedron extends RegularPolyhedron
     {
         components.clear();
         
-        Vector[] vertices = new Vector[HEXAHEDRON_VERTICES];
+        vertices = new Vector[HEXAHEDRON_VERTICES];
         int v = 0;
         for (int i : new int[] {-1, 1}) {
             for (int j : new int[]{-1, 1}) {

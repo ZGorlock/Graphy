@@ -47,7 +47,7 @@ public class Dodecahedron extends RegularPolyhedron
      */
     public Dodecahedron(AbstractObject parent, Vector center, Color color, double radius)
     {
-        super(parent, center, color, DODECAHEDRON_FACES, radius);
+        super(parent, center, color, DODECAHEDRON_FACES, DODECAHEDRON_VERTICES, radius);
     }
     
     /**
@@ -88,7 +88,7 @@ public class Dodecahedron extends RegularPolyhedron
         double a = GOLDEN_RATIO;
         double b = 1 + a;
         
-        Vector[] vertices = new Vector[DODECAHEDRON_VERTICES];
+        vertices = new Vector[DODECAHEDRON_VERTICES];
         int v = 0;
         for (int i : new int[] {-1, 1}) {
             for (int j : new int[] {-1, 1}) {

@@ -6,70 +6,24 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e22397f-9631-4e96-a2b2-7430a02a411c" name="Default" comment="Added other polyhedra objects">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/objects/base/polygon/Pentagon.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/objects/base/polygon/Polygon.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/objects/base/simple/Text.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/objects/polyhedron/Polyhedron.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/RegularPolyhedron.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Dodecahedron.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Icosahedron.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Octahedron.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/Axes.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/Camera.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/Cube.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/Pyramid.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/TriangularPyramid.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/base/BigVertex.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/base/Edge$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/base/Edge.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/base/Rect$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/base/Rect.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/base/Triangle$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/base/Triangle.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/base/Vertex.class" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/camera/Camera$1.class" afterPath="$PROJECT_DIR$/out/production/Graphy/camera/Camera$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/camera/Camera$2.class" afterPath="$PROJECT_DIR$/out/production/Graphy/camera/Camera$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/camera/Camera$3.class" afterPath="$PROJECT_DIR$/out/production/Graphy/camera/Camera$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/camera/Camera$4.class" afterPath="$PROJECT_DIR$/out/production/Graphy/camera/Camera$4.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/camera/Camera.class" afterPath="$PROJECT_DIR$/out/production/Graphy/camera/Camera.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/main/CameraTest$1.class" afterPath="$PROJECT_DIR$/out/production/Graphy/main/CameraTest$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/main/CameraTest$2.class" afterPath="$PROJECT_DIR$/out/production/Graphy/main/CameraTest$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/main/CameraTest.class" afterPath="$PROJECT_DIR$/out/production/Graphy/main/CameraTest.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/main/Environment$1$1.class" afterPath="$PROJECT_DIR$/out/production/Graphy/main/Environment$1$1.class" />
+    <list default="true" id="2e22397f-9631-4e96-a2b2-7430a02a411c" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/MetatronsCube.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/objects/scene/PolyhedraExplosion.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/main/Environment$1.class" afterPath="$PROJECT_DIR$/out/production/Graphy/main/Environment$1.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/main/Environment$2.class" afterPath="$PROJECT_DIR$/out/production/Graphy/main/Environment$2.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/main/Environment$3.class" afterPath="$PROJECT_DIR$/out/production/Graphy/main/Environment$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/main/Environment$4.class" afterPath="$PROJECT_DIR$/out/production/Graphy/main/Environment$4.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/main/Environment.class" afterPath="$PROJECT_DIR$/out/production/Graphy/main/Environment.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/math/matrix/Matrix3.class" afterPath="$PROJECT_DIR$/out/production/Graphy/math/matrix/Matrix3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/math/vector/Vector.class" afterPath="$PROJECT_DIR$/out/production/Graphy/math/vector/Vector.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/base/AbstractObject$1.class" afterPath="$PROJECT_DIR$/out/production/Graphy/objects/base/AbstractObject$1.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/base/AbstractObject$2.class" afterPath="$PROJECT_DIR$/out/production/Graphy/objects/base/AbstractObject$2.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/base/AbstractObject$3.class" afterPath="$PROJECT_DIR$/out/production/Graphy/objects/base/AbstractObject$3.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/base/AbstractObject$DisplayMode.class" afterPath="$PROJECT_DIR$/out/production/Graphy/objects/base/AbstractObject$DisplayMode.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/base/AbstractObject.class" afterPath="$PROJECT_DIR$/out/production/Graphy/objects/base/AbstractObject.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Graphy/objects/base/BaseObject.class" afterPath="$PROJECT_DIR$/out/production/Graphy/objects/base/BaseObject.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/Zack.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/Zack.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Graphy.iml" afterPath="$PROJECT_DIR$/Graphy.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/camera/Camera.java" afterPath="$PROJECT_DIR$/src/camera/Camera.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/CameraTest.java" afterPath="$PROJECT_DIR$/src/main/CameraTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/Environment.java" afterPath="$PROJECT_DIR$/src/main/Environment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/math/matrix/Matrix3.java" afterPath="$PROJECT_DIR$/src/math/matrix/Matrix3.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/math/vector/Vector.java" afterPath="$PROJECT_DIR$/src/math/vector/Vector.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/objects/base/AbstractObject.java" afterPath="$PROJECT_DIR$/src/objects/base/AbstractObject.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/objects/base/BaseObject.java" afterPath="$PROJECT_DIR$/src/objects/base/BaseObject.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/objects/base/Object.java" afterPath="$PROJECT_DIR$/src/objects/base/Object.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/objects/Axes.java" afterPath="$PROJECT_DIR$/src/objects/system/Axes.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/objects/Camera.java" afterPath="$PROJECT_DIR$/src/objects/system/Camera.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/objects/Cube.java" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Hexahedron.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/objects/Pyramid.java" afterPath="$PROJECT_DIR$/src/objects/RectangularPyramid.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/objects/TriangularPyramid.java" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Tetrahedron.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/objects/base/BigVertex.java" afterPath="$PROJECT_DIR$/src/objects/base/simple/BigVertex.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/objects/base/Edge.java" afterPath="$PROJECT_DIR$/src/objects/base/simple/Edge.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/objects/base/Rect.java" afterPath="$PROJECT_DIR$/src/objects/base/polygon/Rectangle.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/objects/base/Triangle.java" afterPath="$PROJECT_DIR$/src/objects/base/polygon/Triangle.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/objects/base/Vertex.java" afterPath="$PROJECT_DIR$/src/objects/base/simple/Vertex.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/objects/polyhedron/regular/RegularPolyhedron.java" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/RegularPolyhedron.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Dodecahedron.java" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Dodecahedron.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Hexahedron.java" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Hexahedron.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Icosahedron.java" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Icosahedron.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Octahedron.java" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Octahedron.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Tetrahedron.java" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Tetrahedron.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -82,31 +36,50 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
+  <component name="DockManager">
+    <window id="1">
+      <content type="file-editors">
+        <state>
+          <leaf>
+            <file leaf-file-name="MetatronsCube.java" pinned="false" current-in-tab="true">
+              <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/MetatronsCube.java">
+                <provider selected="true" editor-type-id="text-editor">
+                  <state relative-caret-position="378">
+                    <caret line="22" column="7" lean-forward="false" selection-start-line="22" selection-start-column="7" selection-end-line="22" selection-end-column="7" />
+                    <folding>
+                      <element signature="imports" expanded="true" />
+                    </folding>
+                  </state>
+                </provider>
+              </entry>
+            </file>
+          </leaf>
+        </state>
+      </content>
+    </window>
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
       <file leaf-file-name="Environment.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/Environment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="69" column="19" lean-forward="false" selection-start-line="69" selection-start-column="19" selection-end-line="69" selection-end-column="19" />
+            <state relative-caret-position="168">
+              <caret line="114" column="35" lean-forward="true" selection-start-line="114" selection-start-column="35" selection-end-line="114" selection-end-column="35" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#24642#25707#0" expanded="true" />
-                <element signature="e#25706#25707#0" expanded="true" />
-                <element signature="e#25951#26105#0" expanded="true" />
-                <element signature="e#26104#26105#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Axes.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/objects/system/Axes.java">
+      <file leaf-file-name="RegularPolyhedron.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/RegularPolyhedron.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="83" column="8" lean-forward="false" selection-start-line="83" selection-start-column="8" selection-end-line="83" selection-end-column="8" />
+            <state relative-caret-position="445">
+              <caret line="121" column="43" lean-forward="true" selection-start-line="121" selection-start-column="43" selection-end-line="121" selection-end-column="43" />
               <folding>
-                <element signature="e#0#3237#0" expanded="true" />
+                <element signature="e#0#4728#0" expanded="true" />
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -115,12 +88,10 @@
       <file leaf-file-name="Icosahedron.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Icosahedron.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3864">
-              <caret line="198" column="10" lean-forward="false" selection-start-line="198" selection-start-column="10" selection-end-line="198" selection-end-column="10" />
+            <state relative-caret-position="231">
+              <caret line="28" column="44" lean-forward="false" selection-start-line="28" selection-start-column="44" selection-end-line="28" selection-end-column="44" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1960#1961#0" expanded="true" />
-                <element signature="e#2009#2010#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -129,12 +100,24 @@
       <file leaf-file-name="Tetrahedron.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Tetrahedron.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1176">
-              <caret line="76" column="11" lean-forward="false" selection-start-line="76" selection-start-column="11" selection-end-line="76" selection-end-column="11" />
+            <state relative-caret-position="546">
+              <caret line="92" column="52" lean-forward="true" selection-start-line="92" selection-start-column="52" selection-end-line="92" selection-end-column="52" />
               <folding>
-                <element signature="e#0#3223#0" expanded="true" />
-                <element signature="e#2119#2120#0" expanded="true" />
-                <element signature="e#2168#2169#0" expanded="true" />
+                <element signature="e#0#3236#0" expanded="true" />
+                <element signature="e#2141#2142#0" expanded="true" />
+                <element signature="e#2190#2191#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Hexahedron.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Hexahedron.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1294">
+              <caret line="87" column="8" lean-forward="false" selection-start-line="87" selection-start-column="8" selection-end-line="87" selection-end-column="8" />
+              <folding>
+                <element signature="e#0#3554#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -143,64 +126,35 @@
       <file leaf-file-name="Octahedron.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Octahedron.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1239">
-              <caret line="68" column="11" lean-forward="false" selection-start-line="68" selection-start-column="11" selection-end-line="68" selection-end-column="11" />
+            <state relative-caret-position="483">
+              <caret line="84" column="8" lean-forward="false" selection-start-line="84" selection-start-column="8" selection-end-line="84" selection-end-column="8" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1868#1869#0" expanded="true" />
-                <element signature="e#1917#1918#0" expanded="true" />
+                <element signature="e#1889#1890#0" expanded="true" />
+                <element signature="e#1938#1939#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Dodecahedron.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Dodecahedron.java">
+      <file leaf-file-name="PolyhedraExplosion.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/objects/scene/PolyhedraExplosion.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3612">
-              <caret line="187" column="10" lean-forward="false" selection-start-line="187" selection-start-column="10" selection-end-line="187" selection-end-column="10" />
+            <state relative-caret-position="305">
+              <caret line="77" column="29" lean-forward="true" selection-start-line="77" selection-start-column="29" selection-end-line="77" selection-end-column="29" />
               <folding>
+                <element signature="e#0#20072#0" expanded="true" />
                 <element signature="imports" expanded="true" />
-                <element signature="e#2021#2022#0" expanded="true" />
-                <element signature="e#2070#2071#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Polygon.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/objects/base/polygon/Polygon.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="672">
-              <caret line="43" column="32" lean-forward="false" selection-start-line="43" selection-start-column="32" selection-end-line="43" selection-end-column="32" />
-              <folding>
-                <element signature="e#0#4473#0" expanded="true" />
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Rectangle.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/objects/base/polygon/Rectangle.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="546">
-              <caret line="37" column="10" lean-forward="false" selection-start-line="37" selection-start-column="10" selection-end-line="37" selection-end-column="10" />
-              <folding>
-                <element signature="e#0#4383#0" expanded="true" />
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BaseObject.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/objects/base/BaseObject.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1995">
-              <caret line="108" column="22" lean-forward="false" selection-start-line="108" selection-start-column="22" selection-end-line="108" selection-end-column="22" />
-              <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#3857#7295#0" expanded="true" />
+                <element signature="e#7294#7295#0" expanded="true" />
+                <element signature="e#7736#10463#0" expanded="true" />
+                <element signature="e#10462#10463#0" expanded="true" />
+                <element signature="e#10898#13601#0" expanded="true" />
+                <element signature="e#13600#13601#0" expanded="true" />
+                <element signature="e#14049#16800#0" expanded="true" />
+                <element signature="e#16799#16800#0" expanded="true" />
+                <element signature="e#17243#19970#0" expanded="true" />
+                <element signature="e#19969#19970#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -209,35 +163,23 @@
       <file leaf-file-name="Camera.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/camera/Camera.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1323">
-              <caret line="76" column="26" lean-forward="false" selection-start-line="76" selection-start-column="26" selection-end-line="76" selection-end-column="26" />
+            <state relative-caret-position="252">
+              <caret line="76" column="27" lean-forward="false" selection-start-line="76" selection-start-column="27" selection-end-line="76" selection-end-column="27" />
               <folding>
-                <element signature="e#0#21840#0" expanded="true" />
+                <element signature="e#0#21841#0" expanded="true" />
                 <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Camera.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/objects/system/Camera.java">
+      <file leaf-file-name="Dodecahedron.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Dodecahedron.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1050">
-              <caret line="62" column="8" lean-forward="false" selection-start-line="62" selection-start-column="8" selection-end-line="62" selection-end-column="8" />
+            <state relative-caret-position="210">
+              <caret line="49" column="78" lean-forward="false" selection-start-line="49" selection-start-column="78" selection-end-line="49" selection-end-column="78" />
               <folding>
-                <element signature="e#0#1945#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BigVertex.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/objects/base/simple/BigVertex.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1827">
-              <caret line="104" column="60" lean-forward="false" selection-start-line="104" selection-start-column="60" selection-end-line="104" selection-end-column="60" />
-              <folding>
-                <element signature="e#0#2612#0" expanded="true" />
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -246,8 +188,8 @@
       <file leaf-file-name="Text.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/objects/base/simple/Text.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="672">
-              <caret line="43" column="32" lean-forward="false" selection-start-line="43" selection-start-column="32" selection-end-line="43" selection-end-column="32" />
+            <state relative-caret-position="21">
+              <caret line="41" column="11" lean-forward="false" selection-start-line="41" selection-start-column="11" selection-end-line="41" selection-end-column="11" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -266,11 +208,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>when</find>
-      <find>clong</find>
-      <find>Vertex</find>
-      <find>pieces</find>
-      <find>1</find>
       <find>(sideLength / 2)</find>
       <find>Vector3</find>
       <find>e.getKeyCode()</find>
@@ -296,6 +233,11 @@
       <find>setColor(</find>
       <find>Rectangle</find>
       <find>Dodecahedron</find>
+      <find>int</find>
+      <find>Count</find>
+      <find>Environment.origin</find>
+      <find>.1);</find>
+      <find>(center</find>
     </findStrings>
     <replaceStrings>
       <replace>v2</replace>
@@ -317,6 +259,11 @@
       <replace>Dodecahedron</replace>
       <replace>Pentagon</replace>
       <replace>Icosahedron</replace>
+      <replace>this, center</replace>
+      <replace>Color</replace>
+      <replace>center</replace>
+      <replace>radius);</replace>
+      <replace>(this, center</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -331,8 +278,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/math/matrix/Matrix4.java" />
-        <option value="$PROJECT_DIR$/src/main/CameraTest.java" />
         <option value="$PROJECT_DIR$/src/math/matrix/Matrix3.java" />
         <option value="$PROJECT_DIR$/src/utility/RotationUtility.java" />
         <option value="$PROJECT_DIR$/src/utility/ColorUtility.java" />
@@ -362,12 +307,9 @@
         <option value="$PROJECT_DIR$/src/objects/polyhedron/TriangularPyramid.java" />
         <option value="$PROJECT_DIR$/src/objects/polyhedron/Tetrahedron.java" />
         <option value="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Cube.java" />
-        <option value="$PROJECT_DIR$/src/objects/polyhedron/regular/RegularPolyhedron.java" />
         <option value="$PROJECT_DIR$/src/objects/polyhedron/Polyhedron.java" />
         <option value="$PROJECT_DIR$/src/objects/base/polygon/Pentagon.java" />
         <option value="$PROJECT_DIR$/src/objects/base/polygon/Rectangle.java" />
-        <option value="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Hexahedron.java" />
-        <option value="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Octahedron.java" />
         <option value="$PROJECT_DIR$/src/objects/RectangularPyramid.java" />
         <option value="$PROJECT_DIR$/src/objects/base/BaseObject.java" />
         <option value="$PROJECT_DIR$/src/objects/base/polygon/Polygon.java" />
@@ -375,13 +317,18 @@
         <option value="$PROJECT_DIR$/src/objects/base/simple/Vertex.java" />
         <option value="$PROJECT_DIR$/src/objects/base/simple/Edge.java" />
         <option value="$PROJECT_DIR$/src/objects/system/Camera.java" />
-        <option value="$PROJECT_DIR$/src/objects/base/simple/Text.java" />
         <option value="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Isocahedron.java" />
-        <option value="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Tetrahedron.java" />
-        <option value="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Dodecahedron.java" />
-        <option value="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Icosahedron.java" />
+        <option value="$PROJECT_DIR$/src/objects/polyhedron/regular/MetatronsCube.java" />
         <option value="$PROJECT_DIR$/src/camera/Camera.java" />
+        <option value="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Hexahedron.java" />
+        <option value="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Dodecahedron.java" />
+        <option value="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Octahedron.java" />
+        <option value="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Tetrahedron.java" />
         <option value="$PROJECT_DIR$/src/main/Environment.java" />
+        <option value="$PROJECT_DIR$/src/objects/polyhedron/regular/RegularPolyhedron.java" />
+        <option value="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Icosahedron.java" />
+        <option value="$PROJECT_DIR$/src/objects/base/simple/Text.java" />
+        <option value="$PROJECT_DIR$/src/objects/scene/PolyhedraExplosion.java" />
       </list>
     </option>
   </component>
@@ -411,7 +358,6 @@
     <panes>
       <pane id="Scope" />
       <pane id="AndroidView" />
-      <pane id="Scratches" />
       <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
@@ -460,12 +406,37 @@
               <item name="Graphy" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="objects" type="462c0819:PsiDirectoryNode" />
+              <item name="polyhedron" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Graphy" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Graphy" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="objects" type="462c0819:PsiDirectoryNode" />
+              <item name="polyhedron" type="462c0819:PsiDirectoryNode" />
+              <item name="regular" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Graphy" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Graphy" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="objects" type="462c0819:PsiDirectoryNode" />
+              <item name="polyhedron" type="462c0819:PsiDirectoryNode" />
+              <item name="regular" type="462c0819:PsiDirectoryNode" />
+              <item name="platonic" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Graphy" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Graphy" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="objects" type="462c0819:PsiDirectoryNode" />
               <item name="system" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -775,6 +746,14 @@
       <option name="presentableId" value="Default" />
       <updated>1485155869493</updated>
     </task>
+    <task id="LOCAL-00001" summary="Added other polyhedra objects">
+      <created>1511560314356</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1511560314356</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -788,12 +767,12 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26797387" sideWeight="0.5498512" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22916667" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19205298" sideWeight="0.44884092" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37665564" sideWeight="0.41666666" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19205298" sideWeight="0.44884092" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26490065" sideWeight="0.41666666" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33995038" sideWeight="0.52797765" order="9" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16506794" sideWeight="0.49107143" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16666667" sideWeight="0.49107143" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17559524" sideWeight="0.49107143" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -840,6 +819,32 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19122024" sideWeight="0.5089286" order="6" side_tool="true" content_ui="tabs" />
     </layout-to-restore>
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+              <option name="COLUMN_ORDER">
+                <list>
+                  <option value="0" />
+                  <option value="1" />
+                  <option value="2" />
+                  <option value="3" />
+                </list>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
@@ -849,7 +854,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="97" />
+      <option name="time" value="99" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
@@ -867,8 +872,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_45/src.zip!/java/awt/List.java" />
-    <entry file="file://$PROJECT_DIR$/src/JD2.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_45/src.zip!/java/awt/Graphics2D.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_45/src.zip!/java/awt/Color.java" />
     <entry file="file://$PROJECT_DIR$/Graphy.iml">
@@ -916,10 +919,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="252">
           <caret line="18" column="62" lean-forward="false" selection-start-line="18" selection-start-column="62" selection-end-line="18" selection-end-column="62" />
-          <folding>
-            <element signature="e#275#276#0" expanded="false" />
-            <element signature="e#347#348#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -946,7 +945,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-735">
           <caret line="272" column="25" lean-forward="true" selection-start-line="272" selection-start-column="25" selection-end-line="272" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -954,9 +952,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
           <caret line="13" column="31" lean-forward="false" selection-start-line="13" selection-start-column="31" selection-end-line="13" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1086,8 +1081,8 @@
         <state relative-caret-position="672">
           <caret line="43" column="32" lean-forward="false" selection-start-line="43" selection-start-column="32" selection-end-line="43" selection-end-column="32" />
           <folding>
-            <element signature="e#0#4473#0" expanded="true" />
-            <element signature="imports" expanded="true" />
+            <element signature="e#0#4473#0" expanded="false" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1097,8 +1092,8 @@
         <state relative-caret-position="546">
           <caret line="37" column="10" lean-forward="false" selection-start-line="37" selection-start-column="10" selection-end-line="37" selection-end-column="10" />
           <folding>
-            <element signature="e#0#4383#0" expanded="true" />
-            <element signature="imports" expanded="true" />
+            <element signature="e#0#4383#0" expanded="false" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1123,109 +1118,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/objects/base/simple/Text.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="672">
-          <caret line="43" column="32" lean-forward="false" selection-start-line="43" selection-start-column="32" selection-end-line="43" selection-end-column="32" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Octahedron.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1239">
-          <caret line="68" column="11" lean-forward="false" selection-start-line="68" selection-start-column="11" selection-end-line="68" selection-end-column="11" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1868#1869#0" expanded="true" />
-            <element signature="e#1917#1918#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Tetrahedron.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1176">
-          <caret line="76" column="11" lean-forward="false" selection-start-line="76" selection-start-column="11" selection-end-line="76" selection-end-column="11" />
-          <folding>
-            <element signature="e#0#3223#0" expanded="true" />
-            <element signature="e#2119#2120#0" expanded="true" />
-            <element signature="e#2168#2169#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Dodecahedron.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3612">
-          <caret line="187" column="10" lean-forward="false" selection-start-line="187" selection-start-column="10" selection-end-line="187" selection-end-column="10" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2021#2022#0" expanded="true" />
-            <element signature="e#2070#2071#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Icosahedron.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3864">
-          <caret line="198" column="10" lean-forward="false" selection-start-line="198" selection-start-column="10" selection-end-line="198" selection-end-column="10" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1960#1961#0" expanded="true" />
-            <element signature="e#2009#2010#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/camera/Camera.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1323">
-          <caret line="76" column="26" lean-forward="false" selection-start-line="76" selection-start-column="26" selection-end-line="76" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#21840#0" expanded="true" />
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/Environment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="69" column="19" lean-forward="false" selection-start-line="69" selection-start-column="19" selection-end-line="69" selection-end-column="19" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#24642#25707#0" expanded="true" />
-            <element signature="e#25706#25707#0" expanded="true" />
-            <element signature="e#25951#26105#0" expanded="true" />
-            <element signature="e#26104#26105#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Hexahedron.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2478">
-          <caret line="133" column="8" lean-forward="false" selection-start-line="133" selection-start-column="8" selection-end-line="133" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#3542#0" expanded="true" />
-            <element signature="e#1939#1940#0" expanded="true" />
-            <element signature="e#1988#1989#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/objects/base/simple/Vertex.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="483">
           <caret line="34" column="19" lean-forward="false" selection-start-line="34" selection-start-column="19" selection-end-line="34" selection-end-column="19" />
-          <folding>
-            <element signature="e#4004#4005#0" expanded="true" />
-            <element signature="e#4039#4040#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1234,22 +1130,7 @@
         <state relative-caret-position="483">
           <caret line="35" column="54" lean-forward="false" selection-start-line="35" selection-start-column="54" selection-end-line="35" selection-end-column="54" />
           <folding>
-            <element signature="e#0#4462#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/RegularPolyhedron.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="882">
-          <caret line="50" column="14" lean-forward="false" selection-start-line="50" selection-start-column="14" selection-end-line="50" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#2408#0" expanded="true" />
-            <element signature="imports" expanded="true" />
-            <element signature="e#1482#1483#0" expanded="true" />
-            <element signature="e#1513#1514#0" expanded="true" />
-            <element signature="e#1713#1714#0" expanded="true" />
-            <element signature="e#1742#1743#0" expanded="true" />
+            <element signature="e#0#4462#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1277,9 +1158,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
           <caret line="23" column="22" lean-forward="false" selection-start-line="23" selection-start-column="22" selection-end-line="23" selection-end-column="22" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1300,6 +1178,133 @@
           <caret line="83" column="8" lean-forward="false" selection-start-line="83" selection-start-column="8" selection-end-line="83" selection-end-column="8" />
           <folding>
             <element signature="e#0#3237#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/camera/Camera.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="76" column="27" lean-forward="false" selection-start-line="76" selection-start-column="27" selection-end-line="76" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#21841#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/MetatronsCube.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="22" column="7" lean-forward="false" selection-start-line="22" selection-start-column="7" selection-end-line="22" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Hexahedron.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1294">
+          <caret line="87" column="8" lean-forward="false" selection-start-line="87" selection-start-column="8" selection-end-line="87" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#3554#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Dodecahedron.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="49" column="78" lean-forward="false" selection-start-line="49" selection-start-column="78" selection-end-line="49" selection-end-column="78" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Octahedron.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="483">
+          <caret line="84" column="8" lean-forward="false" selection-start-line="84" selection-start-column="8" selection-end-line="84" selection-end-column="8" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1889#1890#0" expanded="true" />
+            <element signature="e#1938#1939#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Tetrahedron.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="546">
+          <caret line="92" column="52" lean-forward="true" selection-start-line="92" selection-start-column="52" selection-end-line="92" selection-end-column="52" />
+          <folding>
+            <element signature="e#0#3236#0" expanded="true" />
+            <element signature="e#2141#2142#0" expanded="true" />
+            <element signature="e#2190#2191#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Icosahedron.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="28" column="44" lean-forward="false" selection-start-line="28" selection-start-column="44" selection-end-line="28" selection-end-column="44" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/objects/base/simple/Text.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="21">
+          <caret line="41" column="11" lean-forward="false" selection-start-line="41" selection-start-column="11" selection-end-line="41" selection-end-column="11" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/objects/polyhedron/regular/RegularPolyhedron.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="445">
+          <caret line="121" column="43" lean-forward="true" selection-start-line="121" selection-start-column="43" selection-end-line="121" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#4728#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/Environment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="114" column="35" lean-forward="true" selection-start-line="114" selection-start-column="35" selection-end-line="114" selection-end-column="35" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/objects/scene/PolyhedraExplosion.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="305">
+          <caret line="77" column="29" lean-forward="true" selection-start-line="77" selection-start-column="29" selection-end-line="77" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#20072#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#3857#7295#0" expanded="true" />
+            <element signature="e#7294#7295#0" expanded="true" />
+            <element signature="e#7736#10463#0" expanded="true" />
+            <element signature="e#10462#10463#0" expanded="true" />
+            <element signature="e#10898#13601#0" expanded="true" />
+            <element signature="e#13600#13601#0" expanded="true" />
+            <element signature="e#14049#16800#0" expanded="true" />
+            <element signature="e#16799#16800#0" expanded="true" />
+            <element signature="e#17243#19970#0" expanded="true" />
+            <element signature="e#19969#19970#0" expanded="true" />
           </folding>
         </state>
       </provider>

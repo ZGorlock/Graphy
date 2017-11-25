@@ -52,7 +52,7 @@ public class Tetrahedron extends RegularPolyhedron
      */
     public Tetrahedron(AbstractObject parent, Vector center, Color color, double radius)
     {
-        super(parent, center, color, TETRAHEDRON_FACES, radius);
+        super(parent, center, color, TETRAHEDRON_FACES, TETRAHEDRON_VERTICES, radius);
     }
     
     /**
@@ -90,7 +90,7 @@ public class Tetrahedron extends RegularPolyhedron
     {
         components.clear();
     
-        Vector[] vertices = new Vector[TETRAHEDRON_VERTICES];
+        vertices = new Vector[TETRAHEDRON_VERTICES];
         int v = 0;
         for (int i : new int[] {-1, 1}) {
             for (int j : new int[]{-1, 1}) {

@@ -248,7 +248,7 @@ public abstract class AbstractObject implements ObjectInterface
         }
     
         for (int i = 0; i < vs.size(); i++) {
-            vs.set(i, RotationUtility.performRotation(vs.get(i), rotationMatrix, center));
+            vs.set(i, RotationUtility.performRotation(vs.get(i), rotationMatrix, getParentCenter()));
         }
     }
     
@@ -294,6 +294,20 @@ public abstract class AbstractObject implements ObjectInterface
     public Vector getCenter()
     {
         return center;
+    }
+    
+    /**
+     * Returns the center of the root of the Object.
+     *
+     * @return The center of the root of the Object.
+     */
+    public Vector getParentCenter()
+    {
+        if (parent == null) {
+            return getCenter();
+        } else {
+            return parent.getParentCenter();
+        }
     }
     
     /**
@@ -381,7 +395,6 @@ public abstract class AbstractObject implements ObjectInterface
         }
         
         this.parent = parent;
-        this.center = parent.center;
         this.displayMode = parent.displayMode;
         parent.registerComponent(this);
     }

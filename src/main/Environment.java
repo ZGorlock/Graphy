@@ -10,7 +10,10 @@ import camera.Camera;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import objects.base.*;
+import objects.base.Object;
+import objects.fractals.CubeFractal;
 import objects.polyhedron.regular.MetatronsCube;
+import objects.polyhedron.regular.platonic.Hexahedron;
 import objects.scene.PolyhedraExplosion;
 
 import javax.swing.*;
@@ -89,37 +92,49 @@ public class Environment
      */
     private static void createObjects()
     {
-        //Example 2
+//        //Polyhedra Explosion Scene
+//        MetatronsCube metatronsCube = new MetatronsCube(Environment.origin, 1, new Color(255, 0, 0, 64), new Color(255, 165, 0, 64), new Color(0, 255, 0, 64), new Color(0, 0, 255, 64), new Color(165, 0, 165, 64));
+//        metatronsCube.addFrame(Color.BLACK);
+//        objects.add(metatronsCube);
+//
+//        int speciesCount = 100;
+//        PolyhedraExplosion scene = new PolyhedraExplosion(Environment.origin, .1,
+//                speciesCount, null,
+//                speciesCount, null,
+//                speciesCount, null,
+//                speciesCount, null,
+//                speciesCount, null
+//        );
+//        objects.add(scene);
+        
+        
+        
+        
+        //Cube Fractal
+        CubeFractal cubeFractal = new CubeFractal(Environment.origin, Color.BLACK, 1, 2, 3);
+        cubeFractal.addFrame(Color.WHITE);
+        objects.add(cubeFractal);
+        
+        
+        
+        
+        //Animated Cube
 //        Hexahedron cube = new Hexahedron(Environment.origin, Color.BLUE, 2);
 //        cube.addRotationAnimation(Math.PI / 4, Math.PI / 4, Math.PI / 4);
 //
 //        for (int f = 1; f < 6; f++) {
 //            cube.setFaceColor(f, ColorUtility.getRandomColor());
 //        }
-////        Frame frame = cube.addFrame(Color.BLACK);
+//        Frame frame = cube.addFrame(Color.BLACK);
 //
-////        frame.addColorAnimation(5000, 2500);
-////        cube.addColorAnimation(5000, 0);
+//        frame.addColorAnimation(5000, 2500);
+//        cube.addColorAnimation(5000, 0);
 //        objects.add(cube);
-    
-        
-        
-        //Polyhedra Explosion Scene
-        
-        MetatronsCube metatronsCube = new MetatronsCube(Environment.origin, 1, new Color(255, 0, 0, 64), new Color(255, 165, 0, 64), new Color(0, 255, 0, 64), new Color(0, 0, 255, 64), new Color(165, 0, 165, 64));
-        metatronsCube.addFrame(Color.BLACK);
-        objects.add(metatronsCube);
-    
-        int speciesCount = 100;
-        PolyhedraExplosion scene = new PolyhedraExplosion(Environment.origin, .1,
-                speciesCount, null,
-                speciesCount, null,
-                speciesCount, null,
-                speciesCount, null,
-                speciesCount, null
-        );
-        objects.add(scene);
     }
+    
+    
+    
+    
     
     
     /**

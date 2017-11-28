@@ -71,6 +71,7 @@ public class RegularPolyhedron extends Polyhedron
     
         this.numFaces = numFaces;
         this.numVertices = numVertices;
+        this.center = center;
         this.radius = radius;
         setParent(parent);
         calculate();

@@ -297,16 +297,30 @@ public abstract class AbstractObject implements ObjectInterface
     }
     
     /**
-     * Returns the center of the root of the Object.
+     * Returns the center of the parent of the Object.
      *
-     * @return The center of the root of the Object.
+     * @return The center of the parent of the Object.
      */
     public Vector getParentCenter()
     {
         if (parent == null) {
             return getCenter();
         } else {
-            return parent.getParentCenter();
+            return parent.getCenter();
+        }
+    }
+    
+    /**
+     * Returns the center of the root of the Object.
+     *
+     * @return The center of the root of the Object.
+     */
+    public Vector getRootCenter()
+    {
+        if (parent == null) {
+            return getCenter();
+        } else {
+            return parent.getRootCenter();
         }
     }
     
@@ -395,6 +409,7 @@ public abstract class AbstractObject implements ObjectInterface
         }
         
         this.parent = parent;
+//        this.center = parent.center;
         this.displayMode = parent.displayMode;
         parent.registerComponent(this);
     }

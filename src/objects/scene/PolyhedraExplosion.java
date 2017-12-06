@@ -52,6 +52,11 @@ public class PolyhedraExplosion extends Object
      */
     private double radius;
     
+    /**
+     * The alpha of the colors of each polyhedron.
+     */
+    private int alpha;
+    
     
     //Constructors
     
@@ -70,8 +75,9 @@ public class PolyhedraExplosion extends Object
      * @param dodecahedronColor The color of the dodecahedrons, null for random colors.
      * @param icosahedronCount  The number of icosahedrons to include.
      * @param icosahedronColor  The color of the icosahedrons, null for random colors.
+     * @param alpha             The alpha of the colors of each polyhedron.
      */
-    public PolyhedraExplosion(Vector center, double radius, int tetrahedronCount, Color tetrahedronColor, int hexahedronCount, Color hexahedronColor, int octahedronCount, Color octahedronColor, int dodecahedronCount, Color dodecahedronColor, int icosahedronCount, Color icosahedronColor)
+    public PolyhedraExplosion(Vector center, double radius, int tetrahedronCount, Color tetrahedronColor, int hexahedronCount, Color hexahedronColor, int octahedronCount, Color octahedronColor, int dodecahedronCount, Color dodecahedronColor, int icosahedronCount, Color icosahedronColor, int alpha)
     {
         super(center, Color.BLACK);
         
@@ -102,7 +108,7 @@ public class PolyhedraExplosion extends Object
         AtomicBoolean cameraInMotion = new AtomicBoolean(false);
         final AtomicInteger[] loop = {new AtomicInteger(1)};
         for (int i = 0; i < hexahedronCount; i++) {
-            Color c = (hexahedronColor == null) ? ColorUtility.getRandomColor() : hexahedronColor;
+            Color c = (hexahedronColor == null) ? ColorUtility.getRandomColor(alpha) : hexahedronColor;
             Hexahedron hexahedron = new Hexahedron(this, center, c, radius);
             Frame frame = new Frame(hexahedron);
             Timer waiter = new Timer();
@@ -171,7 +177,7 @@ public class PolyhedraExplosion extends Object
         }
 
         for (int i = 0; i < tetrahedronCount; i++) {
-            Color c = (tetrahedronColor == null) ? ColorUtility.getRandomColor() : tetrahedronColor;
+            Color c = (tetrahedronColor == null) ? ColorUtility.getRandomColor(alpha) : tetrahedronColor;
             Tetrahedron tetrahedron = new Tetrahedron(this, center, c, radius);
             Frame frame = new Frame(tetrahedron);
             Timer waiter = new Timer();
@@ -231,7 +237,7 @@ public class PolyhedraExplosion extends Object
         }
 
         for (int i = 0; i < octahedronCount; i++) {
-            Color c = (octahedronColor == null) ? ColorUtility.getRandomColor() : octahedronColor;
+            Color c = (octahedronColor == null) ? ColorUtility.getRandomColor(alpha) : octahedronColor;
             Octahedron octahedron = new Octahedron(this, center, c, radius);
             Frame frame = new Frame(octahedron);
             Timer waiter = new Timer();
@@ -291,7 +297,7 @@ public class PolyhedraExplosion extends Object
         }
 
         for (int i = 0; i < dodecahedronCount; i++) {
-            Color c = (dodecahedronColor == null) ? ColorUtility.getRandomColor() : dodecahedronColor;
+            Color c = (dodecahedronColor == null) ? ColorUtility.getRandomColor(alpha) : dodecahedronColor;
             Dodecahedron dodecahedron = new Dodecahedron(this, center, c, radius);
             Frame frame = new Frame(dodecahedron);
             Timer waiter = new Timer();
@@ -351,7 +357,7 @@ public class PolyhedraExplosion extends Object
         }
 
         for (int i = 0; i < icosahedronCount; i++) {
-            Color c = (icosahedronColor == null) ? ColorUtility.getRandomColor() : icosahedronColor;
+            Color c = (icosahedronColor == null) ? ColorUtility.getRandomColor(alpha) : icosahedronColor;
             Icosahedron icosahedron = new Icosahedron(this, center, c, radius);
             Frame frame = new Frame(icosahedron);
             Timer waiter = new Timer();

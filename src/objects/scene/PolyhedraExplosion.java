@@ -92,6 +92,7 @@ public class PolyhedraExplosion extends Object
         this.dodecahedronColor = dodecahedronColor;
         this.icosahedronCount = icosahedronCount;
         this.icosahedronColor = icosahedronColor;
+        this.alpha = alpha;
         
         calculate();
     }

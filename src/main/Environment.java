@@ -16,6 +16,7 @@ import objects.fractals.CubeFractal;
 import objects.polyhedron.regular.MetatronsCube;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import objects.scene.PolyhedraExplosion;
+import oracle.jrockit.jfr.JFR;
 import utility.ColorUtility;
 
 import javax.swing.*;
@@ -26,6 +27,7 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
 import java.util.Timer;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The main Environment.
@@ -115,6 +117,7 @@ public class Environment
         
         //Cube Fractal
         CubeFractal cubeFractal = new CubeFractal(Environment.origin, Color.BLACK, .25, 2, 4);
+//        cubeFractal.addColorAnimation(10000, 0);
         cubeFractal.addFrame(Color.WHITE);
         objects.add(cubeFractal);
         
@@ -148,6 +151,7 @@ public class Environment
     public static void main(String[] args) {
         frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         Container pane = frame.getContentPane();
         pane.setLayout(new BorderLayout());
         frame.setFocusable(true);
@@ -173,39 +177,50 @@ public class Environment
         
         // panel to display render results
         JPanel renderPanel = new JPanel() {
-            public void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g;
-                g2.setColor(Color.WHITE);
-                g2.fillRect(0, 0, getWidth(), getHeight());
-                BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-                
-                
-                List<BaseObject> preparedBases = new ArrayList<>();
-                for (ObjectInterface object : objects) {
-                    preparedBases.addAll(object.prepare());
-                }
+            private AtomicBoolean rendering = new AtomicBoolean(false);
     
-                preparedBases.sort((o1, o2) -> {
-                    double d1 = o1.calculatePreparedDistance();
-                    double d2 = o2.calculatePreparedDistance();
-                    return Double.compare(d2, d1);
-                });
-                
-                for (BaseObject preparedBase : preparedBases) {
-                    preparedBase.render(g2);
+            public void paintComponent(Graphics g) {
+                if (rendering.compareAndSet(false, true)) {
+    
+                    List<BaseObject> preparedBases = new ArrayList<>();
+                    try {
+                        for (ObjectInterface object : objects) {
+                            preparedBases.addAll(object.prepare());
+                        }
+                    } catch (ConcurrentModificationException ignored) {
+                        rendering.set(false);
+                        return;
+                    }
+    
+                    preparedBases.sort((o1, o2) -> {
+                        double d1 = o1.calculatePreparedDistance();
+                        double d2 = o2.calculatePreparedDistance();
+                        return Double.compare(d2, d1);
+                    });
+    
+    
+                    Graphics2D g2 = (Graphics2D) g;
+                    g2.setColor(Color.WHITE);
+                    g2.fillRect(0, 0, getWidth(), getHeight());
+                    BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+    
+    
+                    for (BaseObject preparedBase : preparedBases) {
+                        preparedBase.render(g2);
+                    }
+    
+                    g2.drawImage(img, 0, 0, null);
+                    rendering.set(false);
                 }
-                
-                
-                g2.drawImage(img, 0, 0, null);
             }
         };
         pane.add(renderPanel, BorderLayout.CENTER);
-        
-        
+    
+    
         frame.setSize(screenX, screenY);
         frame.setVisible(true);
         
-        
+    
         Timer renderTimer = new Timer();
         renderTimer.scheduleAtFixedRate(new TimerTask()
         {

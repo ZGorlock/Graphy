@@ -9,15 +9,10 @@ package main;
 import camera.Camera;
 import math.matrix.Matrix3;
 import math.vector.Vector;
-import objects.base.*;
-import objects.base.Frame;
-import objects.base.Object;
-import objects.fractals.CubeFractal;
-import objects.polyhedron.regular.MetatronsCube;
+import objects.base.AbstractObject;
+import objects.base.BaseObject;
+import objects.base.ObjectInterface;
 import objects.polyhedron.regular.platonic.Hexahedron;
-import objects.scene.PolyhedraExplosion;
-import oracle.jrockit.jfr.JFR;
-import utility.ColorUtility;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,13 +35,13 @@ public class Environment
     /**
      * The number of frames to render per second.
      */
-    public static final int FPS = 60;
+    public static final int FPS = 20;
     
     /**
      * The dimensions of the Window.
      */
-    public static final int screenX = 2560;
-    public static final int screenY = 1440;
+    public static final int screenX = 1920;
+    public static final int screenY = 1080;
     public static final int screenZ = 720;
     
     
@@ -97,29 +92,37 @@ public class Environment
     private static void createObjects()
     {
         //Polyhedra Explosion Scene
-        MetatronsCube metatronsCube = new MetatronsCube(Environment.origin, 1, new Color(255, 0, 0, 64), new Color(255, 165, 0, 64), new Color(0, 255, 0, 64), new Color(0, 0, 255, 64), new Color(165, 0, 165, 64));
-        metatronsCube.addFrame(Color.BLACK);
-        objects.add(metatronsCube);
-
-        int speciesCount = 100;
-        PolyhedraExplosion scene = new PolyhedraExplosion(Environment.origin, .1,
-                speciesCount, null,
-                speciesCount, null,
-                speciesCount, null,
-                speciesCount, null,
-                speciesCount, null,
-                255
-        );
-        objects.add(scene);
+//        MetatronsCube metatronsCube = new MetatronsCube(Environment.origin, 1, new Color(255, 0, 0, 64), new Color(255, 165, 0, 64), new Color(0, 255, 0, 64), new Color(0, 0, 255, 64), new Color(165, 0, 165, 64));
+//        metatronsCube.addFrame(Color.BLACK);
+//        objects.add(metatronsCube);
+//
+//        int speciesCount = 20;
+//        PolyhedraExplosion scene = new PolyhedraExplosion(Environment.origin, .1,
+//                speciesCount, null,
+//                speciesCount, null,
+//                speciesCount, null,
+//                speciesCount, null,
+//                speciesCount, null,
+//                255
+//        );
+//        objects.add(scene);
         
         
         
         
         //Cube Fractal
-        CubeFractal cubeFractal = new CubeFractal(Environment.origin, Color.BLACK, .25, 2, 4);
+//        CubeFractal cubeFractal = new CubeFractal(Environment.origin, Color.BLACK, .25, 2, 4);
 //        cubeFractal.addColorAnimation(10000, 0);
-        cubeFractal.addFrame(Color.WHITE);
-        objects.add(cubeFractal);
+//        cubeFractal.addFrame(Color.WHITE);
+//        objects.add(cubeFractal);
+        
+        
+        //Cube Field
+        for (int i = 0; i < 200; i++) {
+            Hexahedron h = new Hexahedron(new Vector(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100), Color.BLUE, Math.random() * 2);
+            h.addFrame(Color.BLACK);
+            objects.add(h);
+        }
         
         
         
@@ -177,41 +180,39 @@ public class Environment
         
         // panel to display render results
         JPanel renderPanel = new JPanel() {
-            private AtomicBoolean rendering = new AtomicBoolean(false);
     
             public void paintComponent(Graphics g) {
-                if (rendering.compareAndSet(false, true)) {
-    
-                    List<BaseObject> preparedBases = new ArrayList<>();
-                    try {
-                        for (ObjectInterface object : objects) {
-                            preparedBases.addAll(object.prepare());
-                        }
-                    } catch (ConcurrentModificationException ignored) {
-                        rendering.set(false);
-                        return;
+                List<BaseObject> preparedBases = new ArrayList<>();
+                try {
+                    for (ObjectInterface object : objects) {
+                        preparedBases.addAll(object.prepare());
                     }
-    
+                } catch (ConcurrentModificationException ignored) {
+                    return;
+                }
+
+                try {
                     preparedBases.sort((o1, o2) -> {
                         double d1 = o1.calculatePreparedDistance();
                         double d2 = o2.calculatePreparedDistance();
                         return Double.compare(d2, d1);
                     });
-    
-    
-                    Graphics2D g2 = (Graphics2D) g;
-                    g2.setColor(Color.WHITE);
-                    g2.fillRect(0, 0, getWidth(), getHeight());
-                    BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-    
-    
-                    for (BaseObject preparedBase : preparedBases) {
-                        preparedBase.render(g2);
-                    }
-    
-                    g2.drawImage(img, 0, 0, null);
-                    rendering.set(false);
+                } catch (IllegalArgumentException e) {
+                    //TODO handle this
                 }
+
+
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setColor(Color.WHITE);
+                g2.fillRect(0, 0, getWidth(), getHeight());
+                BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+
+
+                for (BaseObject preparedBase : preparedBases) {
+                    preparedBase.render(g2);
+                }
+
+                g2.drawImage(img, 0, 0, null);
             }
         };
         pane.add(renderPanel, BorderLayout.CENTER);
@@ -224,10 +225,15 @@ public class Environment
         Timer renderTimer = new Timer();
         renderTimer.scheduleAtFixedRate(new TimerTask()
         {
+            private AtomicBoolean rendering = new AtomicBoolean(false);
+            
             @Override
             public void run()
             {
-                renderPanel.repaint();
+                if (rendering.compareAndSet(false, true)) {
+                    renderPanel.repaint();
+                    rendering.set(false);
+                }
             }
         }, 0, 1000 / FPS);
     }

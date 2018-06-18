@@ -183,10 +183,10 @@ public class Camera
     public void calculateCamera()
     {
         //determine if update is necessary
-        if (!Environment.origin.equals(origin)) {
-            origin = Environment.origin;
-            updateRequired = true;
-        }
+//        if (!Environment.origin.equals(origin)) {
+//            origin = Environment.origin;
+//            updateRequired = true;
+//        }
         if (!updateRequired) {
             return;
         }
@@ -393,6 +393,7 @@ public class Camera
                 double oldPhi = phi;
                 double oldTheta = theta;
                 double oldRho = rho;
+                Vector oldOrigin = origin.clone();
                 
                 for (Integer key : pressed) {
                     if (key == KeyEvent.VK_W) {
@@ -438,9 +439,22 @@ public class Camera
                     if (key == KeyEvent.VK_Z) {
                         rho += zoomSpeed;
                     }
+                    
+                    if (key == KeyEvent.VK_LEFT) {
+                        origin = origin.plus(new Vector(1, 0, 0));
+                    }
+                    if (key == KeyEvent.VK_RIGHT) {
+                        origin = origin.plus(new Vector(-1, 0, 0));
+                    }
+                    if (key == KeyEvent.VK_UP) {
+                        origin = origin.plus(new Vector(0, -1, 0));
+                    }
+                    if (key == KeyEvent.VK_DOWN) {
+                        origin = origin.plus(new Vector(0, 1, 0));
+                    }
                 }
                 
-                if (phi != oldPhi || theta != oldTheta || rho != oldRho) {
+                if (phi != oldPhi || theta != oldTheta || rho != oldRho || !origin.equals(oldOrigin)) {
                     updateRequired = true;
                 }
             }

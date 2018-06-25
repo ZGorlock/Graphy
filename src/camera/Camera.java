@@ -7,13 +7,13 @@
 package camera;
 
 import main.Environment;
+import math.Delta;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import math.vector.Vector3;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 
@@ -93,7 +93,7 @@ public class Camera
      */
     private double phiSpeed = .05;
     private double thetaSpeed = .05;
-    private double zoomSpeed = 1;
+    private double rhoSpeed = 1;
     
     /**
      * The dimensions of the viewport.
@@ -161,6 +161,7 @@ public class Camera
         Environment.addObject(cameraObject);
         
         setupKeyListener();
+        setupMouseListener();
         setupStaticKeyListener();
         
         timer = new Timer();
@@ -431,13 +432,13 @@ public class Camera
                         }
                     }
                     if (key == KeyEvent.VK_Q) {
-                        rho -= zoomSpeed;
-                        if (rho < zoomSpeed) {
-                            rho = zoomSpeed;
+                        rho -= rhoSpeed;
+                        if (rho < rhoSpeed) {
+                            rho = rhoSpeed;
                         }
                     }
                     if (key == KeyEvent.VK_Z) {
-                        rho += zoomSpeed;
+                        rho += rhoSpeed;
                     }
                     
                     if (key == KeyEvent.VK_LEFT) {
@@ -465,6 +466,86 @@ public class Camera
                 pressed.remove(e.getKeyCode());
             }
             
+        });
+    }
+    
+    /**
+     * Adds a MouseListener for the Camera controls.
+     */
+    private void setupMouseListener()
+    {
+        final Delta delta = new Delta();
+        
+        Environment.frame.addMouseListener(new MouseListener()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+            
+            }
+        
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                delta.x = e.getX();
+                delta.y = e.getY();
+            }
+        
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+            }
+        
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+            
+            }
+        
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+            
+            }
+        });
+        
+        Environment.frame.addMouseMotionListener(new MouseMotionListener()
+        {
+            @Override
+            public void mouseDragged(MouseEvent e)
+            {
+                double deltaX = e.getX() - delta.x;
+                double deltaY = e.getY() - delta.y;
+                delta.x = e.getX();
+                delta.y = e.getY();
+            
+                double oldTheta = theta;
+                double oldPhi = phi;
+            
+                theta += thetaSpeed / 10 * deltaX;
+                phi += phiSpeed / 10 * deltaY;
+                bindLocation();
+            
+                if (phi != oldPhi || theta != oldTheta) {
+                    updateRequired = true;
+                }
+            }
+        
+            @Override
+            public void mouseMoved(MouseEvent e)
+            {
+            }
+        });
+    
+        Environment.frame.addMouseWheelListener(e -> {
+            double oldRho = rho;
+        
+            rho += rhoSpeed * e.getWheelRotation();
+            bindLocation();
+        
+            if (rho != oldRho) {
+                updateRequired = true;
+            }
         });
     }
     

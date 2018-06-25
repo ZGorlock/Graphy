@@ -306,7 +306,7 @@ public abstract class AbstractObject implements ObjectInterface
         if (parent == null) {
             return getCenter();
         } else {
-            return parent.getParentCenter();
+            return parent.getCenter(); //TODO
         }
     }
     

@@ -560,9 +560,9 @@ public class Camera
      * @param phiMovement   The phi angle to move over the period.
      * @param thetaMovement The phi angle to move over the period.
      * @param rhoMovement   The phi angle to move over the period.
-     * @param period        The period over which to perform the movement.
+     * @param period        The period over which to perform the movement in milliseconds.
      */
-    public void addFluidTransition(double phiMovement, double thetaMovement, double rhoMovement, double period)
+    public void addFluidTransition(double phiMovement, double thetaMovement, double rhoMovement, long period)
     {
         Timer transitionTimer = new Timer();
         transitionTimer.scheduleAtFixedRate(new TimerTask()
@@ -571,7 +571,7 @@ public class Camera
             private double originalTheta = theta;
             private double originalRho = rho;
             
-            private double timeCount = 0;
+            private long timeCount = 0;
             
             private long lastTime;
     
@@ -593,7 +593,7 @@ public class Camera
                     transitionTimer.purge();
                     transitionTimer.cancel();
                 } else {
-                    double scale = timeElapsed / period;
+                    double scale = (double) timeElapsed / period;
                     setLocation(phi + phiMovement * scale, theta + thetaMovement * scale, rho + rhoMovement * scale);
                 }
                 

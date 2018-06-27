@@ -144,7 +144,7 @@ public abstract class AbstractObject implements ObjectInterface
         movementAnimations.add(new double[]{xSpeed, ySpeed, zSpeed});
         animationTimer.scheduleAtFixedRate(new TimerTask()
         {
-            private double lastTime = 0;
+            private long lastTime = 0;
             
             @Override
             public void run()
@@ -153,12 +153,62 @@ public abstract class AbstractObject implements ObjectInterface
                     lastTime = System.currentTimeMillis();
                     return;
                 }
-    
-                double timeElapsed = System.currentTimeMillis() - lastTime;
-                lastTime = System.currentTimeMillis();
                 
-                double scale = timeElapsed / 1000;
+                long currentTime = System.currentTimeMillis();
+                long timeElapsed = currentTime - lastTime;
+                lastTime = currentTime;
+                
+                double scale = (double) timeElapsed / 1000;
                 move(new Vector(xSpeed * scale, ySpeed * scale, zSpeed * scale));
+            }
+        }, 0, 1000 / Environment.FPS);
+    }
+    
+    /**
+     * Adds a movement transition to an Object over a period of time.
+     *
+     * @param xMovement The total x movement in radians.
+     * @param yMovement The total y movement in radians.
+     * @param zMovement The total z movement in radians.
+     * @param period    The period over which to perform the transition in milliseconds.
+     */
+    @Override
+    public void addMovementTransition(double xMovement, double yMovement, double zMovement, long period)
+    {
+        Timer transitionTimer = new Timer();
+        transitionTimer.scheduleAtFixedRate(new TimerTask()
+        {
+            private double originalX = getCenter().getX();
+            private double originalY = getCenter().getY();
+            private double originalZ = getCenter().getZ();
+            
+            private long timeCount = 0;
+            
+            private long lastTime = 0;
+            
+            @Override
+            public void run()
+            {
+                if (lastTime == 0) {
+                    lastTime = System.currentTimeMillis();
+                    return;
+                }
+                
+                long currentTime = System.currentTimeMillis();
+                long timeElapsed = currentTime - lastTime;
+                lastTime = currentTime;
+                timeCount += timeElapsed;
+                
+                if (timeCount >= period) {
+                    setCenter(new Vector(originalX + xMovement, originalY + yMovement, originalZ + zMovement));
+                    transitionTimer.purge();
+                    transitionTimer.cancel();
+                } else {
+                    double scale = (double) timeElapsed / period;
+                    move(new Vector(xMovement * scale, yMovement * scale, zMovement * scale));
+                }
+                
+                double scale = (double) timeElapsed / 1000;
             }
         }, 0, 1000 / Environment.FPS);
     }
@@ -178,7 +228,7 @@ public abstract class AbstractObject implements ObjectInterface
         rotationAnimations.add(new double[]{yawSpeed, pitchSpeed, rollSpeed});
         animationTimer.scheduleAtFixedRate(new TimerTask()
         {
-            private double lastTime = 0;
+            private long lastTime = 0;
         
             @Override
             public void run()
@@ -188,11 +238,61 @@ public abstract class AbstractObject implements ObjectInterface
                     return;
                 }
             
-                double timeElapsed = System.currentTimeMillis() - lastTime;
-                lastTime = System.currentTimeMillis();
+                long currentTime = System.currentTimeMillis();
+                long timeElapsed = currentTime - lastTime;
+                lastTime = currentTime;
             
-                double scale = timeElapsed / 1000;
+                double scale = (double) timeElapsed / 1000;
                 setRotation(getRotation().plus(new Vector(yawSpeed * scale, pitchSpeed * scale, rollSpeed * scale)));
+            }
+        }, 0, 1000 / Environment.FPS);
+    }
+    
+    /**
+     * Adds a rotation transition to an Object over a period of time.
+     *
+     * @param yawRotation   The total yaw rotation in radians.
+     * @param pitchRotation The total pitch rotation in radians.
+     * @param rollRotation  The total roll rotation in radians.
+     * @param period        The period over which to perform the transition in milliseconds.
+     */
+    @Override
+    public void addRotationTransition(double yawRotation, double pitchRotation, double rollRotation, long period)
+    {
+        Timer transitionTimer = new Timer();
+        transitionTimer.scheduleAtFixedRate(new TimerTask()
+        {
+            private double originalYaw = getRotationYaw();
+            private double originalPitch = getRotationPitch();
+            private double originalRoll = getRotationRoll();
+            
+            private long timeCount = 0;
+            
+            private long lastTime = 0;
+        
+            @Override
+            public void run()
+            {
+                if (lastTime == 0) {
+                    lastTime = System.currentTimeMillis();
+                    return;
+                }
+            
+                long currentTime = System.currentTimeMillis();
+                long timeElapsed = currentTime - lastTime;
+                lastTime = currentTime;
+                timeCount += timeElapsed;
+                
+                if (timeCount >= period) {
+                    setRotation(new Vector(originalYaw + yawRotation, originalPitch + pitchRotation, originalRoll + rollRotation));
+                    transitionTimer.purge();
+                    transitionTimer.cancel();
+                } else {
+                    double scale = (double) timeElapsed / period;
+                    setRotation(getRotation().plus(new Vector(yawRotation * scale, pitchRotation * scale, rollRotation * scale)));
+                }
+            
+                double scale = (double) timeElapsed / 1000;
             }
         }, 0, 1000 / Environment.FPS);
     }
@@ -200,17 +300,17 @@ public abstract class AbstractObject implements ObjectInterface
     /**
      * Adds a constant color animation to an Object.
      *
-     * @param period The period of the color animation.
-     * @param offset The offset of the color animation.
+     * @param period The period of the color animation in milliseconds.
+     * @param offset The offset of the color animation in milliseconds.
      */
     @Override
-    public void addColorAnimation(double period, double offset)
+    public void addColorAnimation(long period, long offset)
     {
         Timer animationTimer = new Timer();
         animationTimers.add(animationTimer);
         animationTimer.scheduleAtFixedRate(new TimerTask()
         {
-            private double firstTime = 0;
+            private long firstTime = 0;
             
             @Override
             public void run()
@@ -219,10 +319,10 @@ public abstract class AbstractObject implements ObjectInterface
                     firstTime = System.currentTimeMillis() - offset;
                 }
 
-                double timeElapsed = System.currentTimeMillis() - firstTime;
+                long timeElapsed = System.currentTimeMillis() - firstTime;
                 timeElapsed %= period;
 
-                float hue = (float) (timeElapsed / period);
+                float hue = (float) timeElapsed / period;
                 setColor(ColorUtility.getColorByHue(hue));
             }
         }, 0, 1000 / Environment.FPS);

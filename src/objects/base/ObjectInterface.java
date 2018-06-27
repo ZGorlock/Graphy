@@ -51,6 +51,16 @@ public interface ObjectInterface
     void addMovementAnimation(double xSpeed, double ySpeed, double zSpeed);
     
     /**
+     * Adds a movement transition to an Object over a period of time.
+     *
+     * @param xMovement The total x movement in radians.
+     * @param yMovement The total y movement in radians.
+     * @param zMovement The total z movement in radians.
+     * @param period    The period over which to perform the transition in milliseconds.
+     */
+    void addMovementTransition(double xMovement, double yMovement, double zMovement, long period);
+    
+    /**
      * Adds a constant rotation animation to an Object.
      *
      * @param yawSpeed   The speed of the yaw rotation in radians per second.
@@ -60,12 +70,22 @@ public interface ObjectInterface
     void addRotationAnimation(double yawSpeed, double pitchSpeed, double rollSpeed);
     
     /**
+     * Adds a rotation transition to an Object over a period of time.
+     *
+     * @param yawRotation   The total yaw rotation in radians.
+     * @param pitchRotation The total pitch rotation in radians.
+     * @param rollRotation  The total roll rotation in radians.
+     * @param period        The period over which to perform the transition in milliseconds.
+     */
+    void addRotationTransition(double yawRotation, double pitchRotation, double rollRotation, long period);
+    
+    /**
      * Adds a constant color animation to an Object.
      *
-     * @param period The period of the color animation.
-     * @param offset The offset of the color animation.
+     * @param period The period of the color animation in milliseconds.
+     * @param offset The offset of the color animation in milliseconds.
      */
-    void addColorAnimation(double period, double offset);
+    void addColorAnimation(long period, long offset);
     
     /**
      * Registers a component with the Object.

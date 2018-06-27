@@ -1,10 +1,10 @@
 /*
  * File:    PolyhedraExplosion.java
- * Package: objects.scene
+ * Package: main.scenes
  * Author:  Zachary Gill
  */
 
-package objects.scene;
+package main.scenes;
 
 import camera.Camera;
 import main.Environment;
@@ -12,10 +12,14 @@ import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.Frame;
 import objects.base.Object;
+import objects.base.Scene;
+import objects.polyhedron.regular.MetatronsCube;
 import objects.polyhedron.regular.platonic.*;
 import utility.ColorUtility;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -24,7 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Defines a Polyhedra explosion scene.
  */
-public class PolyhedraExplosion extends Object
+public class PolyhedraExplosion extends Scene
 {
     
     //Fields
@@ -58,6 +62,74 @@ public class PolyhedraExplosion extends Object
     private int alpha;
     
     
+    //Main Methods
+    
+    /**
+     * The main method for the Rubik's Cube scene.
+     *
+     * @param args The arguments to the main method.
+     */
+    public static void main(String[] args)
+    {
+        String[] environmentArgs = new String[]{};
+        Environment.main(environmentArgs);
+        Environment.setupMainKeyListener();
+        
+        List<Object> objects = createObjects();
+        for (Object object : objects) {
+            Environment.addObject(object);
+        }
+        
+        setupCameras();
+        
+        setupControls();
+    }
+    
+    /**
+     * Creates objects for the scene.
+     *
+     * @return A list of Objects that were created for the scene.
+     */
+    public static List<Object> createObjects()
+    {
+        List<Object> objects = new ArrayList<>();
+        
+        MetatronsCube metatronsCube = new MetatronsCube(Environment.origin, 1, new Color(255, 0, 0, 64), new Color(255, 165, 0, 64), new Color(0, 255, 0, 64), new Color(0, 0, 255, 64), new Color(165, 0, 165, 64));
+        metatronsCube.addFrame(Color.BLACK);
+        objects.add(metatronsCube);
+        
+        int speciesCount = 30;
+        PolyhedraExplosion scene = new PolyhedraExplosion(Environment.origin, .1,
+                speciesCount, null,
+                speciesCount, null,
+                speciesCount, null,
+                speciesCount, null,
+                speciesCount, null,
+                255
+        );
+        objects.add(scene);
+        
+        return objects;
+    }
+    
+    /**
+     * Sets up cameras for the scene.
+     */
+    public static void setupCameras()
+    {
+        Camera camera = new Camera(true, false);
+        camera.setLocation(Math.PI / 2, Math.PI, 10);
+        Camera.setActiveCamera(0);
+    }
+    
+    /**
+     * Sets up controls for the scene.
+     */
+    public static void setupControls()
+    {
+    }
+    
+    
     //Constructors
     
     /**
@@ -79,7 +151,7 @@ public class PolyhedraExplosion extends Object
      */
     public PolyhedraExplosion(Vector center, double radius, int tetrahedronCount, Color tetrahedronColor, int hexahedronCount, Color hexahedronColor, int octahedronCount, Color octahedronColor, int dodecahedronCount, Color dodecahedronColor, int icosahedronCount, Color icosahedronColor, int alpha)
     {
-        super(center, Color.BLACK);
+        super(center);
         
         this.radius = radius;
         this.tetrahedronCount = tetrahedronCount;

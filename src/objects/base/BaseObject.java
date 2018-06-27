@@ -8,14 +8,11 @@ package objects.base;
 
 import camera.Camera;
 import main.Environment;
-import math.matrix.Matrix3;
 import math.vector.Vector;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Timer;
 
 /**
  * Defines the base properties of an Object.
@@ -152,17 +149,18 @@ public abstract class BaseObject extends AbstractObject
     public double calculatePreparedDistance()
     {
         if (prepared.isEmpty()) {
-            return Double.MAX_VALUE;
+            return 0;
         }
-
-        Vector average;
-        if (prepared.size() > 1) {
-            average = prepared.get(0).average(prepared.subList(1, prepared.size() - 1));
-        } else {
-            average = prepared.get(0);
+        
+        Vector cam = Camera.getActiveCameraView().getCameraPosition();
+        double max = 0;
+        for (Vector prepare : prepared) {
+            double dist = prepare.distance(cam);
+            if (dist > max) {
+                max = dist;
+            }
         }
-
-        return average.distance(Camera.getActiveCameraView().getCameraPosition());
+        return max;
     }
     
     /**

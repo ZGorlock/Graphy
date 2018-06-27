@@ -6,13 +6,11 @@
 
 package main;
 
-import camera.Camera;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
 import objects.base.ObjectInterface;
-import objects.polyhedron.regular.platonic.Hexahedron;
 
 import javax.swing.*;
 import java.awt.*;
@@ -83,68 +81,14 @@ public class Environment
      */
     public static Vector origin = new Vector(0, 0, 0);
     
-    
-    // Static Methods
-    
     /**
-     * Creates objects in the Environment.
+     * Whether the main KeyListener has been set up or not.
      */
-    private static void createObjects()
-    {
-        //Polyhedra Explosion Scene
-//        MetatronsCube metatronsCube = new MetatronsCube(Environment.origin, 1, new Color(255, 0, 0, 64), new Color(255, 165, 0, 64), new Color(0, 255, 0, 64), new Color(0, 0, 255, 64), new Color(165, 0, 165, 64));
-//        metatronsCube.addFrame(Color.BLACK);
-//        objects.add(metatronsCube);
-//
-//        int speciesCount = 20;
-//        PolyhedraExplosion scene = new PolyhedraExplosion(Environment.origin, .1,
-//                speciesCount, null,
-//                speciesCount, null,
-//                speciesCount, null,
-//                speciesCount, null,
-//                speciesCount, null,
-//                255
-//        );
-//        objects.add(scene);
-        
-        
-        
-        
-        //Cube Fractal
-//        CubeFractal cubeFractal = new CubeFractal(Environment.origin, Color.BLACK, .25, 2, 4);
-//        cubeFractal.addColorAnimation(10000, 0);
-//        cubeFractal.addFrame(Color.WHITE);
-//        objects.add(cubeFractal);
-        
-        
-        //Cube Field
-        for (int i = 0; i < 200; i++) {
-            Hexahedron h = new Hexahedron(new Vector(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100), Color.BLUE, Math.random() * 2);
-            h.addFrame(Color.BLACK);
-            objects.add(h);
-        }
-        
-        
-        
-        
-        //Animated Cube
-//        Hexahedron cube = new Hexahedron(Environment.origin, Color.BLUE, 2);
-//        cube.addRotationAnimation(Math.PI / 4, Math.PI / 4, Math.PI / 4);
-//
-//        for (int f = 1; f < 6; f++) {
-//            cube.setFaceColor(f, ColorUtility.getRandomColor());
-//        }
-//        Frame frame = cube.addFrame(Color.BLACK);
-//
-//        frame.addColorAnimation(5000, 2500);
-//        cube.addColorAnimation(5000, 0);
-//        objects.add(cube);
-    }
+    private static AtomicBoolean hasSetupMainKeyListener = new AtomicBoolean(false);
     
     
     
-    
-    
+    //Main Method
     
     /**
      * The main method of of the program.
@@ -159,23 +103,6 @@ public class Environment
         pane.setLayout(new BorderLayout());
         frame.setFocusable(true);
         frame.setFocusTraversalKeysEnabled(false);
-        
-        
-        //add KeyListener for main controls
-        setupMainKeyListener();
-    
-    
-        //add cameras
-        Camera camera = new Camera();
-        camera.setLocation(Math.PI / 2, Math.PI, 10);
-        Camera camera2 = new Camera();
-        camera2.setLocation(Math.PI * 3 / 4, Math.PI * 3 / 4, 20);
-        Camera.setActiveCamera(0);
-        
-        
-        //add objects
-        objects.clear();
-        createObjects();
         
         
         // panel to display render results
@@ -238,11 +165,53 @@ public class Environment
         }, 0, 1000 / FPS);
     }
     
+    
+    //Static Methods
+    
+    /**
+     * Creates objects in the Environment.
+     */
+    private static void createObjects()
+    {
+        
+        //Cube Fractal
+//        CubeFractal cubeFractal = new CubeFractal(Environment.origin, Color.BLACK, .25, 2, 5);
+//        cubeFractal.addColorAnimation(10000, 0);
+//        cubeFractal.addFrame(Color.WHITE);
+//        objects.add(cubeFractal);
+        
+        
+        //Cube Field
+//        for (int i = 0; i < 200; i++) {
+//            Hexahedron h = new Hexahedron(new Vector(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100), Color.BLUE, Math.random() * 3);
+//            h.addFrame(Color.BLACK);
+//            objects.add(h);
+//        }
+        
+        
+        //Animated Cube
+//        Hexahedron cube = new Hexahedron(Environment.origin, Color.BLUE, 2);
+//        cube.addRotationAnimation(Math.PI / 4, Math.PI / 4, Math.PI / 4);
+//
+////        for (int f = 1; f < 6; f++) {
+////            cube.setFaceColor(f, ColorUtility.getRandomColor());
+////        }
+//        Frame frame = cube.addFrame(Color.BLACK);
+//
+//        frame.addColorAnimation(5000, 2500);
+//        cube.addColorAnimation(5000, 0);
+//        objects.add(cube);
+    }
+    
     /**
      * Adds the KeyListener for the Camera main environment controls.
      */
-    private static void setupMainKeyListener()
+    public static void setupMainKeyListener()
     {
+        if (!hasSetupMainKeyListener.compareAndSet(false, true)) {
+            return;
+        }
+        
         Environment.frame.addKeyListener(new KeyListener()
         {
             

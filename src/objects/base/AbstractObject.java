@@ -303,10 +303,10 @@ public abstract class AbstractObject implements ObjectInterface
      */
     public Vector getParentCenter()
     {
-        if (parent == null) {
+        if (parent == null || parent instanceof Scene) {
             return getCenter();
         } else {
-            return parent.getCenter(); //TODO
+            return parent.getParentCenter();
         }
     }
     

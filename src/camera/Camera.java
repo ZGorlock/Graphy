@@ -16,6 +16,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Defines the functionality of a Camera.
@@ -56,7 +57,7 @@ public class Camera
     /**
      * Whether the static KeyListener has been set up or not.
      */
-    private static boolean hasSetupStaticKeyListener = false;
+    private static AtomicBoolean hasSetupStaticKeyListener = new AtomicBoolean(false);
     
     
     //Fields
@@ -145,7 +146,7 @@ public class Camera
     /**
      * The constructor for a Camera.
      */
-    public Camera()
+    public Camera(boolean cameraControls, boolean cameraMovement)
     {
         cameraId = nextCameraId;
         nextCameraId++;
@@ -160,9 +161,13 @@ public class Camera
         }
         Environment.addObject(cameraObject);
         
-        setupKeyListener();
-        setupMouseListener();
-        setupStaticKeyListener();
+        if (cameraMovement) {
+            setupKeyListener();
+            setupMouseListener();
+        }
+        if (cameraControls) {
+            setupStaticKeyListener();
+        }
         
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask()
@@ -794,6 +799,10 @@ public class Camera
      */
     private static void setupStaticKeyListener()
     {
+        if (!hasSetupStaticKeyListener.compareAndSet(false, true)) {
+            return;
+        }
+        
         Environment.frame.addKeyListener(new KeyListener()
         {
             

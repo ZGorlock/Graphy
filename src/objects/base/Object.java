@@ -318,6 +318,20 @@ public class Object extends AbstractObject
     }
     
     /**
+     * Sets the angles that define the rotation of the Object.
+     *
+     * @param rotation The angles that define the rotation of the Object.
+     */
+    public void setRotation(Vector rotation)
+    {
+        super.setRotation(rotation);
+        
+        for (ObjectInterface component : components) {
+            component.setRotation(rotation);
+        }
+    }
+    
+    /**
      * Sets the visibility of the Object.
      *
      * @param visible The new visibility of the Object.

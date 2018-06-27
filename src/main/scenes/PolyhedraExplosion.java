@@ -79,7 +79,7 @@ public class PolyhedraExplosion extends Scene
         for (Object object : objects) {
             Environment.addObject(object);
         }
-        
+    
         setupCameras();
         
         setupControls();
@@ -182,7 +182,8 @@ public class PolyhedraExplosion extends Scene
         final AtomicInteger[] loop = {new AtomicInteger(1)};
         for (int i = 0; i < hexahedronCount; i++) {
             Color c = (hexahedronColor == null) ? ColorUtility.getRandomColor(alpha) : hexahedronColor;
-            Hexahedron hexahedron = new Hexahedron(this, center, c, radius);
+            Hexahedron hexahedron = new Hexahedron(center, c, radius);
+            registerComponent(hexahedron);
             Frame frame = new Frame(hexahedron);
             Timer waiter = new Timer();
             waiter.schedule(new TimerTask()
@@ -251,7 +252,8 @@ public class PolyhedraExplosion extends Scene
 
         for (int i = 0; i < tetrahedronCount; i++) {
             Color c = (tetrahedronColor == null) ? ColorUtility.getRandomColor(alpha) : tetrahedronColor;
-            Tetrahedron tetrahedron = new Tetrahedron(this, center, c, radius);
+            Tetrahedron tetrahedron = new Tetrahedron(center, c, radius);
+            registerComponent(tetrahedron);
             Frame frame = new Frame(tetrahedron);
             Timer waiter = new Timer();
             waiter.schedule(new TimerTask()
@@ -311,7 +313,8 @@ public class PolyhedraExplosion extends Scene
 
         for (int i = 0; i < octahedronCount; i++) {
             Color c = (octahedronColor == null) ? ColorUtility.getRandomColor(alpha) : octahedronColor;
-            Octahedron octahedron = new Octahedron(this, center, c, radius);
+            Octahedron octahedron = new Octahedron(center, c, radius);
+            registerComponent(octahedron);
             Frame frame = new Frame(octahedron);
             Timer waiter = new Timer();
             waiter.schedule(new TimerTask()
@@ -371,7 +374,8 @@ public class PolyhedraExplosion extends Scene
 
         for (int i = 0; i < dodecahedronCount; i++) {
             Color c = (dodecahedronColor == null) ? ColorUtility.getRandomColor(alpha) : dodecahedronColor;
-            Dodecahedron dodecahedron = new Dodecahedron(this, center, c, radius);
+            Dodecahedron dodecahedron = new Dodecahedron(center, c, radius);
+            registerComponent(dodecahedron);
             Frame frame = new Frame(dodecahedron);
             Timer waiter = new Timer();
             waiter.schedule(new TimerTask()
@@ -431,7 +435,8 @@ public class PolyhedraExplosion extends Scene
 
         for (int i = 0; i < icosahedronCount; i++) {
             Color c = (icosahedronColor == null) ? ColorUtility.getRandomColor(alpha) : icosahedronColor;
-            Icosahedron icosahedron = new Icosahedron(this, center, c, radius);
+            Icosahedron icosahedron = new Icosahedron(center, c, radius);
+            registerComponent(icosahedron);
             Frame frame = new Frame(icosahedron);
             Timer waiter = new Timer();
             waiter.schedule(new TimerTask()

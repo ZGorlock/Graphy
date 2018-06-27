@@ -119,6 +119,13 @@ public interface ObjectInterface
     void setColor(Color color);
     
     /**
+     * Sets the angles that define the rotation of the Object.
+     *
+     * @param rotation The angles that define the rotation of the Object.
+     */
+    void setRotation(Vector rotation);
+    
+    /**
      * Sets the angles that define the rotation of the Object from the parent of that Object.
      *
      * @param rotation The angles that define the rotation of the Object.

@@ -151,11 +151,16 @@ public abstract class BaseObject extends AbstractObject
         if (prepared.isEmpty()) {
             return 0;
         }
+    
+        Camera cam = Camera.getActiveCameraView();
+        if (cam == null) {
+            return 0;
+        }
         
-        Vector cam = Camera.getActiveCameraView().getCameraPosition();
+        Vector pos = cam.getCameraPosition();
         double max = 0;
         for (Vector prepare : prepared) {
-            double dist = prepare.distance(cam);
+            double dist = prepare.distance(pos);
             if (dist > max) {
                 max = dist;
             }

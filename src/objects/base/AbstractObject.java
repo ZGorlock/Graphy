@@ -403,7 +403,7 @@ public abstract class AbstractObject implements ObjectInterface
      */
     public Vector getParentCenter()
     {
-        if (parent == null || parent instanceof Scene) {
+        if (parent == null) {
             return getCenter();
         } else {
             return parent.getParentCenter();
@@ -509,7 +509,6 @@ public abstract class AbstractObject implements ObjectInterface
         }
         
         this.parent = parent;
-//        this.center = parent.center;
         this.displayMode = parent.displayMode;
         parent.registerComponent(this);
     }
@@ -554,6 +553,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @param rotation The angles that define the rotation of the Object.
      */
+    @Override
     public void setRotation(Vector rotation)
     {
         setRotationWithoutUpdate(rotation);

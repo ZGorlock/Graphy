@@ -6,10 +6,7 @@
 
 package objects.base;
 
-import camera.Camera;
 import math.vector.Vector;
-import objects.base.*;
-import objects.base.Object;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -85,7 +82,7 @@ public class Frame extends Object
      */
     public void render(Graphics2D g2, List<Vector> prepared)
     {
-        if (!visible) {
+        if (!visible || base.displayMode == DisplayMode.VERTEX) {
             return;
         }
         

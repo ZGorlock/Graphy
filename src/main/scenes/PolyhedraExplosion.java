@@ -98,7 +98,7 @@ public class PolyhedraExplosion extends Scene
         metatronsCube.addFrame(Color.BLACK);
         objects.add(metatronsCube);
         
-        int speciesCount = 30;
+        int speciesCount = 25;
         PolyhedraExplosion scene = new PolyhedraExplosion(Environment.origin, .1,
                 speciesCount, null,
                 speciesCount, null,
@@ -117,7 +117,7 @@ public class PolyhedraExplosion extends Scene
      */
     public static void setupCameras()
     {
-        Camera camera = new Camera(true, false);
+        Camera camera = new Camera(true, true);
         camera.setLocation(Math.PI / 2, Math.PI, 10);
         Camera.setActiveCamera(0);
     }

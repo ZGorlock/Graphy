@@ -42,6 +42,28 @@ public interface ObjectInterface
     void move(Vector offset);
     
     /**
+     * Rotates the Object in a certain direction.
+     *
+     * @param offset The relative offsets to rotate the Object.
+     */
+    void rotate(Vector offset);
+    
+    /**
+     * Rotates the Object in a certain direction and saves the rotation in its vector state.
+     *
+     * @param offset The relative offsets to rotate the Object.
+     */
+    void rotateAndTransform(Vector offset);
+    
+    /**
+     * Rotates the Object in a certain direction and saves the rotation in its vector state.
+     *
+     * @param offset The relative offsets to rotate the Object.
+     * @param center The center to rotate the Object about.
+     */
+    void rotateAndTransform(Vector offset, Vector center);
+    
+    /**
      * Adds a constant movement animation to an Object.
      *
      * @param xSpeed The speed of the x movement in units per second.
@@ -51,14 +73,14 @@ public interface ObjectInterface
     void addMovementAnimation(double xSpeed, double ySpeed, double zSpeed);
     
     /**
-     * Adds a movement transition to an Object over a period of time.
+     * Adds a movement transformation to an Object over a period of time.
      *
      * @param xMovement The total x movement in radians.
      * @param yMovement The total y movement in radians.
      * @param zMovement The total z movement in radians.
      * @param period    The period over which to perform the transition in milliseconds.
      */
-    void addMovementTransition(double xMovement, double yMovement, double zMovement, long period);
+    void addMovementTransformation(double xMovement, double yMovement, double zMovement, long period);
     
     /**
      * Adds a constant rotation animation to an Object.
@@ -70,14 +92,14 @@ public interface ObjectInterface
     void addRotationAnimation(double yawSpeed, double pitchSpeed, double rollSpeed);
     
     /**
-     * Adds a rotation transition to an Object over a period of time.
+     * Adds a rotation transformation to an Object over a period of time.
      *
      * @param yawRotation   The total yaw rotation in radians.
      * @param pitchRotation The total pitch rotation in radians.
      * @param rollRotation  The total roll rotation in radians.
      * @param period        The period over which to perform the transition in milliseconds.
      */
-    void addRotationTransition(double yawRotation, double pitchRotation, double rollRotation, long period);
+    void addRotationTransformation(double yawRotation, double pitchRotation, double rollRotation, long period);
     
     /**
      * Adds a constant color animation to an Object.
@@ -95,11 +117,25 @@ public interface ObjectInterface
     void registerComponent(ObjectInterface component);
     
     /**
+     * Unregisters a component with the Object.
+     *
+     * @param component The component to unregister.
+     */
+    void unregisterComponent(ObjectInterface component);
+    
+    /**
      * Registers a Frame with the Object.
      *
      * @param frame The Frame to register.
      */
     void registerFrame(Frame frame);
+    
+    /**
+     * Returns whether the Object is undergoing a rotation transformation or not.
+     *
+     * @return Whether the Object is undergoing a rotation transformation or not.
+     */
+    boolean inRotationTransformation();
     
     
     //Setters

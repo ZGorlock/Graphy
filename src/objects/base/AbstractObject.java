@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Defines an abstract implementation of an Object.
@@ -87,6 +88,16 @@ public abstract class AbstractObject implements ObjectInterface
      */
     public final List<double[]> rotationAnimations = new ArrayList<>();
     
+    /**
+     * A flag indicating whether the Object is currently undergoing a movement transformation or not.
+     */
+    public final AtomicBoolean inMovementTransformation = new AtomicBoolean(false);
+    
+    /**
+     * A flag indicating whether the Object is currently undergoing a rotation transformation or not.
+     */
+    public final AtomicBoolean inRotationTransformation = new AtomicBoolean(false);
+    
     
     //Enums
     
@@ -130,6 +141,34 @@ public abstract class AbstractObject implements ObjectInterface
     }
     
     /**
+     * Rotates the Object in a certain direction.
+     *
+     * @param offset The relative offsets to rotate the Object.
+     */
+    @Override
+    public void rotate(Vector offset)
+    {
+        setRotation(rotation.plus(offset));
+    }
+    
+    /**
+     * Rotates the Object in a certain direction and saves the rotation in its vector state.
+     *
+     * @param offset The relative offsets to rotate the Object.
+     */
+    @Override
+    public abstract void rotateAndTransform(Vector offset);
+    
+    /**
+     * Rotates the Object in a certain direction and saves the rotation in its vector state.
+     *
+     * @param offset The relative offsets to rotate the Object.
+     * @param center The center to rotate the Object about.
+     */
+    @Override
+    public abstract void rotateAndTransform(Vector offset, Vector center);
+    
+    /**
      * Adds a constant movement animation to an Object.
      *
      * @param xSpeed The speed of the x movement in units per second.
@@ -144,6 +183,7 @@ public abstract class AbstractObject implements ObjectInterface
         movementAnimations.add(new double[]{xSpeed, ySpeed, zSpeed});
         animationTimer.scheduleAtFixedRate(new TimerTask()
         {
+            private Vector speedVector = new Vector(xSpeed, ySpeed, zSpeed);
             private long lastTime = 0;
             
             @Override
@@ -159,13 +199,13 @@ public abstract class AbstractObject implements ObjectInterface
                 lastTime = currentTime;
                 
                 double scale = (double) timeElapsed / 1000;
-                move(new Vector(xSpeed * scale, ySpeed * scale, zSpeed * scale));
+                move(speedVector.scale(scale));
             }
         }, 0, 1000 / Environment.FPS);
     }
     
     /**
-     * Adds a movement transition to an Object over a period of time.
+     * Adds a movement transformation to an Object over a period of time.
      *
      * @param xMovement The total x movement in radians.
      * @param yMovement The total y movement in radians.
@@ -173,17 +213,15 @@ public abstract class AbstractObject implements ObjectInterface
      * @param period    The period over which to perform the transition in milliseconds.
      */
     @Override
-    public void addMovementTransition(double xMovement, double yMovement, double zMovement, long period)
+    public void addMovementTransformation(double xMovement, double yMovement, double zMovement, long period)
     {
+        inMovementTransformation.set(true);
         Timer transitionTimer = new Timer();
         transitionTimer.scheduleAtFixedRate(new TimerTask()
         {
-            private double originalX = getCenter().getX();
-            private double originalY = getCenter().getY();
-            private double originalZ = getCenter().getZ();
-            
+            private Vector movementVector = new Vector(xMovement, yMovement, zMovement);
+            private Vector totalMovement = new Vector(0, 0, 0);
             private long timeCount = 0;
-            
             private long lastTime = 0;
             
             @Override
@@ -200,12 +238,15 @@ public abstract class AbstractObject implements ObjectInterface
                 timeCount += timeElapsed;
                 
                 if (timeCount >= period) {
-                    setCenter(new Vector(originalX + xMovement, originalY + yMovement, originalZ + zMovement));
+                    move(movementVector.minus(totalMovement));
                     transitionTimer.purge();
                     transitionTimer.cancel();
+                    inMovementTransformation.set(false);
                 } else {
                     double scale = (double) timeElapsed / period;
-                    move(new Vector(xMovement * scale, yMovement * scale, zMovement * scale));
+                    Vector movementFrame = movementVector.scale(scale);
+                    move(movementFrame);
+                    totalMovement = totalMovement.plus(movementFrame);
                 }
                 
                 double scale = (double) timeElapsed / 1000;
@@ -228,6 +269,7 @@ public abstract class AbstractObject implements ObjectInterface
         rotationAnimations.add(new double[]{yawSpeed, pitchSpeed, rollSpeed});
         animationTimer.scheduleAtFixedRate(new TimerTask()
         {
+            private Vector speedVector = new Vector(yawSpeed, pitchSpeed, rollSpeed);
             private long lastTime = 0;
         
             @Override
@@ -243,13 +285,13 @@ public abstract class AbstractObject implements ObjectInterface
                 lastTime = currentTime;
             
                 double scale = (double) timeElapsed / 1000;
-                setRotation(getRotation().plus(new Vector(yawSpeed * scale, pitchSpeed * scale, rollSpeed * scale)));
+                rotate(speedVector.scale(scale));
             }
         }, 0, 1000 / Environment.FPS);
     }
     
     /**
-     * Adds a rotation transition to an Object over a period of time.
+     * Adds a rotation transformation to an Object over a period of time.
      *
      * @param yawRotation   The total yaw rotation in radians.
      * @param pitchRotation The total pitch rotation in radians.
@@ -257,17 +299,15 @@ public abstract class AbstractObject implements ObjectInterface
      * @param period        The period over which to perform the transition in milliseconds.
      */
     @Override
-    public void addRotationTransition(double yawRotation, double pitchRotation, double rollRotation, long period)
+    public void addRotationTransformation(double yawRotation, double pitchRotation, double rollRotation, long period)
     {
+        inRotationTransformation.set(true);
         Timer transitionTimer = new Timer();
         transitionTimer.scheduleAtFixedRate(new TimerTask()
         {
-            private double originalYaw = getRotationYaw();
-            private double originalPitch = getRotationPitch();
-            private double originalRoll = getRotationRoll();
-            
+            private Vector rotationVector = new Vector(yawRotation, pitchRotation, rollRotation);
+            private Vector totalRotation = new Vector(0, 0, 0);
             private long timeCount = 0;
-            
             private long lastTime = 0;
         
             @Override
@@ -284,12 +324,15 @@ public abstract class AbstractObject implements ObjectInterface
                 timeCount += timeElapsed;
                 
                 if (timeCount >= period) {
-                    setRotation(new Vector(originalYaw + yawRotation, originalPitch + pitchRotation, originalRoll + rollRotation));
+                    rotateAndTransform(rotationVector.minus(totalRotation));
                     transitionTimer.purge();
                     transitionTimer.cancel();
+                    inRotationTransformation.set(false);
                 } else {
                     double scale = (double) timeElapsed / period;
-                    setRotation(getRotation().plus(new Vector(yawRotation * scale, pitchRotation * scale, rollRotation * scale)));
+                    Vector rotationFrame = rotationVector.scale(scale);
+                    rotateAndTransform(rotationFrame);
+                    totalRotation = totalRotation.plus(rotationFrame);
                 }
             
                 double scale = (double) timeElapsed / 1000;
@@ -359,6 +402,16 @@ public abstract class AbstractObject implements ObjectInterface
      */
     @Override
     public void registerComponent(ObjectInterface component)
+    {
+    }
+    
+    /**
+     * Unregisters a component with the Object.
+     *
+     * @param component The component to unregister.
+     */
+    @Override
+    public void unregisterComponent(ObjectInterface component)
     {
     }
     
@@ -494,6 +547,26 @@ public abstract class AbstractObject implements ObjectInterface
         return displayMode;
     }
     
+    /**
+     * Returns whether the Object is undergoing a movement transformation or not.
+     *
+     * @return Whether the Object is undergoing a movement transformation or not.
+     */
+    public boolean inMovementTransformation()
+    {
+        return inMovementTransformation.get();
+    }
+    
+    /**
+     * Returns whether the Object is undergoing a rotation transformation or not.
+     *
+     * @return Whether the Object is undergoing a rotation transformation or not.
+     */
+    public boolean inRotationTransformation()
+    {
+        return inRotationTransformation.get();
+    }
+    
     
     //Setters
     
@@ -543,9 +616,9 @@ public abstract class AbstractObject implements ObjectInterface
     @Override
     public void setRotationWithoutUpdate(Vector rotation)
     {
-        setRotationYawWithoutUpdate(rotation.get(0));
-        setRotationPitchWithoutUpdate(rotation.get(1));
-        setRotationRollWithoutUpdate(rotation.get(2));
+        setRotationYawWithoutUpdate(rotation.getX());
+        setRotationPitchWithoutUpdate(rotation.getY());
+        setRotationRollWithoutUpdate(rotation.getZ());
     }
     
     /**

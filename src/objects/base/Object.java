@@ -6,7 +6,9 @@
 
 package objects.base;
 
+import math.matrix.Matrix3;
 import math.vector.Vector;
+import utility.RotationUtility;
 
 import java.awt.*;
 import java.util.*;
@@ -27,6 +29,20 @@ public class Object extends AbstractObject
     
     
     //Constructors
+    
+    /**
+     * The constructor for an Object.
+     *
+     * @param parent The parent of the Object.
+     * @param center The center of the Object.
+     * @param color  The color of the Object.
+     */
+    public Object(AbstractObject parent, Vector center, Color color)
+    {
+        this.center = center;
+        this.color = color;
+        setParent(parent);
+    }
     
     /**
      * The constructor for an Object.
@@ -68,6 +84,10 @@ public class Object extends AbstractObject
     @Override
     public List<BaseObject> prepare()
     {
+        if (!visible) {
+            return new ArrayList<>();
+        }
+        
         List<BaseObject> preparedBases = new ArrayList<>();
         
         for (ObjectInterface component : components) {
@@ -125,6 +145,34 @@ public class Object extends AbstractObject
     }
     
     /**
+     * Rotates the Object in a certain direction and saves the rotation in its vector state.
+     *
+     * @param offset The relative offsets to rotate the Object.
+     */
+    @Override
+    public void rotateAndTransform(Vector offset)
+    {
+        rotateAndTransform(offset, getRootCenter());
+    }
+    
+    /**
+     * Rotates the Object in a certain direction and saves the rotation in its vector state.
+     *
+     * @param offset The relative offsets to rotate the Object.
+     * @param center The center to rotate the Object about.
+     */
+    @Override
+    public void rotateAndTransform(Vector offset, Vector center)
+    {
+        for (ObjectInterface component : components) {
+            component.rotateAndTransform(offset, center);
+        }
+    
+        Matrix3 rotationTransformationMatrix = RotationUtility.getRotationMatrix(offset.getX(), offset.getY(), offset.getZ());
+        this.center = RotationUtility.performRotation(this.center, rotationTransformationMatrix, getRootCenter());
+    }
+    
+    /**
      * Hides the Object from being rendered.
      */
     public void hide()
@@ -167,6 +215,7 @@ public class Object extends AbstractObject
     public void updateRotationMatrix()
     {
         super.updateRotationMatrix();
+        
         for (ObjectInterface component : components) {
             component.setRotationWithoutUpdate(rotation);
             component.setRotationMatrix(rotationMatrix);
@@ -194,6 +243,19 @@ public class Object extends AbstractObject
     {
         if (!components.contains(component)) {
             this.components.add(component);
+        }
+    }
+    
+    /**
+     * Unregisters a component with the Object.
+     *
+     * @param component The component to unregister.
+     */
+    @Override
+    public void unregisterComponent(ObjectInterface component)
+    {
+        if (components.contains(component)) {
+            this.components.remove(component);
         }
     }
     
@@ -231,6 +293,27 @@ public class Object extends AbstractObject
         }, delay, delay);
     }
     
+    /**
+     * Returns whether the Object is undergoing a rotation transformation or not.
+     *
+     * @return Whether the Object is undergoing a rotation transformation or not.
+     */
+    @Override
+    public boolean inRotationTransformation()
+    {
+        if (super.inRotationTransformation.get()) {
+            return true;
+        }
+        
+        for (ObjectInterface component : components) {
+            if (component.inRotationTransformation()) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
     
     //Getters
     
@@ -255,7 +338,7 @@ public class Object extends AbstractObject
         for (ObjectInterface component : components) {
             if (component instanceof BaseObject) {
                 baseComponents.add((BaseObject) component);
-            } else if (component instanceof  Object){
+            } else if (component instanceof Object){
                 baseComponents.addAll(((Object) component).getBaseComponents());
             } else {
                 //TODO
@@ -275,7 +358,7 @@ public class Object extends AbstractObject
         for (ObjectInterface component : components) {
             if (component instanceof BaseObject) {
                 vectors.addAll(Arrays.asList(((BaseObject) component).vertices));
-            } else if (component instanceof  Object){
+            } else if (component instanceof Object){
                 vectors.addAll(((Object) component).getVectors());
             } else {
                 //TODO

@@ -567,9 +567,8 @@ public class Camera
         Timer transitionTimer = new Timer();
         transitionTimer.scheduleAtFixedRate(new TimerTask()
         {
-            private double originalPhi = phi;
-            private double originalTheta = theta;
-            private double originalRho = rho;
+            private Vector movementVector = new Vector(phiMovement, thetaMovement, rhoMovement);
+            private Vector totalMovement = new Vector(0, 0, 0);
             
             private long timeCount = 0;
             
@@ -589,12 +588,14 @@ public class Camera
                 timeCount += timeElapsed;
                 
                 if (timeCount >= period) {
-                    setLocation(originalPhi + phiMovement, originalTheta + thetaMovement, originalRho + rhoMovement);
+                    moveCamera(movementVector.minus(totalMovement));
                     transitionTimer.purge();
                     transitionTimer.cancel();
                 } else {
                     double scale = (double) timeElapsed / period;
-                    setLocation(phi + phiMovement * scale, theta + thetaMovement * scale, rho + rhoMovement * scale);
+                    Vector movementFrame = movementVector.scale(scale);
+                    moveCamera(movementFrame);
+                    totalMovement = totalMovement.plus(movementFrame);
                 }
                 
             }
@@ -644,6 +645,16 @@ public class Camera
         updateRequired = true;
     }
     
+    /**
+     * Moves the Camera in a certain direction.
+     *
+     * @param offset The relative offsets to move the Camera.
+     */
+    public void moveCamera(Vector offset)
+    {
+        setLocation(phi + offset.getX(), theta + offset.getY(), rho + offset.getZ());
+    }
+    
     
     //Functions
     
@@ -655,6 +666,9 @@ public class Camera
     public static void projectVectorToCamera(List<Vector> vs)
     {
         Camera camera = getActiveCameraView();
+        if (camera == null) {
+            return;
+        }
         
         for (int i = 0; i < vs.size(); i++) {
             vs.set(i, camera.projectVector(vs.get(i)));
@@ -669,6 +683,9 @@ public class Camera
     public static void collapseVectorToViewport(List<Vector> vs)
     {
         Camera camera = getActiveCameraView();
+        if (camera == null) {
+            return;
+        }
     
         for (int i = 0; i < vs.size(); i++) {
             vs.set(i, camera.collapseVector(vs.get(i)));
@@ -685,6 +702,9 @@ public class Camera
     public static boolean hasVectorInView(List<Vector> vs, Vector[] ovs)
     {
         Camera camera = getActiveCameraView();
+        if (camera == null) {
+            return false;
+        }
 
         //ensure Vectors are not behind Camera
         boolean inView = true;

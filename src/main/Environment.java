@@ -33,7 +33,7 @@ public class Environment
     /**
      * The number of frames to render per second.
      */
-    public static final int FPS = 20;
+    public static final int FPS = 60;
     
     /**
      * The dimensions of the Window.

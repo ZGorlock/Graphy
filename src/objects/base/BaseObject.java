@@ -8,7 +8,9 @@ package objects.base;
 
 import camera.Camera;
 import main.Environment;
+import math.matrix.Matrix3;
 import math.vector.Vector;
+import utility.RotationUtility;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -139,6 +141,34 @@ public abstract class BaseObject extends AbstractObject
         for (int i = 0; i < vertices.length; i++) {
            vertices[i] = vertices[i].plus(offset);
         }
+    }
+    
+    /**
+     * Rotates the Object in a certain direction and saves the rotation in its vector state.
+     *
+     * @param offset The relative offsets to rotate the Object.
+     */
+    @Override
+    public void rotateAndTransform(Vector offset)
+    {
+        rotateAndTransform(offset, getRootCenter());
+    }
+    
+    /**
+     * Rotates the Object in a certain direction and saves the rotation in its vector state.
+     *
+     * @param offset The relative offsets to rotate the Object.
+     * @param center The center to rotate the Object about.
+     */
+    @Override
+    public void rotateAndTransform(Vector offset, Vector center)
+    {
+        Matrix3 rotationTransformationMatrix = RotationUtility.getRotationMatrix(offset.getX(), offset.getY(), offset.getZ());
+        
+        for (int i = 0; i < vertices.length; i++) {
+            vertices[i] = RotationUtility.performRotation(vertices[i], rotationTransformationMatrix, center);
+        }
+        this.center = RotationUtility.performRotation(this.center, rotationTransformationMatrix, center);
     }
     
     /**

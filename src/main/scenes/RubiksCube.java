@@ -56,6 +56,11 @@ public class RubiksCube extends Scene
     public static final int ROTATE_SPEED = 100;
     
     /**
+     * The number of moves to perform during a shuffle.
+     */
+    public static final int SHUFFLE_MOVES = 500;
+    
+    /**
      * A flag indicating whether or not to print the cube state after transformations.
      */
     public static final boolean PRINT_CUBE_STATE = false;
@@ -636,7 +641,7 @@ public class RubiksCube extends Scene
      */
     private static void shuffle()
     {
-        shuffle(30);
+        shuffle(SHUFFLE_MOVES);
     }
     
     /**
@@ -709,8 +714,6 @@ public class RubiksCube extends Scene
                 }
             };
             solveTimer.schedule(solveTask, 0);
-            
-            
             
             inAutoMovement.set(false);
         }

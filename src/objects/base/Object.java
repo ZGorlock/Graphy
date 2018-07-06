@@ -25,7 +25,7 @@ public class Object extends AbstractObject
     /**
      * The list of Objects that compose the Object.
      */
-    protected List<ObjectInterface> components = new ArrayList<>();
+    protected final List<ObjectInterface> components = new ArrayList<>();
     
     
     //Constructors
@@ -305,10 +305,14 @@ public class Object extends AbstractObject
             return true;
         }
         
-        for (ObjectInterface component : components) {
-            if (component.inRotationTransformation()) {
-                return true;
+        try {
+            for (ObjectInterface component : components) {
+                if (component.inRotationTransformation()) {
+                    return true;
+                }
             }
+        } catch (ConcurrentModificationException e) {
+            return true;
         }
         
         return false;

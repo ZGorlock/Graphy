@@ -17,10 +17,9 @@ import objects.polyhedron.regular.platonic.Hexahedron;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Defines a Rubik's Cube scene.
@@ -41,9 +40,20 @@ public class RubiksCube extends Scene
     private static final int BACK = 5;
     
     /**
+     * The constants for directions.
+     */
+    private static final int CLOCKWISE = 1;
+    private static final int COUNTERCLOCKWISE = -1;
+    
+    /**
      * The speed of cube flips in milliseconds.
      */
-    public static final int FLIP_SPEED = 250;
+    public static final int FLIP_SPEED = 100;
+    
+    /**
+     * The speed of cube rotations in milliseconds.
+     */
+    public static final int ROTATE_SPEED = 100;
     
     /**
      * A flag indicating whether or not to print the cube state after transformations.
@@ -72,11 +82,21 @@ public class RubiksCube extends Scene
      * The matrix of pieces that are positioned on each side.
      */
     private static int[][] matrix = {{0, 1, 2, 3, 4, 5, 6, 7, 8}, //front
-                                     {18, 19, 20, 9, 10, 11, 0, 1, 2}, //top
+                                     {18, 19, 20, 9, 10, 11, 0, 1, 2}, //up
                                      {2, 11, 20, 5, 14, 23, 8, 17, 26}, //right
-                                     {6, 7, 8, 15, 16, 17, 24, 25, 26}, //bottom
+                                     {6, 7, 8, 15, 16, 17, 24, 25, 26}, //down
                                      {18, 9, 0, 21, 12, 3, 24, 15, 6}, //left
                                      {20, 19, 18, 23, 22, 21, 26, 25, 24}}; //back
+    
+    /**
+     * The list of moves that have been performed on the cube.
+     */
+    private static final Stack<String> moves = new Stack<>();
+    
+    /**
+     * A flag indicating whether the cube is performing automatic movement or not.
+     */
+    private static final AtomicBoolean inAutoMovement = new AtomicBoolean(false);
     
     
     //Main Method
@@ -122,7 +142,7 @@ public class RubiksCube extends Scene
     public static void setupCameras()
     {
         Camera camera = new Camera(false, false);
-        camera.setLocation(7 * Math.PI / 12, 13 * Math.PI / 12, 22);
+        camera.setLocation(7 * Math.PI / 12, 7 * Math.PI / 6, 22);
         Camera.setActiveCamera(0);
     }
     
@@ -143,79 +163,39 @@ public class RubiksCube extends Scene
             public void keyPressed(KeyEvent e)
             {
                 int key = e.getKeyCode();
+                int dir = e.isControlDown() ? COUNTERCLOCKWISE : CLOCKWISE;
     
-                if (!rubiksCube.inRotationTransformation()) {
+                if (!rubiksCube.inRotationTransformation() && !inAutoMovement.get()) {
                     if (key == KeyEvent.VK_NUMPAD0) {
-                        List<Object> face = retrieveFace(FRONT);
-                        RotationGroup frontGroup = new RotationGroup(rubiksCube, face.get(4), face);
-                        if (e.isControlDown()) {
-                            frontGroup.rotateGroup(0, 0, Math.PI / 2, FLIP_SPEED);
-                            matrix = counterclockwise(matrix, FRONT);
-                        } else {
-                            frontGroup.rotateGroup(0, 0, -Math.PI / 2, FLIP_SPEED);
-                            matrix = clockwise(matrix, FRONT);
-                        }
-                        printCube();
+                        front(dir);
+                        moves.push("F" + (dir == CLOCKWISE ? "'" : ""));
                     }
                     if (key == KeyEvent.VK_NUMPAD5) {
-                        List<Object> face = retrieveFace(BACK);
-                        RotationGroup frontGroup = new RotationGroup(rubiksCube, face.get(4), face);
-                        if (e.isControlDown()) {
-                            frontGroup.rotateGroup(0, 0, -Math.PI / 2, FLIP_SPEED);
-                            matrix = counterclockwise(matrix, BACK);
-                        } else {
-                            frontGroup.rotateGroup(0, 0, Math.PI / 2, FLIP_SPEED);
-                            matrix = clockwise(matrix, BACK);
-                        }
-                        printCube();
+                        back(dir);
+                        moves.push("B" + (dir == CLOCKWISE ? "'" : ""));
                     }
                     if (key == KeyEvent.VK_NUMPAD4) {
-                        List<Object> face = retrieveFace(LEFT);
-                        RotationGroup frontGroup = new RotationGroup(rubiksCube, face.get(4), face);
-                        if (e.isControlDown()) {
-                            frontGroup.rotateGroup(-Math.PI / 2, 0, 0, FLIP_SPEED);
-                            matrix = counterclockwise(matrix, LEFT);
-                        } else {
-                            frontGroup.rotateGroup(Math.PI / 2, 0, 0, FLIP_SPEED);
-                            matrix = clockwise(matrix, LEFT);
-                        }
-                        printCube();
+                        left(dir);
+                        moves.push("L" + (dir == CLOCKWISE ? "'" : ""));
                     }
                     if (key == KeyEvent.VK_NUMPAD6) {
-                        List<Object> face = retrieveFace(RIGHT);
-                        RotationGroup frontGroup = new RotationGroup(rubiksCube, face.get(4), face);
-                        if (e.isControlDown()) {
-                            frontGroup.rotateGroup(Math.PI / 2, 0, 0, FLIP_SPEED);
-                            matrix = counterclockwise(matrix, RIGHT);
-                        } else {
-                            frontGroup.rotateGroup(-Math.PI / 2, 0, 0, FLIP_SPEED);
-                            matrix = clockwise(matrix, RIGHT);
-                        }
-                        printCube();
+                        right(dir);
+                        moves.push("R" + (dir == CLOCKWISE ? "'" : ""));
                     }
                     if (key == KeyEvent.VK_NUMPAD8) {
-                        List<Object> face = retrieveFace(TOP);
-                        RotationGroup frontGroup = new RotationGroup(rubiksCube, face.get(4), face);
-                        if (e.isControlDown()) {
-                            frontGroup.rotateGroup(0, Math.PI / 2, 0, FLIP_SPEED);
-                            matrix = counterclockwise(matrix, TOP);
-                        } else {
-                            frontGroup.rotateGroup(0, -Math.PI / 2, 0, FLIP_SPEED);
-                            matrix = clockwise(matrix, TOP);
-                        }
-                        printCube();
+                        up(dir);
+                        moves.push("U" + (dir == CLOCKWISE ? "'" : ""));
                     }
                     if (key == KeyEvent.VK_NUMPAD2) {
-                        List<Object> face = retrieveFace(BOTTOM);
-                        RotationGroup frontGroup = new RotationGroup(rubiksCube, face.get(4), face);
-                        if (e.isControlDown()) {
-                            frontGroup.rotateGroup(0, -Math.PI / 2, 0, FLIP_SPEED);
-                            matrix = counterclockwise(matrix, BOTTOM);
-                        } else {
-                            frontGroup.rotateGroup(0, Math.PI / 2, 0, FLIP_SPEED);
-                            matrix = clockwise(matrix, BOTTOM);
-                        }
-                        printCube();
+                        down(dir);
+                        moves.push("D" + (dir == CLOCKWISE ? "'" : ""));
+                    }
+                    
+                    if (key == KeyEvent.VK_Q) {
+                        shuffle();
+                    }
+                    if (key == KeyEvent.VK_W) {
+                        solve();
                     }
                 }
             }
@@ -225,34 +205,22 @@ public class RubiksCube extends Scene
             {
                 int key = e.getKeyCode();
     
-                if (!rubiksCube.inRotationTransformation()) {
+                if (!rubiksCube.inRotationTransformation() && !inAutoMovement.get()) {
                     if (key == KeyEvent.VK_UP) {
-                        rubiksCube.addRotationTransformation(-Math.PI / 2, 0, 0, FLIP_SPEED);
-                        matrix = new int[][]{matrix[BOTTOM], matrix[FRONT], matrix[RIGHT], matrix[BACK], matrix[LEFT], matrix[TOP]};
-                        matrix = adjustFaceCounterclockwise(matrix, LEFT);
-                        matrix = adjustFaceClockwise(matrix, RIGHT);
-                        printCube();
+                        flipUp();
+                        moves.push("XD");
                     }
                     if (key == KeyEvent.VK_DOWN) {
-                        rubiksCube.addRotationTransformation(Math.PI / 2, 0, 0, FLIP_SPEED);
-                        matrix = new int[][]{matrix[TOP], matrix[BACK], matrix[RIGHT], matrix[FRONT], matrix[LEFT], matrix[BOTTOM]};
-                        matrix = adjustFaceClockwise(matrix, LEFT);
-                        matrix = adjustFaceCounterclockwise(matrix, RIGHT);
-                        printCube();
+                        flipDown();
+                        moves.push("XU");
                     }
                     if (key == KeyEvent.VK_LEFT) {
-                        rubiksCube.addRotationTransformation(0, -Math.PI / 2, 0, FLIP_SPEED);
-                        matrix = new int[][]{matrix[RIGHT], matrix[TOP], matrix[BACK], matrix[BOTTOM], matrix[FRONT], matrix[LEFT]};
-                        matrix = adjustFaceClockwise(matrix, TOP);
-                        matrix = adjustFaceCounterclockwise(matrix, BOTTOM);
-                        printCube();
+                        flipLeft();
+                        moves.push("XR");
                     }
                     if (key == KeyEvent.VK_RIGHT) {
-                        rubiksCube.addRotationTransformation(0, Math.PI / 2, 0, FLIP_SPEED);
-                        matrix = new int[][]{matrix[LEFT], matrix[TOP], matrix[FRONT], matrix[BOTTOM], matrix[BACK], matrix[RIGHT]};
-                        matrix = adjustFaceCounterclockwise(matrix, TOP);
-                        matrix = adjustFaceClockwise(matrix, BOTTOM);
-                        printCube();
+                        flipRight();
+                        moves.push("XL");
                     }
                 }
             }
@@ -357,7 +325,7 @@ public class RubiksCube extends Scene
      * @param map    The transformation map.
      * @return The matrix after the transformation has been applied.
      */
-    public static int[][] remapMatrix(int[][] matrix, Map<Integer, Integer> map) {
+    private static int[][] remapMatrix(int[][] matrix, Map<Integer, Integer> map) {
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
                 if (map.containsKey(matrix[i][j])) {
@@ -375,7 +343,7 @@ public class RubiksCube extends Scene
      * @param face   The face to rotate.
      * @return The matrix after the rotation.
      */
-    public static int[][] clockwise(int[][] matrix, int face)
+    private static int[][] clockwise(int[][] matrix, int face)
     {
         Map<Integer, Integer> map = new HashMap<>();
         map.put(matrix[face][0], matrix[face][6]);
@@ -397,7 +365,7 @@ public class RubiksCube extends Scene
      * @param face   The face to rotate.
      * @return The matrix after the rotation.
      */
-    public static int[][] counterclockwise(int[][] matrix, int face)
+    private static int[][] counterclockwise(int[][] matrix, int face)
     {
         Map<Integer, Integer> map = new HashMap<>();
         map.put(matrix[face][0], matrix[face][2]);
@@ -413,13 +381,32 @@ public class RubiksCube extends Scene
     }
     
     /**
-     * Adjusts a face for a clockwise turn.
+     * Performs an operation on a face.
      *
      * @param matrix The matrix of the cube.
      * @param face   The face to rotate.
+     * @param dir    The direction to rotate the face.
      * @return The matrix after the rotation.
      */
-    public static int[][] adjustFaceClockwise(int[][] matrix, int face)
+    private static int[][] rotate(int[][] matrix, int face, int dir)
+    {
+        if (dir == CLOCKWISE) {
+            return clockwise(matrix, face);
+        } else if (dir == COUNTERCLOCKWISE) {
+            return counterclockwise(matrix, face);
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * Adjusts a face for a clockwise turn.
+     *
+     * @param matrix The matrix of the cube.
+     * @param face   The face to adjust.
+     * @return The matrix after the adjustment.
+     */
+    private static int[][] adjustFaceClockwise(int[][] matrix, int face)
     {
         int[] original = matrix[face];
         int[] adjusted = new int[]{original[6], original[3], original[0], original[7], original[4], original[1], original[8], original[5], original[2]};
@@ -431,15 +418,302 @@ public class RubiksCube extends Scene
      * Adjusts a face for a counterclockwise turn.
      *
      * @param matrix The matrix of the cube.
-     * @param face   The face to rotate.
-     * @return The matrix after the rotation.
+     * @param face   The face to adjust.
+     * @return The matrix after the adjustment.
      */
-    public static int[][] adjustFaceCounterclockwise(int[][] matrix, int face)
+    private static int[][] adjustFaceCounterclockwise(int[][] matrix, int face)
     {
         int[] original = matrix[face];
         int[] adjusted = new int[]{original[2], original[5], original[8], original[1], original[4], original[7], original[0], original[3], original[6]};
         matrix[face] = adjusted;
         return matrix;
+    }
+    
+    /**
+     * Adjusts a face for a turn.
+     *
+     * @param matrix The matrix of the cube.
+     * @param face   The face to adjust.
+     * @param dir    The direction to adjust the face.
+     * @return The matrix after the adjustment.
+     */
+    private static int[][] adjust(int[][] matrix, int face, int dir)
+    {
+        if (dir == CLOCKWISE) {
+            return adjustFaceClockwise(matrix, face);
+        } else if (dir == COUNTERCLOCKWISE) {
+            return adjustFaceCounterclockwise(matrix, face);
+        } else {
+            return null;
+        }
+    }
+    
+    /**
+     * Rotates a face.
+     *
+     * @param face     The face to rotate.
+     * @param dir      The direction to rotate the face.
+     * @param rotation The vector of rotation for the face.
+     */
+    private static void rotateFace(int face, int dir, Vector rotation)
+    {
+        List<Object> f = retrieveFace(face);
+        RotationGroup frontGroup = new RotationGroup(rubiksCube, f.get(4), f);
+    
+        frontGroup.rotateGroup(rotation.getX() * dir, rotation.getY() * dir, rotation.getZ() * dir, FLIP_SPEED);
+        matrix = rotate(matrix, face, dir);
+    
+        printCube();
+    }
+    
+    /**
+     * Rotates the front face.
+     *
+     * @param dir The direction to turn the face.
+     */
+    private static void front(int dir)
+    {
+        rotateFace(FRONT, dir, new Vector(0, 0, -Math.PI / 2));
+    }
+    
+    /**
+     * Rotates the back face.
+     *
+     * @param dir The direction to turn the face.
+     */
+    private static void back(int dir)
+    {
+        rotateFace(BACK, dir, new Vector(0, 0, Math.PI / 2));
+    }
+    
+    /**
+     * Rotates the left face.
+     *
+     * @param dir The direction to turn the face.
+     */
+    private static void left(int dir)
+    {
+        rotateFace(LEFT, dir, new Vector(Math.PI / 2, 0, 0));
+    }
+    
+    /**
+     * Rotates the right face.
+     *
+     * @param dir The direction to turn the face.
+     */
+    private static void right(int dir)
+    {
+        rotateFace(RIGHT, dir, new Vector(-Math.PI / 2, 0, 0));
+    }
+    
+    /**
+     * Rotates the top face.
+     *
+     * @param dir The direction to turn the face.
+     */
+    private static void up(int dir)
+    {
+        rotateFace(TOP, dir, new Vector(0, -Math.PI / 2, 0));
+    }
+    
+    /**
+     * Rotates the bottom face.
+     *
+     * @param dir The direction to turn the face.
+     */
+    private static void down(int dir)
+    {
+        rotateFace(BOTTOM, dir, new Vector(0, Math.PI / 2, 0));
+    }
+    
+    /**
+     * Flips the cube left.
+     */
+    private static void flipLeft()
+    {
+        rubiksCube.addRotationTransformation(0, -Math.PI / 2, 0, ROTATE_SPEED);
+        matrix = new int[][]{matrix[RIGHT], matrix[TOP], matrix[BACK], matrix[BOTTOM], matrix[FRONT], matrix[LEFT]};
+        matrix = adjust(matrix, TOP, CLOCKWISE);
+        matrix = adjust(matrix, BOTTOM, COUNTERCLOCKWISE);
+        printCube();
+    }
+    
+    /**
+     * Flips the cube right.
+     */
+    private static void flipRight()
+    {
+        rubiksCube.addRotationTransformation(0, Math.PI / 2, 0, ROTATE_SPEED);
+        matrix = new int[][]{matrix[LEFT], matrix[TOP], matrix[FRONT], matrix[BOTTOM], matrix[BACK], matrix[RIGHT]};
+        matrix = adjust(matrix, TOP, COUNTERCLOCKWISE);
+        matrix = adjust(matrix, BOTTOM, CLOCKWISE);
+        printCube();
+    }
+    
+    /**
+     * Flips the cube up.
+     */
+    private static void flipUp()
+    {
+        rubiksCube.addRotationTransformation(-Math.PI / 2, 0, 0, ROTATE_SPEED);
+        matrix = new int[][]{matrix[BOTTOM], matrix[FRONT], matrix[RIGHT], matrix[BACK], matrix[LEFT], matrix[TOP]};
+        matrix = adjust(matrix, LEFT, COUNTERCLOCKWISE);
+        matrix = adjust(matrix, RIGHT, CLOCKWISE);
+        printCube();
+    }
+    
+    /**
+     * Flips the cube down.
+     */
+    private static void flipDown()
+    {
+        rubiksCube.addRotationTransformation(Math.PI / 2, 0, 0, ROTATE_SPEED);
+        matrix = new int[][]{matrix[TOP], matrix[BACK], matrix[RIGHT], matrix[FRONT], matrix[LEFT], matrix[BOTTOM]};
+        matrix = adjust(matrix, LEFT, CLOCKWISE);
+        matrix = adjust(matrix, RIGHT, COUNTERCLOCKWISE);
+        printCube();
+    }
+    
+    /**
+     * Shuffles the cube.
+     *
+     * @param count The number of moves to make.
+     */
+    private static void shuffle(int count)
+    {
+        if (inAutoMovement.compareAndSet(false, true)) {
+            Timer shuffleTimer = new Timer();
+            TimerTask shuffleTask = new TimerTask()
+            {
+                @Override
+                public void run()
+                {
+                    for (int i = 0; i < count; i++) {
+                        int move = (int) (Math.random() * 6);
+                        int dir = (int) (Math.random() * 2);
+                        if (dir == 0) {
+                            dir = COUNTERCLOCKWISE;
+                        }
+    
+                        switch (move) {
+                            case 0:
+                                front(dir);
+                                moves.push("F" + (dir == CLOCKWISE ? "'" : ""));
+                                break;
+                            case 1:
+                                back(dir);
+                                moves.push("B" + (dir == CLOCKWISE ? "'" : ""));
+                                break;
+                            case 2:
+                                left(dir);
+                                moves.push("L" + (dir == CLOCKWISE ? "'" : ""));
+                                break;
+                            case 3:
+                                right(dir);
+                                moves.push("R" + (dir == CLOCKWISE ? "'" : ""));
+                                break;
+                            case 4:
+                                up(dir);
+                                moves.push("U" + (dir == CLOCKWISE ? "'" : ""));
+                                break;
+                            case 5:
+                                down(dir);
+                                moves.push("D" + (dir == CLOCKWISE ? "'" : ""));
+                                break;
+                        }
+    
+                        waitForAnimation();
+                    }
+                    inAutoMovement.set(false);
+                }
+            };
+            shuffleTimer.schedule(shuffleTask, 0);
+        }
+    }
+    
+    /**
+     * Shuffles the cube.
+     */
+    private static void shuffle()
+    {
+        shuffle(30);
+    }
+    
+    /**
+     * Waits for the cube to finish its animation.
+     */
+    private static void waitForAnimation()
+    {
+        do {
+            try {
+                Thread.sleep(FLIP_SPEED / 5);
+            } catch (InterruptedException ignored) {
+            }
+        } while (rubiksCube.inRotationTransformation());
+    }
+    
+    /**
+     * Solves the cube.
+     */
+    private static void solve()
+    {
+        if (inAutoMovement.compareAndSet(false, true)) {
+            Timer solveTimer = new Timer();
+            TimerTask solveTask = new TimerTask()
+            {
+                @Override
+                public void run()
+                {
+                    while(!moves.empty()) {
+                        String move = moves.pop();
+                        
+                        int dir = move.endsWith("'") ? COUNTERCLOCKWISE : CLOCKWISE;
+                        move = move.endsWith("'") ? move.substring(0, 1) : move;
+                        
+                        switch (move) {
+                            case "F":
+                                front(dir);
+                                break;
+                            case "B":
+                                back(dir);
+                                break;
+                            case "L":
+                                left(dir);
+                                break;
+                            case "R":
+                                right(dir);
+                                break;
+                            case "U":
+                                up(dir);
+                                break;
+                            case "D":
+                                down(dir);
+                                break;
+                            case "XD":
+                                flipDown();
+                                break;
+                            case "XU":
+                                flipUp();
+                                break;
+                            case "XR":
+                                flipRight();
+                                break;
+                            case "XL":
+                                flipLeft();
+                                break;
+                        }
+                
+                        waitForAnimation();
+                    }
+                    inAutoMovement.set(false);
+                }
+            };
+            solveTimer.schedule(solveTask, 0);
+            
+            
+            
+            inAutoMovement.set(false);
+        }
     }
     
     /**

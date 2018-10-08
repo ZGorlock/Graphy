@@ -6,16 +6,15 @@
 
 package objects.base.polygon;
 
+import java.awt.Color;
+
 import math.vector.Vector;
 import objects.base.AbstractObject;
-
-import java.awt.*;
 
 /**
  * Defines an Pentagon.
  */
-public class Pentagon extends Polygon
-{
+public class Pentagon extends Polygon {
     
     //Constructors
     
@@ -30,8 +29,7 @@ public class Pentagon extends Polygon
      * @param v4     The fourth point of the Pentagon.
      * @param v5     The fifth point of the Pentagon.
      */
-    public Pentagon(AbstractObject parent, Color color, Vector v1, Vector v2, Vector v3, Vector v4, Vector v5)
-    {
+    public Pentagon(AbstractObject parent, Color color, Vector v1, Vector v2, Vector v3, Vector v4, Vector v5) {
         super(parent, color, v1, v2, v3, v4, v5);
     }
     
@@ -45,8 +43,7 @@ public class Pentagon extends Polygon
      * @param v4     The fourth point of the Pentagon.
      * @param v5     The fifth point of the Pentagon.
      */
-    public Pentagon(AbstractObject parent, Vector v1, Vector v2, Vector v3, Vector v4, Vector v5)
-    {
+    public Pentagon(AbstractObject parent, Vector v1, Vector v2, Vector v3, Vector v4, Vector v5) {
         this(parent, Color.BLACK, v1, v2, v3, v4, v5);
     }
     
@@ -58,10 +55,9 @@ public class Pentagon extends Polygon
      * @param v2    The second point of the Pentagon.
      * @param v3    The third point of the Pentagon.
      * @param v4    The fourth point of the Pentagon.
-     * @param v5     The fifth point of the Pentagon.
+     * @param v5    The fifth point of the Pentagon.
      */
-    public Pentagon(Color color, Vector v1, Vector v2, Vector v3, Vector v4, Vector v5)
-    {
+    public Pentagon(Color color, Vector v1, Vector v2, Vector v3, Vector v4, Vector v5) {
         this(null, color, v1, v2, v3, v4, v5);
     }
     
@@ -72,10 +68,9 @@ public class Pentagon extends Polygon
      * @param v2 The second point of the Pentagon.
      * @param v3 The third point of the Pentagon.
      * @param v4 The fourth point of the Pentagon.
-     * @param v5     The fifth point of the Pentagon.
+     * @param v5 The fifth point of the Pentagon.
      */
-    public Pentagon(Vector v1, Vector v2, Vector v3, Vector v4, Vector v5)
-    {
+    public Pentagon(Vector v1, Vector v2, Vector v3, Vector v4, Vector v5) {
         this(null, Color.BLACK, v1, v2, v3, v4, v5);
     }
     
@@ -87,8 +82,7 @@ public class Pentagon extends Polygon
      *
      * @return The first point of the Pentagon.
      */
-    public Vector getP1()
-    {
+    public Vector getP1() {
         return getVertex(1);
     }
     
@@ -97,8 +91,7 @@ public class Pentagon extends Polygon
      *
      * @return The second point of the Pentagon.
      */
-    public Vector getP2()
-    {
+    public Vector getP2() {
         return getVertex(2);
     }
     
@@ -107,8 +100,7 @@ public class Pentagon extends Polygon
      *
      * @return The third point of the Pentagon.
      */
-    public Vector getP3()
-    {
+    public Vector getP3() {
         return getVertex(3);
     }
     
@@ -117,8 +109,7 @@ public class Pentagon extends Polygon
      *
      * @return The fourth point of the Pentagon.
      */
-    public Vector getP4()
-    {
+    public Vector getP4() {
         return getVertex(4);
     }
     
@@ -127,8 +118,7 @@ public class Pentagon extends Polygon
      *
      * @return The fifth point of the Pentagon.
      */
-    public Vector getP5()
-    {
+    public Vector getP5() {
         return getVertex(5);
     }
     
@@ -144,8 +134,7 @@ public class Pentagon extends Polygon
      * @param p4 The fourth point of the Pentagon.
      * @param p5 The fifth point of the Pentagon.
      */
-    public void setPoints(Vector p1, Vector p2, Vector p3, Vector p4, Vector p5)
-    {
+    public void setPoints(Vector p1, Vector p2, Vector p3, Vector p4, Vector p5) {
         setP1(p1);
         setP2(p2);
         setP3(p3);
@@ -158,8 +147,7 @@ public class Pentagon extends Polygon
      *
      * @param p1 The new first point of the Pentagon.
      */
-    public void setP1(Vector p1)
-    {
+    public void setP1(Vector p1) {
         setVertex(1, p1);
     }
     
@@ -168,8 +156,7 @@ public class Pentagon extends Polygon
      *
      * @param p2 The new second point of the Pentagon.
      */
-    public void setP2(Vector p2)
-    {
+    public void setP2(Vector p2) {
         setVertex(2, p2);
     }
     
@@ -178,8 +165,7 @@ public class Pentagon extends Polygon
      *
      * @param p3 The new third point of the Pentagon.
      */
-    public void setP3(Vector p3)
-    {
+    public void setP3(Vector p3) {
         setVertex(3, p3);
     }
     
@@ -188,8 +174,7 @@ public class Pentagon extends Polygon
      *
      * @param p4 The new fourth point of the Pentagon.
      */
-    public void setP4(Vector p4)
-    {
+    public void setP4(Vector p4) {
         setVertex(4, p4);
     }
     
@@ -198,8 +183,7 @@ public class Pentagon extends Polygon
      *
      * @param p5 The new fifth point of the Pentagon.
      */
-    public void setP5(Vector p5)
-    {
+    public void setP5(Vector p5) {
         setVertex(5, p5);
     }
     

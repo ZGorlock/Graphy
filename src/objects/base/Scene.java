@@ -6,17 +6,16 @@
 
 package objects.base;
 
-import math.vector.Vector;
-
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+
+import math.vector.Vector;
 
 /**
  * Defines a Scene to render.
  */
-public abstract class Scene extends Object
-{
+public abstract class Scene extends Object {
     
     //Constructors
     
@@ -25,8 +24,7 @@ public abstract class Scene extends Object
      *
      * @param center The center of the scene.
      */
-    public Scene(Vector center)
-    {
+    public Scene(Vector center) {
         super(center, Color.BLACK);
     }
     
@@ -36,23 +34,20 @@ public abstract class Scene extends Object
     /**
      * Creates objects for the scene.
      */
-    public static List<Object> createObjects()
-    {
+    public static List<Object> createObjects() {
         return new ArrayList<>();
     }
     
     /**
      * Sets up cameras for the scene.
      */
-    public static void setupCameras()
-    {
+    public static void setupCameras() {
     }
     
     /**
      * Sets up controls for the scene.
      */
-    public static void setupControls()
-    {
+    public static void setupControls() {
     }
     
 }

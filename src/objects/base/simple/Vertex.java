@@ -6,20 +6,20 @@
 
 package objects.base.simple;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
+
 import camera.Camera;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Defines a Vertex.
  */
-public class Vertex extends BaseObject
-{
+public class Vertex extends BaseObject {
     
     //Constructors
     
@@ -39,7 +39,7 @@ public class Vertex extends BaseObject
      * The constructor for a Vertex from a 3-dimensional Vector.
      *
      * @param parent The parent of the Vertex.
-     * @param v The Vector.
+     * @param v      The Vector.
      */
     public Vertex(AbstractObject parent, Vector v) {
         this(parent, Color.BLACK, v);
@@ -48,8 +48,8 @@ public class Vertex extends BaseObject
     /**
      * The constructor for a Vertex from a 3-dimensional Vector.
      *
-     * @param color  The color of the Vertex.
-     * @param v The Vector.
+     * @param color The color of the Vertex.
+     * @param v     The Vector.
      */
     public Vertex(Color color, Vector v) {
         this(null, color, v);
@@ -73,18 +73,17 @@ public class Vertex extends BaseObject
      * @return The list of BaseObjects that were prepared.
      */
     @Override
-    public List<BaseObject> prepare()
-    {
+    public List<BaseObject> prepare() {
         List<BaseObject> preparedBases = new ArrayList<>();
         if (!visible) {
             return preparedBases;
         }
-    
+        
         prepared.clear();
         prepared.add(vertices[0].clone());
-    
+        
         performRotationTransformation(prepared);
-    
+        
         preparedBases.add(this);
         return preparedBases;
     }
@@ -95,18 +94,17 @@ public class Vertex extends BaseObject
      * @param g2 The 2D Graphics entity.
      */
     @Override
-    public void render(Graphics2D g2)
-    {
+    public void render(Graphics2D g2) {
         if (!visible || prepared.size() != 1) {
             return;
         }
-    
+        
         Camera.projectVectorToCamera(prepared);
         Camera.collapseVectorToViewport(prepared);
         
         if (!clippingEnabled || Camera.hasVectorInView(prepared, vertices)) {
             Camera.scaleVectorToScreen(prepared);
-    
+            
             g2.setColor(getColor());
             g2.drawRect((int) prepared.get(0).getX(), (int) prepared.get(0).getY(), 1, 1);
         }
@@ -118,8 +116,7 @@ public class Vertex extends BaseObject
      * @return A string that represents the Vertex.
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder vertex = new StringBuilder();
         
         for (Double component : getPoint().getComponents()) {
@@ -138,8 +135,7 @@ public class Vertex extends BaseObject
      * @param v The other Vertex.
      * @return Whether the two Vertices are equal or not.
      */
-    public boolean equals(Vertex v)
-    {
+    public boolean equals(Vertex v) {
         return getPoint().equals(v.getPoint());
     }
     
@@ -149,8 +145,7 @@ public class Vertex extends BaseObject
      * @return The cloned Vertex.
      */
     @Override
-    public Vertex clone()
-    {
+    public Vertex clone() {
         return new Vertex(getPoint());
     }
     
@@ -162,8 +157,7 @@ public class Vertex extends BaseObject
      *
      * @return The point of the Vertex.
      */
-    public Vector getPoint()
-    {
+    public Vector getPoint() {
         return vertices[0];
     }
     
@@ -175,8 +169,7 @@ public class Vertex extends BaseObject
      *
      * @param point The new point of the Vertex.
      */
-    public void setPoint(Vector point)
-    {
+    public void setPoint(Vector point) {
         vertices[0] = point;
     }
     

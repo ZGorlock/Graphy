@@ -6,21 +6,17 @@
 
 package objects.polyhedron.regular.platonic;
 
-import math.vector.Vector;
-import objects.base.*;
-import objects.base.polygon.Rectangle;
-import objects.base.simple.BigVertex;
-import objects.polyhedron.regular.RegularPolyhedron;
+import java.awt.Color;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import math.vector.Vector;
+import objects.base.AbstractObject;
+import objects.base.polygon.Rectangle;
+import objects.polyhedron.regular.RegularPolyhedron;
 
 /**
  * Defines a Hexahedron.
  */
-public class Hexahedron extends RegularPolyhedron
-{
+public class Hexahedron extends RegularPolyhedron {
     
     //Constants
     
@@ -45,8 +41,7 @@ public class Hexahedron extends RegularPolyhedron
      * @param color  The color of the Hexahedron.
      * @param radius The radius of the bounding sphere of the Hexahedron.
      */
-    public Hexahedron(AbstractObject parent, Vector center, Color color, double radius)
-    {
+    public Hexahedron(AbstractObject parent, Vector center, Color color, double radius) {
         super(parent, center, color, HEXAHEDRON_FACES, HEXAHEDRON_VERTICES, radius);
     }
     
@@ -57,8 +52,7 @@ public class Hexahedron extends RegularPolyhedron
      * @param center The center point of the Hexahedron.
      * @param radius The radius of the bounding sphere of the Hexahedron.
      */
-    public Hexahedron(AbstractObject parent, Vector center, double radius)
-    {
+    public Hexahedron(AbstractObject parent, Vector center, double radius) {
         this(parent, center, Color.BLACK, radius);
     }
     
@@ -69,8 +63,7 @@ public class Hexahedron extends RegularPolyhedron
      * @param color  The color of the Hexahedron.
      * @param radius The radius of the bounding sphere of the Hexahedron.
      */
-    public Hexahedron(Vector center, Color color, double radius)
-    {
+    public Hexahedron(Vector center, Color color, double radius) {
         this(null, center, color, radius);
     }
     
@@ -81,15 +74,14 @@ public class Hexahedron extends RegularPolyhedron
      * Calculates the structure of the Hexahedron.
      */
     @Override
-    protected void calculate()
-    {
+    protected void calculate() {
         components.clear();
         
         vertices = new Vector[HEXAHEDRON_VERTICES];
         int v = 0;
         for (int i : new int[] {-1, 1}) {
-            for (int j : new int[]{-1, 1}) {
-                for (int k : new int[]{-1, 1}) {
+            for (int j : new int[] {-1, 1}) {
+                for (int k : new int[] {-1, 1}) {
                     vertices[v++] = new Vector(i, j, k).scale(radius).plus(center);
                 }
             }

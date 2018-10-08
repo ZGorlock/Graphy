@@ -6,17 +6,20 @@
 
 package objects.polyhedron.regular;
 
+import java.awt.Color;
+
 import math.vector.Vector;
 import objects.base.Object;
-import objects.polyhedron.regular.platonic.*;
-
-import java.awt.*;
+import objects.polyhedron.regular.platonic.Dodecahedron;
+import objects.polyhedron.regular.platonic.Hexahedron;
+import objects.polyhedron.regular.platonic.Icosahedron;
+import objects.polyhedron.regular.platonic.Octahedron;
+import objects.polyhedron.regular.platonic.Tetrahedron;
 
 /**
  * Defines a Metatron's Cube.
  */
-public class MetatronsCube extends Object
-{
+public class MetatronsCube extends Object {
     
     //Constructors
     
@@ -31,8 +34,7 @@ public class MetatronsCube extends Object
      * @param dodecahedronColor The color of the Dodecahedron.
      * @param icosahedronColor  The color of the Icosahedron.
      */
-    public MetatronsCube(Vector center, double radius, Color octahedronColor, Color tetrahedronColor, Color hexahedronColor, Color dodecahedronColor, Color icosahedronColor)
-    {
+    public MetatronsCube(Vector center, double radius, Color octahedronColor, Color tetrahedronColor, Color hexahedronColor, Color dodecahedronColor, Color icosahedronColor) {
         super(center, Color.BLACK);
         
         new Octahedron(this, center, octahedronColor, radius);

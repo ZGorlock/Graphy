@@ -6,13 +6,10 @@
 
 package math.vector;
 
-import java.util.List;
-
 /**
  * Defines a 2-dimensional Vector.
  */
-public class Vector2 extends Vector
-{
+public class Vector2 extends Vector {
     
     //Constructors
     

@@ -6,62 +6,79 @@
 
 package main;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.SwingConstants;
+import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+
+import math.matrix.Matrix3;
 import math.vector.Vector;
 import objects.base.simple.Edge;
 import objects.base.simple.Vertex;
-import math.matrix.Matrix3;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.List;
-import java.util.ArrayList;
-import java.awt.image.BufferedImage;
 
 public class CameraTest {
     
     private static int screenDim = 1000;
+    
     private static int screenBorder = 100;
+    
     private static int minValue = -2;
+    
     private static int maxValue = 2;
+    
     private static double stepValue = .01;
+    
     private static double maxError = .001;
     
     private static int screenX = screenDim;
+    
     private static int screenY = screenDim;
     
     private static int xMin = minValue;
+    
     private static int xMax = maxValue;
+    
     private static double xStep = stepValue;
     
     private static int yMin = minValue;
+    
     private static int yMax = maxValue;
+    
     private static double yStep = stepValue;
     
     private static int zMin = minValue;
+    
     private static int zMax = maxValue;
+    
     private static double zStep = stepValue;
     
-    
     private static double ox = 0;
+    
     private static double oy = 0;
+    
     private static double oz = 0;
     
     private static double rho = 1;
+    
     private static double phi = Math.PI / 2;
+    
     private static double theta = Math.PI;
     
     private static List<Object> objects = new ArrayList<>();
     
-    
-    
-    
-    private static List<Vertex> calculateGraph()
-    {
+    private static List<Vertex> calculateGraph() {
         List<Vertex> vertices = new ArrayList<>();
-
-
 
 
 //        for (double x = xMin; x <= xMax; x += xStep) {
@@ -77,8 +94,6 @@ public class CameraTest {
 //        }
         
         
-
-        
         List<Vertex> graph = new ArrayList<>();
 //        for (Vertex vertex : vertices) {
 //            graph.add(scaleVectorToScreen(vertex));
@@ -86,8 +101,7 @@ public class CameraTest {
         return graph;
     }
     
-    private static List<Edge> calculateAxes()
-    {
+    private static List<Edge> calculateAxes() {
         List<Edge> edges = new ArrayList<>();
         
         //main axes
@@ -148,16 +162,13 @@ public class CameraTest {
         frame.setFocusable(true);
         frame.setFocusTraversalKeysEnabled(false);
         
-        frame.addKeyListener(new KeyListener()
-        {
+        frame.addKeyListener(new KeyListener() {
             @Override
-            public void keyTyped(KeyEvent e)
-            {
+            public void keyTyped(KeyEvent e) {
             }
-    
+            
             @Override
-            public void keyPressed(KeyEvent e)
-            {
+            public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_W) {
                     phi -= .05;
                     if (phi < 0) {
@@ -192,13 +203,11 @@ public class CameraTest {
                     rho += .2;
                 }
                 
-
             }
-    
+            
             @Override
-            public void keyReleased(KeyEvent e)
-            {
-        
+            public void keyReleased(KeyEvent e) {
+                
             }
         });
         
@@ -254,14 +263,14 @@ public class CameraTest {
                 double py = 0;
                 double pz = pc / cz;
                 Vector p = new Vector(px, py, pz);
-    
+
 //                double W = 800;
 //                double H = 600;
 //                Vertex S1 = new Vertex(400, 400, 400);
 //                Vertex S2 = new Vertex(880, 1040, -200);
 //                Vertex S3 = new Vertex(400, 400, -200);
 //                Vertex S4 = new Vertex()
-    
+                
                 //normal unit vector n
                 double nx = cx - ox;
                 double ny = cy - oy;
@@ -271,9 +280,8 @@ public class CameraTest {
                 ny /= nl;
                 nz /= nl;
                 Vector n = new Vector(nx, ny, nz);
-    
-    
-                
+
+
 //                Hexahedron cube = new Hexahedron(new Vertex(0, 0, 0), 1, Color.BLUE);
 //                objects.add(cube);
 //
@@ -360,6 +368,5 @@ public class CameraTest {
 //        v2.z *= scale;
 //        return v2;
 //    }
-    
     
 }

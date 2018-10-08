@@ -6,20 +6,20 @@
 
 package objects.base.polygon;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
+
 import camera.Camera;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Defines a Polygon.
  */
-public class Polygon extends BaseObject
-{
+public class Polygon extends BaseObject {
     
     //Fields
     
@@ -38,8 +38,7 @@ public class Polygon extends BaseObject
      * @param color  The color of the Polygon.
      * @param vs     The vertices of the Polygon.
      */
-    public Polygon(AbstractObject parent, Color color, Vector... vs)
-    {
+    public Polygon(AbstractObject parent, Color color, Vector... vs) {
         super(parent, color, Vector.averageVector(vs), vs);
         numVertices = vs.length;
     }
@@ -53,20 +52,19 @@ public class Polygon extends BaseObject
      * @return The list of BaseObjects that were prepared.
      */
     @Override
-    public List<BaseObject> prepare()
-    {
+    public List<BaseObject> prepare() {
         List<BaseObject> preparedBases = new ArrayList<>();
         if (!visible) {
             return preparedBases;
         }
-    
+        
         prepared.clear();
         for (Vector vertex : vertices) {
             prepared.add(vertex.clone());
         }
-    
+        
         performRotationTransformation(prepared);
-    
+        
         preparedBases.add(this);
         return preparedBases;
     }
@@ -77,18 +75,17 @@ public class Polygon extends BaseObject
      * @param g2 The 2D Graphics entity.
      */
     @Override
-    public void render(Graphics2D g2)
-    {
+    public void render(Graphics2D g2) {
         if (!visible || prepared.size() != numVertices) {
             return;
         }
-    
+        
         Camera.projectVectorToCamera(prepared);
         Camera.collapseVectorToViewport(prepared);
-    
+        
         if (!clippingEnabled || Camera.hasVectorInView(prepared, vertices)) {
             Camera.scaleVectorToScreen(prepared);
-        
+            
             g2.setColor(getColor());
             switch (displayMode) {
                 case VERTEX:
@@ -97,7 +94,7 @@ public class Polygon extends BaseObject
                         g2.drawRect((int) v.getX(), (int) v.getY(), 1, 1);
                     }
                     break;
-                    
+                
                 case EDGE:
                     if (numVertices < 2) {
                         break;
@@ -108,7 +105,7 @@ public class Polygon extends BaseObject
                     }
                     g2.drawLine((int) prepared.get(numVertices - 1).getX(), (int) prepared.get(numVertices - 1).getY(), (int) prepared.get(0).getX(), (int) prepared.get(0).getY());
                     break;
-                    
+                
                 case FACE:
                     if (numVertices < 3) {
                         break;
@@ -129,7 +126,7 @@ public class Polygon extends BaseObject
                     g2.fillPolygon(face);
                     break;
             }
-        
+            
             addFrame(g2);
         }
     }
@@ -143,8 +140,7 @@ public class Polygon extends BaseObject
      * @param n The index of the point to return.
      * @return The first point of the Triangle.
      */
-    public Vector getVertex(int n)
-    {
+    public Vector getVertex(int n) {
         if (n < 1 || n > numVertices) {
             return new Vector(0, 0, 0);
         }
@@ -160,8 +156,7 @@ public class Polygon extends BaseObject
      * @param n The index of the point to set.
      * @param p The new point.
      */
-    public void setVertex(int n, Vector p)
-    {
+    public void setVertex(int n, Vector p) {
         if (n < 1 || n > numVertices) {
             return;
         }

@@ -6,6 +6,9 @@
 
 package main.scenes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -13,19 +16,14 @@ import objects.base.Object;
 import objects.base.Scene;
 import objects.polyhedron.regular.platonic.Icosahedron;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Test extends Scene
-{
+public class Test extends Scene {
     
     /**
      * Constructor for a Scene.
      *
      * @param center The center of the scene.
      */
-    public Test(Vector center)
-    {
+    public Test(Vector center) {
         super(center);
     }
     
@@ -37,9 +35,8 @@ public class Test extends Scene
      *
      * @param args The arguments to the main method.
      */
-    public static void main(String[] args)
-    {
-        String[] environmentArgs = new String[]{};
+    public static void main(String[] args) {
+        String[] environmentArgs = new String[] {};
         Environment.main(environmentArgs);
         
         List<Object> objects = createObjects();
@@ -57,10 +54,9 @@ public class Test extends Scene
      *
      * @return A list of Objects that were created for the scene.
      */
-    public static List<Object> createObjects()
-    {
+    public static List<Object> createObjects() {
         List<Object> objects = new ArrayList<>();
-    
+        
         Icosahedron i = new Icosahedron(null, Environment.origin, java.awt.Color.BLUE, 3);
         i.addFrame(java.awt.Color.BLACK);
         objects.add(i);
@@ -71,8 +67,7 @@ public class Test extends Scene
     /**
      * Sets up cameras for the scene.
      */
-    public static void setupCameras()
-    {
+    public static void setupCameras() {
         Camera camera = new Camera(true, true);
         camera.setLocation(Math.PI / 2, 0, 5);
         Camera.setActiveCamera(0);
@@ -81,9 +76,8 @@ public class Test extends Scene
     /**
      * Sets up controls for the scene.
      */
-    public static void setupControls()
-    {
-    
+    public static void setupControls() {
+        
     }
     
 }

@@ -9,8 +9,7 @@ package math;
 /**
  * Defines a delta.
  */
-public class Delta
-{
+public class Delta {
     
     //Fields
     

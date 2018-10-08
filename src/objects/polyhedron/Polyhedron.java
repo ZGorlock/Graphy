@@ -6,20 +6,15 @@
 
 package objects.polyhedron;
 
-import math.vector.Vector;
-import objects.base.*;
-import objects.base.Object;
-import objects.base.simple.BigVertex;
+import java.awt.Color;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import math.vector.Vector;
+import objects.base.Object;
 
 /**
  * Defines a Polyhedron.
  */
-public abstract class Polyhedron extends Object
-{
+public abstract class Polyhedron extends Object {
     
     //Constants
     
@@ -37,8 +32,7 @@ public abstract class Polyhedron extends Object
      * @param center The center of the Polyhedron.
      * @param color  The color of the Polyhedron.
      */
-    public Polyhedron(Vector center, Color color)
-    {
+    public Polyhedron(Vector center, Color color) {
         super(center, color);
     }
     

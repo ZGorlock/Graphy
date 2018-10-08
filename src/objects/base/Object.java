@@ -6,19 +6,23 @@
 
 package objects.base;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.ConcurrentModificationException;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import utility.RotationUtility;
 
-import java.awt.*;
-import java.util.*;
-import java.util.List;
-
 /**
  * Defines the base properties of an Object.
  */
-public class Object extends AbstractObject
-{
+public class Object extends AbstractObject {
     
     //Fields
     
@@ -37,8 +41,7 @@ public class Object extends AbstractObject
      * @param center The center of the Object.
      * @param color  The color of the Object.
      */
-    public Object(AbstractObject parent, Vector center, Color color)
-    {
+    public Object(AbstractObject parent, Vector center, Color color) {
         this.center = center;
         this.color = color;
         setParent(parent);
@@ -50,8 +53,7 @@ public class Object extends AbstractObject
      * @param center The center of the Object.
      * @param color  The color of the Object.
      */
-    public Object(Vector center, Color color)
-    {
+    public Object(Vector center, Color color) {
         this.center = center;
         this.color = color;
     }
@@ -61,8 +63,7 @@ public class Object extends AbstractObject
      *
      * @param color The color of the Object.
      */
-    public Object(Color color)
-    {
+    public Object(Color color) {
         this.color = color;
     }
     
@@ -72,8 +73,7 @@ public class Object extends AbstractObject
     /**
      * Calculates the components that compose the Object.
      */
-    protected void calculate()
-    {
+    protected void calculate() {
     }
     
     /**
@@ -82,8 +82,7 @@ public class Object extends AbstractObject
      * @return The list of BaseObjects that were prepared.
      */
     @Override
-    public List<BaseObject> prepare()
-    {
+    public List<BaseObject> prepare() {
         if (!visible) {
             return new ArrayList<>();
         }
@@ -103,8 +102,7 @@ public class Object extends AbstractObject
      * @param g2 The 2D Graphics entity.
      */
     @Override
-    public void render(Graphics2D g2)
-    {
+    public void render(Graphics2D g2) {
         if (!visible) {
             return;
         }
@@ -120,8 +118,7 @@ public class Object extends AbstractObject
      * @param offset The relative offsets to move the Object.
      */
     @Override
-    public void move(Vector offset)
-    {
+    public void move(Vector offset) {
         super.move(offset);
         
         for (ObjectInterface component : components) {
@@ -134,8 +131,7 @@ public class Object extends AbstractObject
      *
      * @param center The new center of the Object.
      */
-    public void reposition(Vector center)
-    {
+    public void reposition(Vector center) {
         if (this.center.equals(center)) {
             return;
         }
@@ -150,8 +146,7 @@ public class Object extends AbstractObject
      * @param offset The relative offsets to rotate the Object.
      */
     @Override
-    public void rotateAndTransform(Vector offset)
-    {
+    public void rotateAndTransform(Vector offset) {
         rotateAndTransform(offset, getRootCenter());
     }
     
@@ -162,12 +157,11 @@ public class Object extends AbstractObject
      * @param center The center to rotate the Object about.
      */
     @Override
-    public void rotateAndTransform(Vector offset, Vector center)
-    {
+    public void rotateAndTransform(Vector offset, Vector center) {
         for (ObjectInterface component : components) {
             component.rotateAndTransform(offset, center);
         }
-    
+        
         Matrix3 rotationTransformationMatrix = RotationUtility.getRotationMatrix(offset.getX(), offset.getY(), offset.getZ());
         this.center = RotationUtility.performRotation(this.center, rotationTransformationMatrix, getRootCenter());
     }
@@ -175,8 +169,7 @@ public class Object extends AbstractObject
     /**
      * Hides the Object from being rendered.
      */
-    public void hide()
-    {
+    public void hide() {
         setVisible(false);
         for (ObjectInterface component : components) {
             if (component instanceof BaseObject) {
@@ -193,8 +186,7 @@ public class Object extends AbstractObject
     /**
      * Shows the Object to be rendered.
      */
-    public void show()
-    {
+    public void show() {
         setVisible(true);
         for (ObjectInterface component : components) {
             if (component instanceof BaseObject) {
@@ -212,8 +204,7 @@ public class Object extends AbstractObject
      * Updates the rotation matrix for the Object.
      */
     @Override
-    public void updateRotationMatrix()
-    {
+    public void updateRotationMatrix() {
         super.updateRotationMatrix();
         
         for (ObjectInterface component : components) {
@@ -227,8 +218,7 @@ public class Object extends AbstractObject
      *
      * @param color The color of the Frame to add.
      */
-    public Frame addFrame(Color color)
-    {
+    public Frame addFrame(Color color) {
         frame = new Frame(this, color);
         return frame;
     }
@@ -239,8 +229,7 @@ public class Object extends AbstractObject
      * @param component The component to register.
      */
     @Override
-    public void registerComponent(ObjectInterface component)
-    {
+    public void registerComponent(ObjectInterface component) {
         if (!components.contains(component)) {
             this.components.add(component);
         }
@@ -252,8 +241,7 @@ public class Object extends AbstractObject
      * @param component The component to unregister.
      */
     @Override
-    public void unregisterComponent(ObjectInterface component)
-    {
+    public void unregisterComponent(ObjectInterface component) {
         if (components.contains(component)) {
             this.components.remove(component);
         }
@@ -265,8 +253,7 @@ public class Object extends AbstractObject
      * @param frame The Frame to register.
      */
     @Override
-    public void registerFrame(Frame frame)
-    {
+    public void registerFrame(Frame frame) {
         super.registerFrame(frame);
         
         for (ObjectInterface component : components) {
@@ -280,14 +267,11 @@ public class Object extends AbstractObject
      * @param process The process to execute.
      * @param delay   The delay between executions.
      */
-    public void addProcess(Runnable process, long delay)
-    {
+    public void addProcess(Runnable process, long delay) {
         Timer processTimer = new Timer();
-        processTimer.scheduleAtFixedRate(new TimerTask()
-        {
+        processTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
-            public void run()
-            {
+            public void run() {
                 process.run();
             }
         }, delay, delay);
@@ -299,8 +283,7 @@ public class Object extends AbstractObject
      * @return Whether the Object is undergoing a rotation transformation or not.
      */
     @Override
-    public boolean inRotationTransformation()
-    {
+    public boolean inRotationTransformation() {
         if (super.inRotationTransformation.get()) {
             return true;
         }
@@ -326,8 +309,7 @@ public class Object extends AbstractObject
      *
      * @return The list of Objects that define the Object.
      */
-    public List<ObjectInterface> getComponents()
-    {
+    public List<ObjectInterface> getComponents() {
         return components;
     }
     
@@ -336,13 +318,12 @@ public class Object extends AbstractObject
      *
      * @return The list of Base Objects that define the Object.
      */
-    public List<BaseObject> getBaseComponents()
-    {
+    public List<BaseObject> getBaseComponents() {
         List<BaseObject> baseComponents = new ArrayList<>();
         for (ObjectInterface component : components) {
             if (component instanceof BaseObject) {
                 baseComponents.add((BaseObject) component);
-            } else if (component instanceof Object){
+            } else if (component instanceof Object) {
                 baseComponents.addAll(((Object) component).getBaseComponents());
             } else {
                 //TODO
@@ -356,13 +337,12 @@ public class Object extends AbstractObject
      *
      * @return The list of Vectors that define the Object.
      */
-    public List<Vector> getVectors()
-    {
+    public List<Vector> getVectors() {
         List<Vector> vectors = new ArrayList<>();
         for (ObjectInterface component : components) {
             if (component instanceof BaseObject) {
                 vectors.addAll(Arrays.asList(((BaseObject) component).vertices));
-            } else if (component instanceof Object){
+            } else if (component instanceof Object) {
                 vectors.addAll(((Object) component).getVectors());
             } else {
                 //TODO
@@ -380,10 +360,9 @@ public class Object extends AbstractObject
      * @param center The nwe center point of the Object.
      */
     @Override
-    public void setCenter(Vector center)
-    {
+    public void setCenter(Vector center) {
         super.setCenter(center);
-    
+        
         for (ObjectInterface component : components) {
             component.setCenter(center);
         }
@@ -395,8 +374,7 @@ public class Object extends AbstractObject
      * @param color The new color of the Object.
      */
     @Override
-    public void setColor(Color color)
-    {
+    public void setColor(Color color) {
         super.setColor(color);
         
         for (ObjectInterface component : components) {
@@ -409,8 +387,7 @@ public class Object extends AbstractObject
      *
      * @param rotation The angles that define the rotation of the Object.
      */
-    public void setRotation(Vector rotation)
-    {
+    public void setRotation(Vector rotation) {
         super.setRotation(rotation);
         
         for (ObjectInterface component : components) {
@@ -424,10 +401,9 @@ public class Object extends AbstractObject
      * @param visible The new visibility of the Object.
      */
     @Override
-    public void setVisible(boolean visible)
-    {
+    public void setVisible(boolean visible) {
         super.setVisible(visible);
-    
+        
         for (ObjectInterface component : components) {
             component.setVisible(visible);
         }
@@ -439,8 +415,7 @@ public class Object extends AbstractObject
      * @param displayMode The new display mode of the Object.
      */
     @Override
-    public void setDisplayMode(BaseObject.DisplayMode displayMode)
-    {
+    public void setDisplayMode(BaseObject.DisplayMode displayMode) {
         super.setDisplayMode(displayMode);
         
         for (ObjectInterface component : components) {
@@ -454,8 +429,7 @@ public class Object extends AbstractObject
      * @param clippingEnabled The new clipping mode of the Object.
      */
     @Override
-    public void setClippingEnabled(boolean clippingEnabled)
-    {
+    public void setClippingEnabled(boolean clippingEnabled) {
         super.setClippingEnabled(clippingEnabled);
         
         for (ObjectInterface component : components) {

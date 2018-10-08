@@ -6,20 +6,18 @@
 
 package objects.fractals;
 
-import main.Environment;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import math.vector.Vector;
 import objects.base.Object;
 import objects.polyhedron.regular.platonic.Hexahedron;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Defines a Cube Fractal.
  */
-public class CubeFractal extends Object
-{
+public class CubeFractal extends Object {
     
     //Fields
     
@@ -50,8 +48,7 @@ public class CubeFractal extends Object
      * @param scalingFactor The scaling factor of child Cubes.
      * @param renderDepth   The number of iterations to render.
      */
-    public CubeFractal(Vector center, Color color, double initialSize, double scalingFactor, int renderDepth)
-    {
+    public CubeFractal(Vector center, Color color, double initialSize, double scalingFactor, int renderDepth) {
         super(center, color);
         
         this.initialSize = initialSize;
@@ -67,8 +64,7 @@ public class CubeFractal extends Object
      * Calculates the entities of the Cube Fractal.
      */
     @Override
-    public void calculate()
-    {
+    public void calculate() {
         int c = 0;
         double w = initialSize;
         
@@ -84,14 +80,14 @@ public class CubeFractal extends Object
         while (c < renderDepth) {
             c++;
             w /= scalingFactor;
-        
+            
             a.clear();
             a.addAll(b);
             aType.clear();
             aType.addAll(bType);
             b.clear();
             bType.clear();
-        
+            
             for (int i = 0; i < a.size(); i++) {
                 Hexahedron as = a.get(i);
                 int type = aType.get(i);
@@ -121,9 +117,8 @@ public class CubeFractal extends Object
                     bType.add(6);
                 }
             }
-        
+            
         }
     }
-    
     
 }

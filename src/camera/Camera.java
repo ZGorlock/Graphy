@@ -6,23 +6,31 @@
 
 package camera;
 
+import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import main.Environment;
 import math.Delta;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import math.vector.Vector3;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 /**
  * Defines the functionality of a Camera.
  */
-public class Camera
-{
+public class Camera {
     
     //Constants
     
@@ -76,7 +84,9 @@ public class Camera
      * The current location of the Camera in spherical coordinates.
      */
     private double rho = 10;
+    
     private double phi = Math.PI / 2;
+    
     private double theta = Math.PI;
     
     /**
@@ -93,13 +103,16 @@ public class Camera
      * The current movement speed of the Camera.
      */
     private double phiSpeed = .05;
+    
     private double thetaSpeed = .05;
+    
     private double rhoSpeed = 1;
     
     /**
      * The dimensions of the viewport.
      */
     private double viewportX = Environment.screenX / 1000.0;
+    
     private double viewportY = Environment.screenY / 1000.0;
     
     /**
@@ -121,8 +134,11 @@ public class Camera
      * The points that define the Screen viewport.
      */
     private Vector s1;
+    
     private Vector s2;
+    
     private Vector s3;
+    
     private Vector s4;
     
     /**
@@ -146,8 +162,7 @@ public class Camera
     /**
      * The constructor for a Camera.
      */
-    public Camera(boolean cameraControls, boolean cameraMovement)
-    {
+    public Camera(boolean cameraControls, boolean cameraMovement) {
         cameraId = nextCameraId;
         nextCameraId++;
         cameraMap.put(cameraId, this);
@@ -155,8 +170,8 @@ public class Camera
         origin = Environment.origin;
         
         calculateCamera();
-    
-        if (activeCameraView == -1 || activeCameraControl == -1 ) {
+        
+        if (activeCameraView == -1 || activeCameraControl == -1) {
             setActiveCamera(cameraId);
         }
         Environment.addObject(cameraObject);
@@ -170,11 +185,9 @@ public class Camera
         }
         
         timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask()
-        {
+        timer.scheduleAtFixedRate(new TimerTask() {
             @Override
-            public void run()
-            {
+            public void run() {
                 calculateCamera();
             }
         }, 0, 1000 / Environment.FPS);
@@ -186,8 +199,7 @@ public class Camera
     /**
      * Calculates the Camera.
      */
-    public void calculateCamera()
-    {
+    public void calculateCamera() {
         //determine if update is necessary
 //        if (!Environment.origin.equals(origin)) {
 //            origin = Environment.origin;
@@ -203,7 +215,7 @@ public class Camera
         double my = rho * Math.cos(phi);
         double mz = rho * Math.sin(phi) * Math.sin(theta);
         m = new Vector(mx, my, mz);
-    
+        
         
         //normal unit vector of screen, n
         double nx = mx - origin.getX();
@@ -248,7 +260,7 @@ public class Camera
         
         
         //find scalar equation of screen
-        Matrix3 scalarEquationSystem = new Matrix3(new double[]{
+        Matrix3 scalarEquationSystem = new Matrix3(new double[] {
                 s1.getX(), s1.getY(), s1.getZ(),
                 s2.getX(), s2.getY(), s2.getZ(),
                 m.getX(), m.getY(), m.getZ()
@@ -290,8 +302,7 @@ public class Camera
      * @param v The Vector to project.
      * @return The projected Vector.
      */
-    public Vector projectVector(Vector v)
-    {
+    public Vector projectVector(Vector v) {
         //equation of plane of screen
         //e.x*x + e.y*y + e.z*z = 1
         
@@ -313,8 +324,7 @@ public class Camera
      * @param v The Vector, will be updated with its relative coordinates on the viewport.
      * @return Whether the Vector is visible on the Screen or not.
      */
-    public Vector collapseVector(Vector v)
-    {
+    public Vector collapseVector(Vector v) {
         //perform pre-calculations
         Vector s1v = v.minus(s1);
         Vector s4v = v.minus(s4);
@@ -340,32 +350,28 @@ public class Camera
     /**
      * Sets this Camera as the active camera.
      */
-    public void setAsActiveCamera()
-    {
+    public void setAsActiveCamera() {
         setActiveCamera(cameraId);
     }
     
     /**
      * Sets this Camera as the active camera for viewing.
      */
-    public void setAsActiveViewCamera()
-    {
+    public void setAsActiveViewCamera() {
         setActiveCameraView(cameraId);
     }
     
     /**
      * Sets this Camera as the active camera for controls.
      */
-    public void setAsActiveControlCamera()
-    {
+    public void setAsActiveControlCamera() {
         setActiveCameraControl(cameraId);
     }
     
     /**
      * Removes the Camera.
      */
-    public void removeCamera()
-    {
+    public void removeCamera() {
         timer.purge();
         timer.cancel();
         cameraObject.setVisible(false);
@@ -376,20 +382,16 @@ public class Camera
     /**
      * Adds a KeyListener for the Camera controls.
      */
-    private void setupKeyListener()
-    {
-        Environment.frame.addKeyListener(new KeyListener()
-        {
+    private void setupKeyListener() {
+        Environment.frame.addKeyListener(new KeyListener() {
             private final Set<Integer> pressed = new HashSet<>();
             
             @Override
-            public void keyTyped(KeyEvent e)
-            {
+            public void keyTyped(KeyEvent e) {
             }
             
             @Override
-            public void keyPressed(KeyEvent e)
-            {
+            public void keyPressed(KeyEvent e) {
                 if (cameraId != activeCameraControl) {
                     return;
                 }
@@ -466,8 +468,7 @@ public class Camera
             }
             
             @Override
-            public void keyReleased(KeyEvent e)
-            {
+            public void keyReleased(KeyEvent e) {
                 pressed.remove(e.getKeyCode());
             }
             
@@ -477,77 +478,67 @@ public class Camera
     /**
      * Adds a MouseListener for the Camera controls.
      */
-    private void setupMouseListener()
-    {
+    private void setupMouseListener() {
         final Delta delta = new Delta();
         
-        Environment.frame.addMouseListener(new MouseListener()
-        {
+        Environment.frame.addMouseListener(new MouseListener() {
             @Override
-            public void mouseClicked(MouseEvent e)
-            {
-            
+            public void mouseClicked(MouseEvent e) {
+                
             }
-        
+            
             @Override
-            public void mousePressed(MouseEvent e)
-            {
+            public void mousePressed(MouseEvent e) {
                 delta.x = e.getX();
                 delta.y = e.getY();
             }
-        
-            @Override
-            public void mouseReleased(MouseEvent e)
-            {
-            }
-        
-            @Override
-            public void mouseEntered(MouseEvent e)
-            {
             
-            }
-        
             @Override
-            public void mouseExited(MouseEvent e)
-            {
+            public void mouseReleased(MouseEvent e) {
+            }
             
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                
             }
         });
         
-        Environment.frame.addMouseMotionListener(new MouseMotionListener()
-        {
+        Environment.frame.addMouseMotionListener(new MouseMotionListener() {
             @Override
-            public void mouseDragged(MouseEvent e)
-            {
+            public void mouseDragged(MouseEvent e) {
                 double deltaX = e.getX() - delta.x;
                 double deltaY = e.getY() - delta.y;
                 delta.x = e.getX();
                 delta.y = e.getY();
-            
+                
                 double oldTheta = theta;
                 double oldPhi = phi;
-            
+                
                 theta += thetaSpeed / 10 * deltaX;
                 phi += phiSpeed / 10 * deltaY;
                 bindLocation();
-            
+                
                 if (phi != oldPhi || theta != oldTheta) {
                     updateRequired = true;
                 }
             }
-        
+            
             @Override
-            public void mouseMoved(MouseEvent e)
-            {
+            public void mouseMoved(MouseEvent e) {
             }
         });
-    
+        
         Environment.frame.addMouseWheelListener(e -> {
             double oldRho = rho;
-        
+            
             rho += rhoSpeed * e.getWheelRotation();
             bindLocation();
-        
+            
             if (rho != oldRho) {
                 updateRequired = true;
             }
@@ -562,21 +553,19 @@ public class Camera
      * @param rhoMovement   The phi angle to move over the period.
      * @param period        The period over which to perform the movement in milliseconds.
      */
-    public void addFluidTransition(double phiMovement, double thetaMovement, double rhoMovement, long period)
-    {
+    public void addFluidTransition(double phiMovement, double thetaMovement, double rhoMovement, long period) {
         Timer transitionTimer = new Timer();
-        transitionTimer.scheduleAtFixedRate(new TimerTask()
-        {
+        transitionTimer.scheduleAtFixedRate(new TimerTask() {
             private Vector movementVector = new Vector(phiMovement, thetaMovement, rhoMovement);
+            
             private Vector totalMovement = new Vector(0, 0, 0);
             
             private long timeCount = 0;
             
             private long lastTime;
-    
+            
             @Override
-            public void run()
-            {
+            public void run() {
                 if (lastTime == 0) {
                     lastTime = System.currentTimeMillis();
                     return;
@@ -602,8 +591,7 @@ public class Camera
         }, 0, (long) (1000.0 / Environment.FPS / 2));
     }
     
-    public void bindLocation()
-    {
+    public void bindLocation() {
         if (phi < phiBoundary) {
             phi = phiBoundary;
         } else if (phi > Math.PI - phiBoundary) {
@@ -621,8 +609,7 @@ public class Camera
      *
      * @return The Camera position.
      */
-    public Vector getCameraPosition()
-    {
+    public Vector getCameraPosition() {
         return c;
     }
     
@@ -636,8 +623,7 @@ public class Camera
      * @param theta The new theta angle of the Camera.
      * @param rho   The new rho distance of the Camera.
      */
-    public void setLocation(double phi, double theta, double rho)
-    {
+    public void setLocation(double phi, double theta, double rho) {
         this.phi = phi;
         this.theta = theta;
         this.rho = rho;
@@ -650,8 +636,7 @@ public class Camera
      *
      * @param offset The relative offsets to move the Camera.
      */
-    public void moveCamera(Vector offset)
-    {
+    public void moveCamera(Vector offset) {
         setLocation(phi + offset.getX(), theta + offset.getY(), rho + offset.getZ());
     }
     
@@ -663,8 +648,7 @@ public class Camera
      *
      * @param vs The list of Vectors to project.
      */
-    public static void projectVectorToCamera(List<Vector> vs)
-    {
+    public static void projectVectorToCamera(List<Vector> vs) {
         Camera camera = getActiveCameraView();
         if (camera == null) {
             return;
@@ -680,13 +664,12 @@ public class Camera
      *
      * @param vs The list of Vector to be prepared for rendering.
      */
-    public static void collapseVectorToViewport(List<Vector> vs)
-    {
+    public static void collapseVectorToViewport(List<Vector> vs) {
         Camera camera = getActiveCameraView();
         if (camera == null) {
             return;
         }
-    
+        
         for (int i = 0; i < vs.size(); i++) {
             vs.set(i, camera.collapseVector(vs.get(i)));
         }
@@ -699,17 +682,15 @@ public class Camera
      * @param ovs The list of original Vectors.
      * @return Whether any of the Vectors are visible on the Screen or not.
      */
-    public static boolean hasVectorInView(List<Vector> vs, Vector[] ovs)
-    {
+    public static boolean hasVectorInView(List<Vector> vs, Vector[] ovs) {
         Camera camera = getActiveCameraView();
         if (camera == null) {
             return false;
         }
-
+        
         //ensure Vectors are not behind Camera
         boolean inView = true;
-        for (Vector v : ovs)
-        {
+        for (Vector v : ovs) {
             double d1 = camera.origin.distance(v);
             double d2 = camera.origin.distance(camera.c);
             double d3 = camera.c.distance(v);
@@ -725,7 +706,7 @@ public class Camera
         inView = false;
         for (Vector v : vs) {
             if (v.getX() >= 0 && v.getX() < camera.viewportX &&
-                    v.getY() >= 0 && v.getY() < camera.viewportY) {
+                v.getY() >= 0 && v.getY() < camera.viewportY) {
                 inView = true;
             }
         }
@@ -737,8 +718,7 @@ public class Camera
      *
      * @param vs The list of Vectors to scale.
      */
-    public static void scaleVectorToScreen(List<Vector> vs)
-    {
+    public static void scaleVectorToScreen(List<Vector> vs) {
         Camera camera = getActiveCameraView();
         Vector viewportDim = getActiveViewportDim();
         Vector scale = new Vector(
@@ -757,8 +737,7 @@ public class Camera
      *
      * @return The active Camera for viewing.
      */
-    public static Camera getActiveCameraView()
-    {
+    public static Camera getActiveCameraView() {
         return cameraMap.get(activeCameraView);
     }
     
@@ -767,8 +746,7 @@ public class Camera
      *
      * @param cameraId The if of the new active Camera.
      */
-    public static void setActiveCamera(int cameraId)
-    {
+    public static void setActiveCamera(int cameraId) {
         setActiveCameraView(cameraId);
         setActiveCameraControl(cameraId);
     }
@@ -778,8 +756,7 @@ public class Camera
      *
      * @param cameraId The if of the new active Camera for viewing.
      */
-    public static void setActiveCameraView(int cameraId)
-    {
+    public static void setActiveCameraView(int cameraId) {
         if (cameraMap.containsKey(cameraId) && cameraId != activeCameraView) {
             if (activeCameraView >= 0) {
                 cameraMap.get(activeCameraView).cameraObject.show();
@@ -796,8 +773,7 @@ public class Camera
      *
      * @param cameraId The if of the new active Camera for control.
      */
-    public static void setActiveCameraControl(int cameraId)
-    {
+    public static void setActiveCameraControl(int cameraId) {
         if (cameraMap.containsKey(cameraId) && cameraId != activeCameraControl) {
             activeCameraControl = cameraId;
         }
@@ -808,8 +784,7 @@ public class Camera
      *
      * @return The viewport dimensions of the active Camera.
      */
-    public static Vector getActiveViewportDim()
-    {
+    public static Vector getActiveViewportDim() {
         Camera camera = getActiveCameraView();
         return new Vector(camera.viewportX, camera.viewportY);
     }
@@ -817,25 +792,21 @@ public class Camera
     /**
      * Adds the static KeyListener for the Camera system controls.
      */
-    private static void setupStaticKeyListener()
-    {
+    private static void setupStaticKeyListener() {
         if (!hasSetupStaticKeyListener.compareAndSet(false, true)) {
             return;
         }
         
-        Environment.frame.addKeyListener(new KeyListener()
-        {
+        Environment.frame.addKeyListener(new KeyListener() {
             
             @Override
-            public void keyTyped(KeyEvent e)
-            {
+            public void keyTyped(KeyEvent e) {
             }
             
             @Override
-            public void keyPressed(KeyEvent e)
-            {
+            public void keyPressed(KeyEvent e) {
                 int key = e.getKeyCode();
-    
+                
                 if (key == KeyEvent.VK_1 || key == KeyEvent.VK_NUMPAD1) {
                     setActiveCamera(0);
                 }
@@ -866,8 +837,7 @@ public class Camera
             }
             
             @Override
-            public void keyReleased(KeyEvent e)
-            {
+            public void keyReleased(KeyEvent e) {
             }
             
         });

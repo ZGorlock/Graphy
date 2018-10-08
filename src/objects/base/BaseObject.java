@@ -6,21 +6,21 @@
 
 package objects.base;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
+
 import camera.Camera;
 import main.Environment;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import utility.RotationUtility;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Defines the base properties of an Object.
  */
-public abstract class BaseObject extends AbstractObject
-{
+public abstract class BaseObject extends AbstractObject {
     
     //Fields
     
@@ -73,7 +73,7 @@ public abstract class BaseObject extends AbstractObject
      * @throws ArithmeticException When the vertices are not all of the same spacial dimension.
      */
     public BaseObject(AbstractObject parent, Vector center, List<Vector> vertices) throws ArithmeticException {
-        this(parent, Color.BLACK, center, vertices.toArray(new Vector[]{}));
+        this(parent, Color.BLACK, center, vertices.toArray(new Vector[] {}));
     }
     
     /**
@@ -85,7 +85,7 @@ public abstract class BaseObject extends AbstractObject
      * @throws ArithmeticException When the vertices are not all of the same spacial dimension.
      */
     public BaseObject(Color color, Vector center, List<Vector> vertices) throws ArithmeticException {
-        this(null, color, center, vertices.toArray(new Vector[]{}));
+        this(null, color, center, vertices.toArray(new Vector[] {}));
     }
     
     /**
@@ -96,7 +96,7 @@ public abstract class BaseObject extends AbstractObject
      * @throws ArithmeticException When the vertices are not all of the same spacial dimension.
      */
     public BaseObject(Vector center, List<Vector> vertices) throws ArithmeticException {
-        this(null, Color.BLACK, center, vertices.toArray(new Vector[]{}));
+        this(null, Color.BLACK, center, vertices.toArray(new Vector[] {}));
     }
     
     /**
@@ -106,7 +106,7 @@ public abstract class BaseObject extends AbstractObject
      * @throws ArithmeticException When the vertices are not all of the same spacial dimension.
      */
     public BaseObject(List<Vector> vertices) throws ArithmeticException {
-        this(null, Color.BLACK, Environment.origin, vertices.toArray(new Vector[]{}));
+        this(null, Color.BLACK, Environment.origin, vertices.toArray(new Vector[] {}));
     }
     
     
@@ -134,12 +134,11 @@ public abstract class BaseObject extends AbstractObject
      * @param offset The relative offsets to move the Object.
      */
     @Override
-    public void move(Vector offset)
-    {
+    public void move(Vector offset) {
         super.move(offset);
         
         for (int i = 0; i < vertices.length; i++) {
-           vertices[i] = vertices[i].plus(offset);
+            vertices[i] = vertices[i].plus(offset);
         }
     }
     
@@ -149,8 +148,7 @@ public abstract class BaseObject extends AbstractObject
      * @param offset The relative offsets to rotate the Object.
      */
     @Override
-    public void rotateAndTransform(Vector offset)
-    {
+    public void rotateAndTransform(Vector offset) {
         rotateAndTransform(offset, getRootCenter());
     }
     
@@ -161,8 +159,7 @@ public abstract class BaseObject extends AbstractObject
      * @param center The center to rotate the Object about.
      */
     @Override
-    public void rotateAndTransform(Vector offset, Vector center)
-    {
+    public void rotateAndTransform(Vector offset, Vector center) {
         Matrix3 rotationTransformationMatrix = RotationUtility.getRotationMatrix(offset.getX(), offset.getY(), offset.getZ());
         
         for (int i = 0; i < vertices.length; i++) {
@@ -176,12 +173,11 @@ public abstract class BaseObject extends AbstractObject
      *
      * @return The distance of the prepared Vectors of the Object from the Camera.
      */
-    public double calculatePreparedDistance()
-    {
+    public double calculatePreparedDistance() {
         if (prepared.isEmpty()) {
             return 0;
         }
-    
+        
         Camera cam = Camera.getActiveCameraView();
         if (cam == null) {
             return 0;
@@ -203,8 +199,7 @@ public abstract class BaseObject extends AbstractObject
      *
      * @param g2 The 2D Graphics entity.
      */
-    public void addFrame(Graphics2D g2)
-    {
+    public void addFrame(Graphics2D g2) {
         if (frame == null) {
             return;
         }
@@ -220,8 +215,7 @@ public abstract class BaseObject extends AbstractObject
      *
      * @return The list of Vertices that define the Object.
      */
-    public Vector[] getVertices()
-    {
+    public Vector[] getVertices() {
         return vertices;
     }
     

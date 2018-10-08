@@ -6,20 +6,19 @@
 
 package objects;
 
+import java.awt.Color;
+import java.util.Arrays;
+
 import math.vector.Vector;
-import objects.base.*;
+import objects.base.AbstractObject;
 import objects.base.Object;
 import objects.base.polygon.Rectangle;
 import objects.base.polygon.Triangle;
 
-import java.awt.*;
-import java.util.Arrays;
-
 /**
  * Defines a Pyramid Object.
  */
-public class RectangularPyramid extends Object
-{
+public class RectangularPyramid extends Object {
     
     //Fields
     
@@ -44,8 +43,7 @@ public class RectangularPyramid extends Object
      * @param base   The Rectangle defining the base of the Pyramid.
      * @param apex   The Vector defining the apex of the Pyramid.
      */
-    public RectangularPyramid(AbstractObject parent, Color color, Rectangle base, Vector apex)
-    {
+    public RectangularPyramid(AbstractObject parent, Color color, Rectangle base, Vector apex) {
         super(color);
         
         this.base = base;
@@ -61,8 +59,7 @@ public class RectangularPyramid extends Object
      * @param base   The Rectangle defining the base of the Pyramid.
      * @param apex   The Vector defining the apex of the Pyramid.
      */
-    public RectangularPyramid(AbstractObject parent, Rectangle base, Vector apex)
-    {
+    public RectangularPyramid(AbstractObject parent, Rectangle base, Vector apex) {
         this(null, Color.BLACK, base, apex);
     }
     
@@ -73,8 +70,7 @@ public class RectangularPyramid extends Object
      * @param base  The Rectangle defining the base of the Pyramid.
      * @param apex  The Vector defining the apex of the Pyramid.
      */
-    public RectangularPyramid(Color color, Rectangle base, Vector apex)
-    {
+    public RectangularPyramid(Color color, Rectangle base, Vector apex) {
         this(null, color, base, apex);
     }
     
@@ -85,10 +81,9 @@ public class RectangularPyramid extends Object
      * Calculates the structure of the Pyramid.
      */
     @Override
-    protected void calculate()
-    {
+    protected void calculate() {
         components.clear();
-    
+        
         this.center = apex.average(base.getVertices()[0].average(Arrays.copyOfRange(base.getVertices(), 1, base.getVertices().length)));
         
         new Triangle(this, color,
@@ -124,8 +119,7 @@ public class RectangularPyramid extends Object
     /**
      * Recalculates the structure of the Pyramid.
      */
-    protected void recalculate()
-    {
+    protected void recalculate() {
         this.center = apex.average(base.getVertices()[0].average(Arrays.copyOfRange(base.getVertices(), 1, base.getVertices().length - 1)));
         
         ((Triangle) components.get(0)).setPoints(
@@ -164,8 +158,7 @@ public class RectangularPyramid extends Object
      *
      * @return The Rectangle that defines the base of the Pyramid.
      */
-    public Rectangle getBase()
-    {
+    public Rectangle getBase() {
         return base;
     }
     
@@ -174,8 +167,7 @@ public class RectangularPyramid extends Object
      *
      * @return The Vector that defines the apex of the Pyramid.
      */
-    public Vector getApex()
-    {
+    public Vector getApex() {
         return apex;
     }
     
@@ -188,8 +180,7 @@ public class RectangularPyramid extends Object
      * @param base The Rectangle that defines the base of the Pyramid.
      * @param apex The Vector that defines the apex of the Pyramid.
      */
-    public void setComponents(Rectangle base, Vector apex)
-    {
+    public void setComponents(Rectangle base, Vector apex) {
         this.base = base;
         this.apex = apex;
         recalculate();
@@ -200,8 +191,7 @@ public class RectangularPyramid extends Object
      *
      * @param base The Rectangle that defines the base of the Pyramid.
      */
-    public void setBase(Rectangle base)
-    {
+    public void setBase(Rectangle base) {
         this.base = base;
         recalculate();
     }
@@ -211,8 +201,7 @@ public class RectangularPyramid extends Object
      *
      * @param apex The Vector that defines the apex of the Pyramid.
      */
-    public void setApex(Vector apex)
-    {
+    public void setApex(Vector apex) {
         this.apex = apex;
         recalculate();
     }
@@ -223,8 +212,7 @@ public class RectangularPyramid extends Object
      * @param face  The face of the Pyramid.
      * @param color The color.
      */
-    public void setFaceColor(int face, Color color)
-    {
+    public void setFaceColor(int face, Color color) {
         if (face < 1 || face > 5) {
             return;
         }

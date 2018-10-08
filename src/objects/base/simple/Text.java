@@ -6,20 +6,20 @@
 
 package objects.base.simple;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
+
 import camera.Camera;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Defines a Text object.
  */
-public class Text extends BaseObject
-{
+public class Text extends BaseObject {
     
     //Fields
     
@@ -39,8 +39,7 @@ public class Text extends BaseObject
      * @param v      The Vector defining the point of the Text.
      * @param text   The text to display.
      */
-    public Text(AbstractObject parent, Color color, Vector v, String text)
-    {
+    public Text(AbstractObject parent, Color color, Vector v, String text) {
         super(parent, color, v, v);
         this.text = text.toCharArray();
     }
@@ -52,34 +51,30 @@ public class Text extends BaseObject
      * @param v      The Vector defining the point of the Text.
      * @param text   The text to display.
      */
-    public Text(AbstractObject parent, Vector v, String text)
-    {
+    public Text(AbstractObject parent, Vector v, String text) {
         this(parent, Color.BLACK, v, text);
     }
     
     /**
      * The constructor for a Text.
      *
-     * @param color  The color of the Text.
-     * @param v      The Vector defining the point of the Text.
-     * @param text   The text to display.
+     * @param color The color of the Text.
+     * @param v     The Vector defining the point of the Text.
+     * @param text  The text to display.
      */
-    public Text(Color color, Vector v, String text)
-    {
+    public Text(Color color, Vector v, String text) {
         this(null, color, v, text);
     }
     
     /**
      * The constructor for a Text.
      *
-     * @param v      The Vector defining the point of the Text.
-     * @param text   The text to display.
+     * @param v    The Vector defining the point of the Text.
+     * @param text The text to display.
      */
-    public Text(Vector v, String text)
-    {
+    public Text(Vector v, String text) {
         this(null, Color.BLACK, v, text);
     }
-    
     
     
     //Methods
@@ -90,8 +85,7 @@ public class Text extends BaseObject
      * @return The list of BaseObjects that were prepared.
      */
     @Override
-    public List<BaseObject> prepare()
-    {
+    public List<BaseObject> prepare() {
         List<BaseObject> preparedBases = new ArrayList<>();
         if (!visible) {
             return preparedBases;
@@ -112,8 +106,7 @@ public class Text extends BaseObject
      * @param g2 The 2D Graphics entity.
      */
     @Override
-    public void render(Graphics2D g2)
-    {
+    public void render(Graphics2D g2) {
         if (!visible || prepared.size() != 1) {
             return;
         }

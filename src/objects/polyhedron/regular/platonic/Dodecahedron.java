@@ -6,21 +6,17 @@
 
 package objects.polyhedron.regular.platonic;
 
+import java.awt.Color;
+
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.polygon.Pentagon;
-import objects.base.polygon.Triangle;
-import objects.base.simple.BigVertex;
-import objects.base.simple.Text;
 import objects.polyhedron.regular.RegularPolyhedron;
-
-import java.awt.*;
 
 /**
  * Defines a Dodecahedron.
  */
-public class Dodecahedron extends RegularPolyhedron
-{
+public class Dodecahedron extends RegularPolyhedron {
     
     //Constants
     
@@ -45,8 +41,7 @@ public class Dodecahedron extends RegularPolyhedron
      * @param color  The color of the Dodecahedron.
      * @param radius The radius of the bounding sphere of the Dodecahedron.
      */
-    public Dodecahedron(AbstractObject parent, Vector center, Color color, double radius)
-    {
+    public Dodecahedron(AbstractObject parent, Vector center, Color color, double radius) {
         super(parent, center, color, DODECAHEDRON_FACES, DODECAHEDRON_VERTICES, radius);
     }
     
@@ -57,8 +52,7 @@ public class Dodecahedron extends RegularPolyhedron
      * @param center The center point of the Dodecahedron.
      * @param radius The radius of the bounding sphere of the Dodecahedron.
      */
-    public Dodecahedron(AbstractObject parent, Vector center, double radius)
-    {
+    public Dodecahedron(AbstractObject parent, Vector center, double radius) {
         this(parent, center, Color.BLACK, radius);
     }
     
@@ -69,8 +63,7 @@ public class Dodecahedron extends RegularPolyhedron
      * @param color  The color of the Dodecahedron.
      * @param radius The radius of the bounding sphere of the Dodecahedron.
      */
-    public Dodecahedron(Vector center, Color color, double radius)
-    {
+    public Dodecahedron(Vector center, Color color, double radius) {
         this(null, center, color, radius);
     }
     
@@ -81,8 +74,7 @@ public class Dodecahedron extends RegularPolyhedron
      * Calculates the structure of the Dodecahedron.
      */
     @Override
-    protected void calculate()
-    {
+    protected void calculate() {
         components.clear();
         
         double a = GOLDEN_RATIO;
@@ -96,7 +88,7 @@ public class Dodecahedron extends RegularPolyhedron
                 vertices[v++] = new Vector(a * i, b * j, 0).scale(radius).plus(center);
                 vertices[v++] = new Vector(b * i, 0, a * j).scale(radius).plus(center);
                 
-                for (int k : new int[]{-1, 1}) {
+                for (int k : new int[] {-1, 1}) {
                     vertices[v++] = new Vector(i, j, k).scale(radius).plus(center);
                 }
             }

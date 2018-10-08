@@ -6,17 +6,17 @@
 
 package objects.base;
 
-import math.vector.Vector;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
+
+import math.vector.Vector;
 
 /**
  * Defines a Frame Object for Objects.
  */
-public class Frame extends Object
-{
+public class Frame extends Object {
     
     //Fields
     
@@ -34,8 +34,7 @@ public class Frame extends Object
      * @param base  The Object to create a frame for.
      * @param color The color of the Frame.
      */
-    public Frame(Object base, Color color)
-    {
+    public Frame(Object base, Color color) {
         super(base.getCenter(), color);
         
         this.base = base;
@@ -48,8 +47,7 @@ public class Frame extends Object
      *
      * @param base The Object to create a frame for.
      */
-    public Frame(Object base)
-    {
+    public Frame(Object base) {
         this(base, Color.BLACK);
     }
     
@@ -60,8 +58,7 @@ public class Frame extends Object
      * Calculates the edges of the Frame.
      */
     @Override
-    protected void calculate()
-    {
+    protected void calculate() {
     }
     
     /**
@@ -70,8 +67,7 @@ public class Frame extends Object
      * @return The list of BaseObjects that were prepared.
      */
     @Override
-    public List<BaseObject> prepare()
-    {
+    public List<BaseObject> prepare() {
         return new ArrayList<>();
     }
     
@@ -80,8 +76,7 @@ public class Frame extends Object
      *
      * @param g2 The 2D Graphics entity.
      */
-    public void render(Graphics2D g2, List<Vector> prepared)
-    {
+    public void render(Graphics2D g2, List<Vector> prepared) {
         if (!visible || base.displayMode == DisplayMode.VERTEX) {
             return;
         }
@@ -104,8 +99,7 @@ public class Frame extends Object
      * @param g2 The 2D Graphics entity.
      */
     @Override
-    public void render(Graphics2D g2)
-    {
+    public void render(Graphics2D g2) {
     }
     
 }

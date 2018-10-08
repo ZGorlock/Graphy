@@ -6,21 +6,20 @@
 
 package objects.base.simple;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
+
 import camera.Camera;
-import main.Environment;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Defines an Edge.
  */
-public class Edge extends BaseObject
-{
+public class Edge extends BaseObject {
     
     //Constructors
     
@@ -77,8 +76,7 @@ public class Edge extends BaseObject
      * @return The list of BaseObjects that were prepared.
      */
     @Override
-    public List<BaseObject> prepare()
-    {
+    public List<BaseObject> prepare() {
         List<BaseObject> preparedBases = new ArrayList<>();
         if (!visible) {
             return preparedBases;
@@ -87,7 +85,7 @@ public class Edge extends BaseObject
         prepared.clear();
         prepared.add(vertices[0].clone());
         prepared.add(vertices[1].clone());
-    
+        
         performRotationTransformation(prepared);
         
         preparedBases.add(this);
@@ -100,18 +98,17 @@ public class Edge extends BaseObject
      * @param g2 The 2D Graphics entity.
      */
     @Override
-    public void render(Graphics2D g2)
-    {
+    public void render(Graphics2D g2) {
         if (!visible || prepared.size() != 2) {
             return;
         }
-    
+        
         Camera.projectVectorToCamera(prepared);
         Camera.collapseVectorToViewport(prepared);
-    
+        
         if (!clippingEnabled || Camera.hasVectorInView(prepared, vertices)) {
             Camera.scaleVectorToScreen(prepared);
-        
+            
             g2.setColor(getColor());
             switch (displayMode) {
                 case VERTEX:
@@ -123,7 +120,7 @@ public class Edge extends BaseObject
                     g2.drawLine((int) prepared.get(0).get(0), (int) prepared.get(0).get(1), (int) prepared.get(1).get(0), (int) prepared.get(1).get(1));
                     break;
             }
-    
+            
             addFrame(g2);
         }
     }
@@ -136,8 +133,7 @@ public class Edge extends BaseObject
      *
      * @return The starting point of the Edge.
      */
-    public Vector getV1()
-    {
+    public Vector getV1() {
         return vertices[0];
     }
     
@@ -146,8 +142,7 @@ public class Edge extends BaseObject
      *
      * @return The ending point of the Edge.
      */
-    public Vector getV2()
-    {
+    public Vector getV2() {
         return vertices[1];
     }
     
@@ -160,20 +155,17 @@ public class Edge extends BaseObject
      * @param v1 The starting point of the Edge.
      * @param v2 The ending point of the Edge.
      */
-    public void setPoints(Vector v1, Vector v2)
-    {
+    public void setPoints(Vector v1, Vector v2) {
         setV1(v1);
         setV2(v2);
     }
-    
     
     /**
      * Sets the starting point of the Edge.
      *
      * @param v1 The starting point of the Edge.
      */
-    public void setV1(Vector v1)
-    {
+    public void setV1(Vector v1) {
         vertices[0] = v1;
     }
     
@@ -182,8 +174,7 @@ public class Edge extends BaseObject
      *
      * @param v2 The ending point of the Edge.
      */
-    public void setV2(Vector v2)
-    {
+    public void setV2(Vector v2) {
         vertices[1] = v2;
     }
     

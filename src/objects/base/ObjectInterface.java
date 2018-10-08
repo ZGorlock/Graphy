@@ -6,17 +6,17 @@
 
 package objects.base;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.util.List;
+
 import math.matrix.Matrix3;
 import math.vector.Vector;
-
-import java.awt.*;
-import java.util.List;
 
 /**
  * The interface that defines the contract for creating an Object class.
  */
-public interface ObjectInterface
-{
+public interface ObjectInterface {
     
     //Methods
     

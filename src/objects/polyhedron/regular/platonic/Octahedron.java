@@ -6,18 +6,17 @@
 
 package objects.polyhedron.regular.platonic;
 
+import java.awt.Color;
+
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.polygon.Triangle;
 import objects.polyhedron.regular.RegularPolyhedron;
 
-import java.awt.*;
-
 /**
  * Defines an Octahedron.
  */
-public class Octahedron extends RegularPolyhedron
-{
+public class Octahedron extends RegularPolyhedron {
     
     //Constants
     
@@ -42,8 +41,7 @@ public class Octahedron extends RegularPolyhedron
      * @param color  The color of the Octahedron.
      * @param radius The radius of the bounding sphere of the Octahedron.
      */
-    public Octahedron(AbstractObject parent, Vector center, Color color, double radius)
-    {
+    public Octahedron(AbstractObject parent, Vector center, Color color, double radius) {
         super(parent, center, color, OCTAHEDRON_FACES, OCTAHEDRON_VERTICES, radius);
     }
     
@@ -54,8 +52,7 @@ public class Octahedron extends RegularPolyhedron
      * @param center The center point of the Octahedron.
      * @param radius The radius of the bounding sphere of the Octahedron.
      */
-    public Octahedron(AbstractObject parent, Vector center, double radius)
-    {
+    public Octahedron(AbstractObject parent, Vector center, double radius) {
         this(parent, center, Color.BLACK, radius);
     }
     
@@ -66,8 +63,7 @@ public class Octahedron extends RegularPolyhedron
      * @param color  The color of the Octahedron.
      * @param radius The radius of the bounding sphere of the Octahedron.
      */
-    public Octahedron(Vector center, Color color, double radius)
-    {
+    public Octahedron(Vector center, Color color, double radius) {
         this(null, center, color, radius);
     }
     
@@ -78,8 +74,7 @@ public class Octahedron extends RegularPolyhedron
      * Calculates the structure of the Octahedron.
      */
     @Override
-    protected void calculate()
-    {
+    protected void calculate() {
         components.clear();
         
         vertices = new Vector[OCTAHEDRON_VERTICES];
@@ -89,7 +84,7 @@ public class Octahedron extends RegularPolyhedron
             vertices[v++] = new Vector(0, i, 0).scale(radius).plus(center);
             vertices[v++] = new Vector(i, 0, 0).scale(radius).plus(center);
         }
-    
+        
         new Triangle(this, color,
                 vertices[1],
                 vertices[2],

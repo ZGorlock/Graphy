@@ -9,8 +9,6 @@ package animations;
 /**
  * Defines an Animation.
  */
-public class Animation
-{
-
-
+public class Animation {
+    
 }

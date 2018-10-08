@@ -8,14 +8,13 @@ package math.matrix;
 
 import math.vector.Vector;
 
-public class Matrix4
-{
+public class Matrix4 {
+    
     public double[] values;
     
     public Matrix4(double[] values) {
         this.values = values;
     }
-    
     
     public Matrix4 multiply(Matrix4 other) {
         double[] result = new double[16];
@@ -29,8 +28,7 @@ public class Matrix4
         return new Matrix4(result);
     }
     
-    public Vector multiply(Vector other)
-    {
+    public Vector multiply(Vector other) {
         double[] result = new double[4];
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 4; col++) {

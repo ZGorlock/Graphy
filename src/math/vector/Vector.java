@@ -12,8 +12,7 @@ import java.util.Objects;
 /**
  * Defines the base properties of a Vector.
  */
-public class Vector
-{
+public class Vector {
     
     //Fields
     
@@ -42,7 +41,7 @@ public class Vector
      */
     public Vector(List<Double> components) {
         this.components = new double[components.size()];
-        System.arraycopy(components.toArray(new Double[]{}), 0, this.components, 0, components.size());
+        System.arraycopy(components.toArray(new Double[] {}), 0, this.components, 0, components.size());
     }
     
     /**
@@ -75,8 +74,7 @@ public class Vector
      * @return A string that represents the Vector.
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         StringBuilder vector = new StringBuilder();
         
         for (Double component : components) {
@@ -95,8 +93,7 @@ public class Vector
      * @param v The other Vector.
      * @return Whether the two Vectors' dimension is equal or not.
      */
-    public boolean dimensionsEqual(Vector v)
-    {
+    public boolean dimensionsEqual(Vector v) {
         return (components.length == v.components.length);
     }
     
@@ -106,8 +103,7 @@ public class Vector
      * @param v The other Vector.
      * @return Whether the two Vectors are equal or not.
      */
-    public boolean equals(Vector v)
-    {
+    public boolean equals(Vector v) {
         if (!dimensionsEqual(v)) {
             return false;
         }
@@ -126,8 +122,7 @@ public class Vector
      * @return The cloned Vector.
      */
     @Override
-    public Vector clone()
-    {
+    public Vector clone() {
         return new Vector(components);
     }
     
@@ -136,10 +131,10 @@ public class Vector
      *
      * @param v The other Vector.
      * @return The distance between the two Vectors.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
-    public double distance(Vector v) throws ArithmeticException
-    {
+    public double distance(Vector v) throws ArithmeticException {
         if (!dimensionsEqual(v)) {
             throw new ArithmeticException("The vectors: " + toString() + " and " + v.toString() + " are of different dimensions.");
         }
@@ -156,10 +151,10 @@ public class Vector
      *
      * @param v The other Vector.
      * @return The midpoint between the two Vectors.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
-    public Vector midpoint(Vector v) throws ArithmeticException
-    {
+    public Vector midpoint(Vector v) throws ArithmeticException {
         return average(v);
     }
     
@@ -168,16 +163,16 @@ public class Vector
      *
      * @param vs The set of Vectors.
      * @return The average of the Vectors.
-     * @throws ArithmeticException  When the Vectors are not all of the same dimension.
+     *
+     * @throws ArithmeticException When the Vectors are not all of the same dimension.
      */
-    public Vector average(Vector... vs) throws ArithmeticException
-    {
+    public Vector average(Vector... vs) throws ArithmeticException {
         for (Vector v : vs) {
             if (!dimensionsEqual(v)) {
                 throw new ArithmeticException("The vectors: " + toString() + " and " + v.toString() + " are of different dimensions.");
             }
         }
-    
+        
         double[] newComponents = new double[getDimension()];
         for (int c = 0; c < components.length; c++) {
             double component = components[c];
@@ -194,11 +189,11 @@ public class Vector
      *
      * @param vs The list of Vectors.
      * @return The average of the Vectors.
-     * @throws ArithmeticException  When the Vectors are not all of the same dimension.
+     *
+     * @throws ArithmeticException When the Vectors are not all of the same dimension.
      */
-    public Vector average(List<Vector> vs) throws ArithmeticException
-    {
-        return average(vs.toArray(new Vector[]{}));
+    public Vector average(List<Vector> vs) throws ArithmeticException {
+        return average(vs.toArray(new Vector[] {}));
     }
     
     /**
@@ -206,10 +201,10 @@ public class Vector
      *
      * @param v The other Vector.
      * @return The dot product.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
-    public double dot(Vector v) throws ArithmeticException
-    {
+    public double dot(Vector v) throws ArithmeticException {
         if (!dimensionsEqual(v)) {
             throw new ArithmeticException("The vectors: " + toString() + " and " + v.toString() + " are of different dimensions.");
         }
@@ -226,8 +221,7 @@ public class Vector
      *
      * @return The normalized Vector.
      */
-    public Vector normalize()
-    {
+    public Vector normalize() {
         return scale(1 / hypotenuse());
     }
     
@@ -236,8 +230,7 @@ public class Vector
      *
      * @return The square root of the sum of the squares of the components.
      */
-    public double hypotenuse()
-    {
+    public double hypotenuse() {
         return Math.sqrt(Math.pow(getX(), 2) + Math.pow(getY(), 2) + Math.pow(getZ(), 2));
     }
     
@@ -246,8 +239,7 @@ public class Vector
      *
      * @return The sum of the components of the Vector.
      */
-    public double sum()
-    {
+    public double sum() {
         double sum = 0;
         for (int c = 0; c < components.length; c++) {
             sum += get(c);
@@ -260,10 +252,10 @@ public class Vector
      *
      * @param v The other Vector.
      * @return The Vector produced as a result of the addition.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
-    public Vector plus(Vector v) throws ArithmeticException
-    {
+    public Vector plus(Vector v) throws ArithmeticException {
         if (!dimensionsEqual(v)) {
             throw new ArithmeticException("The vectors: " + toString() + " and " + v.toString() + " are of different dimensions.");
         }
@@ -280,14 +272,14 @@ public class Vector
      *
      * @param v The other Vector.
      * @return The Vector produced as a result of the subtraction.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
-    public Vector minus(Vector v) throws ArithmeticException
-    {
+    public Vector minus(Vector v) throws ArithmeticException {
         if (!dimensionsEqual(v)) {
             throw new ArithmeticException("The vectors: " + toString() + " and " + v.toString() + " are of different dimensions.");
         }
-    
+        
         double[] newComponents = new double[getDimension()];
         for (int c = 0; c < components.length; c++) {
             newComponents[c] = components[c] - v.components[c];
@@ -300,14 +292,14 @@ public class Vector
      *
      * @param v The other Vector.
      * @return The Vector produced as a result of the multiplication.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
-    public Vector times(Vector v) throws ArithmeticException
-    {
+    public Vector times(Vector v) throws ArithmeticException {
         if (!dimensionsEqual(v)) {
             throw new ArithmeticException("The vectors: " + toString() + " and " + v.toString() + " are of different dimensions.");
         }
-    
+        
         double[] newComponents = new double[getDimension()];
         for (int c = 0; c < components.length; c++) {
             newComponents[c] = components[c] * v.components[c];
@@ -320,10 +312,10 @@ public class Vector
      *
      * @param d The constant.
      * @return The Vector produced as a result of the scaling.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
-    public Vector scale(double d) throws ArithmeticException
-    {
+    public Vector scale(double d) throws ArithmeticException {
         double[] newComponents = new double[getDimension()];
         for (int c = 0; c < components.length; c++) {
             newComponents[c] = components[c] * d;
@@ -336,14 +328,14 @@ public class Vector
      *
      * @param v The other Vector.
      * @return The Vector produced as a result of the division.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
-    public Vector dividedBy(Vector v) throws ArithmeticException
-    {
+    public Vector dividedBy(Vector v) throws ArithmeticException {
         if (!dimensionsEqual(v)) {
             throw new ArithmeticException("The vectors: " + toString() + " and " + v.toString() + " are of different dimensions.");
         }
-    
+        
         double[] newComponents = new double[getDimension()];
         for (int c = 0; c < components.length; c++) {
             newComponents[c] = components[c] / v.components[c];
@@ -356,8 +348,7 @@ public class Vector
      *
      * @return The Vector rounded to integers.
      */
-    public Vector round()
-    {
+    public Vector round() {
         double[] newComponents = new double[getDimension()];
         for (int c = 0; c < components.length; c++) {
             newComponents[c] = Math.round(components[c]);
@@ -370,8 +361,7 @@ public class Vector
      *
      * @param newDim The new dimension of the Vector.
      */
-    public void redim(int newDim)
-    {
+    public void redim(int newDim) {
         double[] newComponents = new double[newDim];
         System.arraycopy(components, 0, newComponents, 0, newDim);
         components = newComponents;
@@ -385,8 +375,7 @@ public class Vector
      *
      * @return The dimension of the Vector.
      */
-    public int getDimension()
-    {
+    public int getDimension() {
         return components.length;
     }
     
@@ -395,8 +384,7 @@ public class Vector
      *
      * @return The components of the Vector.
      */
-    public double[] getComponents()
-    {
+    public double[] getComponents() {
         return components;
     }
     
@@ -405,8 +393,7 @@ public class Vector
      *
      * @return The x component of the Vector.
      */
-    public double getX()
-    {
+    public double getX() {
         return (getDimension() >= 1) ? get(0) : 0;
     }
     
@@ -415,8 +402,7 @@ public class Vector
      *
      * @return The y component of the Vector.
      */
-    public double getY()
-    {
+    public double getY() {
         return (getDimension() >= 2) ? get(1) : 0;
     }
     
@@ -425,8 +411,7 @@ public class Vector
      *
      * @return The z component of the Vector.
      */
-    public double getZ()
-    {
+    public double getZ() {
         return (getDimension() >= 3) ? get(2) : 0;
     }
     
@@ -435,8 +420,7 @@ public class Vector
      *
      * @return The w component of the Vector.
      */
-    public double getW()
-    {
+    public double getW() {
         return (getDimension() >= 4) ? get(3) : 0;
     }
     
@@ -445,10 +429,10 @@ public class Vector
      *
      * @param i The index of the component.
      * @return The component of the Vector at the index.
+     *
      * @throws IndexOutOfBoundsException When the Vector does not contain a component of the specified index.
      */
-    public double get(int i) throws IndexOutOfBoundsException
-    {
+    public double get(int i) throws IndexOutOfBoundsException {
         if (i >= getDimension() || i < 0) {
             throw new IndexOutOfBoundsException("The vector: " + toString() + " does not have a component of index: " + i);
         }
@@ -464,8 +448,7 @@ public class Vector
      *
      * @param x The new x component of the Vector.
      */
-    public void setX(double x)
-    {
+    public void setX(double x) {
         if (getDimension() >= 1) {
             set(0, x);
         }
@@ -476,8 +459,7 @@ public class Vector
      *
      * @param y The new y component of the Vector.
      */
-    public void setY(double y)
-    {
+    public void setY(double y) {
         if (getDimension() >= 2) {
             set(1, y);
         }
@@ -488,8 +470,7 @@ public class Vector
      *
      * @param z The new z component of the Vector.
      */
-    public void setZ(double z)
-    {
+    public void setZ(double z) {
         if (getDimension() >= 3) {
             set(2, z);
         }
@@ -500,8 +481,7 @@ public class Vector
      *
      * @param w The new w component of the Vector.
      */
-    public void setW(double w)
-    {
+    public void setW(double w) {
         if (getDimension() >= 4) {
             set(3, w);
         }
@@ -514,8 +494,7 @@ public class Vector
      * @param value The new value of the component.
      * @throws IndexOutOfBoundsException When the Vector does not contain a component of the specified index.
      */
-    public void set(int i, double value) throws IndexOutOfBoundsException
-    {
+    public void set(int i, double value) throws IndexOutOfBoundsException {
         if (i >= getDimension() || i < 0) {
             throw new IndexOutOfBoundsException("The vector: " + toString() + " does not have a component of index: " + i);
         }
@@ -531,10 +510,10 @@ public class Vector
      *
      * @param vs The set of Vectors.
      * @return The average of the Vectors.
-     * @throws ArithmeticException  When the Vectors are not all of the same dimension.
+     *
+     * @throws ArithmeticException When the Vectors are not all of the same dimension.
      */
-    public static Vector averageVector(Vector... vs) throws ArithmeticException
-    {
+    public static Vector averageVector(Vector... vs) throws ArithmeticException {
         int dim = 0;
         for (Vector v : vs) {
             if (dim == 0) {

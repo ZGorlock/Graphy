@@ -6,20 +6,15 @@
 
 package objects.base.polygon;
 
-import camera.Camera;
+import java.awt.Color;
+
 import math.vector.Vector;
 import objects.base.AbstractObject;
-import objects.base.BaseObject;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines an Rectangle.
  */
-public class Rectangle extends Polygon
-{
+public class Rectangle extends Polygon {
     
     //Constructors
     
@@ -33,8 +28,7 @@ public class Rectangle extends Polygon
      * @param v3     The third point of the Rectangle.
      * @param v4     The fourth point of the Rectangle.
      */
-    public Rectangle(AbstractObject parent, Color color, Vector v1, Vector v2, Vector v3, Vector v4)
-    {
+    public Rectangle(AbstractObject parent, Color color, Vector v1, Vector v2, Vector v3, Vector v4) {
         super(parent, color, v1, v2, v3, v4);
     }
     
@@ -47,8 +41,7 @@ public class Rectangle extends Polygon
      * @param v3     The third point of the Rectangle.
      * @param v4     The fourth point of the Rectangle.
      */
-    public Rectangle(AbstractObject parent, Vector v1, Vector v2, Vector v3, Vector v4)
-    {
+    public Rectangle(AbstractObject parent, Vector v1, Vector v2, Vector v3, Vector v4) {
         this(parent, Color.BLACK, v1, v2, v3, v4);
     }
     
@@ -61,8 +54,7 @@ public class Rectangle extends Polygon
      * @param v3    The third point of the Rectangle.
      * @param v4    The fourth point of the Rectangle.
      */
-    public Rectangle(Color color, Vector v1, Vector v2, Vector v3, Vector v4)
-    {
+    public Rectangle(Color color, Vector v1, Vector v2, Vector v3, Vector v4) {
         this(null, color, v1, v2, v3, v4);
     }
     
@@ -74,8 +66,7 @@ public class Rectangle extends Polygon
      * @param v3 The third point of the Rectangle.
      * @param v4 The fourth point of the Rectangle.
      */
-    public Rectangle(Vector v1, Vector v2, Vector v3, Vector v4)
-    {
+    public Rectangle(Vector v1, Vector v2, Vector v3, Vector v4) {
         this(null, Color.BLACK, v1, v2, v3, v4);
     }
     
@@ -87,8 +78,7 @@ public class Rectangle extends Polygon
      *
      * @return The first point of the Rectangle.
      */
-    public Vector getP1()
-    {
+    public Vector getP1() {
         return getVertex(1);
     }
     
@@ -97,8 +87,7 @@ public class Rectangle extends Polygon
      *
      * @return The second point of the Rectangle.
      */
-    public Vector getP2()
-    {
+    public Vector getP2() {
         return getVertex(2);
     }
     
@@ -107,8 +96,7 @@ public class Rectangle extends Polygon
      *
      * @return The third point of the Rectangle.
      */
-    public Vector getP3()
-    {
+    public Vector getP3() {
         return getVertex(3);
     }
     
@@ -117,8 +105,7 @@ public class Rectangle extends Polygon
      *
      * @return The fourth point of the Rectangle.
      */
-    public Vector getP4()
-    {
+    public Vector getP4() {
         return getVertex(4);
     }
     
@@ -133,8 +120,7 @@ public class Rectangle extends Polygon
      * @param p3 The third point of the Rectangle.
      * @param p4 The fourth point of the Rectangle.
      */
-    public void setPoints(Vector p1, Vector p2, Vector p3, Vector p4)
-    {
+    public void setPoints(Vector p1, Vector p2, Vector p3, Vector p4) {
         setP1(p1);
         setP2(p2);
         setP3(p3);
@@ -146,8 +132,7 @@ public class Rectangle extends Polygon
      *
      * @param p1 The new first point of the Rectangle.
      */
-    public void setP1(Vector p1)
-    {
+    public void setP1(Vector p1) {
         setVertex(1, p1);
     }
     
@@ -156,8 +141,7 @@ public class Rectangle extends Polygon
      *
      * @param p2 The new second point of the Rectangle.
      */
-    public void setP2(Vector p2)
-    {
+    public void setP2(Vector p2) {
         setVertex(2, p2);
     }
     
@@ -166,8 +150,7 @@ public class Rectangle extends Polygon
      *
      * @param p3 The new third point of the Rectangle.
      */
-    public void setP3(Vector p3)
-    {
+    public void setP3(Vector p3) {
         setVertex(3, p3);
     }
     
@@ -176,8 +159,7 @@ public class Rectangle extends Polygon
      *
      * @param p4 The new fourth point of the Rectangle.
      */
-    public void setP4(Vector p4)
-    {
+    public void setP4(Vector p4) {
         setVertex(4, p4);
     }
     

@@ -6,20 +6,19 @@
 
 package objects.system;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Object;
 import objects.base.simple.Edge;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Defines the coordinate axes.
  */
-public class Axes extends Object
-{
+public class Axes extends Object {
     
     //Fields
     
@@ -46,14 +45,13 @@ public class Axes extends Object
      *
      * @param displaySubAxes Whether or not to display the sub Axes.
      */
-    public Axes(boolean displaySubAxes)
-    {
+    public Axes(boolean displaySubAxes) {
         super(Environment.origin, Color.BLACK);
         
         this.displaySubAxes = displaySubAxes;
         
         calculate();
-    
+        
         setClippingEnabled(false);
     }
     
@@ -64,8 +62,7 @@ public class Axes extends Object
      * Calculates the Objects for the Camera Object.
      */
     @Override
-    protected void calculate()
-    {
+    protected void calculate() {
         mainAxes = new ArrayList<>();
         subAxes = new ArrayList<>();
         
@@ -75,10 +72,10 @@ public class Axes extends Object
                 new Vector(Environment.xMax, 0, 0)));
         mainAxes.add(new Edge(this, Color.GREEN,
                 new Vector(0, Environment.yMin, 0),
-                new Vector(0,Environment.yMin,0)));
+                new Vector(0, Environment.yMin, 0)));
         mainAxes.add(new Edge(this, Color.BLUE,
                 new Vector(0, 0, Environment.zMax),
-                new Vector(0,0, Environment.zMin)));
+                new Vector(0, 0, Environment.zMin)));
 
 //        //sub axes
         if (displaySubAxes) {

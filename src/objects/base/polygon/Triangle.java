@@ -6,18 +6,15 @@
 
 package objects.base.polygon;
 
-import camera.Camera;
+import java.awt.Color;
+
 import math.vector.Vector;
 import objects.base.AbstractObject;
-import objects.base.polygon.Polygon;
-
-import java.awt.*;
 
 /**
  * Defines a Triangle.
  */
-public class Triangle extends Polygon
-{
+public class Triangle extends Polygon {
     
     //Constructors
     
@@ -30,8 +27,7 @@ public class Triangle extends Polygon
      * @param v2     The second point of the Triangle.
      * @param v3     The third point of the Triangle.
      */
-    public Triangle(AbstractObject parent, Color color, Vector v1, Vector v2, Vector v3)
-    {
+    public Triangle(AbstractObject parent, Color color, Vector v1, Vector v2, Vector v3) {
         super(parent, color, v1, v2, v3);
     }
     
@@ -43,8 +39,7 @@ public class Triangle extends Polygon
      * @param v2     The second point of the Triangle.
      * @param v3     The third point of the Triangle.
      */
-    public Triangle(AbstractObject parent, Vector v1, Vector v2, Vector v3)
-    {
+    public Triangle(AbstractObject parent, Vector v1, Vector v2, Vector v3) {
         this(parent, Color.BLACK, v1, v2, v3);
     }
     
@@ -56,8 +51,7 @@ public class Triangle extends Polygon
      * @param v2    The second point of the Triangle.
      * @param v3    The third point of the Triangle.
      */
-    public Triangle(Color color, Vector v1, Vector v2, Vector v3)
-    {
+    public Triangle(Color color, Vector v1, Vector v2, Vector v3) {
         this(null, color, v1, v2, v3);
     }
     
@@ -68,8 +62,7 @@ public class Triangle extends Polygon
      * @param v2 The second point of the Triangle.
      * @param v3 The third point of the Triangle.
      */
-    public Triangle(Vector v1, Vector v2, Vector v3)
-    {
+    public Triangle(Vector v1, Vector v2, Vector v3) {
         this(null, Color.BLACK, v1, v2, v3);
     }
     
@@ -81,8 +74,7 @@ public class Triangle extends Polygon
      *
      * @return The first point of the Triangle.
      */
-    public Vector getP1()
-    {
+    public Vector getP1() {
         return getVertex(1);
     }
     
@@ -91,8 +83,7 @@ public class Triangle extends Polygon
      *
      * @return The second point of the Triangle.
      */
-    public Vector getP2()
-    {
+    public Vector getP2() {
         return getVertex(2);
     }
     
@@ -101,8 +92,7 @@ public class Triangle extends Polygon
      *
      * @return The third point of the Triangle.
      */
-    public Vector getP3()
-    {
+    public Vector getP3() {
         return getVertex(3);
     }
     
@@ -116,8 +106,7 @@ public class Triangle extends Polygon
      * @param p2 The second point of the Triangle.
      * @param p3 The third point of the Triangle.
      */
-    public void setPoints(Vector p1, Vector p2, Vector p3)
-    {
+    public void setPoints(Vector p1, Vector p2, Vector p3) {
         setP1(p1);
         setP2(p2);
         setP3(p3);
@@ -128,8 +117,7 @@ public class Triangle extends Polygon
      *
      * @param p1 The new first point of the Triangle.
      */
-    public void setP1(Vector p1)
-    {
+    public void setP1(Vector p1) {
         setVertex(1, p1);
     }
     
@@ -138,8 +126,7 @@ public class Triangle extends Polygon
      *
      * @param p2 The new second point of the Triangle.
      */
-    public void setP2(Vector p2)
-    {
+    public void setP2(Vector p2) {
         setVertex(2, p2);
     }
     
@@ -148,8 +135,7 @@ public class Triangle extends Polygon
      *
      * @param p3 The new third point of the Triangle.
      */
-    public void setP3(Vector p3)
-    {
+    public void setP3(Vector p3) {
         setVertex(3, p3);
     }
     

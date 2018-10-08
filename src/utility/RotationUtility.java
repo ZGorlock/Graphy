@@ -13,21 +13,19 @@ import math.vector.Vector;
 /**
  * Handles rotations operations.
  */
-public final class RotationUtility
-{
+public final class RotationUtility {
     
     //Functions
     
     /**
      * Creates the rotation transformation matrix for an Object.
      *
-     * @param yaw    The yaw angle to rotate by.
-     * @param pitch  The pitch angle to rotate by.
-     * @param roll   The roll angle to rotate by.
+     * @param yaw   The yaw angle to rotate by.
+     * @param pitch The pitch angle to rotate by.
+     * @param roll  The roll angle to rotate by.
      * @return The rotation transformation matrix.
      */
-    public static Matrix3 getRotationMatrix(double yaw, double pitch, double roll)
-    {
+    public static Matrix3 getRotationMatrix(double yaw, double pitch, double roll) {
         Matrix3 yawRotation = new Matrix3(new double[] {
                 Math.cos(yaw), -Math.sin(yaw), 0,
                 Math.sin(yaw), Math.cos(yaw), 0,
@@ -54,8 +52,7 @@ public final class RotationUtility
      * @param center         The center point to rotate about.
      * @return The rotated Vector.
      */
-    public static Vector performRotation(Vector vector, Matrix3 rotationMatrix, Vector center)
-    {
+    public static Vector performRotation(Vector vector, Matrix3 rotationMatrix, Vector center) {
         Matrix4 translationMatrix = new Matrix4(new double[] {
                 1, 0, 0, -center.getX(),
                 0, 1, 0, -center.getY(),
@@ -64,9 +61,9 @@ public final class RotationUtility
         });
         Vector v4 = new Vector(vector, 1.0);
         v4 = translationMatrix.multiply(v4);
-    
+        
         Vector v = rotationMatrix.transform(new Vector(v4.getX(), v4.getY(), v4.getZ()));
-    
+        
         Matrix4 untranslationMatrix = new Matrix4(new double[] {
                 1, 0, 0, center.getX(),
                 0, 1, 0, center.getY(),

@@ -6,42 +6,50 @@
 
 package main;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
 import objects.base.ObjectInterface;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.util.*;
-import java.util.List;
-import java.util.Timer;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 /**
  * The main Environment.
  */
-public class Environment
-{
+public class Environment {
     
     //Constants
     
     /**
      * The number of frames to render per second.
      */
-    public static final int FPS = 60;
+    public static final int FPS = 120;
     
     /**
      * The dimensions of the Window.
      */
-    public static final int screenX = 1920;
-    public static final int screenY = 1080;
-    public static final int screenZ = 720;
+    public static final int screenX = 2560;
     
+    public static final int screenY = 1440;
+    
+    public static final int screenZ = 720;
     
     /**
      * The border from the edge of the Window.
@@ -52,10 +60,15 @@ public class Environment
      * The min and max coordinate values to render.
      */
     public static double xMin = -100.0;
+    
     public static double xMax = 100.0;
+    
     public static double yMin = -100.0;
+    
     public static double yMax = 100.0;
+    
     public static double zMin = -100.0;
+    
     public static double zMax = 100.0;
     
     
@@ -87,7 +100,6 @@ public class Environment
     private static AtomicBoolean hasSetupMainKeyListener = new AtomicBoolean(false);
     
     
-    
     //Main Method
     
     /**
@@ -107,7 +119,7 @@ public class Environment
         
         // panel to display render results
         JPanel renderPanel = new JPanel() {
-    
+            
             public void paintComponent(Graphics g) {
                 List<BaseObject> preparedBases = new ArrayList<>();
                 try {
@@ -117,7 +129,7 @@ public class Environment
                 } catch (ConcurrentModificationException ignored) {
                     return;
                 }
-
+                
                 try {
                     preparedBases.sort((o1, o2) -> {
                         double d1 = o1.calculatePreparedDistance();
@@ -127,36 +139,34 @@ public class Environment
                 } catch (IllegalArgumentException e) {
                     //TODO handle this
                 }
-
-
+                
+                
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setColor(Color.WHITE);
                 g2.fillRect(0, 0, getWidth(), getHeight());
                 BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-
-
+                
+                
                 for (BaseObject preparedBase : preparedBases) {
                     preparedBase.render(g2);
                 }
-
+                
                 g2.drawImage(img, 0, 0, null);
             }
         };
         pane.add(renderPanel, BorderLayout.CENTER);
-    
-    
+        
+        
         frame.setSize(screenX, screenY);
         frame.setVisible(true);
         
-    
+        
         Timer renderTimer = new Timer();
-        renderTimer.scheduleAtFixedRate(new TimerTask()
-        {
+        renderTimer.scheduleAtFixedRate(new TimerTask() {
             private AtomicBoolean rendering = new AtomicBoolean(false);
             
             @Override
-            public void run()
-            {
+            public void run() {
                 if (rendering.compareAndSet(false, true)) {
                     renderPanel.repaint();
                     rendering.set(false);
@@ -171,8 +181,7 @@ public class Environment
     /**
      * Creates objects in the Environment.
      */
-    private static void createObjects()
-    {
+    private static void createObjects() {
         
         //Cube Fractal
 //        CubeFractal cubeFractal = new CubeFractal(Environment.origin, Color.BLACK, .25, 2, 5);
@@ -206,23 +215,19 @@ public class Environment
     /**
      * Adds the KeyListener for the Camera main environment controls.
      */
-    public static void setupMainKeyListener()
-    {
+    public static void setupMainKeyListener() {
         if (!hasSetupMainKeyListener.compareAndSet(false, true)) {
             return;
         }
         
-        Environment.frame.addKeyListener(new KeyListener()
-        {
+        Environment.frame.addKeyListener(new KeyListener() {
             
             @Override
-            public void keyTyped(KeyEvent e)
-            {
+            public void keyTyped(KeyEvent e) {
             }
             
             @Override
-            public void keyPressed(KeyEvent e)
-            {
+            public void keyPressed(KeyEvent e) {
                 int key = e.getKeyCode();
                 
                 if (key == KeyEvent.VK_DIVIDE) {
@@ -243,8 +248,7 @@ public class Environment
             }
             
             @Override
-            public void keyReleased(KeyEvent e)
-            {
+            public void keyReleased(KeyEvent e) {
             }
             
         });
@@ -258,8 +262,7 @@ public class Environment
      *
      * @param object The Object to add to the Environment.
      */
-    public static void addObject(ObjectInterface object)
-    {
+    public static void addObject(ObjectInterface object) {
         objects.add(object);
     }
     
@@ -268,8 +271,7 @@ public class Environment
      *
      * @param object The Object to remove from the Environment.
      */
-    public static void removeObject(ObjectInterface object)
-    {
+    public static void removeObject(ObjectInterface object) {
         objects.remove(object);
     }
     

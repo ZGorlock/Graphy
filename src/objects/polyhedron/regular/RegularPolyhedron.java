@@ -6,19 +6,18 @@
 
 package objects.polyhedron.regular;
 
+import java.awt.Color;
+
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.polygon.Polygon;
 import objects.base.simple.Text;
 import objects.polyhedron.Polyhedron;
 
-import java.awt.*;
-
 /**
  * Defines a Regular Polyhedron.
  */
-public class RegularPolyhedron extends Polyhedron
-{
+public class RegularPolyhedron extends Polyhedron {
     
     //Fields
     
@@ -65,10 +64,9 @@ public class RegularPolyhedron extends Polyhedron
      * @param numVertices The number of vertices of the RegularPolyhedron
      * @param radius      The radius of the bounding sphere of the RegularPolyhedron.
      */
-    public RegularPolyhedron(AbstractObject parent, Vector center, Color color, int numFaces, int numVertices, double radius)
-    {
+    public RegularPolyhedron(AbstractObject parent, Vector center, Color color, int numFaces, int numVertices, double radius) {
         super(center, color);
-    
+        
         this.numFaces = numFaces;
         this.numVertices = numVertices;
         this.center = center;
@@ -83,8 +81,7 @@ public class RegularPolyhedron extends Polyhedron
     /**
      * Displays the indices of the vertices of the Polyhedron.
      */
-    public void displayVertexIndices()
-    {
+    public void displayVertexIndices() {
         if (vertexIndices == null) {
             vertexIndices = new Text[numVertices];
             
@@ -101,8 +98,7 @@ public class RegularPolyhedron extends Polyhedron
     /**
      * Hides the indices of the vertices of the Polyhedron.
      */
-    public void hideVertexIndices()
-    {
+    public void hideVertexIndices() {
         if (vertexIndices != null) {
             for (Text vertex : vertexIndices) {
                 vertex.setVisible(false);
@@ -113,18 +109,17 @@ public class RegularPolyhedron extends Polyhedron
     /**
      * Displays the indices of the faces of the Polyhedron.
      */
-    public void displayFaceIndices()
-    {
+    public void displayFaceIndices() {
         if (faceIndices == null) {
             faceIndices = new Text[numFaces];
-        
+            
             for (int i = 0; i < numFaces; i++) {
                 if (components.get(i) instanceof Polygon) {
                     faceIndices[i] = new Text(this, Color.RED, Vector.averageVector(((Polygon) components.get(i)).getVertices()), String.valueOf(i));
                 }
             }
         }
-    
+        
         for (Text face : faceIndices) {
             face.setVisible(true);
         }
@@ -133,8 +128,7 @@ public class RegularPolyhedron extends Polyhedron
     /**
      * Hides the indices of the faces of the Polyhedron.
      */
-    public void hideFaceIndices()
-    {
+    public void hideFaceIndices() {
         if (faceIndices != null) {
             for (Text face : faceIndices) {
                 face.setVisible(false);
@@ -150,8 +144,7 @@ public class RegularPolyhedron extends Polyhedron
      *
      * @return The number of faces of the Polyhedron.
      */
-    public int getNumFaces()
-    {
+    public int getNumFaces() {
         return numFaces;
     }
     
@@ -160,8 +153,7 @@ public class RegularPolyhedron extends Polyhedron
      *
      * @return The radius of the bounding sphere of the Polyhedron.
      */
-    public double getRadius()
-    {
+    public double getRadius() {
         return radius;
     }
     
@@ -174,8 +166,7 @@ public class RegularPolyhedron extends Polyhedron
      * @param face  The index of the face of the Polyhedron.
      * @param color The color.
      */
-    public void setFaceColor(int face, Color color)
-    {
+    public void setFaceColor(int face, Color color) {
         if (face < 1 || face > numFaces) {
             return;
         }
@@ -187,8 +178,7 @@ public class RegularPolyhedron extends Polyhedron
      *
      * @param radius The new radius of the bounding sphere of the Polyhedron.
      */
-    public void setRadius(double radius)
-    {
+    public void setRadius(double radius) {
         this.radius = radius;
         calculate();
     }

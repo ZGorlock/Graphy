@@ -6,13 +6,10 @@
 
 package math.vector;
 
-import math.matrix.Matrix3;
-
 /**
  * Defines a 3-dimensional Vector.
  */
-public class Vector3 extends Vector
-{
+public class Vector3 extends Vector {
     
     //Constructors
     
@@ -55,10 +52,10 @@ public class Vector3 extends Vector
      *
      * @param v The other Vector.
      * @return The cross product.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
-    public Vector cross(Vector v) throws ArithmeticException
-    {
+    public Vector cross(Vector v) throws ArithmeticException {
         if (!dimensionsEqual(v)) {
             throw new ArithmeticException("The vectors: " + toString() + " and " + v.toString() + " are of different dimensions.");
         }

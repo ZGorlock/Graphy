@@ -6,24 +6,24 @@
 
 package objects.base;
 
-import main.Environment;
-import math.matrix.Matrix3;
-import math.vector.Vector;
-import utility.ColorUtility;
-import utility.RotationUtility;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import main.Environment;
+import math.matrix.Matrix3;
+import math.vector.Vector;
+import utility.ColorUtility;
+import utility.RotationUtility;
+
 /**
  * Defines an abstract implementation of an Object.
  */
-public abstract class AbstractObject implements ObjectInterface
-{
+public abstract class AbstractObject implements ObjectInterface {
     
     //Fields
     
@@ -73,6 +73,7 @@ public abstract class AbstractObject implements ObjectInterface
     protected boolean clippingEnabled = true;
     
     //TODO make protected
+    
     /**
      * The animations timers of the Object.
      */
@@ -100,6 +101,7 @@ public abstract class AbstractObject implements ObjectInterface
     
     
     //Enums
+    
     
     /**
      * The enumeration of display modes for Objects.
@@ -135,8 +137,7 @@ public abstract class AbstractObject implements ObjectInterface
      * @param offset The relative offsets to move the Object.
      */
     @Override
-    public void move(Vector offset)
-    {
+    public void move(Vector offset) {
         center = center.plus(offset);
     }
     
@@ -146,8 +147,7 @@ public abstract class AbstractObject implements ObjectInterface
      * @param offset The relative offsets to rotate the Object.
      */
     @Override
-    public void rotate(Vector offset)
-    {
+    public void rotate(Vector offset) {
         setRotation(rotation.plus(offset));
     }
     
@@ -176,19 +176,17 @@ public abstract class AbstractObject implements ObjectInterface
      * @param zSpeed The speed of the z movement in units per second.
      */
     @Override
-    public void addMovementAnimation(double xSpeed, double ySpeed, double zSpeed)
-    {
+    public void addMovementAnimation(double xSpeed, double ySpeed, double zSpeed) {
         Timer animationTimer = new Timer();
         animationTimers.add(animationTimer);
-        movementAnimations.add(new double[]{xSpeed, ySpeed, zSpeed});
-        animationTimer.scheduleAtFixedRate(new TimerTask()
-        {
+        movementAnimations.add(new double[] {xSpeed, ySpeed, zSpeed});
+        animationTimer.scheduleAtFixedRate(new TimerTask() {
             private Vector speedVector = new Vector(xSpeed, ySpeed, zSpeed);
+            
             private long lastTime = 0;
             
             @Override
-            public void run()
-            {
+            public void run() {
                 if (lastTime == 0) {
                     lastTime = System.currentTimeMillis();
                     return;
@@ -213,20 +211,20 @@ public abstract class AbstractObject implements ObjectInterface
      * @param period    The period over which to perform the transition in milliseconds.
      */
     @Override
-    public void addMovementTransformation(double xMovement, double yMovement, double zMovement, long period)
-    {
+    public void addMovementTransformation(double xMovement, double yMovement, double zMovement, long period) {
         inMovementTransformation.set(true);
         Timer transitionTimer = new Timer();
-        transitionTimer.scheduleAtFixedRate(new TimerTask()
-        {
+        transitionTimer.scheduleAtFixedRate(new TimerTask() {
             private Vector movementVector = new Vector(xMovement, yMovement, zMovement);
+            
             private Vector totalMovement = new Vector(0, 0, 0);
+            
             private long timeCount = 0;
+            
             private long lastTime = 0;
             
             @Override
-            public void run()
-            {
+            public void run() {
                 if (lastTime == 0) {
                     lastTime = System.currentTimeMillis();
                     return;
@@ -262,28 +260,26 @@ public abstract class AbstractObject implements ObjectInterface
      * @param rollSpeed  The speed of the roll rotation in radians per second.
      */
     @Override
-    public void addRotationAnimation(double yawSpeed, double pitchSpeed, double rollSpeed)
-    {
+    public void addRotationAnimation(double yawSpeed, double pitchSpeed, double rollSpeed) {
         Timer animationTimer = new Timer();
         animationTimers.add(animationTimer);
-        rotationAnimations.add(new double[]{yawSpeed, pitchSpeed, rollSpeed});
-        animationTimer.scheduleAtFixedRate(new TimerTask()
-        {
+        rotationAnimations.add(new double[] {yawSpeed, pitchSpeed, rollSpeed});
+        animationTimer.scheduleAtFixedRate(new TimerTask() {
             private Vector speedVector = new Vector(yawSpeed, pitchSpeed, rollSpeed);
+            
             private long lastTime = 0;
-        
+            
             @Override
-            public void run()
-            {
+            public void run() {
                 if (lastTime == 0) {
                     lastTime = System.currentTimeMillis();
                     return;
                 }
-            
+                
                 long currentTime = System.currentTimeMillis();
                 long timeElapsed = currentTime - lastTime;
                 lastTime = currentTime;
-            
+                
                 double scale = (double) timeElapsed / 1000;
                 rotate(speedVector.scale(scale));
             }
@@ -299,25 +295,25 @@ public abstract class AbstractObject implements ObjectInterface
      * @param period        The period over which to perform the transition in milliseconds.
      */
     @Override
-    public void addRotationTransformation(double yawRotation, double pitchRotation, double rollRotation, long period)
-    {
+    public void addRotationTransformation(double yawRotation, double pitchRotation, double rollRotation, long period) {
         inRotationTransformation.set(true);
         Timer transitionTimer = new Timer();
-        transitionTimer.scheduleAtFixedRate(new TimerTask()
-        {
+        transitionTimer.scheduleAtFixedRate(new TimerTask() {
             private Vector rotationVector = new Vector(yawRotation, pitchRotation, rollRotation);
+            
             private Vector totalRotation = new Vector(0, 0, 0);
+            
             private long timeCount = 0;
+            
             private long lastTime = 0;
-        
+            
             @Override
-            public void run()
-            {
+            public void run() {
                 if (lastTime == 0) {
                     lastTime = System.currentTimeMillis();
                     return;
                 }
-            
+                
                 long currentTime = System.currentTimeMillis();
                 long timeElapsed = currentTime - lastTime;
                 lastTime = currentTime;
@@ -334,7 +330,7 @@ public abstract class AbstractObject implements ObjectInterface
                     rotateAndTransform(rotationFrame);
                     totalRotation = totalRotation.plus(rotationFrame);
                 }
-            
+                
                 double scale = (double) timeElapsed / 1000;
             }
         }, 0, 1000 / Environment.FPS);
@@ -347,24 +343,21 @@ public abstract class AbstractObject implements ObjectInterface
      * @param offset The offset of the color animation in milliseconds.
      */
     @Override
-    public void addColorAnimation(long period, long offset)
-    {
+    public void addColorAnimation(long period, long offset) {
         Timer animationTimer = new Timer();
         animationTimers.add(animationTimer);
-        animationTimer.scheduleAtFixedRate(new TimerTask()
-        {
+        animationTimer.scheduleAtFixedRate(new TimerTask() {
             private long firstTime = 0;
             
             @Override
-            public void run()
-            {
+            public void run() {
                 if (firstTime == 0) {
                     firstTime = System.currentTimeMillis() - offset;
                 }
-
+                
                 long timeElapsed = System.currentTimeMillis() - firstTime;
                 timeElapsed %= period;
-
+                
                 float hue = (float) timeElapsed / period;
                 setColor(ColorUtility.getColorByHue(hue));
             }
@@ -374,8 +367,7 @@ public abstract class AbstractObject implements ObjectInterface
     /**
      * Updates the rotation matrix for the Object.
      */
-    public void updateRotationMatrix()
-    {
+    public void updateRotationMatrix() {
         rotationMatrix = RotationUtility.getRotationMatrix(getRotationYaw(), getRotationPitch(), getRotationRoll());
     }
     
@@ -384,12 +376,11 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @param vs The list of Vectors to transform.
      */
-    public void performRotationTransformation(List<Vector> vs)
-    {
+    public void performRotationTransformation(List<Vector> vs) {
         if (rotationMatrix == null) {
             return;
         }
-    
+        
         for (int i = 0; i < vs.size(); i++) {
             vs.set(i, RotationUtility.performRotation(vs.get(i), rotationMatrix, getParentCenter()));
         }
@@ -401,8 +392,7 @@ public abstract class AbstractObject implements ObjectInterface
      * @param component The component to register.
      */
     @Override
-    public void registerComponent(ObjectInterface component)
-    {
+    public void registerComponent(ObjectInterface component) {
     }
     
     /**
@@ -411,8 +401,7 @@ public abstract class AbstractObject implements ObjectInterface
      * @param component The component to unregister.
      */
     @Override
-    public void unregisterComponent(ObjectInterface component)
-    {
+    public void unregisterComponent(ObjectInterface component) {
     }
     
     /**
@@ -421,8 +410,7 @@ public abstract class AbstractObject implements ObjectInterface
      * @param frame The Frame to register.
      */
     @Override
-    public void registerFrame(Frame frame)
-    {
+    public void registerFrame(Frame frame) {
         this.frame = frame;
     }
     
@@ -434,8 +422,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @return The parent of the Object.
      */
-    public AbstractObject getParent()
-    {
+    public AbstractObject getParent() {
         return parent;
     }
     
@@ -444,8 +431,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @return The center point of the Object.
      */
-    public Vector getCenter()
-    {
+    public Vector getCenter() {
         return center;
     }
     
@@ -454,8 +440,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @return The center of the parent of the Object.
      */
-    public Vector getParentCenter()
-    {
+    public Vector getParentCenter() {
         if (parent == null) {
             return getCenter();
         } else {
@@ -468,8 +453,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @return The center of the root of the Object.
      */
-    public Vector getRootCenter()
-    {
+    public Vector getRootCenter() {
         if (parent == null) {
             return getCenter();
         } else {
@@ -482,8 +466,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @return The color of the Object.
      */
-    public Color getColor()
-    {
+    public Color getColor() {
         return color;
     }
     
@@ -492,8 +475,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @return The angles that define the rotation of the Object.
      */
-    public Vector getRotation()
-    {
+    public Vector getRotation() {
         return rotation;
     }
     
@@ -502,8 +484,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @return The angle that defines the yaw rotation of the Object.
      */
-    public double getRotationYaw()
-    {
+    public double getRotationYaw() {
         return rotation.get(0);
     }
     
@@ -512,8 +493,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @return The angle that defines the pitch rotation of the Object.
      */
-    public double getRotationPitch()
-    {
+    public double getRotationPitch() {
         return rotation.get(1);
     }
     
@@ -522,8 +502,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @return The angle that defines the roll rotation of the Object.
      */
-    public double getRotationRoll()
-    {
+    public double getRotationRoll() {
         return rotation.get(2);
     }
     
@@ -532,8 +511,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @return Whether the Object is visible or not.
      */
-    public boolean isVisible()
-    {
+    public boolean isVisible() {
         return visible;
     }
     
@@ -542,8 +520,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @return The display mode of the Object.
      */
-    public BaseObject.DisplayMode getDisplayMode()
-    {
+    public BaseObject.DisplayMode getDisplayMode() {
         return displayMode;
     }
     
@@ -552,8 +529,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @return Whether the Object is undergoing a movement transformation or not.
      */
-    public boolean inMovementTransformation()
-    {
+    public boolean inMovementTransformation() {
         return inMovementTransformation.get();
     }
     
@@ -562,8 +538,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @return Whether the Object is undergoing a rotation transformation or not.
      */
-    public boolean inRotationTransformation()
-    {
+    public boolean inRotationTransformation() {
         return inRotationTransformation.get();
     }
     
@@ -575,8 +550,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @param parent The parent of the Object.
      */
-    public void setParent(AbstractObject parent)
-    {
+    public void setParent(AbstractObject parent) {
         if (parent == null) {
             return;
         }
@@ -592,8 +566,7 @@ public abstract class AbstractObject implements ObjectInterface
      * @param center The nwe center point of the Object.
      */
     @Override
-    public void setCenter(Vector center)
-    {
+    public void setCenter(Vector center) {
         this.center = center;
     }
     
@@ -603,8 +576,7 @@ public abstract class AbstractObject implements ObjectInterface
      * @param color The new color of the Object.
      */
     @Override
-    public void setColor(Color color)
-    {
+    public void setColor(Color color) {
         this.color = color;
     }
     
@@ -614,8 +586,7 @@ public abstract class AbstractObject implements ObjectInterface
      * @param rotation The angles that define the rotation of the Object.
      */
     @Override
-    public void setRotationWithoutUpdate(Vector rotation)
-    {
+    public void setRotationWithoutUpdate(Vector rotation) {
         setRotationYawWithoutUpdate(rotation.getX());
         setRotationPitchWithoutUpdate(rotation.getY());
         setRotationRollWithoutUpdate(rotation.getZ());
@@ -627,8 +598,7 @@ public abstract class AbstractObject implements ObjectInterface
      * @param rotation The angles that define the rotation of the Object.
      */
     @Override
-    public void setRotation(Vector rotation)
-    {
+    public void setRotation(Vector rotation) {
         setRotationWithoutUpdate(rotation);
         updateRotationMatrix();
     }
@@ -639,8 +609,7 @@ public abstract class AbstractObject implements ObjectInterface
      * @param rotationMatrix The transformation Matrix that defines the rotation of the Object.
      */
     @Override
-    public void setRotationMatrix(Matrix3 rotationMatrix)
-    {
+    public void setRotationMatrix(Matrix3 rotationMatrix) {
         this.rotationMatrix = rotationMatrix;
     }
     
@@ -649,8 +618,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @param yaw The angle that defines the yaw rotation of the Object.
      */
-    public void setRotationYawWithoutUpdate(double yaw)
-    {
+    public void setRotationYawWithoutUpdate(double yaw) {
         yaw %= (Math.PI * 2);
         rotation.set(0, yaw);
     }
@@ -660,8 +628,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @param pitch The angle that defines the pitch rotation of the Object.
      */
-    public void setRotationPitchWithoutUpdate(double pitch)
-    {
+    public void setRotationPitchWithoutUpdate(double pitch) {
         pitch %= (Math.PI * 2);
         rotation.set(1, pitch);
     }
@@ -671,8 +638,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @param roll The angle that defines the roll rotation of the Object.
      */
-    public void setRotationRollWithoutUpdate(double roll)
-    {
+    public void setRotationRollWithoutUpdate(double roll) {
         roll %= (Math.PI * 2);
         rotation.set(2, roll);
     }
@@ -682,8 +648,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @param yaw The angle that defines the yaw rotation of the Object.
      */
-    public void setRotationYaw(double yaw)
-    {
+    public void setRotationYaw(double yaw) {
         setRotationYawWithoutUpdate(yaw);
         updateRotationMatrix();
     }
@@ -693,8 +658,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @param pitch The angle that defines the pitch rotation of the Object.
      */
-    public void setRotationPitch(double pitch)
-    {
+    public void setRotationPitch(double pitch) {
         setRotationPitchWithoutUpdate(pitch);
         updateRotationMatrix();
     }
@@ -704,8 +668,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @param roll The angle that defines the roll rotation of the Object.
      */
-    public void setRotationRoll(double roll)
-    {
+    public void setRotationRoll(double roll) {
         setRotationRollWithoutUpdate(roll);
         updateRotationMatrix();
     }
@@ -716,8 +679,7 @@ public abstract class AbstractObject implements ObjectInterface
      * @param visible The new visibility of the Object.
      */
     @Override
-    public void setVisible(boolean visible)
-    {
+    public void setVisible(boolean visible) {
         this.visible = visible;
     }
     
@@ -727,8 +689,7 @@ public abstract class AbstractObject implements ObjectInterface
      * @param displayMode The new display mode of the Object.
      */
     @Override
-    public void setDisplayMode(BaseObject.DisplayMode displayMode)
-    {
+    public void setDisplayMode(BaseObject.DisplayMode displayMode) {
         this.displayMode = displayMode;
     }
     
@@ -738,8 +699,7 @@ public abstract class AbstractObject implements ObjectInterface
      * @param clippingEnabled The new clipping mode of the Object.
      */
     @Override
-    public void setClippingEnabled(boolean clippingEnabled)
-    {
+    public void setClippingEnabled(boolean clippingEnabled) {
         this.clippingEnabled = clippingEnabled;
     }
     
@@ -748,8 +708,7 @@ public abstract class AbstractObject implements ObjectInterface
      *
      * @param color The new color of the Frame of the Object.
      */
-    public void setFrameColor(Color color)
-    {
+    public void setFrameColor(Color color) {
         if (frame != null) {
             frame.setColor(color);
         }

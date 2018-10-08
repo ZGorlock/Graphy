@@ -6,6 +6,8 @@
 
 package objects.system;
 
+import java.awt.Color;
+
 import main.Environment;
 import objects.RectangularPyramid;
 import objects.base.Frame;
@@ -14,13 +16,10 @@ import objects.base.polygon.Rectangle;
 import objects.base.simple.BigVertex;
 import objects.base.simple.Edge;
 
-import java.awt.*;
-
 /**
  * Defines a Camera Object.
  */
-public class Camera extends Object
-{
+public class Camera extends Object {
     
     //Fields
     
@@ -50,15 +49,14 @@ public class Camera extends Object
     /**
      * The constructor for a Camera.
      */
-    public Camera()
-    {
+    public Camera() {
         super(Environment.origin, Color.BLACK);
-    
+        
         camera = new BigVertex(this, Color.RED, Environment.origin, 3);
         screenNormal = new Edge(this, Color.BLUE, Environment.origin, Environment.origin);
         screenXNormal = new Edge(this, Color.RED, Environment.origin, Environment.origin);
         screenYNormal = new Edge(this, Color.GREEN, Environment.origin, Environment.origin);
-    
+        
         screen = new Rectangle(Color.RED, Environment.origin, Environment.origin, Environment.origin, Environment.origin); //not rendered
         cameraEnclosure = new RectangularPyramid(this, new Color(192, 192, 192, 64), screen, Environment.origin);
         frame = new Frame(cameraEnclosure);
@@ -73,8 +71,7 @@ public class Camera extends Object
      * Calculates the Objects for the Camera Object.
      */
     @Override
-    protected void calculate()
-    {
+    protected void calculate() {
     }
     
 }

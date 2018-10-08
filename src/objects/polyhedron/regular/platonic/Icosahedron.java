@@ -6,20 +6,17 @@
 
 package objects.polyhedron.regular.platonic;
 
+import java.awt.Color;
+
 import math.vector.Vector;
 import objects.base.AbstractObject;
-import objects.base.polygon.Pentagon;
 import objects.base.polygon.Triangle;
-import objects.base.simple.Text;
 import objects.polyhedron.regular.RegularPolyhedron;
-
-import java.awt.*;
 
 /**
  * Defines an Icosahedron.
  */
-public class Icosahedron extends RegularPolyhedron
-{
+public class Icosahedron extends RegularPolyhedron {
     
     //Constants
     
@@ -44,8 +41,7 @@ public class Icosahedron extends RegularPolyhedron
      * @param color  The color of the Icosahedron.
      * @param radius The radius of the bounding sphere of the Icosahedron.
      */
-    public Icosahedron(AbstractObject parent, Vector center, Color color, double radius)
-    {
+    public Icosahedron(AbstractObject parent, Vector center, Color color, double radius) {
         super(parent, center, color, ICOSAHEDRON_FACES, ICOSAHEDRON_VERTICES, radius);
     }
     
@@ -56,8 +52,7 @@ public class Icosahedron extends RegularPolyhedron
      * @param center The center point of the Icosahedron.
      * @param radius The radius of the bounding sphere of the Icosahedron.
      */
-    public Icosahedron(AbstractObject parent, Vector center, double radius)
-    {
+    public Icosahedron(AbstractObject parent, Vector center, double radius) {
         this(parent, center, Color.BLACK, radius);
     }
     
@@ -68,8 +63,7 @@ public class Icosahedron extends RegularPolyhedron
      * @param color  The color of the Icosahedron.
      * @param radius The radius of the bounding sphere of the Icosahedron.
      */
-    public Icosahedron(Vector center, Color color, double radius)
-    {
+    public Icosahedron(Vector center, Color color, double radius) {
         this(null, center, color, radius);
     }
     
@@ -80,8 +74,7 @@ public class Icosahedron extends RegularPolyhedron
      * Calculates the structure of the Icosahedron.
      */
     @Override
-    protected void calculate()
-    {
+    protected void calculate() {
         components.clear();
         
         double a = GOLDEN_RATIO;

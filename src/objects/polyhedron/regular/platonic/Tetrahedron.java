@@ -87,23 +87,23 @@ public class Tetrahedron extends RegularPolyhedron {
         
         new Triangle(this, color,
                 vertices[2],
-                vertices[1],
-                vertices[0]
+                vertices[0],
+                vertices[1]
         );
         new Triangle(this, color,
                 vertices[0],
-                vertices[1],
+                vertices[3],
+                vertices[1]
+        );
+        new Triangle(this, color,
+                vertices[0],
+                vertices[2],
                 vertices[3]
         );
         new Triangle(this, color,
-                vertices[0],
-                vertices[3],
-                vertices[2]
-        );
-        new Triangle(this, color,
                 vertices[2],
-                vertices[3],
-                vertices[1]
+                vertices[1],
+                vertices[3]
         );
         
         setVisible(visible);

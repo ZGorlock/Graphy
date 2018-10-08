@@ -173,10 +173,10 @@ public class Dodecahedron extends RegularPolyhedron {
         );
         new Pentagon(this, color,
                 vertices[10],
-                vertices[8],
-                vertices[6],
+                vertices[18],
                 vertices[16],
-                vertices[18]
+                vertices[6],
+                vertices[8]
         );
         
         setVisible(visible);

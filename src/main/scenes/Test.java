@@ -6,6 +6,7 @@
 
 package main.scenes;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,9 +57,10 @@ public class Test extends Scene {
      */
     public static List<Object> createObjects() {
         List<Object> objects = new ArrayList<>();
-        
-        Icosahedron i = new Icosahedron(null, Environment.origin, java.awt.Color.BLUE, 3);
+    
+        Icosahedron i = new Icosahedron(null, Environment.origin, new Color(0, 0, 0, 0), 3);
         i.addFrame(java.awt.Color.BLACK);
+        i.displayVertexIndices();
         objects.add(i);
         
         return objects;

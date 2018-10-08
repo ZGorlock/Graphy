@@ -87,23 +87,23 @@ public class Octahedron extends RegularPolyhedron {
         
         new Triangle(this, color,
                 vertices[1],
-                vertices[2],
-                vertices[3]
-        );
-        new Triangle(this, color,
-                vertices[1],
                 vertices[3],
-                vertices[5]
+                vertices[2]
         );
         new Triangle(this, color,
                 vertices[1],
                 vertices[5],
-                vertices[0]
+                vertices[3]
         );
         new Triangle(this, color,
                 vertices[1],
                 vertices[0],
-                vertices[2]
+                vertices[5]
+        );
+        new Triangle(this, color,
+                vertices[1],
+                vertices[2],
+                vertices[0]
         );
         new Triangle(this, color,
                 vertices[4],

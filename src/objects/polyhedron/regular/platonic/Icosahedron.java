@@ -117,8 +117,8 @@ public class Icosahedron extends RegularPolyhedron {
         );
         new Triangle(this, color,
                 vertices[1],
-                vertices[0],
-                vertices[2]
+                vertices[2],
+                vertices[0]
         );
         new Triangle(this, color,
                 vertices[3],

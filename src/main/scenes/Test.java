@@ -6,16 +6,16 @@
 
 package main.scenes;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Object;
 import objects.base.Scene;
-import objects.polyhedron.regular.platonic.Icosahedron;
+import objects.polyhedron.regular.platonic.Dodecahedron;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Test extends Scene {
     
@@ -58,9 +58,10 @@ public class Test extends Scene {
     public static List<Object> createObjects() {
         List<Object> objects = new ArrayList<>();
     
-        Icosahedron i = new Icosahedron(null, Environment.origin, new Color(0, 0, 0, 0), 3);
+        Dodecahedron i = new Dodecahedron(null, Environment.origin, new Color(0, 0, 0, 0), 3);
         i.addFrame(java.awt.Color.BLACK);
         i.displayVertexIndices();
+        i.displayFaceIndices();
         objects.add(i);
         
         return objects;

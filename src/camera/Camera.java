@@ -100,6 +100,11 @@ public class Camera {
     private Vector c;
     
     /**
+     * The offset of the Camera.
+     */
+    private Vector offset;
+    
+    /**
      * The current movement speed of the Camera.
      */
     private double phiSpeed = .05;
@@ -168,6 +173,7 @@ public class Camera {
         cameraMap.put(cameraId, this);
         
         origin = Environment.origin;
+        offset = new Vector(0, 0, 0);
         
         calculateCamera();
         
@@ -214,13 +220,13 @@ public class Camera {
         double mx = rho * Math.sin(phi) * Math.cos(theta);
         double my = rho * Math.cos(phi);
         double mz = rho * Math.sin(phi) * Math.sin(theta);
-        m = new Vector(mx, my, mz);
+        m = new Vector(mx, my, mz).plus(offset);
         
         
         //normal unit vector of screen, n
-        double nx = mx - origin.getX();
-        double ny = my - origin.getY();
-        double nz = mz - origin.getZ();
+        double nx = m.getX() - origin.getX();
+        double ny = m.getY() - origin.getY();
+        double nz = m.getZ() - origin.getZ();
         n = new Vector(nx, ny, nz);
         n = n.normalize();
         
@@ -449,16 +455,24 @@ public class Camera {
                     }
                     
                     if (key == KeyEvent.VK_LEFT) {
-                        origin = origin.plus(new Vector(1, 0, 0));
+                        Environment.origin = Environment.origin.plus(new Vector(0, 0, 1));
+                        origin = origin.plus(new Vector(0, 0, 1));
+                        offset = offset.plus(new Vector(0, 0, 1));
                     }
                     if (key == KeyEvent.VK_RIGHT) {
-                        origin = origin.plus(new Vector(-1, 0, 0));
+                        Environment.origin = Environment.origin.plus(new Vector(0, 0, -1));
+                        origin = origin.plus(new Vector(0, 0, -1));
+                        offset = offset.plus(new Vector(0, 0, -1));
                     }
                     if (key == KeyEvent.VK_UP) {
+                        Environment.origin = Environment.origin.plus(new Vector(0, -1, 0));
                         origin = origin.plus(new Vector(0, -1, 0));
+                        offset = offset.plus(new Vector(0, -1, 0));
                     }
                     if (key == KeyEvent.VK_DOWN) {
+                        Environment.origin = Environment.origin.plus(new Vector(0, 1, 0));
                         origin = origin.plus(new Vector(0, 1, 0));
+                        offset = offset.plus(new Vector(0, 1, 0));
                     }
                 }
                 

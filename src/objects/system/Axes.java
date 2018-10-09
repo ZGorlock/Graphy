@@ -6,19 +6,20 @@
 
 package objects.system;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Object;
 import objects.base.simple.Edge;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Defines the coordinate axes.
  */
 public class Axes extends Object {
+    
     
     //Fields
     
@@ -33,9 +34,14 @@ public class Axes extends Object {
     public List<Edge> subAxes;
     
     /**
+     * The radius of the axes;
+     */
+    public int axesRadius;
+    
+    /**
      * Whether or not to display the sub Axes.
      */
-    public boolean displaySubAxes = false;
+    public boolean displaySubAxes;
     
     
     //Constructors
@@ -43,16 +49,26 @@ public class Axes extends Object {
     /**
      * The constructor for the coordinate Axes.
      *
-     * @param displaySubAxes Whether or not to display the sub Axes.
+     * @param axesRadius     The radius of the axes.
+     * @param displaySubAxes Whether or not to display the sub axes.
      */
-    public Axes(boolean displaySubAxes) {
+    public Axes(int axesRadius, boolean displaySubAxes) {
         super(Environment.origin, Color.BLACK);
         
+        this.axesRadius = axesRadius;
         this.displaySubAxes = displaySubAxes;
         
         calculate();
-        
         setClippingEnabled(false);
+    }
+    
+    /**
+     * The constructor for the coordinate Axes.
+     *
+     * @param axesRadius The radius of the axes.
+     */
+    public Axes(int axesRadius) {
+        this(axesRadius, false);
     }
     
     
@@ -68,47 +84,53 @@ public class Axes extends Object {
         
         //main axes
         mainAxes.add(new Edge(this, Color.RED,
-                new Vector(Environment.xMin, 0, 0),
-                new Vector(Environment.xMax, 0, 0)));
+                new Vector(-axesRadius, 0, 0),
+                new Vector(axesRadius, 0, 0)));
         mainAxes.add(new Edge(this, Color.GREEN,
-                new Vector(0, Environment.yMin, 0),
-                new Vector(0, Environment.yMin, 0)));
+                new Vector(0, -axesRadius, 0),
+                new Vector(0, axesRadius, 0)));
         mainAxes.add(new Edge(this, Color.BLUE,
-                new Vector(0, 0, Environment.zMax),
-                new Vector(0, 0, Environment.zMin)));
+                new Vector(0, 0, axesRadius),
+                new Vector(0, 0, -axesRadius)));
 
-//        //sub axes
+        //sub axes
         if (displaySubAxes) {
-//        Color subAxis = new Color(128, 128, 128, 32);
-//        for (int xg = xMin; xg <= xMax; xg += 1) {
-//            for (int yg = yMin; yg <= yMax; yg += 1) {
-//                if (xg != 0 || yg != 0) {
-//                    edges.add(new objects.base.simple.Edge(new Vertex(xg, yg, zMin),
-//                            new Vertex(xg, yg, zMax), subAxis));
-//                }
-//            }
-//            for (int zg = zMin; zg <= zMax; zg += 1) {
-//                if (xg != 0 || zg != 0) {
-//                    edges.add(new objects.base.simple.Edge(new Vertex(xg, yMin, zg),
-//                            new Vertex(xg, yMax, zg), subAxis));
-//                }
-//            }
-//        }
-//        for (int yg = yMin; yg <= yMax; yg += 1) {
-//            for (int xg = xMin; xg <= xMax; xg += 1) {
-//                if (yg != 0 || xg != 0) {
-//                    edges.add(new objects.base.simple.Edge(new Vertex(xg, yg, zMin),
-//                            new Vertex(xg, yg, zMax), subAxis));
-//                }
-//            }
-//            for (int zg = zMin; zg <= zMax; zg += 1) {
-//                if (yg != 0 || zg != 0) {
-//                    edges.add(new objects.base.simple.Edge(new Vertex(xMin, yg, zg),
-//                            new Vertex(xMax, yg, zg), subAxis));
-//                }
-//            }
-//        }
+            Color subAxis = new Color(128, 128, 128, 32);
+            for (int xg = -axesRadius; xg <= axesRadius; xg += 1) {
+                for (int yg = -axesRadius; yg <= axesRadius; yg += 1) {
+                    if (xg != 0 || yg != 0) {
+                        subAxes.add(new objects.base.simple.Edge(this, subAxis,
+                                new Vector(xg, yg, -axesRadius),
+                                new Vector(xg, yg, axesRadius)));
+                    }
+                }
+                for (int zg = -axesRadius; zg <= axesRadius; zg += 1) {
+                    if (xg != 0 || zg != 0) {
+                        subAxes.add(new objects.base.simple.Edge(this, subAxis,
+                                new Vector(xg, -axesRadius, zg),
+                                new Vector(xg, axesRadius, zg)));
+                    }
+                }
+            }
+            for (int yg = -axesRadius; yg <= axesRadius; yg += 1) {
+                for (int xg = -axesRadius; xg <= axesRadius; xg += 1) {
+                    if (yg != 0 || xg != 0) {
+                        subAxes.add(new objects.base.simple.Edge(this, subAxis,
+                                new Vector(xg, yg, -axesRadius),
+                                new Vector(xg, yg, axesRadius)));
+                    }
+                }
+                for (int zg = -axesRadius; zg <= axesRadius; zg += 1) {
+                    if (yg != 0 || zg != 0) {
+                        subAxes.add(new objects.base.simple.Edge(this, subAxis,
+                                new Vector(-axesRadius, yg, zg),
+                                new Vector(axesRadius, yg, zg)));
+                    }
+                }
+            }
         }
+        
+        setVisible(true);
     }
     
 }

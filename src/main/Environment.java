@@ -53,21 +53,6 @@ public class Environment {
      */
     public static final double omega = 0.0000001;
     
-    /**
-     * The min and max coordinate values to render.
-     */
-    public static double xMin = -100.0;
-    
-    public static double xMax = 100.0;
-    
-    public static double yMin = -100.0;
-    
-    public static double yMax = 100.0;
-    
-    public static double zMin = -100.0;
-    
-    public static double zMax = 100.0;
-    
     
     //Static Fields
     
@@ -174,40 +159,6 @@ public class Environment {
     
     
     //Static Methods
-    
-    /**
-     * Creates objects in the Environment.
-     */
-    private static void createObjects() {
-        
-        //Cube Fractal
-//        CubeFractal cubeFractal = new CubeFractal(Environment.origin, Color.BLACK, .25, 2, 5);
-//        cubeFractal.addColorAnimation(10000, 0);
-//        cubeFractal.addFrame(Color.WHITE);
-//        objects.add(cubeFractal);
-        
-        
-        //Cube Field
-//        for (int i = 0; i < 200; i++) {
-//            Hexahedron h = new Hexahedron(new Vector(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100), Color.BLUE, Math.random() * 3);
-//            h.addFrame(Color.BLACK);
-//            objects.add(h);
-//        }
-        
-        
-        //Animated Cube
-//        Hexahedron cube = new Hexahedron(Environment.origin, Color.BLUE, 2);
-//        cube.addRotationAnimation(Math.PI / 4, Math.PI / 4, Math.PI / 4);
-//
-////        for (int f = 1; f < 6; f++) {
-////            cube.setFaceColor(f, ColorUtility.getRandomColor());
-////        }
-//        Frame frame = cube.addFrame(Color.BLACK);
-//
-//        frame.addColorAnimation(5000, 2500);
-//        cube.addColorAnimation(5000, 0);
-//        objects.add(cube);
-    }
     
     /**
      * Adds the KeyListener for the Camera main environment controls.

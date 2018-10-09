@@ -52,7 +52,7 @@ public class SphereField extends Scene {
      */
     public static List<Object> createObjects() {
         List<Object> objects = new ArrayList<>();
-        
+                
         for (int i = 0; i < 10; i++) {
             Sphere sphere = new Sphere(null, new Vector(Math.random() * 20 - 10, Math.random() * 20 - 10, Math.random() * 20 - 10), Color.BLACK, (int) (Math.random() * 5) + 1, Math.PI / (4 * ((int) (Math.random() * 4) + 1)));
             sphere.addRotationAnimation(Math.PI / (4 * ((int) (Math.random() * 8) + 1)), Math.PI / (4 * ((int) (Math.random() * 8) + 1)), Math.PI / (4 * ((int) (Math.random() * 8) + 1)));

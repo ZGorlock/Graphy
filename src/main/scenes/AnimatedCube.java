@@ -9,24 +9,25 @@ package main.scenes;
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
+import objects.base.Frame;
 import objects.base.Object;
 import objects.base.Scene;
-import objects.polyhedron.regular.RegularPolyhedron;
-import objects.polyhedron.regular.platonic.Icosahedron;
+import objects.polyhedron.regular.platonic.Hexahedron;
+import utility.ColorUtility;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Defines a Test scene.
+ * Defines a Animated Cube scene.
  */
-public class Test extends Scene {    
+public class AnimatedCube extends Scene {    
     
     //Main Methods
     
     /**
-     * The main method for the Rubik's Cube scene.
+     * The main method for the Animated Cube scene.
      *
      * @param args The arguments to the main method.
      */
@@ -52,12 +53,18 @@ public class Test extends Scene {
      */
     public static List<Object> createObjects() {
         List<Object> objects = new ArrayList<>();
-    
-        RegularPolyhedron i = new Icosahedron(null, Environment.origin, new Color(0, 0, 0, 0), 1);
-        i.addFrame(java.awt.Color.BLACK);
-        i.displayVertexIndices();
-        i.displayFaceIndices();
-        objects.add(i);
+
+        Hexahedron cube = new Hexahedron(Environment.origin, Color.BLUE, 2);
+        cube.addRotationAnimation(Math.PI / 4, Math.PI / 4, Math.PI / 4);
+
+        for (int f = 1; f < 6; f++) {
+            cube.setFaceColor(f, ColorUtility.getRandomColor());
+        }
+        Frame frame = cube.addFrame(Color.BLACK);
+
+        frame.addColorAnimation(5000, 2500);
+        cube.addColorAnimation(5000, 0);
+        objects.add(cube);
         
         return objects;
     }
@@ -67,7 +74,7 @@ public class Test extends Scene {
      */
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
-        camera.setLocation(Math.PI / 2, 0, 5);
+        camera.setLocation(Math.PI / 2, 0, 12);
         Camera.setActiveCamera(0);
     }
     
@@ -81,11 +88,11 @@ public class Test extends Scene {
     //Constructors
     
     /**
-     * Constructor for the Test Scene.
+     * Constructor for the Animated Cube Scene.
      *
      * @param center The center of the scene.
      */
-    public Test(Vector center) {
+    public AnimatedCube(Vector center) {
         super(center);
     }
     

@@ -11,22 +11,21 @@ import main.Environment;
 import math.vector.Vector;
 import objects.base.Object;
 import objects.base.Scene;
-import objects.polyhedron.regular.RegularPolyhedron;
-import objects.polyhedron.regular.platonic.Icosahedron;
+import objects.polyhedron.regular.platonic.Hexahedron;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Defines a Test scene.
+ * Defines a Cube Field scene.
  */
-public class Test extends Scene {    
+public class CubeField extends Scene {    
     
     //Main Methods
     
     /**
-     * The main method for the Rubik's Cube scene.
+     * The main method for the Cube Field scene.
      *
      * @param args The arguments to the main method.
      */
@@ -52,12 +51,12 @@ public class Test extends Scene {
      */
     public static List<Object> createObjects() {
         List<Object> objects = new ArrayList<>();
-    
-        RegularPolyhedron i = new Icosahedron(null, Environment.origin, new Color(0, 0, 0, 0), 1);
-        i.addFrame(java.awt.Color.BLACK);
-        i.displayVertexIndices();
-        i.displayFaceIndices();
-        objects.add(i);
+
+        for (int i = 0; i < 300; i++) {
+            Hexahedron h = new Hexahedron(new Vector(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100), Color.BLUE, Math.random() * 3);
+            h.addFrame(Color.BLACK);
+            objects.add(h);
+        }
         
         return objects;
     }
@@ -67,7 +66,7 @@ public class Test extends Scene {
      */
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
-        camera.setLocation(Math.PI / 2, 0, 5);
+        camera.setLocation(Math.PI / 2, 0, 4);
         Camera.setActiveCamera(0);
     }
     
@@ -81,11 +80,11 @@ public class Test extends Scene {
     //Constructors
     
     /**
-     * Constructor for the Test Scene.
+     * Constructor for the Cube Field Scene.
      *
      * @param center The center of the scene.
      */
-    public Test(Vector center) {
+    public CubeField(Vector center) {
         super(center);
     }
     

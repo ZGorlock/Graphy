@@ -11,22 +11,20 @@ import main.Environment;
 import math.vector.Vector;
 import objects.base.Object;
 import objects.base.Scene;
-import objects.polyhedron.regular.RegularPolyhedron;
-import objects.polyhedron.regular.platonic.Icosahedron;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Defines a Test scene.
+ * Defines a Cube Fractal scene.
  */
-public class Test extends Scene {    
+public class CubeFractal extends Scene {    
     
     //Main Methods
     
     /**
-     * The main method for the Rubik's Cube scene.
+     * The main method for the Cube Fractal scene.
      *
      * @param args The arguments to the main method.
      */
@@ -53,11 +51,10 @@ public class Test extends Scene {
     public static List<Object> createObjects() {
         List<Object> objects = new ArrayList<>();
     
-        RegularPolyhedron i = new Icosahedron(null, Environment.origin, new Color(0, 0, 0, 0), 1);
-        i.addFrame(java.awt.Color.BLACK);
-        i.displayVertexIndices();
-        i.displayFaceIndices();
-        objects.add(i);
+        objects.fractals.CubeFractal cubeFractal = new objects.fractals.CubeFractal(Environment.origin, Color.BLACK, .25, 2, 5);
+        cubeFractal.addColorAnimation(10000, 0);
+        cubeFractal.addFrame(Color.WHITE);
+        objects.add(cubeFractal);
         
         return objects;
     }
@@ -67,7 +64,7 @@ public class Test extends Scene {
      */
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
-        camera.setLocation(Math.PI / 2, 0, 5);
+        camera.setLocation(Math.PI / 2, 0, 2);
         Camera.setActiveCamera(0);
     }
     
@@ -81,11 +78,11 @@ public class Test extends Scene {
     //Constructors
     
     /**
-     * Constructor for the Test Scene.
+     * Constructor for the Cube Fractal Scene.
      *
      * @param center The center of the scene.
      */
-    public Test(Vector center) {
+    public CubeFractal(Vector center) {
         super(center);
     }
     

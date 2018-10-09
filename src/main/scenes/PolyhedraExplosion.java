@@ -5,14 +5,6 @@
  */
 
 package main.scenes;
-        
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import camera.Camera;
 import main.Environment;
@@ -22,15 +14,19 @@ import objects.base.Frame;
 import objects.base.Object;
 import objects.base.Scene;
 import objects.polyhedron.regular.MetatronsCube;
-import objects.polyhedron.regular.platonic.Dodecahedron;
-import objects.polyhedron.regular.platonic.Hexahedron;
-import objects.polyhedron.regular.platonic.Icosahedron;
-import objects.polyhedron.regular.platonic.Octahedron;
-import objects.polyhedron.regular.platonic.Tetrahedron;
+import objects.polyhedron.regular.platonic.*;
 import utility.ColorUtility;
 
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
- * Defines a Polyhedra explosion scene.
+ * Defines a Polyhedra Explosion scene.
  */
 public class PolyhedraExplosion extends Scene {
     

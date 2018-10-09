@@ -6,18 +6,13 @@
 
 package objects.base;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.ConcurrentModificationException;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import utility.RotationUtility;
+
+import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 /**
  * Defines the base properties of an Object.
@@ -211,16 +206,6 @@ public class Object extends AbstractObject {
             component.setRotationWithoutUpdate(rotation);
             component.setRotationMatrix(rotationMatrix);
         }
-    }
-    
-    /**
-     * Adds a frame to the Object.
-     *
-     * @param color The color of the Frame to add.
-     */
-    public Frame addFrame(Color color) {
-        frame = new Frame(this, color);
-        return frame;
     }
     
     /**

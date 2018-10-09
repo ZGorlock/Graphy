@@ -6,16 +6,15 @@
 
 package objects.base;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
-
 import camera.Camera;
 import main.Environment;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import utility.RotationUtility;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Defines the base properties of an Object.
@@ -199,7 +198,7 @@ public abstract class BaseObject extends AbstractObject {
      *
      * @param g2 The 2D Graphics entity.
      */
-    public void addFrame(Graphics2D g2) {
+    public void renderFrame(Graphics2D g2) {
         if (frame == null) {
             return;
         }

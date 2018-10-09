@@ -6,12 +6,11 @@
 
 package objects.base;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import math.vector.Vector;
+
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import math.vector.Vector;
 
 /**
  * Defines a Frame Object for Objects.
@@ -23,7 +22,7 @@ public class Frame extends Object {
     /**
      * The Object that the Frame was created for.
      */
-    protected Object base;
+    protected AbstractObject base;
     
     
     //Constructors
@@ -34,7 +33,7 @@ public class Frame extends Object {
      * @param base  The Object to create a frame for.
      * @param color The color of the Frame.
      */
-    public Frame(Object base, Color color) {
+    public Frame(AbstractObject base, Color color) {
         super(base.getCenter(), color);
         
         this.base = base;

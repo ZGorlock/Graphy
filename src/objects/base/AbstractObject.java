@@ -6,19 +6,18 @@
 
 package objects.base;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import main.Environment;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import utility.ColorUtility;
 import utility.RotationUtility;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Defines an abstract implementation of an Object.
@@ -402,6 +401,16 @@ public abstract class AbstractObject implements ObjectInterface {
      */
     @Override
     public void unregisterComponent(ObjectInterface component) {
+    }
+    
+    /**
+     * Adds a frame to the Object.
+     *
+     * @param color The color of the Frame to add.
+     */
+    public Frame addFrame(Color color) {
+        frame = new Frame(this, color);
+        return frame;
     }
     
     /**

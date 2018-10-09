@@ -6,14 +6,17 @@
 
 package math.physics;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import main.Environment;
 import math.vector.Vector;
 import objects.base.ObjectInterface;
 import objects.base.polygon.Polygon;
 import objects.polyhedron.Polyhedron;
+import objects.polyhedron.regular.platonic.Icosahedron;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Contains physical metrics about a Polyhedron. 
@@ -44,6 +47,34 @@ public class Metrics {
      * The density of the Polyhedron.
      */
     protected double density = 1.0;
+    
+    public static void main(String[] args) {
+        Polyhedron i = new Icosahedron(null, Environment.origin, new Color(0, 0, 0, 0), 1);
+        
+        long t = System.currentTimeMillis();
+        SAMPLE_SET_FOR_VOLUME_APPROXIMATION = 1000;
+        Metrics m = new Metrics(i);
+        System.out.println(m.getVolume());
+        System.out.println(System.currentTimeMillis() - t);
+        
+        t = System.currentTimeMillis();
+        SAMPLE_SET_FOR_VOLUME_APPROXIMATION = 10000;
+        m = new Metrics(i);
+        System.out.println(m.getVolume());
+        System.out.println(System.currentTimeMillis() - t);
+        
+        t = System.currentTimeMillis();
+        SAMPLE_SET_FOR_VOLUME_APPROXIMATION = 100000;
+        m = new Metrics(i);
+        System.out.println(m.getVolume());
+        System.out.println(System.currentTimeMillis() - t);
+        
+        t = System.currentTimeMillis();
+        SAMPLE_SET_FOR_VOLUME_APPROXIMATION = 1000000;
+        m = new Metrics(i);
+        System.out.println(m.getVolume());
+        System.out.println(System.currentTimeMillis() - t);
+    }
     
     
     //Constructors

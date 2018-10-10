@@ -1,10 +1,14 @@
 /*
- * File:    SphereField.java
+ * File:    SphereFieldSimple.java
  * Package: main.scenes
  * Author:  Zachary Gill
  */
 
 package main.scenes;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 import camera.Camera;
 import main.Environment;
@@ -12,10 +16,6 @@ import math.vector.Vector;
 import objects.base.Object;
 import objects.base.Scene;
 import objects.sphere.Sphere;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines a Sphere Field scene.

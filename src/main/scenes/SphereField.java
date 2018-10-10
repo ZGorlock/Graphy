@@ -6,6 +6,10 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -13,10 +17,6 @@ import objects.base.Frame;
 import objects.base.Object;
 import objects.base.Scene;
 import objects.sphere.Sphere;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines a Sphere Field scene.
@@ -54,8 +54,9 @@ public class SphereField extends Scene {
         List<Object> objects = new ArrayList<>();
                 
         for (int i = 0; i < 10; i++) {
-            Sphere sphere = new Sphere(null, new Vector(Math.random() * 20 - 10, Math.random() * 20 - 10, Math.random() * 20 - 10), Color.BLACK, (int) (Math.random() * 5) + 1, Math.PI / (4 * ((int) (Math.random() * 4) + 1)));
-            sphere.addRotationAnimation(Math.PI / (4 * ((int) (Math.random() * 8) + 1)), Math.PI / (4 * ((int) (Math.random() * 8) + 1)), Math.PI / (4 * ((int) (Math.random() * 8) + 1)));
+            Sphere sphere = new Sphere(null, new Vector(Math.random() * 20 - 10, Math.random() * 20 - 10, Math.random() * 20 - 10), Color.BLACK, Color.RED, (int) (Math.random() * 5) + 1, Math.PI / (4 * ((int) (Math.random() * 4) + 1)));
+//            sphere.addRotationAnimation(Math.PI / (4 * ((int) (Math.random() * 8) + 1)), Math.PI / (4 * ((int) (Math.random() * 8) + 1)), Math.PI / (4 * ((int) (Math.random() * 8) + 1)));
+            sphere.addRotationAnimation(0, Math.PI / 16, 0);
             Frame f = sphere.addFrame(Color.BLACK);
             f.addColorAnimation(5000, (int) (Math.random() * 5000));
             objects.add(sphere);

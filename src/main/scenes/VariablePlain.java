@@ -81,10 +81,9 @@ public class VariablePlain extends Scene {
                         }
                     }
                     
-                    Triangle t = new Triangle(Color.WHITE, vt.get(0), vt.get(1), vt.get(2));
+                    Triangle t = new Triangle(plain, Color.WHITE, vt.get(0), vt.get(1), vt.get(2));
 //                    t.addColorAnimation(10000, 0);
                     t.addFrame(Color.BLACK);
-                    plain.getComponents().add(t);
                     
                     vs.addAll(vt);
                 }

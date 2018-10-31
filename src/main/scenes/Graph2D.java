@@ -1,5 +1,5 @@
 /*
- * File:    Graph.java
+ * File:    Graph2D.java
  * Package: main.scenes
  * Author:  Zachary Gill
  */
@@ -11,7 +11,7 @@ import main.Environment;
 import math.vector.Vector;
 import objects.base.Object;
 import objects.base.Scene;
-import objects.base.polygon.Rectangle;
+import objects.base.simple.Edge;
 import objects.system.Axes;
 import utility.EquationUtility;
 
@@ -20,16 +20,16 @@ import java.util.*;
 import java.util.List;
 
 /**
- * Defines a Graph scene.
+ * Defines a Graph2D scene.
  */
-public class Graph extends Scene {
+public class Graph2D extends Scene {
     
     //Constants
     
     /**
      * The density of the graph.
      */
-    public static double density = 0.2;
+    public static double density = 0.25;
     
     
     //Fields
@@ -37,13 +37,13 @@ public class Graph extends Scene {
     /**
      * The equation to graph
      */
-    private static EquationUtility.MathOperation graph = EquationUtility.parseMath("x^3 - y^3 - x^2 + y^2 - x + y - 3");
+    private static EquationUtility.MathOperation graph = EquationUtility.parseMath("x");
     
     
     //Main Methods
     
     /**
-     * The main method for the Graph scene.
+     * The main method for the Graph2D scene.
      *
      * @param args The arguments to the main method.
      */
@@ -76,44 +76,38 @@ public class Graph extends Scene {
         Set<Vector> vs = new HashSet<>();
         Map<Vector, Double> vsm = new HashMap<>();
         for (double x = -10; x <= 10; x += density) {
-            for (double y = -10; y <= 10; y += density) {
-                
-                List<Vector> vt = new ArrayList<>();
-                vt.add(new Vector(x, y, 0));
-                vt.add(new Vector(x + density, y, 0));
-                vt.add(new Vector(x + density, y + density, 0));
-                vt.add(new Vector(x, y + density, 0));
-                
-                for (int i = 0; i < vt.size(); i++) {
-                    for (Vector vsi : vs) {
-                        if (vt.get(i).getX() == vsi.getX() &&
-                                vt.get(i).getY() == vsi.getY() &&
-                                vt.get(i).getZ() == vsi.getZ()) {
-                            vt.set(i, vsi);
-                        }
+            
+            List<Vector> vt = new ArrayList<>();
+            vt.add(new Vector(x, 0, 0));
+            vt.add(new Vector(x + density, 0, 0));
+            
+            for (int i = 0; i < vt.size(); i++) {
+                for (Vector vsi : vs) {
+                    if (vt.get(i).getX() == vsi.getX() &&
+                            vt.get(i).getY() == vsi.getY() &&
+                            vt.get(i).getZ() == vsi.getZ()) {
+                        vt.set(i, vsi);
                     }
                 }
-                
-                Rectangle t = new Rectangle(plain, Color.WHITE, vt.get(0), vt.get(1), vt.get(2), vt.get(3));
-                t.addFrame(Color.BLACK);
-                
-                vs.addAll(vt);
             }
+            
+            Edge t = new Edge(plain, Color.BLACK, vt.get(0), vt.get(1));
+            
+            vs.addAll(vt);
         }
         
         for (Vector v : vs) {
             Map<String, Number> vars = new HashMap<>();
-            vars.put("x", v.getX());
-            vars.put("y", v.getY());
-            v.setZ(-graph.evaluate(vars).doubleValue());
-            if (v.getZ() != v.getZ()) {
-                v.setZ(0);
+            vars.put("x", Math.sin(v.getX()));
+            v.setY(-graph.evaluate(vars).doubleValue());
+            if (v.getY() != v.getY()) {
+                v.setY(0);
             }
-            if (v.getZ() > 20) {
-                v.setZ(20);
+            if (v.getY() > 20) {
+                v.setY(20);
             }
-            if (v.getZ() < -20) {
-                v.setZ(-20);
+            if (v.getY() < -20) {
+                v.setY(-20);
             }
         }
         
@@ -127,7 +121,7 @@ public class Graph extends Scene {
      */
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
-        camera.setLocation(3 * Math.PI / 4, -Math.PI / 4, 50);
+        camera.setLocation(Math.PI, 0, 50);
         Camera.setActiveCamera(0);
     }
     
@@ -141,11 +135,11 @@ public class Graph extends Scene {
     //Constructors
     
     /**
-     * Constructor for the Graph Scene.
+     * Constructor for the Graph2D Scene.
      *
      * @param center The center of the scene.
      */
-    public Graph(Vector center) {
+    public Graph2D(Vector center) {
         super(center);
     }
     

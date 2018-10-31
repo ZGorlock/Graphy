@@ -6,26 +6,17 @@
 
 package camera;
 
-import java.awt.Color;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import main.Environment;
 import math.Delta;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import math.vector.Vector3;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Defines the functionality of a Camera.
@@ -61,6 +52,13 @@ public class Camera {
      * The map of Cameras that are registered in the Environment.
      */
     private static final Map<Integer, Camera> cameraMap = new HashMap<>();
+    
+    /**
+     * The dimensions of the viewport.
+     */
+    private static double viewportX = Environment.screenX / 1000.0;
+    
+    private static double viewportY = Environment.screenY / 1000.0;
     
     /**
      * Whether the static KeyListener has been set up or not.
@@ -112,13 +110,6 @@ public class Camera {
     private double thetaSpeed = .05;
     
     private double rhoSpeed = 1;
-    
-    /**
-     * The dimensions of the viewport.
-     */
-    private double viewportX = Environment.screenX / 1000.0;
-    
-    private double viewportY = Environment.screenY / 1000.0;
     
     /**
      * The normal unit Vector of the Screen.
@@ -799,8 +790,7 @@ public class Camera {
      * @return The viewport dimensions of the active Camera.
      */
     public static Vector getActiveViewportDim() {
-        Camera camera = getActiveCameraView();
-        return new Vector(camera.viewportX, camera.viewportY);
+        return new Vector(viewportX, viewportY);
     }
     
     /**

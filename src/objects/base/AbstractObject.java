@@ -254,17 +254,17 @@ public abstract class AbstractObject implements ObjectInterface {
     /**
      * Adds a constant rotation animation to an Object.
      *
-     * @param yawSpeed   The speed of the yaw rotation in radians per second.
-     * @param pitchSpeed The speed of the pitch rotation in radians per second.
      * @param rollSpeed  The speed of the roll rotation in radians per second.
+     * @param pitchSpeed The speed of the pitch rotation in radians per second.
+     * @param yawSpeed   The speed of the yaw rotation in radians per second.
      */
     @Override
-    public void addRotationAnimation(double yawSpeed, double pitchSpeed, double rollSpeed) {
+    public void addRotationAnimation(double rollSpeed, double pitchSpeed, double yawSpeed) {
         Timer animationTimer = new Timer();
         animationTimers.add(animationTimer);
-        rotationAnimations.add(new double[] {yawSpeed, pitchSpeed, rollSpeed});
+        rotationAnimations.add(new double[] {rollSpeed, pitchSpeed, yawSpeed});
         animationTimer.scheduleAtFixedRate(new TimerTask() {
-            private Vector speedVector = new Vector(yawSpeed, pitchSpeed, rollSpeed);
+            private Vector speedVector = new Vector(rollSpeed, pitchSpeed, yawSpeed);
             
             private long lastTime = 0;
             
@@ -288,17 +288,17 @@ public abstract class AbstractObject implements ObjectInterface {
     /**
      * Adds a rotation transformation to an Object over a period of time.
      *
-     * @param yawRotation   The total yaw rotation in radians.
-     * @param pitchRotation The total pitch rotation in radians.
      * @param rollRotation  The total roll rotation in radians.
+     * @param pitchRotation The total pitch rotation in radians.
+     * @param yawRotation   The total yaw rotation in radians.
      * @param period        The period over which to perform the transition in milliseconds.
      */
     @Override
-    public void addRotationTransformation(double yawRotation, double pitchRotation, double rollRotation, long period) {
+    public void addRotationTransformation( double rollRotation,double pitchRotation, double yawRotation, long period) {
         inRotationTransformation.set(true);
         Timer transitionTimer = new Timer();
         transitionTimer.scheduleAtFixedRate(new TimerTask() {
-            private Vector rotationVector = new Vector(yawRotation, pitchRotation, rollRotation);
+            private Vector rotationVector = new Vector(rollRotation, pitchRotation, yawRotation);
             
             private Vector totalRotation = new Vector(0, 0, 0);
             
@@ -367,7 +367,7 @@ public abstract class AbstractObject implements ObjectInterface {
      * Updates the rotation matrix for the Object.
      */
     public void updateRotationMatrix() {
-        rotationMatrix = RotationUtility.getRotationMatrix(getRotationYaw(), getRotationPitch(), getRotationRoll());
+        rotationMatrix = RotationUtility.getRotationMatrix(getRotationRoll(), getRotationPitch(), getRotationYaw());
     }
     
     /**
@@ -381,7 +381,7 @@ public abstract class AbstractObject implements ObjectInterface {
         }
         
         for (int i = 0; i < vs.size(); i++) {
-            vs.set(i, RotationUtility.performRotation(vs.get(i), rotationMatrix, getParentCenter()));
+            vs.set(i, RotationUtility.performRotation(vs.get(i), rotationMatrix, getRootCenter()));
         }
     }
     
@@ -445,19 +445,6 @@ public abstract class AbstractObject implements ObjectInterface {
     }
     
     /**
-     * Returns the center of the parent of the Object.
-     *
-     * @return The center of the parent of the Object.
-     */
-    public Vector getParentCenter() {
-        if (parent == null) {
-            return getCenter();
-        } else {
-            return parent.getParentCenter();
-        }
-    }
-    
-    /**
      * Returns the center of the root of the Object.
      *
      * @return The center of the root of the Object.
@@ -489,16 +476,16 @@ public abstract class AbstractObject implements ObjectInterface {
     }
     
     /**
-     * Returns the angle that defines the yaw rotation of the Object.
+     * Returns the angle that defines the roll rotation of the Object.
      *
-     * @return The angle that defines the yaw rotation of the Object.
+     * @return The angle that defines the roll rotation of the Object.
      */
-    public double getRotationYaw() {
+    public double getRotationRoll() {
         return rotation.get(0);
     }
     
     /**
-     * Sets the angle that defines the pitch rotation of the Object.
+     * Returns the angle that defines the pitch rotation of the Object.
      *
      * @return The angle that defines the pitch rotation of the Object.
      */
@@ -507,11 +494,11 @@ public abstract class AbstractObject implements ObjectInterface {
     }
     
     /**
-     * Sets the angle that defines the roll rotation of the Object.
+     * Returns the angle that defines the yaw rotation of the Object.
      *
-     * @return The angle that defines the roll rotation of the Object.
+     * @return The angle that defines the yaw rotation of the Object.
      */
-    public double getRotationRoll() {
+    public double getRotationYaw() {
         return rotation.get(2);
     }
     
@@ -596,9 +583,9 @@ public abstract class AbstractObject implements ObjectInterface {
      */
     @Override
     public void setRotationWithoutUpdate(Vector rotation) {
-        setRotationYawWithoutUpdate(rotation.getX());
+        setRotationRollWithoutUpdate(rotation.getX());
         setRotationPitchWithoutUpdate(rotation.getY());
-        setRotationRollWithoutUpdate(rotation.getZ());
+        setRotationYawWithoutUpdate(rotation.getZ());
     }
     
     /**
@@ -623,13 +610,13 @@ public abstract class AbstractObject implements ObjectInterface {
     }
     
     /**
-     * Sets the angle that defines the yaw rotation of the Object without updating the rotation transformation matrix.
+     * Sets the angle that defines the roll rotation of the Object without updating the rotation transformation matrix.
      *
-     * @param yaw The angle that defines the yaw rotation of the Object.
+     * @param roll The angle that defines the roll rotation of the Object.
      */
-    public void setRotationYawWithoutUpdate(double yaw) {
-        yaw %= (Math.PI * 2);
-        rotation.set(0, yaw);
+    public void setRotationRollWithoutUpdate(double roll) {
+        roll %= (Math.PI * 2);
+        rotation.set(0, roll);
     }
     
     /**
@@ -643,22 +630,22 @@ public abstract class AbstractObject implements ObjectInterface {
     }
     
     /**
-     * Sets the angle that defines the roll rotation of the Object without updating the rotation transformation matrix.
-     *
-     * @param roll The angle that defines the roll rotation of the Object.
-     */
-    public void setRotationRollWithoutUpdate(double roll) {
-        roll %= (Math.PI * 2);
-        rotation.set(2, roll);
-    }
-    
-    /**
-     * Sets the angle that defines the yaw rotation of the Object.
+     * Sets the angle that defines the yaw rotation of the Object without updating the rotation transformation matrix.
      *
      * @param yaw The angle that defines the yaw rotation of the Object.
      */
-    public void setRotationYaw(double yaw) {
-        setRotationYawWithoutUpdate(yaw);
+    public void setRotationYawWithoutUpdate(double yaw) {
+        yaw %= (Math.PI * 2);
+        rotation.set(2, yaw);
+    }
+    
+    /**
+     * Sets the angle that defines the roll rotation of the Object.
+     *
+     * @param roll The angle that defines the roll rotation of the Object.
+     */
+    public void setRotationRoll(double roll) {
+        setRotationRollWithoutUpdate(roll);
         updateRotationMatrix();
     }
     
@@ -673,12 +660,12 @@ public abstract class AbstractObject implements ObjectInterface {
     }
     
     /**
-     * Sets the angle that defines the roll rotation of the Object.
+     * Sets the angle that defines the yaw rotation of the Object.
      *
-     * @param roll The angle that defines the roll rotation of the Object.
+     * @param yaw The angle that defines the yaw rotation of the Object.
      */
-    public void setRotationRoll(double roll) {
-        setRotationRollWithoutUpdate(roll);
+    public void setRotationYaw(double yaw) {
+        setRotationYawWithoutUpdate(yaw);
         updateRotationMatrix();
     }
     

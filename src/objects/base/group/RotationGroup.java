@@ -6,17 +6,16 @@
 
 package objects.base.group;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
 import objects.base.Object;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Defines a rotation for a group of Objects.
@@ -99,13 +98,13 @@ public class RotationGroup extends Object {
     /**
      * Adds a rotation transformation to a group over a period of time.
      *
-     * @param yawRotation   The total yaw rotation in radians.
-     * @param pitchRotation The total pitch rotation in radians.
      * @param rollRotation  The total roll rotation in radians.
+     * @param pitchRotation The total pitch rotation in radians.
+     * @param yawRotation   The total yaw rotation in radians.
      * @param period        The period over which to perform the transition in milliseconds.
      */
-    public void rotateGroup(double yawRotation, double pitchRotation, double rollRotation, long period) {
-        addRotationTransformation(yawRotation, pitchRotation, rollRotation, period);
+    public void rotateGroup(double rollRotation, double pitchRotation, double yawRotation, long period) {
+        addRotationTransformation(rollRotation, pitchRotation, yawRotation, period);
         
         RotationGroup thisGroup = this;
         Timer completionTimer = new Timer();

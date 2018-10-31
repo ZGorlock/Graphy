@@ -6,15 +6,15 @@
 
 package objects.sphere;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import main.Environment;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.Object;
 import objects.base.polygon.Triangle;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Defines a Sphere.
@@ -126,9 +126,9 @@ public class Sphere extends Object {
         for (double phi = 0; Math.PI - phi > -Environment.omega; phi += step / 2) {
             vertices.add(new ArrayList<>());
             for (double theta = 0; Math.PI * 2 - theta > -Environment.omega; theta += step) {
-                double x = radius * Math.sin(phi) * Math.cos(theta + (offset ? step / 2 : 0));
-                double y = radius * Math.cos(phi);
-                double z = radius * Math.sin(phi) * Math.sin(theta + (offset ? step / 2 : 0));
+                double x = radius * Math.sin(phi) * Math.sin(theta + (offset ? step / 2 : 0));
+                double y = radius * Math.sin(phi) * Math.cos(theta + (offset ? step / 2 : 0));
+                double z = radius * Math.cos(phi);
                 
                 vertices.get(layer).add(new Vector(x, y, z).plus(center));
             }

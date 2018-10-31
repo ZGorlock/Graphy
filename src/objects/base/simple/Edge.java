@@ -82,8 +82,8 @@ public class Edge extends BaseObject {
         }
         
         prepared.clear();
-        prepared.add(vertices[0].clone());
-        prepared.add(vertices[1].clone());
+        prepared.add(vertices[0].clone().justify());
+        prepared.add(vertices[1].clone().justify());
         
         performRotationTransformation(prepared);
         

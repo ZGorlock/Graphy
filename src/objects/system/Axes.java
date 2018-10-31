@@ -10,6 +10,7 @@ import main.Environment;
 import math.vector.Vector;
 import objects.base.Object;
 import objects.base.simple.Edge;
+import objects.base.simple.Text;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -83,15 +84,25 @@ public class Axes extends Object {
         subAxes = new ArrayList<>();
         
         //main axes
-        mainAxes.add(new Edge(this, Color.RED,
+        Edge x = new Edge(this, Color.RED,
                 new Vector(-axesRadius, 0, 0),
-                new Vector(axesRadius, 0, 0)));
-        mainAxes.add(new Edge(this, Color.GREEN,
+                new Vector(axesRadius, 0, 0));
+        Edge y = new Edge(this, Color.GREEN,
                 new Vector(0, -axesRadius, 0),
-                new Vector(0, axesRadius, 0)));
-        mainAxes.add(new Edge(this, Color.BLUE,
+                new Vector(0, axesRadius, 0));
+        Edge z = new Edge(this, Color.BLUE,
                 new Vector(0, 0, axesRadius),
-                new Vector(0, 0, -axesRadius)));
+                new Vector(0, 0, -axesRadius));
+        mainAxes.add(x);
+        mainAxes.add(y);
+        mainAxes.add(z);
+    
+        components.add(new Text(Color.BLACK, x.getV1(), "-X"));
+        components.add(new Text(Color.BLACK, x.getV2(), "X"));
+        components.add(new Text(Color.BLACK, y.getV1(), "-Y"));
+        components.add(new Text(Color.BLACK, y.getV2(), "Y"));
+        components.add(new Text(Color.BLACK, z.getV1(), "-Z"));
+        components.add(new Text(Color.BLACK, z.getV2(), "Z"));
 
         //sub axes
         if (displaySubAxes) {

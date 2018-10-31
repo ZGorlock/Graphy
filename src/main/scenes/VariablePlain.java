@@ -33,7 +33,7 @@ public class VariablePlain extends Scene {
     //Main Methods
     
     /**
-     * The main method for the Sphere Field scene.
+     * The main method for the Variable Plain scene.
      *
      * @param args The arguments to the main method.
      */
@@ -67,9 +67,9 @@ public class VariablePlain extends Scene {
             for (double y = -10; y <= 10; y += density) {
                 for (double z = -density; z <= density; z += density * 2) {
                     List<Vector> vt = new ArrayList<>();
-                    vt.add(new Vector(x, 0, y));
-                    vt.add(new Vector(x + z, 0, y + z));
-                    vt.add(new Vector(new Vector(x + z, 0, y)));
+                    vt.add(new Vector(x, y, 0));
+                    vt.add(new Vector(x + z, y + z, 0));
+                    vt.add(new Vector(new Vector(x + z, y, 0)));
                     
                     for (int i = 0; i < vt.size(); i++) {
                         for (Vector vsi : vs) {
@@ -99,9 +99,9 @@ public class VariablePlain extends Scene {
                 for (Vector v : vs) {
                     if (vsm.containsKey(v)) {
                         double m = vsm.get(v);
-                        v.setY(v.getY() + m);
+                        v.setZ(v.getZ() + m);
                         
-                        if (Math.abs(v.getY()) >= density / 2) {
+                        if (Math.abs(v.getZ()) >= density / 2) {
                             m = -m;
                             vsm.replace(v, m);
                         }

@@ -59,7 +59,7 @@ public class Polygon extends BaseObject {
         
         prepared.clear();
         for (Vector vertex : vertices) {
-            prepared.add(vertex.clone());
+            prepared.add(vertex.clone().justify());
         }
         
         performRotationTransformation(prepared);

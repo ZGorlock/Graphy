@@ -20,28 +20,28 @@ public final class RotationUtility {
     /**
      * Creates the rotation transformation matrix for an Object.
      *
-     * @param yaw   The yaw angle to rotate by.
-     * @param pitch The pitch angle to rotate by.
      * @param roll  The roll angle to rotate by.
+     * @param pitch The pitch angle to rotate by.
+     * @param yaw   The yaw angle to rotate by.
      * @return The rotation transformation matrix.
      */
-    public static Matrix3 getRotationMatrix(double yaw, double pitch, double roll) {
-        Matrix3 yawRotation = new Matrix3(new double[] {
-                Math.cos(yaw), -Math.sin(yaw), 0,
-                Math.sin(yaw), Math.cos(yaw), 0,
+    public static Matrix3 getRotationMatrix(double roll, double pitch, double yaw) {
+        Matrix3 rollRotation = new Matrix3(new double[] {
+                Math.cos(roll), Math.sin(roll), 0,
+                -Math.sin(roll), Math.cos(roll), 0,
                 0, 0, 1
         });
         Matrix3 pitchRotation = new Matrix3(new double[] {
-                Math.cos(pitch), 0, -Math.sin(pitch),
-                0, 1, 0,
-                Math.sin(pitch), 0, Math.cos(pitch)
-        });
-        Matrix3 rollRotation = new Matrix3(new double[] {
                 1, 0, 0,
-                0, Math.cos(roll), Math.sin(roll),
-                0, -Math.sin(roll), Math.cos(roll)
+                0, Math.cos(pitch), -Math.sin(pitch),
+                0, Math.sin(pitch), Math.cos(pitch)
         });
-        return yawRotation.multiply(pitchRotation).multiply(rollRotation);
+        Matrix3 yawRotation = new Matrix3(new double[] {
+                Math.cos(yaw), 0, -Math.sin(yaw),
+                0, 1, 0,
+                Math.sin(yaw), 0, Math.cos(yaw)
+        });
+        return rollRotation.multiply(pitchRotation).multiply(yawRotation);
     }
     
     /**
@@ -53,10 +53,12 @@ public final class RotationUtility {
      * @return The rotated Vector.
      */
     public static Vector performRotation(Vector vector, Matrix3 rotationMatrix, Vector center) {
+        Vector justifiedCenter = center.justify();
+        
         Matrix4 translationMatrix = new Matrix4(new double[] {
-                1, 0, 0, -center.getX(),
-                0, 1, 0, -center.getY(),
-                0, 0, 1, -center.getZ(),
+                1, 0, 0, -justifiedCenter.getX(),
+                0, 1, 0, -justifiedCenter.getY(),
+                0, 0, 1, -justifiedCenter.getZ(),
                 0, 0, 0, 1
         });
         Vector v4 = new Vector(vector, 1.0);
@@ -65,9 +67,9 @@ public final class RotationUtility {
         Vector v = rotationMatrix.transform(new Vector(v4.getX(), v4.getY(), v4.getZ()));
         
         Matrix4 untranslationMatrix = new Matrix4(new double[] {
-                1, 0, 0, center.getX(),
-                0, 1, 0, center.getY(),
-                0, 0, 1, center.getZ(),
+                1, 0, 0, justifiedCenter.getX(),
+                0, 1, 0, justifiedCenter.getY(),
+                0, 0, 1, justifiedCenter.getZ(),
                 0, 0, 0, 1
         });
         v4 = new Vector(v, 1);

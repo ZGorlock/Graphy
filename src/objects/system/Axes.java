@@ -91,8 +91,8 @@ public class Axes extends Object {
                 new Vector(0, -axesRadius, 0),
                 new Vector(0, axesRadius, 0));
         Edge z = new Edge(this, Color.BLUE,
-                new Vector(0, 0, axesRadius),
-                new Vector(0, 0, -axesRadius));
+                new Vector(0, 0, -axesRadius),
+                new Vector(0, 0, axesRadius));
         mainAxes.add(x);
         mainAxes.add(y);
         mainAxes.add(z);

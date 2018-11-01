@@ -29,7 +29,7 @@ public class Graph2D extends Scene {
     /**
      * The density of the graph.
      */
-    public static double density = 0.25;
+    public static double density = 0.01;
     
     
     //Fields
@@ -98,7 +98,7 @@ public class Graph2D extends Scene {
         
         for (Vector v : vs) {
             Map<String, Number> vars = new HashMap<>();
-            vars.put("x", Math.sin(v.getX()));
+            vars.put("x", Math.atan(v.getX()));
             v.setY(-graph.evaluate(vars).doubleValue());
             if (v.getY() != v.getY()) {
                 v.setY(0);

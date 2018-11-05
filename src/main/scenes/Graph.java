@@ -132,8 +132,7 @@ public class Graph extends Scene {
      */
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
-        camera.setLocation(3 * Math.PI / 4, 5 * Math.PI / 4, 50);
-        Camera.setActiveCamera(0);
+        camera.setLocation(Math.PI / 4, 5 * Math.PI / 4, 50);
     }
     
     /**

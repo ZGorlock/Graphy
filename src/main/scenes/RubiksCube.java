@@ -167,8 +167,7 @@ public class RubiksCube extends Scene {
      */
     public static void setupCameras() {
         Camera camera = new Camera(false, false);
-        camera.setLocation(7 * Math.PI / 12, 4 * Math.PI / 3, 22);
-        Camera.setActiveCamera(0);
+        camera.setLocation(5 * Math.PI / 12, 4 * Math.PI / 3, 22);
     }
     
     /**

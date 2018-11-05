@@ -69,11 +69,6 @@ public class Camera {
      */
     private static AtomicBoolean hasSetupStaticKeyListener = new AtomicBoolean(false);
     
-    /**
-     * A flag indicating whether the camera is performing an update or not.
-     */
-    public static final AtomicBoolean inUpdate = new AtomicBoolean(false);
-    
     
     //Fields
     
@@ -106,6 +101,11 @@ public class Camera {
      * The position of the Camera.
      */
     private Vector c;
+    
+    /**
+     * The origin of the Camera.
+     */
+    private Vector origin;
     
     /**
      * The offset of the Camera.
@@ -182,6 +182,11 @@ public class Camera {
      */
     private boolean verifyViewport = false;
     
+    /**
+     * A flag indicating whether the camera is performing an update or not.
+     */
+    public final AtomicBoolean inUpdate = new AtomicBoolean(false);
+    
     
     //Constructors
     
@@ -193,6 +198,7 @@ public class Camera {
         nextCameraId++;
         cameraMap.put(cameraId, this);
         
+        origin = Environment.origin.clone();
         offset = new Vector(0, 0, 0);
         
         calculateCamera();
@@ -242,30 +248,30 @@ public class Camera {
     
     
             //normal unit vector of screen, n
-            n = m.minus(Environment.origin);
-            n = n.normalize();
+            n = cartesian.normalize();
     
     
             //vector equation of plane of screen
-            //n.x(x - mx) + n.y(y - my) + n.z(z - mz) = 0
+            //(r - m) dot n = 0
+            //n.x(x - m.x) + n.y(y - m.y) + n.z(z - m.z) = 0
     
     
             //satisfy equation to determine second point
-            Vector p1 = new Vector(0, 0, ((n.getX() * m.getX()) + (n.getY() * m.getY()) + (n.getZ() * m.getZ())) / n.getZ());
+            Vector p = new Vector(0, 0, n.dot(m) / n.getZ());
     
     
             //calculate local coordinate system
-            Vector py = (phi > Math.PI / 2) ? p1.minus(m) : m.minus(p1);
-            py = py.normalize();
+            Vector py = (phi > Math.PI / 2) ? p.minus(m) : m.minus(p);
             Vector px = new Vector3(py).cross(n).scale(-1);
             px = px.normalize();
+            py = py.normalize();
     
     
             //calculate screen viewport
-            s1 = px.scale(-viewportX / 2).plus(py.scale(viewportY / 2)).plus(m);
-            s2 = px.scale(viewportX / 2).plus(py.scale(viewportY / 2)).plus(m);
-            s3 = px.scale(viewportX / 2).plus(py.scale(-viewportY / 2)).plus(m);
-            s4 = px.scale(-viewportX / 2).plus(py.scale(-viewportY / 2)).plus(m);
+            s1 = px.scale(-viewportX / 2).plus(py.scale(-viewportY / 2)).plus(m);
+            s2 = px.scale(viewportX / 2).plus(py.scale(-viewportY / 2)).plus(m);
+            s3 = px.scale(viewportX / 2).plus(py.scale(viewportY / 2)).plus(m);
+            s4 = px.scale(-viewportX / 2).plus(py.scale(viewportY / 2)).plus(m);
     
             cameraObject.screen.setP1(s1);
             cameraObject.screen.setP2(s2);
@@ -292,8 +298,8 @@ public class Camera {
     
             //draw local coordinate system normals
             cameraObject.screenNormal.setPoints(c, c.plus(n.scale(viewportX * 2 / 3)));
-            cameraObject.screenXNormal.setPoints(c, c.plus(py.scale(viewportX * 2 / 3)));
-            cameraObject.screenYNormal.setPoints(c, c.plus(px.scale(viewportX * 2 / 3)));
+            cameraObject.screenXNormal.setPoints(c, c.minus(px.scale(viewportX * 2 / 3)));
+            cameraObject.screenYNormal.setPoints(c, c.plus(py.scale(viewportX * 2 / 3)));
     
     
             //draw camera enclosure
@@ -424,7 +430,7 @@ public class Camera {
                 double oldPhi = phi;
                 double oldTheta = theta;
                 double oldRho = rho;
-                Vector oldOrigin = Environment.origin.clone();
+                Vector oldOrigin = origin.clone();
                 
                 for (Integer key : pressed) {
                     if (key == KeyEvent.VK_W) {
@@ -448,23 +454,23 @@ public class Camera {
                     
                     if (key == KeyEvent.VK_LEFT) {
                         Environment.origin = Environment.origin.plus(new Vector(-movementSpeed, 0, 0));
-//                        offset = offset.plus(new Vector(-movementSpeed, 0, 0));
+                        origin = origin.plus(new Vector(-movementSpeed, 0, 0));
                     }
                     if (key == KeyEvent.VK_RIGHT) {
                         Environment.origin = Environment.origin.plus(new Vector(movementSpeed, 0, 0));
-//                        offset = offset.plus(new Vector(movementSpeed, 0, 0));
+                        origin = origin.plus(new Vector(movementSpeed, 0, 0));
                     }
                     if (key == KeyEvent.VK_UP) {
                         Environment.origin = Environment.origin.plus(new Vector(0, movementSpeed, 0));
-//                        offset = offset.plus(new Vector(0, movementSpeed, 0));
+                        origin = origin.plus(new Vector(0, movementSpeed, 0));
                     }
                     if (key == KeyEvent.VK_DOWN) {
                         Environment.origin = Environment.origin.plus(new Vector(0, -movementSpeed, 0));
-//                        offset = offset.plus(new Vector(0, -movementSpeed, 0));
+                        origin = origin.plus(new Vector(0, -movementSpeed, 0));
                     }
                 }
                 
-                if (phi != oldPhi || theta != oldTheta || rho != oldRho || !Environment.origin.equals(oldOrigin)) {
+                if (phi != oldPhi || theta != oldTheta || rho != oldRho || !origin.equals(oldOrigin)) {
                     bindLocation();
                     updateRequired = true;
                 }
@@ -513,6 +519,10 @@ public class Camera {
         Environment.frame.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
+                if (cameraId != activeCameraControl) {
+                    return;
+                }
+                
                 double deltaX = e.getX() - delta.x;
                 double deltaY = e.getY() - delta.y;
                 delta.x = e.getX();
@@ -522,7 +532,7 @@ public class Camera {
                 double oldPhi = phi;
                 
                 theta -= thetaSpeed / 10 * deltaX;
-                phi += phiSpeed / 10 * deltaY;
+                phi -= phiSpeed / 10 * deltaY;
                 bindLocation();
                 
                 if (phi != oldPhi || theta != oldTheta) {
@@ -536,6 +546,10 @@ public class Camera {
         });
         
         Environment.frame.addMouseWheelListener(e -> {
+            if (cameraId != activeCameraControl) {
+                return;
+            }
+            
             double oldRho = rho;
             
             rho += rhoSpeed * e.getWheelRotation();
@@ -790,7 +804,7 @@ public class Camera {
     /**
      * Sets the active Camera.
      *
-     * @param cameraId The if of the new active Camera.
+     * @param cameraId The id of the new active Camera.
      */
     public static void setActiveCamera(int cameraId) {
         setActiveCameraView(cameraId);
@@ -800,10 +814,10 @@ public class Camera {
     /**
      * Sets the active Camera for viewing.
      *
-     * @param cameraId The if of the new active Camera for viewing.
+     * @param cameraId The id of the new active Camera for viewing.
      */
     public static void setActiveCameraView(int cameraId) {
-        if (cameraMap.containsKey(cameraId) && cameraId != activeCameraView) {
+        if (cameraMap.containsKey(cameraId) && (cameraId != activeCameraView)) {
             if (activeCameraView >= 0) {
                 cameraMap.get(activeCameraView).cameraObject.show();
                 cameraMap.get(activeCameraView).updateRequired = true;
@@ -817,10 +831,10 @@ public class Camera {
     /**
      * Sets the active Camera for control.
      *
-     * @param cameraId The if of the new active Camera for control.
+     * @param cameraId The id of the new active Camera for control.
      */
     public static void setActiveCameraControl(int cameraId) {
-        if (cameraMap.containsKey(cameraId) && cameraId != activeCameraControl) {
+        if (cameraMap.containsKey(cameraId) && (cameraId != activeCameraControl)) {
             activeCameraControl = cameraId;
         }
     }

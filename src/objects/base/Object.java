@@ -171,7 +171,6 @@ public class Object extends AbstractObject {
                 component.setVisible(false);
             } else if (component instanceof Object) {
                 ((Object) component).hide();
-                component.setVisible(false);
             } else {
                 //TODO
             }
@@ -188,7 +187,6 @@ public class Object extends AbstractObject {
                 component.setVisible(true);
             } else if (component instanceof Object) {
                 ((Object) component).show();
-                component.setVisible(true);
             } else {
                 //TODO
             }

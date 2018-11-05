@@ -123,7 +123,6 @@ public class PolyhedraExplosion extends Scene {
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
         camera.setLocation(Math.PI / 2, 0, 10);
-        Camera.setActiveCamera(0);
     }
     
     /**
@@ -204,9 +203,9 @@ public class PolyhedraExplosion extends Scene {
                             if (count == 9) {
                                 if (cameraInMotion.compareAndSet(false, true)) {
                                     if ((loop[0].compareAndSet(0, 1)) || (loop[0].compareAndSet(1, 2))) {
-                                        Camera.getActiveCameraView().addFluidTransition(Math.PI / 4, -Math.PI / 2, 0, 10000);
-                                    } else if ((loop[0].compareAndSet(2, 3)) || (loop[0].compareAndSet(3, 0))) {
                                         Camera.getActiveCameraView().addFluidTransition(-Math.PI / 4, -Math.PI / 2, 0, 10000);
+                                    } else if ((loop[0].compareAndSet(2, 3)) || (loop[0].compareAndSet(3, 0))) {
+                                        Camera.getActiveCameraView().addFluidTransition(Math.PI / 4, -Math.PI / 2, 0, 10000);
                                     }
                                 }
                             } else if (count == 20) {

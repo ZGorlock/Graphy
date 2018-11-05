@@ -6,15 +6,14 @@
 
 package objects.system;
 
-import java.awt.Color;
-
 import main.Environment;
 import objects.RectangularPyramid;
-import objects.base.Frame;
 import objects.base.Object;
 import objects.base.polygon.Rectangle;
 import objects.base.simple.BigVertex;
 import objects.base.simple.Edge;
+
+import java.awt.*;
 
 /**
  * Defines a Camera Object.
@@ -59,7 +58,7 @@ public class Camera extends Object {
         
         screen = new Rectangle(Color.RED, Environment.origin, Environment.origin, Environment.origin, Environment.origin); //not rendered
         cameraEnclosure = new RectangularPyramid(this, new Color(192, 192, 192, 64), screen, Environment.origin);
-        frame = new Frame(cameraEnclosure);
+        cameraEnclosure.addFrame(Color.BLACK);
         
         setDisplayMode(DisplayMode.FACE);
     }

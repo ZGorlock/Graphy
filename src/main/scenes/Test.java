@@ -91,8 +91,7 @@ public class Test extends Scene {
      */
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
-        camera.setLocation(3 * Math.PI / 4, Math.PI / 4, 20);
-        Camera.setActiveCamera(0);
+        camera.setLocation(Math.PI / 4, 3 * Math.PI / 4, 20);
     }
     
     /**

@@ -65,8 +65,7 @@ public class VariablePlaneDemo extends Scene {
      */
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
-        camera.setLocation(4 * Math.PI / 6, Math.PI / 4, 5);
-        Camera.setActiveCamera(0);
+        camera.setLocation(Math.PI / 4, Math.PI / 4, 5);
     }
     
     /**

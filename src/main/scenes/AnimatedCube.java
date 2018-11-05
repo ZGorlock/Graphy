@@ -6,10 +6,6 @@
 
 package main.scenes;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -18,6 +14,10 @@ import objects.base.Object;
 import objects.base.Scene;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import utility.ColorUtility;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Defines a Animated Cube scene.
@@ -75,7 +75,6 @@ public class AnimatedCube extends Scene {
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
         camera.setLocation(Math.PI / 2, 0, 12);
-        Camera.setActiveCamera(0);
     }
     
     /**

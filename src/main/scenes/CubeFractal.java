@@ -6,15 +6,15 @@
 
 package main.scenes;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Object;
 import objects.base.Scene;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Defines a Cube Fractal scene.
@@ -65,7 +65,6 @@ public class CubeFractal extends Scene {
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
         camera.setLocation(Math.PI / 2, 0, 2);
-        Camera.setActiveCamera(0);
     }
     
     /**

@@ -36,12 +36,15 @@ public class Environment {
     public static final int FPS = 120;
     
     /**
-     * The dimensions of the Window.
+     * The x dimension of the Window.
      */
     public static final int screenX = 2560;
     
     public static final int screenY = 1440;
     
+    /**
+     * The z dimension of the Window.
+     */
     public static final int screenZ = 720;
     
     /**
@@ -105,7 +108,12 @@ public class Environment {
             
             public void paintComponent(Graphics g) {
                 
-                synchronized (Camera.inUpdate) {
+                Camera camera = Camera.getActiveCameraView();
+                if (camera == null) {
+                    return;
+                }
+                
+                synchronized (camera.inUpdate) {
                     List<BaseObject> preparedBases = new ArrayList<>();
                     try {
                         for (ObjectInterface object : objects) {
@@ -124,14 +132,12 @@ public class Environment {
                     } catch (IllegalArgumentException e) {
                         //TODO handle this
                     }
-    
-    
+                    
                     Graphics2D g2 = (Graphics2D) g;
                     g2.setColor(Color.WHITE);
                     g2.fillRect(0, 0, getWidth(), getHeight());
                     BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-    
-    
+                    
                     for (BaseObject preparedBase : preparedBases) {
                         preparedBase.render(g2);
                     }

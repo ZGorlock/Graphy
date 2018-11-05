@@ -51,8 +51,7 @@ public class PerspectiveDice extends Scene {
      */
     public static List<Object> createObjects() {
         List<Object> objects = new ArrayList<>();
-        Axes axes = new Axes(5);
-        objects.add(axes);
+        objects.add(new Axes(5));
     
         Origin origin = new Origin();
         objects.add(origin);
@@ -70,8 +69,7 @@ public class PerspectiveDice extends Scene {
      */
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
-        camera.setRho(3);
-        Camera.setActiveCamera(0);
+        camera.setLocation(0, Math.PI / 2, 3);
     }
     
     /**

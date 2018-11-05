@@ -11,9 +11,11 @@ import main.Environment;
 import math.vector.Vector;
 import objects.base.Object;
 import objects.base.Scene;
+import objects.base.simple.BigVertex;
 import objects.base.simple.Edge;
 import objects.system.Axes;
 import utility.EquationUtility;
+import utility.SphericalCoordinateUtility;
 
 import java.awt.*;
 import java.util.*;
@@ -72,6 +74,10 @@ public class Graph2D extends Scene {
         objects.add(new Axes(5));
         
         Object plain = new Object(Color.BLACK);
+    
+        new BigVertex(plain, Color.RED, SphericalCoordinateUtility.sphericalToCartesian(0, 0, 4), 1);
+        
+//        new Rectangle(plain, Color.PINK, new Vector(-1, -1, -1), new Vector(-1, 1, -1), new Vector(1, 1, -1), new Vector(1, -1, -1));
         
         Set<Vector> vs = new HashSet<>();
         Map<Vector, Double> vsm = new HashMap<>();
@@ -121,8 +127,7 @@ public class Graph2D extends Scene {
      */
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
-        camera.setRho(50);
-        Camera.setActiveCamera(0);
+        camera.setLocation(0, Math.PI / 2, 50);
     }
     
     /**

@@ -132,7 +132,7 @@ public class Vector {
      * @return The Vector.
      */
     public Vector justify() {
-        return this.scale(-1);
+        return this.times(new Vector(-1, -1, 1));
     }
     
     /**

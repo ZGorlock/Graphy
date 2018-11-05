@@ -6,6 +6,7 @@
 
 package main;
 
+import camera.Camera;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import objects.base.AbstractObject;
@@ -103,37 +104,40 @@ public class Environment {
         JPanel renderPanel = new JPanel() {
             
             public void paintComponent(Graphics g) {
-                List<BaseObject> preparedBases = new ArrayList<>();
-                try {
-                    for (ObjectInterface object : objects) {
-                        preparedBases.addAll(object.prepare());
+                
+                synchronized (Camera.inUpdate) {
+                    List<BaseObject> preparedBases = new ArrayList<>();
+                    try {
+                        for (ObjectInterface object : objects) {
+                            preparedBases.addAll(object.prepare());
+                        }
+                    } catch (ConcurrentModificationException ignored) {
+                        return;
                     }
-                } catch (ConcurrentModificationException ignored) {
-                    return;
+    
+                    try {
+                        preparedBases.sort((o1, o2) -> {
+                            double d1 = o1.calculatePreparedDistance();
+                            double d2 = o2.calculatePreparedDistance();
+                            return Double.compare(d2, d1);
+                        });
+                    } catch (IllegalArgumentException e) {
+                        //TODO handle this
+                    }
+    
+    
+                    Graphics2D g2 = (Graphics2D) g;
+                    g2.setColor(Color.WHITE);
+                    g2.fillRect(0, 0, getWidth(), getHeight());
+                    BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+    
+    
+                    for (BaseObject preparedBase : preparedBases) {
+                        preparedBase.render(g2);
+                    }
+    
+                    g2.drawImage(img, 0, 0, null);
                 }
-                
-                try {
-                    preparedBases.sort((o1, o2) -> {
-                        double d1 = o1.calculatePreparedDistance();
-                        double d2 = o2.calculatePreparedDistance();
-                        return Double.compare(d2, d1);
-                    });
-                } catch (IllegalArgumentException e) {
-                    //TODO handle this
-                }
-                
-                
-                Graphics2D g2 = (Graphics2D) g;
-                g2.setColor(Color.WHITE);
-                g2.fillRect(0, 0, getWidth(), getHeight());
-                BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-                
-                
-                for (BaseObject preparedBase : preparedBases) {
-                    preparedBase.render(g2);
-                }
-                
-                g2.drawImage(img, 0, 0, null);
             }
         };
         pane.add(renderPanel, BorderLayout.CENTER);

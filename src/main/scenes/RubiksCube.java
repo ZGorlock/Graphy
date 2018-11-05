@@ -29,25 +29,43 @@ public class RubiksCube extends Scene {
     //Constants
     
     /**
-     * The indices of faces within the piece matrix.
+     * The index of the front face within the piece matrix.
      */
     private static final int FRONT = 0;
     
+    /**
+     * The index of the top face within the piece matrix.
+     */
     private static final int TOP = 1;
     
+    /**
+     * The index of the right face within the piece matrix.
+     */
     private static final int RIGHT = 2;
     
+    /**
+     * The index of the bottom face within the piece matrix.
+     */
     private static final int BOTTOM = 3;
     
+    /**
+     * The index of the left face within the piece matrix.
+     */
     private static final int LEFT = 4;
     
+    /**
+     * The index of the back face within the piece matrix.
+     */
     private static final int BACK = 5;
     
     /**
-     * The constants for directions.
+     * The constant for the clockwise direction.
      */
     private static final int CLOCKWISE = 1;
     
+    /**
+     * The constant for the counterclockwise direction.
+     */
     private static final int COUNTERCLOCKWISE = -1;
     
     /**
@@ -149,7 +167,7 @@ public class RubiksCube extends Scene {
      */
     public static void setupCameras() {
         Camera camera = new Camera(false, false);
-        camera.setLocation(7 * Math.PI / 12, 7 * Math.PI / 6, 22);
+        camera.setLocation(7 * Math.PI / 12, 4 * Math.PI / 3, 22);
         Camera.setActiveCamera(0);
     }
     

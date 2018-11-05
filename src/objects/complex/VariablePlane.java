@@ -130,7 +130,7 @@ public class VariablePlane extends Object {
         for (double x = p1.getX(); x <= p2.getX(); x += density) {
             for (double y = p1.getY(); y <= p2.getY(); y += density) {
                 for (double n = -density; n <= density; n += density * 2) {
-                    double z = (x / (p2.getX() - p1.getX())) * (p2.getZ() - p1.getZ());
+                    double z = p1.getZ() + ((x / (p2.getX() - p1.getX())) * (p2.getZ() - p1.getZ()));
                     
                     List<Vector> vt = new ArrayList<>();
                     vt.add(new Vector(x, y, z));

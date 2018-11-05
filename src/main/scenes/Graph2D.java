@@ -37,7 +37,7 @@ public class Graph2D extends Scene {
     /**
      * The equation to graph
      */
-    private static EquationUtility.MathOperation graph = EquationUtility.parseMath("x");
+    private static EquationUtility.MathOperation graph = EquationUtility.parseMath("x + 3");
     
     
     //Main Methods
@@ -99,7 +99,7 @@ public class Graph2D extends Scene {
         for (Vector v : vs) {
             Map<String, Number> vars = new HashMap<>();
             vars.put("x", Math.atan(v.getX()));
-            v.setY(-graph.evaluate(vars).doubleValue());
+            v.setY(graph.evaluate(vars).doubleValue());
             if (v.getY() != v.getY()) {
                 v.setY(0);
             }
@@ -121,7 +121,7 @@ public class Graph2D extends Scene {
      */
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
-        camera.setLocation(Math.PI, 0, 50);
+        camera.setRho(50);
         Camera.setActiveCamera(0);
     }
     

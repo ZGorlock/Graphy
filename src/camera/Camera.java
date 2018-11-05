@@ -11,6 +11,7 @@ import math.Delta;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import math.vector.Vector3;
+import utility.SphericalCoordinateUtility;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -28,7 +29,7 @@ public class Camera {
     /**
      * The maximum distance from the phi maximum and minimum.
      */
-    private double phiBoundary = .1;
+    private double phiBoundary = .0001;
     
     
     //Static Fields
@@ -54,10 +55,13 @@ public class Camera {
     private static final Map<Integer, Camera> cameraMap = new HashMap<>();
     
     /**
-     * The dimensions of the viewport.
+     * The x dimension of the viewport.
      */
     private static double viewportX = Environment.screenX / 1000.0;
     
+    /**
+     * The y dimension of the viewport.
+     */
     private static double viewportY = Environment.screenY / 1000.0;
     
     /**
@@ -79,18 +83,19 @@ public class Camera {
     private objects.system.Camera cameraObject = new objects.system.Camera();
     
     /**
-     * The current location of the Camera in spherical coordinates.
+     * The current phi location of the Camera in spherical coordinates.
      */
-    private double rho = 10;
-    
-    private double phi = Math.PI / 2;
-    
-    private double theta = Math.PI;
+    private double phi = Math.PI;
     
     /**
-     * The current center of the Environment.
+     * The current theta location of the Camera in spherical coordinates.
      */
-    private Vector origin;
+    private double theta = Math.PI / 2;
+    
+    /**
+     * The current rho location of the Camera in spherical coordinates.
+     */
+    private double rho = 10;
     
     /**
      * The position of the Camera.
@@ -103,13 +108,24 @@ public class Camera {
     private Vector offset;
     
     /**
-     * The current movement speed of the Camera.
+     * The current phi movement speed of the Camera.
      */
     private double phiSpeed = .05;
     
+    /**
+     * The current theta movement speed of the Camera.
+     */
     private double thetaSpeed = .05;
     
+    /**
+     * The current rho movement speed of the Camera.
+     */
     private double rhoSpeed = 1;
+    
+    /**
+     * The current origin movement speed of the Camera.
+     */
+    private double movementSpeed = .1;
     
     /**
      * The normal unit Vector of the Screen.
@@ -127,14 +143,23 @@ public class Camera {
     private Vector e;
     
     /**
-     * The points that define the Screen viewport.
+     * The first point that defines the Screen viewport.
      */
     private Vector s1;
     
+    /**
+     * The second point that defines the Screen viewport.
+     */
     private Vector s2;
     
+    /**
+     * The third point that defines the Screen viewport.
+     */
     private Vector s3;
     
+    /**
+     * The fourth point that defines the Screen viewport.
+     */
     private Vector s4;
     
     /**
@@ -163,7 +188,6 @@ public class Camera {
         nextCameraId++;
         cameraMap.put(cameraId, this);
         
-        origin = Environment.origin;
         offset = new Vector(0, 0, 0);
         
         calculateCamera();
@@ -187,7 +211,7 @@ public class Camera {
             public void run() {
                 calculateCamera();
             }
-        }, 0, 1000 / Environment.FPS);
+        }, 500 / Environment.FPS, 1000 / Environment.FPS);
     }
     
     
@@ -197,28 +221,18 @@ public class Camera {
      * Calculates the Camera.
      */
     public void calculateCamera() {
-        //determine if update is necessary
-//        if (!Environment.origin.equals(origin)) {
-//            origin = Environment.origin;
-//            updateRequired = true;
-//        }
         if (!updateRequired) {
             return;
         }
         
         
         //center of screen, m
-        double mx = rho * Math.sin(phi) * Math.cos(theta);
-        double my = rho * Math.cos(phi);
-        double mz = rho * Math.sin(phi) * Math.sin(theta);
-        m = new Vector(mx, my, mz).plus(offset);
+        Vector cartesian = SphericalCoordinateUtility.sphericalToCartesian(phi, theta, rho);
+        m = cartesian.plus(Environment.origin).plus(offset);
         
         
         //normal unit vector of screen, n
-        double nx = m.getX() - origin.getX();
-        double ny = m.getY() - origin.getY();
-        double nz = m.getZ() - origin.getZ();
-        n = new Vector(nx, ny, nz);
+        n = m.minus(Environment.origin);
         n = n.normalize();
         
         
@@ -227,7 +241,7 @@ public class Camera {
         
         
         //satisfy equation to determine second point
-        Vector p1 = new Vector(0, ((n.getX() * m.getX()) + (n.getY() * m.getY()) + (n.getZ() * m.getZ())) / n.getY(), 0);
+        Vector p1 = new Vector(0, 0, ((n.getX() * m.getX()) + (n.getY() * m.getY()) + (n.getZ() * m.getZ())) / n.getZ());
         
         
         //calculate local coordinate system
@@ -280,10 +294,10 @@ public class Camera {
         
         //verify screen
         if (verifyViewport) {
-            if (viewportX != s1.distance(s2)) {
+            if (Math.abs(viewportX - s1.distance(s2)) > Environment.omega) {
                 System.err.println("Camera: " + cameraId + " - Screen viewportX does not match the actual viewport width");
             }
-            if (viewportY != s1.distance(s3)) {
+            if (Math.abs(viewportY - s1.distance(s3)) > Environment.omega) {
                 System.err.println("Camera: " + cameraId + " - Screen viewportY does not match the actual viewport height");
             }
         }
@@ -398,76 +412,48 @@ public class Camera {
                 double oldPhi = phi;
                 double oldTheta = theta;
                 double oldRho = rho;
-                Vector oldOrigin = origin.clone();
+                Vector oldOrigin = Environment.origin.clone();
                 
                 for (Integer key : pressed) {
                     if (key == KeyEvent.VK_W) {
-                        if (phi < (Math.PI - phiBoundary)) {
-                            if ((phi < (Math.PI / 2) - phiBoundary) && (phi + phiSpeed > (Math.PI / 2) - phiBoundary)) {
-                                phi = (Math.PI / 2) - phiBoundary;
-                            } else {
-                                phi += phiSpeed;
-                            }
-                        } else {
-                            phi = Math.PI - phiBoundary;
-                        }
+                        phi += phiSpeed;
                     }
                     if (key == KeyEvent.VK_S) {
-                        if (phi > phiBoundary) {
-                            if ((phi > (Math.PI / 2) - phiBoundary) && (phi - phiSpeed < (Math.PI / 2) - phiBoundary)) {
-                                phi = (Math.PI / 2) - phiBoundary;
-                            } else {
-                                phi -= phiSpeed;
-                            }
-                        } else {
-                            phi = phiBoundary;
-                        }
+                        phi -= phiSpeed;
                     }
                     if (key == KeyEvent.VK_A) {
-                        theta += thetaSpeed;
-                        if (theta > 2 * Math.PI) {
-                            theta -= (2 * Math.PI);
-                        }
+                        theta -= thetaSpeed;
                     }
                     if (key == KeyEvent.VK_D) {
-                        theta -= thetaSpeed;
-                        if (theta < 0) {
-                            theta += (2 * Math.PI);
-                        }
+                        theta += thetaSpeed;
                     }
                     if (key == KeyEvent.VK_Q) {
                         rho -= rhoSpeed;
-                        if (rho < rhoSpeed) {
-                            rho = rhoSpeed;
-                        }
                     }
                     if (key == KeyEvent.VK_Z) {
                         rho += rhoSpeed;
                     }
                     
                     if (key == KeyEvent.VK_LEFT) {
-                        Environment.origin = Environment.origin.plus(new Vector(0, 0, 1));
-                        origin = origin.plus(new Vector(0, 0, 1));
-                        offset = offset.plus(new Vector(0, 0, 1));
+                        Environment.origin = Environment.origin.plus(new Vector(-movementSpeed, 0, 0));
+//                        offset = offset.plus(new Vector(-movementSpeed, 0, 0));
                     }
                     if (key == KeyEvent.VK_RIGHT) {
-                        Environment.origin = Environment.origin.plus(new Vector(0, 0, -1));
-                        origin = origin.plus(new Vector(0, 0, -1));
-                        offset = offset.plus(new Vector(0, 0, -1));
+                        Environment.origin = Environment.origin.plus(new Vector(movementSpeed, 0, 0));
+//                        offset = offset.plus(new Vector(movementSpeed, 0, 0));
                     }
                     if (key == KeyEvent.VK_UP) {
-                        Environment.origin = Environment.origin.plus(new Vector(0, -1, 0));
-                        origin = origin.plus(new Vector(0, -1, 0));
-                        offset = offset.plus(new Vector(0, -1, 0));
+                        Environment.origin = Environment.origin.plus(new Vector(0, movementSpeed, 0));
+//                        offset = offset.plus(new Vector(0, movementSpeed, 0));
                     }
                     if (key == KeyEvent.VK_DOWN) {
-                        Environment.origin = Environment.origin.plus(new Vector(0, 1, 0));
-                        origin = origin.plus(new Vector(0, 1, 0));
-                        offset = offset.plus(new Vector(0, 1, 0));
+                        Environment.origin = Environment.origin.plus(new Vector(0, -movementSpeed, 0));
+//                        offset = offset.plus(new Vector(0, -movementSpeed, 0));
                     }
                 }
                 
-                if (phi != oldPhi || theta != oldTheta || rho != oldRho || !origin.equals(oldOrigin)) {
+                if (phi != oldPhi || theta != oldTheta || rho != oldRho || !Environment.origin.equals(oldOrigin)) {
+                    bindLocation();
                     updateRequired = true;
                 }
             }
@@ -489,7 +475,6 @@ public class Camera {
         Environment.frame.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                
             }
             
             @Override
@@ -524,7 +509,7 @@ public class Camera {
                 double oldTheta = theta;
                 double oldPhi = phi;
                 
-                theta += thetaSpeed / 10 * deltaX;
+                theta -= thetaSpeed / 10 * deltaX;
                 phi += phiSpeed / 10 * deltaY;
                 bindLocation();
                 
@@ -596,6 +581,9 @@ public class Camera {
         }, 0, (long) (1000.0 / Environment.FPS / 2));
     }
     
+    /**
+     * Binds the location of the camera to its limits.
+     */
     public void bindLocation() {
         if (phi < phiBoundary) {
             phi = phiBoundary;
@@ -604,6 +592,10 @@ public class Camera {
         }
         
         theta %= (Math.PI * 2);
+        
+        if (rho < rhoSpeed) {
+            rho = rhoSpeed;
+        }
     }
     
     
@@ -632,6 +624,43 @@ public class Camera {
         this.phi = phi;
         this.theta = theta;
         this.rho = rho;
+        
+        bindLocation();
+        updateRequired = true;
+    }
+    
+    /**
+     * Sets the phi location of the Camera.
+     *
+     * @param phi The new phi angle of the Camera.
+     */
+    public void setPhi(double phi) {
+        this.phi = phi;
+        
+        bindLocation();
+        updateRequired = true;
+    }
+    
+    /**
+     * Sets the theta location of the Camera.
+     *
+     * @param theta The new theta angle of the Camera.
+     */
+    public void setTheta(double theta) {
+        this.theta = theta;
+        
+        bindLocation();
+        updateRequired = true;
+    }
+    
+    /**
+     * Sets the rho location of the Camera.
+     *
+     * @param rho The new rho distance of the Camera.
+     */
+    public void setRho(double rho) {
+        this.rho = rho;
+        
         bindLocation();
         updateRequired = true;
     }
@@ -696,8 +725,8 @@ public class Camera {
         //ensure Vectors are not behind Camera
         boolean inView = true;
         for (Vector v : ovs) {
-            double d1 = camera.origin.distance(v);
-            double d2 = camera.origin.distance(camera.c);
+            double d1 = Environment.origin.distance(v);
+            double d2 = Environment.origin.distance(camera.c);
             double d3 = camera.c.distance(v);
             if (d1 > d2 && d3 < d1) {
                 inView = false;
@@ -710,8 +739,8 @@ public class Camera {
         //ensure Vectors are in field of view
         inView = false;
         for (Vector v : vs) {
-            if (v.getX() >= 0 && v.getX() < camera.viewportX &&
-                v.getY() >= 0 && v.getY() < camera.viewportY) {
+            if (v.getX() >= 0 && v.getX() < viewportX &&
+                v.getY() >= 0 && v.getY() < viewportY) {
                 inView = true;
             }
         }

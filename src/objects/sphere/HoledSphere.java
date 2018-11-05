@@ -6,15 +6,16 @@
 
 package objects.sphere;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import main.Environment;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.Object;
 import objects.base.polygon.Triangle;
+import utility.SphericalCoordinateUtility;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Defines a Holed Sphere.
@@ -93,11 +94,8 @@ public class HoledSphere extends Object {
         for (double phi = 0; Math.PI - phi > -Environment.omega; phi += step / 2) {
             vertices.add(new ArrayList<>());
             for (double theta = 0; Math.PI * 2 - theta > -Environment.omega; theta += step) {
-                double x = radius * Math.sin(phi) * Math.cos(theta + (offset ? step / 2 : 0));
-                double y = radius * Math.cos(phi);
-                double z = radius * Math.sin(phi) * Math.sin(theta + (offset ? step / 2 : 0));
-                
-                vertices.get(layer).add(new Vector(x, y, z).plus(center));
+                Vector cartesian = SphericalCoordinateUtility.sphericalToCartesian(phi, theta + (offset ? step / 2 : 0), radius);
+                vertices.get(layer).add(cartesian.plus(center));
             }
             offset = !offset;
             layer++;

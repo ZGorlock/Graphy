@@ -11,6 +11,7 @@ import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.Object;
 import objects.base.polygon.Triangle;
+import utility.SphericalCoordinateUtility;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -126,11 +127,8 @@ public class Sphere extends Object {
         for (double phi = 0; Math.PI - phi > -Environment.omega; phi += step / 2) {
             vertices.add(new ArrayList<>());
             for (double theta = 0; Math.PI * 2 - theta > -Environment.omega; theta += step) {
-                double x = radius * Math.sin(phi) * Math.sin(theta + (offset ? step / 2 : 0));
-                double y = radius * Math.sin(phi) * Math.cos(theta + (offset ? step / 2 : 0));
-                double z = radius * Math.cos(phi);
-                
-                vertices.get(layer).add(new Vector(x, y, z).plus(center));
+                Vector cartesian = SphericalCoordinateUtility.sphericalToCartesian(phi, theta + (offset ? step / 2 : 0), radius);                
+                vertices.get(layer).add(cartesian.plus(center));
             }
             offset = !offset;
             layer++;

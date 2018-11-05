@@ -158,7 +158,7 @@ public class Object extends AbstractObject {
         }
         
         Matrix3 rotationTransformationMatrix = RotationUtility.getRotationMatrix(offset.getX(), offset.getY(), offset.getZ());
-        this.center = RotationUtility.performRotation(this.center, rotationTransformationMatrix, center.antijustify());
+        this.center = RotationUtility.performRotation(this.center, rotationTransformationMatrix, center.justify());
     }
     
     /**

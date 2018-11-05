@@ -132,16 +132,7 @@ public class Vector {
      * @return The Vector.
      */
     public Vector justify() {
-        return new Vector(-components[1], -components[2], -components[0]);
-    }
-    
-    /**
-     * Antijustifies a Vector.
-     *
-     * @return The Vector.
-     */
-    public Vector antijustify() {
-        return new Vector(-components[2], -components[0], -components[1]);
+        return this.scale(-1);
     }
     
     /**

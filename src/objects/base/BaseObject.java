@@ -120,15 +120,6 @@ public abstract class BaseObject extends AbstractObject {
     public abstract List<BaseObject> prepare();
     
     /**
-     * Justifies to the Object prior to rendering.
-     */
-    public void justify() {
-        for (int i = 0; i < vertices.length; i++) {
-            vertices[0] = vertices[0].justify();
-        }
-    }
-    
-    /**
      * Renders the Object on the screen.
      *
      * @param g2 The 2D Graphics entity.
@@ -171,9 +162,9 @@ public abstract class BaseObject extends AbstractObject {
         Matrix3 rotationTransformationMatrix = RotationUtility.getRotationMatrix(offset.getX(), offset.getY(), offset.getZ());
         
         for (int i = 0; i < vertices.length; i++) {
-            vertices[i] = RotationUtility.performRotation(vertices[i], rotationTransformationMatrix, center.antijustify());
+            vertices[i] = RotationUtility.performRotation(vertices[i], rotationTransformationMatrix, center.justify());
         }
-        this.center = RotationUtility.performRotation(this.center, rotationTransformationMatrix, center.antijustify());
+        this.center = RotationUtility.performRotation(this.center, rotationTransformationMatrix, center.justify());
     }
     
     /**

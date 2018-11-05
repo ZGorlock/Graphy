@@ -6,6 +6,10 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -15,14 +19,10 @@ import objects.base.group.RotationGroup;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import objects.system.Axes;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Defines a Test scene.
  */
-public class Test extends Scene {    
+public class Test extends Scene {
     
     //Main Methods
     
@@ -53,20 +53,20 @@ public class Test extends Scene {
      */
     public static List<Object> createObjects() {
         List<Object> objects = new ArrayList<>();
-    
+
 //        RegularPolyhedron i = new Icosahedron(null, Environment.origin, new Color(0, 0, 0, 0), 1);
 //        i.addFrame(java.awt.Color.BLACK);
 //        i.displayVertexIndices();
 //        i.displayFaceIndices();
 //        objects.add(i);
-    
+
 //        objects.add(new Axes(5));
 //        Sphere s = new Sphere(null, new Vector(2, 2, 2), Color.BLACK, Color.RED, 1, Math.PI / 16);
 //        s.addRotationAnimation( Math.PI / 2, 0,0);
 //        s.addRotationAnimation( 0, Math.PI / 2,0);
 //        s.addRotationAnimation( 0, 0,Math.PI / 2);
 //        objects.add(s);
-    
+        
         Axes axes = new Axes(5);
         objects.add(axes);
         
@@ -79,7 +79,7 @@ public class Test extends Scene {
         objects1.add(h2);
         objects1.add(h3);
         objects.addAll(objects1);
-    
+        
         RotationGroup r = new RotationGroup(h2, objects1);
         r.addRotationTransformation(2, 0, 0, 10000);
         

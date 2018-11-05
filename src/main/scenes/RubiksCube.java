@@ -6,6 +6,18 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -13,13 +25,6 @@ import objects.base.Object;
 import objects.base.Scene;
 import objects.base.group.RotationGroup;
 import objects.polyhedron.regular.platonic.Hexahedron;
-
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.*;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Defines a Rubik's Cube scene.

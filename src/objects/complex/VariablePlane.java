@@ -6,15 +6,22 @@
 
 package objects.complex;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import math.vector.UniqueVectorSet;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.Object;
 import objects.base.polygon.Rectangle;
 import objects.base.polygon.Triangle;
-
-import java.awt.*;
-import java.util.*;
-import java.util.List;
 
 /**
  * Defines a Variable Plane
@@ -123,8 +130,9 @@ public class VariablePlane extends Object {
         
         Vector p1 = bounds.getP1();
         Vector p2 = bounds.getP3();
-    
+        
         Set<Vector> vs = new HashSet<>();
+        UniqueVectorSet uniqueVectorSet = new UniqueVectorSet();
         Map<Vector, Double> vsm = new HashMap<>();
         Map<Vector, Double> vsmi = new HashMap<>();
         for (double x = p1.getX(); x <= p2.getX(); x += density) {
@@ -136,23 +144,16 @@ public class VariablePlane extends Object {
                     vt.add(new Vector(x, y, z));
                     vt.add(new Vector(x + n, y + n, z));
                     vt.add(new Vector(new Vector(x + n, y, z)));
-                
-                    for (int i = 0; i < vt.size(); i++) {
-                        for (Vector vsi : vs) {
-                            if (vt.get(i).getX() == vsi.getX() &&
-                                    vt.get(i).getY() == vsi.getY()) {
-                                vt.set(i, vsi);
-                            }
-                        }
-                    }
-                
+                    
+                    uniqueVectorSet.alignVectorsToSet(vt);
+                    
                     Triangle t = new Triangle(this, color, vt.get(0), vt.get(1), vt.get(2));
-                
+                    
                     vs.addAll(vt);
                 }
             }
         }
-    
+        
         Timer t = new Timer();
         t.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -161,7 +162,7 @@ public class VariablePlane extends Object {
                     if (vsm.containsKey(v)) {
                         double m = vsm.get(v);
                         v.setZ(v.getZ() + m);
-                    
+                        
                         if (Math.abs(v.getZ() - vsmi.get(v)) >= variabilityRange) {
                             m = -m;
                             vsm.replace(v, m);

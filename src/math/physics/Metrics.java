@@ -6,6 +6,11 @@
 
 package math.physics;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import main.Environment;
 import math.vector.Vector;
 import objects.base.ObjectInterface;
@@ -13,13 +18,8 @@ import objects.base.polygon.Polygon;
 import objects.polyhedron.Polyhedron;
 import objects.polyhedron.regular.platonic.Icosahedron;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
- * Contains physical metrics about a Polyhedron. 
+ * Contains physical metrics about a Polyhedron.
  */
 public class Metrics {
     
@@ -28,7 +28,7 @@ public class Metrics {
     /**
      * The sample set to use for approximating the volume of a Polyhedron.
      */
-    private static long SAMPLE_SET_FOR_VOLUME_APPROXIMATION = 10000; 
+    private static long SAMPLE_SET_FOR_VOLUME_APPROXIMATION = 10000;
     
     
     //Fields
@@ -208,7 +208,7 @@ public class Metrics {
     
     /**
      * Sets the density of the Polyhedron.
-     * 
+     *
      * @param density The density of the Polyhedron.
      */
     public void setDensity(double density) {

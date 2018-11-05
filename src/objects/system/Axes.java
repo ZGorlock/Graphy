@@ -6,15 +6,15 @@
 
 package objects.system;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Object;
 import objects.base.simple.Edge;
 import objects.base.simple.Text;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines the coordinate axes.
@@ -96,14 +96,14 @@ public class Axes extends Object {
         mainAxes.add(x);
         mainAxes.add(y);
         mainAxes.add(z);
-    
+        
         components.add(new Text(Color.BLACK, x.getV1(), "-X"));
         components.add(new Text(Color.BLACK, x.getV2(), "X"));
         components.add(new Text(Color.BLACK, y.getV1(), "-Y"));
         components.add(new Text(Color.BLACK, y.getV2(), "Y"));
         components.add(new Text(Color.BLACK, z.getV1(), "-Z"));
         components.add(new Text(Color.BLACK, z.getV2(), "Z"));
-
+        
         //sub axes
         if (displaySubAxes) {
             Color subAxis = new Color(128, 128, 128, 32);

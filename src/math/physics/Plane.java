@@ -52,7 +52,7 @@ public final class Plane {
     
     /**
      * Determines if a point is inside a Polygon.
-     * 
+     *
      * @param polygon The Polygon.
      * @param point   The point.
      * @return Whether the point is inside the Polygon or not.

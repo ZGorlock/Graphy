@@ -6,18 +6,27 @@
 
 package camera;
 
+import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import main.Environment;
 import math.Delta;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import math.vector.Vector3;
 import utility.SphericalCoordinateUtility;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Defines the functionality of a Camera.
@@ -245,69 +254,69 @@ public class Camera {
             //center of screen, m
             Vector cartesian = SphericalCoordinateUtility.sphericalToCartesian(phi, theta, rho);
             m = cartesian.plus(Environment.origin).plus(offset);
-    
-    
+            
+            
             //normal unit vector of screen, n
             n = cartesian.normalize();
-    
-    
+            
+            
             //vector equation of plane of screen
             //(r - m) dot n = 0
             //n.x(x - m.x) + n.y(y - m.y) + n.z(z - m.z) = 0
-    
-    
+            
+            
             //satisfy equation to determine second point
             Vector p = new Vector(0, 0, n.dot(m) / n.getZ());
-    
-    
+            
+            
             //calculate local coordinate system
             Vector py = (phi > Math.PI / 2) ? p.minus(m) : m.minus(p);
             Vector px = new Vector3(py).cross(n).scale(-1);
             px = px.normalize();
             py = py.normalize();
-    
-    
+            
+            
             //calculate screen viewport
             s1 = px.scale(-viewportX / 2).plus(py.scale(-viewportY / 2)).plus(m);
             s2 = px.scale(viewportX / 2).plus(py.scale(-viewportY / 2)).plus(m);
             s3 = px.scale(viewportX / 2).plus(py.scale(viewportY / 2)).plus(m);
             s4 = px.scale(-viewportX / 2).plus(py.scale(viewportY / 2)).plus(m);
-    
+            
             cameraObject.screen.setP1(s1);
             cameraObject.screen.setP2(s2);
             cameraObject.screen.setP3(s3);
             cameraObject.screen.setP4(s4);
-    
-    
+            
+            
             //position camera behind screen a distance, h
             double h = viewportX;
             c = m.plus(n.scale(h));
             cameraObject.camera.setPoint(c);
             cameraObject.setCenter(c);
-    
-    
+            
+            
             //find scalar equation of screen
-            Matrix3 scalarEquationSystem = new Matrix3(new double[]{
+            Matrix3 scalarEquationSystem = new Matrix3(new double[] {
                     s1.getX(), s1.getY(), s1.getZ(),
                     s2.getX(), s2.getY(), s2.getZ(),
                     m.getX(), m.getY(), m.getZ()
             });
             Vector3 scalarEquationSystemSolutions = new Vector3(1, 1, 1);
             e = new Vector(scalarEquationSystem.solveSystem(scalarEquationSystemSolutions));
-    
-    
+            
+            
             //draw local coordinate system normals
             cameraObject.screenNormal.setPoints(c, c.plus(n.scale(viewportX * 2 / 3)));
             cameraObject.screenXNormal.setPoints(c, c.minus(px.scale(viewportX * 2 / 3)));
             cameraObject.screenYNormal.setPoints(c, c.plus(py.scale(viewportX * 2 / 3)));
-    
-    
+            
+            
             //draw camera enclosure
             cameraObject.cameraEnclosure.setComponents(cameraObject.screen, c);
             cameraObject.cameraEnclosure.setColor(new Color(192, 192, 192, 64));
             cameraObject.cameraEnclosure.setFaceColor(5, Color.RED);
-    
-    
+            
+            
             //verify screen
             if (verifyViewport) {
                 if (Math.abs(viewportX - s1.distance(s2)) > Environment.omega) {
@@ -317,8 +326,8 @@ public class Camera {
                     System.err.println("Camera: " + cameraId + " - Screen viewportY does not match the actual viewport height");
                 }
             }
-    
-    
+            
+            
             //update has been performed
             updateRequired = false;
             inUpdate.set(false);

@@ -6,18 +6,19 @@
 
 package objects.base;
 
-import main.Environment;
-import math.matrix.Matrix3;
-import math.vector.Vector;
-import utility.ColorUtility;
-import utility.RotationUtility;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import main.Environment;
+import math.matrix.Matrix3;
+import math.vector.Vector;
+import utility.ColorUtility;
+import utility.RotationUtility;
 
 /**
  * Defines an abstract implementation of an Object.
@@ -294,7 +295,7 @@ public abstract class AbstractObject implements ObjectInterface {
      * @param period        The period over which to perform the transition in milliseconds.
      */
     @Override
-    public void addRotationTransformation( double rollRotation,double pitchRotation, double yawRotation, long period) {
+    public void addRotationTransformation(double rollRotation, double pitchRotation, double yawRotation, long period) {
         inRotationTransformation.set(true);
         Timer transitionTimer = new Timer();
         transitionTimer.scheduleAtFixedRate(new TimerTask() {

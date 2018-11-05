@@ -6,20 +6,23 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import camera.Camera;
 import main.Environment;
+import math.vector.UniqueVectorSet;
 import math.vector.Vector;
 import objects.base.Object;
 import objects.base.Scene;
-import objects.base.simple.BigVertex;
 import objects.base.simple.Edge;
 import objects.system.Axes;
 import utility.EquationUtility;
-import utility.SphericalCoordinateUtility;
-
-import java.awt.*;
-import java.util.*;
-import java.util.List;
 
 /**
  * Defines a Graph2D scene.
@@ -50,7 +53,7 @@ public class Graph2D extends Scene {
      * @param args The arguments to the main method.
      */
     public static void main(String[] args) {
-        String[] environmentArgs = new String[]{};
+        String[] environmentArgs = new String[] {};
         Environment.main(environmentArgs);
         Environment.setupMainKeyListener();
         
@@ -74,12 +77,9 @@ public class Graph2D extends Scene {
         objects.add(new Axes(5));
         
         Object plain = new Object(Color.BLACK);
-    
-        new BigVertex(plain, Color.RED, SphericalCoordinateUtility.sphericalToCartesian(0, 0, 4), 1);
-        
-//        new Rectangle(plain, Color.PINK, new Vector(-1, -1, -1), new Vector(-1, 1, -1), new Vector(1, 1, -1), new Vector(1, -1, -1));
         
         Set<Vector> vs = new HashSet<>();
+        UniqueVectorSet uniqueVectorSet = new UniqueVectorSet();
         Map<Vector, Double> vsm = new HashMap<>();
         for (double x = -10; x <= 10; x += density) {
             
@@ -87,15 +87,7 @@ public class Graph2D extends Scene {
             vt.add(new Vector(x, 0, 0));
             vt.add(new Vector(x + density, 0, 0));
             
-            for (int i = 0; i < vt.size(); i++) {
-                for (Vector vsi : vs) {
-                    if (vt.get(i).getX() == vsi.getX() &&
-                            vt.get(i).getY() == vsi.getY() &&
-                            vt.get(i).getZ() == vsi.getZ()) {
-                        vt.set(i, vsi);
-                    }
-                }
-            }
+            uniqueVectorSet.alignVectorsToSet(vt);
             
             Edge t = new Edge(plain, Color.BLACK, vt.get(0), vt.get(1));
             

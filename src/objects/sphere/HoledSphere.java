@@ -6,16 +6,16 @@
 
 package objects.sphere;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import main.Environment;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.Object;
 import objects.base.polygon.Triangle;
 import utility.SphericalCoordinateUtility;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines a Holed Sphere.
@@ -65,7 +65,7 @@ public class HoledSphere extends Object {
     public HoledSphere(AbstractObject parent, Vector center, double radius, double step) {
         this(parent, center, Color.BLACK, radius, step);
     }
-
+    
     /**
      * The constructor for a Holed Sphere.
      *
@@ -87,7 +87,7 @@ public class HoledSphere extends Object {
     @Override
     protected void calculate() {
         components.clear();
-    
+        
         int layer = 0;
         List<List<Vector>> vertices = new ArrayList<>();
         boolean offset = false;

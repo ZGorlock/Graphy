@@ -6,6 +6,10 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -13,14 +17,10 @@ import objects.base.Object;
 import objects.base.Scene;
 import objects.sphere.Sphere;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Defines a Sphere Field scene.
  */
-public class SphereFieldSimple extends Scene {    
+public class SphereFieldSimple extends Scene {
     
     //Main Methods
     
@@ -51,7 +51,7 @@ public class SphereFieldSimple extends Scene {
      */
     public static List<Object> createObjects() {
         List<Object> objects = new ArrayList<>();
-                
+        
         for (int i = 0; i < 20; i++) {
             Sphere sphere = new Sphere(null, new Vector(Math.random() * 20 - 10, Math.random() * 20 - 10, Math.random() * 20 - 10), Color.BLACK, (int) (Math.random() * 5) + 1, Math.PI / (4 * ((int) (Math.random() * 4) + 1)));
             sphere.setDisplayMode(DisplayMode.EDGE);

@@ -6,18 +6,23 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import camera.Camera;
 import main.Environment;
+import math.vector.UniqueVectorSet;
 import math.vector.Vector;
 import objects.base.Object;
 import objects.base.Scene;
 import objects.base.polygon.Rectangle;
 import objects.system.Axes;
 import utility.EquationUtility;
-
-import java.awt.*;
-import java.util.*;
-import java.util.List;
 
 /**
  * Defines a Graph scene.
@@ -53,7 +58,7 @@ public class Graph extends Scene {
      * @param args The arguments to the main method.
      */
     public static void main(String[] args) {
-        String[] environmentArgs = new String[]{};
+        String[] environmentArgs = new String[] {};
         Environment.main(environmentArgs);
         Environment.setupMainKeyListener();
         
@@ -79,33 +84,26 @@ public class Graph extends Scene {
         Object plain = new Object(Color.BLACK);
         
         Set<Vector> vs = new HashSet<>();
+        UniqueVectorSet uniqueVectorSet = new UniqueVectorSet();
         Map<Vector, Double> vsm = new HashMap<>();
         for (double x = -boundDiameter / 2.0; x <= boundDiameter / 2.0; x += density) {
             for (double y = -boundDiameter / 2.0; y <= boundDiameter / 2.0; y += density) {
-
+                
                 List<Vector> vt = new ArrayList<>();
                 vt.add(new Vector(x, y, 0));
                 vt.add(new Vector(x + density, y, 0));
                 vt.add(new Vector(x + density, y + density, 0));
                 vt.add(new Vector(x, y + density, 0));
-
-                for (int i = 0; i < vt.size(); i++) {
-                    for (Vector vsi : vs) {
-                        if (vt.get(i).getX() == vsi.getX() &&
-                                vt.get(i).getY() == vsi.getY() &&
-                                vt.get(i).getZ() == vsi.getZ()) {
-                            vt.set(i, vsi);
-                        }
-                    }
-                }
-
+                
+                uniqueVectorSet.alignVectorsToSet(vt);
+                
                 Rectangle t = new Rectangle(plain, Color.WHITE, vt.get(0), vt.get(1), vt.get(2), vt.get(3));
                 t.addFrame(Color.BLACK);
-
+                
                 vs.addAll(vt);
             }
         }
-
+        
         for (Vector v : vs) {
             Map<String, Number> vars = new HashMap<>();
             vars.put("x", v.getX());

@@ -6,11 +6,12 @@
 
 package objects.base;
 
-import math.vector.Vector;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
+
+import math.vector.Vector;
 
 /**
  * Defines a Frame Object for Objects.

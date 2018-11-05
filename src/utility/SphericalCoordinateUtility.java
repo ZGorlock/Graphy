@@ -29,5 +29,5 @@ public final class SphericalCoordinateUtility {
         double mz = rho * Math.cos(phi);
         return new Vector(mx, my, mz);
     }
-        
+    
 }

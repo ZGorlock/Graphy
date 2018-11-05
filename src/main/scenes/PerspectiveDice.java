@@ -6,6 +6,10 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -15,10 +19,6 @@ import objects.base.polygon.Rectangle;
 import objects.complex.VariablePlane;
 import objects.system.Axes;
 import objects.system.Origin;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PerspectiveDice extends Scene {
     
@@ -52,10 +52,10 @@ public class PerspectiveDice extends Scene {
     public static List<Object> createObjects() {
         List<Object> objects = new ArrayList<>();
         objects.add(new Axes(5));
-    
+        
         Origin origin = new Origin();
         objects.add(origin);
-    
+        
         Rectangle floorBounds = new Rectangle(new Vector(-10, -10, -.25), new Vector(-10, 10, -.25), new Vector(10, 10, -.25), new Vector(10, -10, -.25));
         VariablePlane floor = new VariablePlane(Color.WHITE, floorBounds, 0.5, .065, 1.5);
         floor.addFrame(Color.BLACK);

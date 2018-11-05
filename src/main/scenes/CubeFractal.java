@@ -6,20 +6,20 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Object;
 import objects.base.Scene;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Defines a Cube Fractal scene.
  */
-public class CubeFractal extends Scene {    
+public class CubeFractal extends Scene {
     
     //Main Methods
     
@@ -50,7 +50,7 @@ public class CubeFractal extends Scene {
      */
     public static List<Object> createObjects() {
         List<Object> objects = new ArrayList<>();
-    
+        
         objects.fractals.CubeFractal cubeFractal = new objects.fractals.CubeFractal(Environment.origin, Color.BLACK, .25, 2, 5);
         cubeFractal.addColorAnimation(10000, 0);
         cubeFractal.addFrame(Color.WHITE);

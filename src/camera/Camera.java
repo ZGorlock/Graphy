@@ -6,27 +6,18 @@
 
 package camera;
 
-import java.awt.Color;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import main.Environment;
 import math.Delta;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import math.vector.Vector3;
 import utility.SphericalCoordinateUtility;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Defines the functionality of a Camera.
@@ -110,11 +101,6 @@ public class Camera {
      * The position of the Camera.
      */
     private Vector c;
-    
-    /**
-     * The origin of the Camera.
-     */
-    private Vector origin;
     
     /**
      * The offset of the Camera.
@@ -207,7 +193,6 @@ public class Camera {
         nextCameraId++;
         cameraMap.put(cameraId, this);
         
-        origin = Environment.origin.clone();
         offset = new Vector(0, 0, 0);
         
         calculateCamera();
@@ -253,7 +238,8 @@ public class Camera {
             
             //center of screen, m
             Vector cartesian = SphericalCoordinateUtility.sphericalToCartesian(phi, theta, rho);
-            m = cartesian.plus(Environment.origin).plus(offset);
+            Vector cameraOrigin = Environment.origin.plus(offset).justify();
+            m = cartesian.plus(cameraOrigin);
             
             
             //normal unit vector of screen, n
@@ -266,7 +252,10 @@ public class Camera {
             
             
             //satisfy equation to determine second point
-            Vector p = new Vector(0, 0, n.dot(m) / n.getZ());
+            double pax = cameraOrigin.getX();
+            double pay = cameraOrigin.getY();
+            Vector p = new Vector(pax, pay,
+                    ((n.getX() * (pax - m.getX()) + (n.getY() * (pay - m.getY())) - (n.getZ() * m.getZ()))) / -n.getZ());
             
             
             //calculate local coordinate system
@@ -282,37 +271,36 @@ public class Camera {
             s3 = px.scale(viewportX / 2).plus(py.scale(viewportY / 2)).plus(m);
             s4 = px.scale(-viewportX / 2).plus(py.scale(viewportY / 2)).plus(m);
             
-            cameraObject.screen.setP1(s1);
-            cameraObject.screen.setP2(s2);
-            cameraObject.screen.setP3(s3);
-            cameraObject.screen.setP4(s4);
+            cameraObject.screen.setP1(s1.justify());
+            cameraObject.screen.setP2(s2.justify());
+            cameraObject.screen.setP3(s3.justify());
+            cameraObject.screen.setP4(s4.justify());
             
             
             //position camera behind screen a distance, h
-            double h = viewportX;
+            double h = viewportX; //90 degree view angle
             c = m.plus(n.scale(h));
-            cameraObject.camera.setPoint(c);
-            cameraObject.setCenter(c);
+            cameraObject.camera.setPoint(c.justify());
+            cameraObject.setCenter(c.justify());
             
             
             //find scalar equation of screen
-            Matrix3 scalarEquationSystem = new Matrix3(new double[] {
+            Matrix3 scalarEquationSystem = new Matrix3(new double[]{
                     s1.getX(), s1.getY(), s1.getZ(),
                     s2.getX(), s2.getY(), s2.getZ(),
                     m.getX(), m.getY(), m.getZ()
             });
-            Vector3 scalarEquationSystemSolutions = new Vector3(1, 1, 1);
-            e = new Vector(scalarEquationSystem.solveSystem(scalarEquationSystemSolutions));
+            e = scalarEquationSystem.solveSystem(new Vector3(1, 1, 1));
             
             
             //draw local coordinate system normals
-            cameraObject.screenNormal.setPoints(c, c.plus(n.scale(viewportX * 2 / 3)));
-            cameraObject.screenXNormal.setPoints(c, c.minus(px.scale(viewportX * 2 / 3)));
-            cameraObject.screenYNormal.setPoints(c, c.plus(py.scale(viewportX * 2 / 3)));
+            cameraObject.screenNormal.setPoints(c.justify(), c.plus(n.scale(viewportX * 2 / 3)).justify());
+            cameraObject.screenXNormal.setPoints(c.justify(), c.plus(px.scale(viewportX * 2 / 3)).justify());
+            cameraObject.screenYNormal.setPoints(c.justify(), c.minus(py.scale(viewportX * 2 / 3)).justify());
             
             
             //draw camera enclosure
-            cameraObject.cameraEnclosure.setComponents(cameraObject.screen, c);
+            cameraObject.cameraEnclosure.setComponents(cameraObject.screen, c.justify());
             cameraObject.cameraEnclosure.setColor(new Color(192, 192, 192, 64));
             cameraObject.cameraEnclosure.setFaceColor(5, Color.RED);
             
@@ -439,7 +427,7 @@ public class Camera {
                 double oldPhi = phi;
                 double oldTheta = theta;
                 double oldRho = rho;
-                Vector oldOrigin = origin.clone();
+                Vector oldOrigin = Environment.origin.clone();
                 
                 for (Integer key : pressed) {
                     if (key == KeyEvent.VK_W) {
@@ -463,23 +451,19 @@ public class Camera {
                     
                     if (key == KeyEvent.VK_LEFT) {
                         Environment.origin = Environment.origin.plus(new Vector(-movementSpeed, 0, 0));
-                        origin = origin.plus(new Vector(-movementSpeed, 0, 0));
                     }
                     if (key == KeyEvent.VK_RIGHT) {
                         Environment.origin = Environment.origin.plus(new Vector(movementSpeed, 0, 0));
-                        origin = origin.plus(new Vector(movementSpeed, 0, 0));
                     }
                     if (key == KeyEvent.VK_UP) {
                         Environment.origin = Environment.origin.plus(new Vector(0, movementSpeed, 0));
-                        origin = origin.plus(new Vector(0, movementSpeed, 0));
                     }
                     if (key == KeyEvent.VK_DOWN) {
                         Environment.origin = Environment.origin.plus(new Vector(0, -movementSpeed, 0));
-                        origin = origin.plus(new Vector(0, -movementSpeed, 0));
                     }
                 }
                 
-                if (phi != oldPhi || theta != oldTheta || rho != oldRho || !origin.equals(oldOrigin)) {
+                if (phi != oldPhi || theta != oldTheta || rho != oldRho || !Environment.origin.equals(oldOrigin)) {
                     bindLocation();
                     updateRequired = true;
                 }
@@ -620,17 +604,27 @@ public class Camera {
      * Binds the location of the camera to its limits.
      */
     public void bindLocation() {
+        
+        System.out.println(phi + " " + theta + " " + rho);
+        
         if (phi < phiBoundary) {
             phi = phiBoundary;
         } else if (phi > Math.PI - phiBoundary) {
             phi = Math.PI - phiBoundary;
         }
         
-        theta %= (Math.PI * 2);
+        if (theta > 2 * Math.PI) {
+            theta -= 2 * Math.PI;
+        } else if (theta < 0) {
+            theta = (2 * Math.PI) + theta;
+        }
         
         if (rho < rhoSpeed) {
             rho = rhoSpeed;
         }
+        
+        System.out.println(phi + " " + theta + " " + rho);
+        System.out.println();
     }
     
     
@@ -709,6 +703,51 @@ public class Camera {
         setLocation(phi + offset.getX(), theta + offset.getY(), rho + offset.getZ());
     }
     
+    /**
+     * Sets the offset of the Camera.
+     *
+     * @param offset The offsets of the Camera.
+     */
+    public void setOffset(Vector offset) {
+        this.offset = offset.clone();
+    }
+    
+    /**
+     * Translates the Camera in the x direction.
+     *
+     * @param xOffset The relative x offset to translate the Camera.
+     */
+    public void translateCameraX(double xOffset) {
+        translateCamera(new Vector(xOffset, 0, 0));
+    }
+    
+    /**
+     * Translates the Camera in the y direction.
+     *
+     * @param yOffset The relative y offset to translate the Camera.
+     */
+    public void translateCameraY(double yOffset) {
+        translateCamera(new Vector(0, yOffset, 0));
+    }
+    
+    /**
+     * Translates the Camera in the z direction.
+     *
+     * @param zOffset The relative z offset to translate the Camera.
+     */
+    public void translateCameraZ(double zOffset) {
+        translateCamera(new Vector(0, 0, zOffset));
+    }
+    
+    /**
+     * Translates the Camera in a certain direction.
+     *
+     * @param offset The relative offsets to translate the Camera.
+     */
+    public void translateCamera(Vector offset) {
+        setOffset(this.offset.plus(offset));
+    }
+    
     
     //Functions
     
@@ -775,7 +814,7 @@ public class Camera {
         inView = false;
         for (Vector v : vs) {
             if (v.getX() >= 0 && v.getX() < viewportX &&
-                v.getY() >= 0 && v.getY() < viewportY) {
+                    v.getY() >= 0 && v.getY() < viewportY) {
                 inView = true;
             }
         }

@@ -6,18 +6,6 @@
 
 package main.scenes;
 
-import java.awt.Color;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -25,6 +13,13 @@ import objects.base.Object;
 import objects.base.Scene;
 import objects.base.group.RotationGroup;
 import objects.polyhedron.regular.platonic.Hexahedron;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.*;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Defines a Rubik's Cube scene.
@@ -115,11 +110,11 @@ public class RubiksCube extends Scene {
      * The matrix of pieces that are positioned on each side.
      */
     private static int[][] matrix = {{26, 17, 8, 25, 16, 7, 24, 15, 6}, //front
-                                     {20, 11, 2, 23, 14, 5, 26, 17, 8}, //up
-                                     {8, 5, 2, 7, 4, 1, 6, 3, 0}, //right
-                                     {0, 9, 18, 3, 12, 21, 6, 15, 24}, //down
-                                     {20, 23, 26, 19, 22, 25, 18, 21, 24}, //left
-                                     {2, 11, 20, 1, 10, 19, 0, 9, 18}}; //back
+            {20, 11, 2, 23, 14, 5, 26, 17, 8}, //up
+            {8, 5, 2, 7, 4, 1, 6, 3, 0}, //right
+            {0, 9, 18, 3, 12, 21, 6, 15, 24}, //down
+            {20, 23, 26, 19, 22, 25, 18, 21, 24}, //left
+            {2, 11, 20, 1, 10, 19, 0, 9, 18}}; //back
     
     /**
      * The list of moves that have been performed on the cube.
@@ -140,7 +135,7 @@ public class RubiksCube extends Scene {
      * @param args The arguments to the main method.
      */
     public static void main(String[] args) {
-        String[] environmentArgs = new String[] {};
+        String[] environmentArgs = new String[]{};
         Environment.main(environmentArgs);
         
         List<Object> objects = createObjects();
@@ -426,7 +421,7 @@ public class RubiksCube extends Scene {
      */
     private static int[][] adjustFaceClockwise(int[][] matrix, int face) {
         int[] original = matrix[face];
-        int[] adjusted = new int[] {original[6], original[3], original[0], original[7], original[4], original[1], original[8], original[5], original[2]};
+        int[] adjusted = new int[]{original[6], original[3], original[0], original[7], original[4], original[1], original[8], original[5], original[2]};
         matrix[face] = adjusted;
         return matrix;
     }
@@ -440,7 +435,7 @@ public class RubiksCube extends Scene {
      */
     private static int[][] adjustFaceCounterclockwise(int[][] matrix, int face) {
         int[] original = matrix[face];
-        int[] adjusted = new int[] {original[2], original[5], original[8], original[1], original[4], original[7], original[0], original[3], original[6]};
+        int[] adjusted = new int[]{original[2], original[5], original[8], original[1], original[4], original[7], original[0], original[3], original[6]};
         matrix[face] = adjusted;
         return matrix;
     }
@@ -539,7 +534,7 @@ public class RubiksCube extends Scene {
      */
     private static void flipLeft() {
         rubiksCube.addRotationTransformation(-Math.PI / 2, 0, 0, ROTATE_SPEED);
-        matrix = new int[][] {matrix[RIGHT], matrix[TOP], matrix[BACK], matrix[BOTTOM], matrix[FRONT], matrix[LEFT]};
+        matrix = new int[][]{matrix[RIGHT], matrix[TOP], matrix[BACK], matrix[BOTTOM], matrix[FRONT], matrix[LEFT]};
         matrix = adjust(matrix, TOP, CLOCKWISE);
         matrix = adjust(matrix, BOTTOM, COUNTERCLOCKWISE);
         printCube();
@@ -550,7 +545,7 @@ public class RubiksCube extends Scene {
      */
     private static void flipRight() {
         rubiksCube.addRotationTransformation(Math.PI / 2, 0, 0, ROTATE_SPEED);
-        matrix = new int[][] {matrix[LEFT], matrix[TOP], matrix[FRONT], matrix[BOTTOM], matrix[BACK], matrix[RIGHT]};
+        matrix = new int[][]{matrix[LEFT], matrix[TOP], matrix[FRONT], matrix[BOTTOM], matrix[BACK], matrix[RIGHT]};
         matrix = adjust(matrix, TOP, COUNTERCLOCKWISE);
         matrix = adjust(matrix, BOTTOM, CLOCKWISE);
         printCube();
@@ -561,7 +556,7 @@ public class RubiksCube extends Scene {
      */
     private static void flipUp() {
         rubiksCube.addRotationTransformation(0, -Math.PI / 2, 0, ROTATE_SPEED);
-        matrix = new int[][] {matrix[BOTTOM], matrix[FRONT], matrix[RIGHT], matrix[BACK], matrix[LEFT], matrix[TOP]};
+        matrix = new int[][]{matrix[BOTTOM], matrix[FRONT], matrix[RIGHT], matrix[BACK], matrix[LEFT], matrix[TOP]};
         matrix = adjust(matrix, LEFT, COUNTERCLOCKWISE);
         matrix = adjust(matrix, RIGHT, CLOCKWISE);
         printCube();
@@ -572,7 +567,7 @@ public class RubiksCube extends Scene {
      */
     private static void flipDown() {
         rubiksCube.addRotationTransformation(0, Math.PI / 2, 0, ROTATE_SPEED);
-        matrix = new int[][] {matrix[TOP], matrix[BACK], matrix[RIGHT], matrix[FRONT], matrix[LEFT], matrix[BOTTOM]};
+        matrix = new int[][]{matrix[TOP], matrix[BACK], matrix[RIGHT], matrix[FRONT], matrix[LEFT], matrix[BOTTOM]};
         matrix = adjust(matrix, LEFT, CLOCKWISE);
         matrix = adjust(matrix, RIGHT, COUNTERCLOCKWISE);
         printCube();

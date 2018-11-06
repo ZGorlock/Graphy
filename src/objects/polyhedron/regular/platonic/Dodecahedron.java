@@ -6,12 +6,12 @@
 
 package objects.polyhedron.regular.platonic;
 
-import java.awt.Color;
-
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.polygon.Pentagon;
 import objects.polyhedron.regular.RegularPolyhedron;
+
+import java.awt.*;
 
 /**
  * Defines a Dodecahedron.
@@ -82,13 +82,13 @@ public class Dodecahedron extends RegularPolyhedron {
         
         vertices = new Vector[DODECAHEDRON_VERTICES];
         int v = 0;
-        for (int i : new int[] {-1, 1}) {
-            for (int j : new int[] {-1, 1}) {
+        for (int i : new int[]{-1, 1}) {
+            for (int j : new int[]{-1, 1}) {
                 vertices[v++] = new Vector(0, a * i, b * j).scale(radius).plus(center);
                 vertices[v++] = new Vector(a * i, b * j, 0).scale(radius).plus(center);
                 vertices[v++] = new Vector(b * i, 0, a * j).scale(radius).plus(center);
                 
-                for (int k : new int[] {-1, 1}) {
+                for (int k : new int[]{-1, 1}) {
                     vertices[v++] = new Vector(i, j, k).scale(radius).plus(center);
                 }
             }

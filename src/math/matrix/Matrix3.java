@@ -57,12 +57,12 @@ public class Matrix3 {
     
     public double determinant() {
         return (values[0] * ((values[4] * values[8]) - (values[5] * values[7]))) -
-               (values[1] * ((values[3] * values[8]) - (values[5] * values[6]))) +
-               (values[2] * ((values[3] * values[7]) - (values[4] * values[6])));
+                (values[1] * ((values[3] * values[8]) - (values[5] * values[6]))) +
+                (values[2] * ((values[3] * values[7]) - (values[4] * values[6])));
     }
     
     public Matrix3 minors() {
-        return new Matrix3(new double[] {
+        return new Matrix3(new double[]{
                 subMatrix2(4, 5, 7, 8).determinant(), subMatrix2(3, 5, 6, 8).determinant(), subMatrix2(3, 4, 6, 7).determinant(),
                 subMatrix2(1, 2, 7, 8).determinant(), subMatrix2(0, 2, 6, 8).determinant(), subMatrix2(0, 1, 6, 7).determinant(),
                 subMatrix2(1, 2, 4, 5).determinant(), subMatrix2(0, 2, 3, 5).determinant(), subMatrix2(0, 1, 3, 4).determinant()
@@ -70,7 +70,7 @@ public class Matrix3 {
     }
     
     public Matrix3 transpose() {
-        return new Matrix3(new double[] {
+        return new Matrix3(new double[]{
                 values[0], values[3], values[6],
                 values[1], values[4], values[7],
                 values[2], values[5], values[8]
@@ -78,7 +78,7 @@ public class Matrix3 {
     }
     
     public Matrix3 cofactor() {
-        return scale(new Matrix3(new double[] {
+        return scale(new Matrix3(new double[]{
                 1, -1, 1,
                 -1, 1, -1,
                 1, -1, 1
@@ -102,7 +102,7 @@ public class Matrix3 {
     }
     
     public Matrix2 subMatrix2(int a11, int a12, int a21, int a22) {
-        return new Matrix2(new double[] {
+        return new Matrix2(new double[]{
                 values[a11], values[a12],
                 values[a21], values[a22]
         });

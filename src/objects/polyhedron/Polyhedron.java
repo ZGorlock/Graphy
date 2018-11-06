@@ -6,10 +6,10 @@
 
 package objects.polyhedron;
 
-import java.awt.Color;
-
 import math.vector.Vector;
 import objects.base.Object;
+
+import java.awt.*;
 
 /**
  * Defines a Polyhedron.

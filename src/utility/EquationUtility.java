@@ -166,7 +166,6 @@ public final class EquationUtility {
      *
      * @param equation The mathematical equation.
      * @return The tokens parsed from the mathematical equation.
-     *
      * @throws ParseException When there is an error parsing the mathematical equation.
      */
     @SuppressWarnings("UnnecessaryContinue")
@@ -291,7 +290,6 @@ public final class EquationUtility {
      *
      * @param elements The tokens that were parsed from the mathematical equation.
      * @return A series of operations representing the mathematical equation.
-     *
      * @throws ParseException When there is an error parsing the mathematical equation.
      */
     private static MathOperation ingestElements(List<String> elements) throws ParseException {

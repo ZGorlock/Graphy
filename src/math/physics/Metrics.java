@@ -6,17 +6,17 @@
 
 package math.physics;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import main.Environment;
 import math.vector.Vector;
 import objects.base.ObjectInterface;
 import objects.base.polygon.Polygon;
 import objects.polyhedron.Polyhedron;
 import objects.polyhedron.regular.platonic.Icosahedron;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Contains physical metrics about a Polyhedron.

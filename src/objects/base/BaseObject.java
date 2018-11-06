@@ -6,16 +6,15 @@
 
 package objects.base;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
-
 import camera.Camera;
 import main.Environment;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import utility.RotationUtility;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Defines the base properties of an Object.
@@ -73,7 +72,7 @@ public abstract class BaseObject extends AbstractObject {
      * @throws ArithmeticException When the vertices are not all of the same spacial dimension.
      */
     public BaseObject(AbstractObject parent, Vector center, List<Vector> vertices) throws ArithmeticException {
-        this(parent, Color.BLACK, center, vertices.toArray(new Vector[] {}));
+        this(parent, Color.BLACK, center, vertices.toArray(new Vector[]{}));
     }
     
     /**
@@ -85,7 +84,7 @@ public abstract class BaseObject extends AbstractObject {
      * @throws ArithmeticException When the vertices are not all of the same spacial dimension.
      */
     public BaseObject(Color color, Vector center, List<Vector> vertices) throws ArithmeticException {
-        this(null, color, center, vertices.toArray(new Vector[] {}));
+        this(null, color, center, vertices.toArray(new Vector[]{}));
     }
     
     /**
@@ -96,7 +95,7 @@ public abstract class BaseObject extends AbstractObject {
      * @throws ArithmeticException When the vertices are not all of the same spacial dimension.
      */
     public BaseObject(Vector center, List<Vector> vertices) throws ArithmeticException {
-        this(null, Color.BLACK, center, vertices.toArray(new Vector[] {}));
+        this(null, Color.BLACK, center, vertices.toArray(new Vector[]{}));
     }
     
     /**
@@ -106,7 +105,7 @@ public abstract class BaseObject extends AbstractObject {
      * @throws ArithmeticException When the vertices are not all of the same spacial dimension.
      */
     public BaseObject(List<Vector> vertices) throws ArithmeticException {
-        this(null, Color.BLACK, Environment.origin, vertices.toArray(new Vector[] {}));
+        this(null, Color.BLACK, Environment.origin, vertices.toArray(new Vector[]{}));
     }
     
     

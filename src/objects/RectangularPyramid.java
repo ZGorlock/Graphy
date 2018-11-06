@@ -6,14 +6,14 @@
 
 package objects;
 
-import java.awt.Color;
-import java.util.Arrays;
-
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.Object;
 import objects.base.polygon.Rectangle;
 import objects.base.polygon.Triangle;
+
+import java.awt.*;
+import java.util.Arrays;
 
 /**
  * Defines a Pyramid Object.

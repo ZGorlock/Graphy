@@ -6,14 +6,6 @@
 
 package main.scenes;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import camera.Camera;
 import main.Environment;
 import math.vector.UniqueVectorSet;
@@ -23,6 +15,10 @@ import objects.base.Scene;
 import objects.base.polygon.Rectangle;
 import objects.system.Axes;
 import utility.EquationUtility;
+
+import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 /**
  * Defines a Graph scene.
@@ -58,7 +54,7 @@ public class Graph extends Scene {
      * @param args The arguments to the main method.
      */
     public static void main(String[] args) {
-        String[] environmentArgs = new String[] {};
+        String[] environmentArgs = new String[]{};
         Environment.main(environmentArgs);
         Environment.setupMainKeyListener();
         

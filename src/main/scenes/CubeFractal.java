@@ -6,15 +6,15 @@
 
 package main.scenes;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Object;
 import objects.base.Scene;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Defines a Cube Fractal scene.
@@ -29,7 +29,7 @@ public class CubeFractal extends Scene {
      * @param args The arguments to the main method.
      */
     public static void main(String[] args) {
-        String[] environmentArgs = new String[] {};
+        String[] environmentArgs = new String[]{};
         Environment.main(environmentArgs);
         Environment.setupMainKeyListener();
         

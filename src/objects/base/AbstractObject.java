@@ -6,19 +6,18 @@
 
 package objects.base;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import main.Environment;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import utility.ColorUtility;
 import utility.RotationUtility;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Defines an abstract implementation of an Object.
@@ -179,7 +178,7 @@ public abstract class AbstractObject implements ObjectInterface {
     public void addMovementAnimation(double xSpeed, double ySpeed, double zSpeed) {
         Timer animationTimer = new Timer();
         animationTimers.add(animationTimer);
-        movementAnimations.add(new double[] {xSpeed, ySpeed, zSpeed});
+        movementAnimations.add(new double[]{xSpeed, ySpeed, zSpeed});
         animationTimer.scheduleAtFixedRate(new TimerTask() {
             private Vector speedVector = new Vector(xSpeed, ySpeed, zSpeed);
             
@@ -263,7 +262,7 @@ public abstract class AbstractObject implements ObjectInterface {
     public void addRotationAnimation(double rollSpeed, double pitchSpeed, double yawSpeed) {
         Timer animationTimer = new Timer();
         animationTimers.add(animationTimer);
-        rotationAnimations.add(new double[] {rollSpeed, pitchSpeed, yawSpeed});
+        rotationAnimations.add(new double[]{rollSpeed, pitchSpeed, yawSpeed});
         animationTimer.scheduleAtFixedRate(new TimerTask() {
             private Vector speedVector = new Vector(rollSpeed, pitchSpeed, yawSpeed);
             

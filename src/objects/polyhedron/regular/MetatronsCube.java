@@ -6,15 +6,11 @@
 
 package objects.polyhedron.regular;
 
-import java.awt.Color;
-
 import math.vector.Vector;
 import objects.base.Object;
-import objects.polyhedron.regular.platonic.Dodecahedron;
-import objects.polyhedron.regular.platonic.Hexahedron;
-import objects.polyhedron.regular.platonic.Icosahedron;
-import objects.polyhedron.regular.platonic.Octahedron;
-import objects.polyhedron.regular.platonic.Tetrahedron;
+import objects.polyhedron.regular.platonic.*;
+
+import java.awt.*;
 
 /**
  * Defines a Metatron's Cube.

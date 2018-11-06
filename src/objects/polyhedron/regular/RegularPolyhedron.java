@@ -6,13 +6,13 @@
 
 package objects.polyhedron.regular;
 
-import java.awt.Color;
-
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.polygon.Polygon;
 import objects.base.simple.Text;
 import objects.polyhedron.Polyhedron;
+
+import java.awt.*;
 
 /**
  * Defines a Regular Polyhedron.

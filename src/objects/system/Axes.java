@@ -6,15 +6,15 @@
 
 package objects.system;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Object;
 import objects.base.simple.Edge;
 import objects.base.simple.Text;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Defines the coordinate axes.

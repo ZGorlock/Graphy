@@ -6,12 +6,12 @@
 
 package objects.polyhedron.regular.platonic;
 
-import java.awt.Color;
-
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.polygon.Rectangle;
 import objects.polyhedron.regular.RegularPolyhedron;
+
+import java.awt.*;
 
 /**
  * Defines a Hexahedron.
@@ -79,9 +79,9 @@ public class Hexahedron extends RegularPolyhedron {
         
         vertices = new Vector[HEXAHEDRON_VERTICES];
         int v = 0;
-        for (int i : new int[] {-1, 1}) {
-            for (int j : new int[] {-1, 1}) {
-                for (int k : new int[] {-1, 1}) {
+        for (int i : new int[]{-1, 1}) {
+            for (int j : new int[]{-1, 1}) {
+                for (int k : new int[]{-1, 1}) {
                     vertices[v++] = new Vector(i, j, k).scale(radius).plus(center);
                 }
             }

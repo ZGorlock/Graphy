@@ -6,13 +6,13 @@
 
 package objects.system;
 
-import java.awt.Color;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import main.Environment;
 import objects.base.Object;
 import objects.polyhedron.regular.platonic.Hexahedron;
+
+import java.awt.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Defines the origin.

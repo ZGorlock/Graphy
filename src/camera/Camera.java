@@ -169,6 +169,11 @@ public class Camera {
     private double angleOfView = 90;
     
     /**
+     * The heading Vector of the Camera.
+     */
+    private Vector heading;
+    
+    /**
      * The normal unit Vector of the Screen.
      */
     private Vector n;
@@ -277,16 +282,23 @@ public class Camera {
             }
             
             
-            //center of screen, m
+            //cartesian camera location
             Vector cartesian = SphericalCoordinateUtility.sphericalToCartesian(phi, theta, rho);
+            
+            
+            //center of screen, m
             Vector cameraOrigin = Environment.origin.plus(offset).justify();
             m = cartesian.plus(cameraOrigin);
             
             
             //normal unit vector of screen, n
             n = cartesian.normalize();
-    
-    
+            
+            
+            //heading vector
+            heading = cartesian.times(new Vector(1, 1, 0)).normalize();
+            
+            
             //position camera behind screen a distance, h
             double h = viewportX * Math.tan(Math.toRadians(90 - (angleOfView / 2))) / 2;
             if (perspective == Perspective.FIRST_PERSON) {
@@ -477,7 +489,7 @@ public class Camera {
                 if (cameraId != activeCameraControl) {
                     return;
                 }
-    
+                
                 synchronized (pressed) {
                     pressed.add(e.getKeyCode());
                 }
@@ -488,7 +500,7 @@ public class Camera {
                 if (cameraId != activeCameraControl) {
                     return;
                 }
-    
+                
                 synchronized (pressed) {
                     pressed.remove(e.getKeyCode());
                 }
@@ -509,7 +521,10 @@ public class Camera {
                     double oldTheta = theta;
                     double oldRho = rho;
                     Vector oldOrigin = Environment.origin.clone();
-    
+                    
+                    Vector headingMovement = heading.scale(movementSpeed);
+                    Vector perpendicularMovement = new Vector3(0, 0, 1).cross(heading).scale(movementSpeed);
+                    
                     for (Integer key : pressed) {
                         if (key == KeyEvent.VK_W) {
                             phi -= phiSpeed * perspective.getScale();
@@ -529,21 +544,21 @@ public class Camera {
                         if (key == KeyEvent.VK_Z) {
                             rho += rhoSpeed;
                         }
-        
+                        
                         if (key == KeyEvent.VK_LEFT) {
-                            Environment.origin = Environment.origin.plus(new Vector(-movementSpeed, 0, 0));
+                            Environment.origin = Environment.origin.plus(perpendicularMovement);
                         }
                         if (key == KeyEvent.VK_RIGHT) {
-                            Environment.origin = Environment.origin.plus(new Vector(movementSpeed, 0, 0));
+                            Environment.origin = Environment.origin.plus(perpendicularMovement.scale(-1));
                         }
                         if (key == KeyEvent.VK_UP) {
-                            Environment.origin = Environment.origin.plus(new Vector(0, movementSpeed, 0));
+                            Environment.origin = Environment.origin.plus(headingMovement);
                         }
                         if (key == KeyEvent.VK_DOWN) {
-                            Environment.origin = Environment.origin.plus(new Vector(0, -movementSpeed, 0));
+                            Environment.origin = Environment.origin.plus(headingMovement.scale(-1));
                         }
                     }
-    
+                    
                     if (phi != oldPhi || theta != oldTheta || rho != oldRho || !Environment.origin.equals(oldOrigin)) {
                         bindLocation();
                         updateRequired = true;
@@ -710,7 +725,7 @@ public class Camera {
      * @return The Camera position.
      */
     public Vector getCameraPosition() {
-        return c;
+        return c.clone();
     }
     
     /**
@@ -729,6 +744,15 @@ public class Camera {
      */
     public double getAngleOfView() {
         return angleOfView;
+    }
+    
+    /**
+     * Returns the heading Vector of the Camera.
+     *
+     * @return The heading Vector of the Camera.
+     */
+    public Vector getHeading() {
+        return heading.clone();
     }
     
     
@@ -849,7 +873,7 @@ public class Camera {
      */
     public void setPerspective(Perspective perspective) {
         this.perspective = perspective;
-    
+        
         if (perspective == Perspective.THIRD_PERSON) {
             rho = switchRho;
         } else if (perspective == Perspective.FIRST_PERSON) {

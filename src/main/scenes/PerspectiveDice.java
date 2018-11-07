@@ -49,12 +49,12 @@ public class PerspectiveDice extends Scene {
      */
     public static List<Object> createObjects() {
         List<Object> objects = new ArrayList<>();
-        
+
 //        objects.add(new Axes(5));
 //        Origin origin = new Origin();
 //        objects.add(origin);
         
-        Rectangle floorBounds = new Rectangle(new Vector(-25, -25, -2), new Vector(-25, 25, -2), new Vector(25, 25, -2), new Vector(25, -25, -2));
+        Rectangle floorBounds = new Rectangle(new Vector(-10, -10, -2), new Vector(-10, 10, -2), new Vector(10, 10, -2), new Vector(10, -10, -2));
         VariablePlane floor = new VariablePlane(Color.WHITE, floorBounds, 0.5, .065, 1.5);
         floor.addFrame(Color.BLACK);
         objects.add(floor);

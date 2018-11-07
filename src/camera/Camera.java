@@ -31,6 +31,32 @@ public class Camera {
      */
     private double phiBoundary = .0001;
     
+    /**
+     * The maximum distance for rho in first person perspective.
+     */
+    private double rhoBoundary = .0001;
+    
+    
+    //Enums
+    
+    /**
+     * An enumeration of camera perspectives
+     */
+    public enum Perspective {
+        THIRD_PERSON(1),
+        FIRST_PERSON(-1);
+        
+        private int scale;
+        
+        Perspective(int scale) {
+            this.scale = scale;
+        }
+        
+        public int getScale() {
+            return scale;
+        }
+    }
+    
     
     //Static Fields
     
@@ -42,12 +68,12 @@ public class Camera {
     /**
      * The current active Camera for viewing.
      */
-    public static int activeCameraView = -1;
+    private static int activeCameraView = -1;
     
     /**
      * The current active Camera for controls.
      */
-    public static int activeCameraControl = -1;
+    private static int activeCameraControl = -1;
     
     /**
      * The map of Cameras that are registered in the Environment.
@@ -98,6 +124,11 @@ public class Camera {
     private double rho = 10;
     
     /**
+     * The rho location of the Camera saved when switching between first and third person perspectives.
+     */
+    private double switchRho = 10;
+    
+    /**
      * The position of the Camera.
      */
     private Vector c;
@@ -110,12 +141,12 @@ public class Camera {
     /**
      * The current phi movement speed of the Camera.
      */
-    private double phiSpeed = .05;
+    private double phiSpeed = .02;
     
     /**
      * The current theta movement speed of the Camera.
      */
-    private double thetaSpeed = .05;
+    private double thetaSpeed = .02;
     
     /**
      * The current rho movement speed of the Camera.
@@ -125,7 +156,17 @@ public class Camera {
     /**
      * The current origin movement speed of the Camera.
      */
-    private double movementSpeed = .1;
+    private double movementSpeed = .05;
+    
+    /**
+     * The perspective mode of the Camera.
+     */
+    private Perspective perspective = Perspective.THIRD_PERSON;
+    
+    /**
+     * The angle of view of the Camera.
+     */
+    private double angleOfView = 90;
     
     /**
      * The normal unit Vector of the Screen.
@@ -244,6 +285,18 @@ public class Camera {
             
             //normal unit vector of screen, n
             n = cartesian.normalize();
+    
+    
+            //position camera behind screen a distance, h
+            double h = viewportX * Math.tan(Math.toRadians(90 - (angleOfView / 2))) / 2;
+            if (perspective == Perspective.FIRST_PERSON) {
+                c = m;
+                m = c.minus(n.scale(h));
+            } else {
+                c = m.plus(n.scale(h));
+            }
+            cameraObject.camera.setPoint(c.justify());
+            cameraObject.setCenter(c.justify());
             
             
             //vector equation of plane of screen
@@ -271,17 +324,19 @@ public class Camera {
             s3 = px.scale(viewportX / 2).plus(py.scale(viewportY / 2)).plus(m);
             s4 = px.scale(-viewportX / 2).plus(py.scale(viewportY / 2)).plus(m);
             
+            if (perspective == Perspective.FIRST_PERSON) {
+                Vector tmp = s1.clone();
+                s1 = s3;
+                s3 = tmp;
+                tmp = s2;
+                s2 = s4;
+                s4 = tmp;
+            }
+            
             cameraObject.screen.setP1(s1.justify());
             cameraObject.screen.setP2(s2.justify());
             cameraObject.screen.setP3(s3.justify());
             cameraObject.screen.setP4(s4.justify());
-            
-            
-            //position camera behind screen a distance, h
-            double h = viewportX; //90 degree view angle
-            c = m.plus(n.scale(h));
-            cameraObject.camera.setPoint(c.justify());
-            cameraObject.setCenter(c.justify());
             
             
             //find scalar equation of screen
@@ -409,8 +464,9 @@ public class Camera {
      * Adds a KeyListener for the Camera controls.
      */
     private void setupKeyListener() {
+        final Set<Integer> pressed = new HashSet<>();
+        
         Environment.frame.addKeyListener(new KeyListener() {
-            private final Set<Integer> pressed = new HashSet<>();
             
             @Override
             public void keyTyped(KeyEvent e) {
@@ -421,60 +477,80 @@ public class Camera {
                 if (cameraId != activeCameraControl) {
                     return;
                 }
-                
-                pressed.add(e.getKeyCode());
-                
-                double oldPhi = phi;
-                double oldTheta = theta;
-                double oldRho = rho;
-                Vector oldOrigin = Environment.origin.clone();
-                
-                for (Integer key : pressed) {
-                    if (key == KeyEvent.VK_W) {
-                        phi += phiSpeed;
-                    }
-                    if (key == KeyEvent.VK_S) {
-                        phi -= phiSpeed;
-                    }
-                    if (key == KeyEvent.VK_A) {
-                        theta -= thetaSpeed;
-                    }
-                    if (key == KeyEvent.VK_D) {
-                        theta += thetaSpeed;
-                    }
-                    if (key == KeyEvent.VK_Q) {
-                        rho -= rhoSpeed;
-                    }
-                    if (key == KeyEvent.VK_Z) {
-                        rho += rhoSpeed;
-                    }
-                    
-                    if (key == KeyEvent.VK_LEFT) {
-                        Environment.origin = Environment.origin.plus(new Vector(-movementSpeed, 0, 0));
-                    }
-                    if (key == KeyEvent.VK_RIGHT) {
-                        Environment.origin = Environment.origin.plus(new Vector(movementSpeed, 0, 0));
-                    }
-                    if (key == KeyEvent.VK_UP) {
-                        Environment.origin = Environment.origin.plus(new Vector(0, movementSpeed, 0));
-                    }
-                    if (key == KeyEvent.VK_DOWN) {
-                        Environment.origin = Environment.origin.plus(new Vector(0, -movementSpeed, 0));
-                    }
-                }
-                
-                if (phi != oldPhi || theta != oldTheta || rho != oldRho || !Environment.origin.equals(oldOrigin)) {
-                    bindLocation();
-                    updateRequired = true;
+    
+                synchronized (pressed) {
+                    pressed.add(e.getKeyCode());
                 }
             }
             
             @Override
             public void keyReleased(KeyEvent e) {
-                pressed.remove(e.getKeyCode());
+                if (cameraId != activeCameraControl) {
+                    return;
+                }
+    
+                synchronized (pressed) {
+                    pressed.remove(e.getKeyCode());
+                }
             }
             
         });
+        
+        Timer keyListenerThread = new Timer();
+        keyListenerThread.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (cameraId != activeCameraControl) {
+                    return;
+                }
+                
+                synchronized (pressed) {
+                    double oldPhi = phi;
+                    double oldTheta = theta;
+                    double oldRho = rho;
+                    Vector oldOrigin = Environment.origin.clone();
+    
+                    for (Integer key : pressed) {
+                        if (key == KeyEvent.VK_W) {
+                            phi -= phiSpeed * perspective.getScale();
+                        }
+                        if (key == KeyEvent.VK_S) {
+                            phi += phiSpeed * perspective.getScale();
+                        }
+                        if (key == KeyEvent.VK_A) {
+                            theta -= thetaSpeed * perspective.getScale();
+                        }
+                        if (key == KeyEvent.VK_D) {
+                            theta += thetaSpeed * perspective.getScale();
+                        }
+                        if (key == KeyEvent.VK_Q) {
+                            rho -= rhoSpeed;
+                        }
+                        if (key == KeyEvent.VK_Z) {
+                            rho += rhoSpeed;
+                        }
+        
+                        if (key == KeyEvent.VK_LEFT) {
+                            Environment.origin = Environment.origin.plus(new Vector(-movementSpeed, 0, 0));
+                        }
+                        if (key == KeyEvent.VK_RIGHT) {
+                            Environment.origin = Environment.origin.plus(new Vector(movementSpeed, 0, 0));
+                        }
+                        if (key == KeyEvent.VK_UP) {
+                            Environment.origin = Environment.origin.plus(new Vector(0, movementSpeed, 0));
+                        }
+                        if (key == KeyEvent.VK_DOWN) {
+                            Environment.origin = Environment.origin.plus(new Vector(0, -movementSpeed, 0));
+                        }
+                    }
+    
+                    if (phi != oldPhi || theta != oldTheta || rho != oldRho || !Environment.origin.equals(oldOrigin)) {
+                        bindLocation();
+                        updateRequired = true;
+                    }
+                }
+            }
+        }, 0, 20);
     }
     
     /**
@@ -524,8 +600,8 @@ public class Camera {
                 double oldTheta = theta;
                 double oldPhi = phi;
                 
-                theta -= thetaSpeed / 10 * deltaX;
-                phi -= phiSpeed / 10 * deltaY;
+                theta -= (thetaSpeed / 4 * deltaX) * perspective.getScale() / (perspective == Perspective.FIRST_PERSON ? 2 : 1);
+                phi -= (phiSpeed / 4 * deltaY) * perspective.getScale() / (perspective == Perspective.FIRST_PERSON ? 2 : 1);
                 bindLocation();
                 
                 if (phi != oldPhi || theta != oldTheta) {
@@ -604,9 +680,6 @@ public class Camera {
      * Binds the location of the camera to its limits.
      */
     public void bindLocation() {
-        
-        System.out.println(phi + " " + theta + " " + rho);
-        
         if (phi < phiBoundary) {
             phi = phiBoundary;
         } else if (phi > Math.PI - phiBoundary) {
@@ -619,12 +692,13 @@ public class Camera {
             theta = (2 * Math.PI) + theta;
         }
         
-        if (rho < rhoSpeed) {
-            rho = rhoSpeed;
+        if (perspective == Perspective.THIRD_PERSON) {
+            if (rho < rhoSpeed) {
+                rho = rhoSpeed;
+            }
+        } else if (perspective == Perspective.FIRST_PERSON) {
+            rho = rhoBoundary;
         }
-        
-        System.out.println(phi + " " + theta + " " + rho);
-        System.out.println();
     }
     
     
@@ -637,6 +711,24 @@ public class Camera {
      */
     public Vector getCameraPosition() {
         return c;
+    }
+    
+    /**
+     * Returns the perspective mode of the Camera.
+     *
+     * @return The perspective mode of the Camera.
+     */
+    public Perspective getPerspective() {
+        return perspective;
+    }
+    
+    /**
+     * Returns the angle of view of the Camera.
+     *
+     * @return The angle of view of the Camera.
+     */
+    public double getAngleOfView() {
+        return angleOfView;
     }
     
     
@@ -710,6 +802,8 @@ public class Camera {
      */
     public void setOffset(Vector offset) {
         this.offset = offset.clone();
+        
+        updateRequired = true;
     }
     
     /**
@@ -746,6 +840,34 @@ public class Camera {
      */
     public void translateCamera(Vector offset) {
         setOffset(this.offset.plus(offset));
+    }
+    
+    /**
+     * Sets the perspective mode of the Camera.
+     *
+     * @param perspective The perspective mode of the Camera.
+     */
+    public void setPerspective(Perspective perspective) {
+        this.perspective = perspective;
+    
+        if (perspective == Perspective.THIRD_PERSON) {
+            rho = switchRho;
+        } else if (perspective == Perspective.FIRST_PERSON) {
+            switchRho = rho;
+            rho = rhoBoundary;
+        }
+        updateRequired = true;
+    }
+    
+    /**
+     * Sets the angle of view of the Camera.
+     *
+     * @param angleOfView The angle of view of the Camera.
+     */
+    public void setAngleOfView(double angleOfView) {
+        this.angleOfView = angleOfView;
+        
+        updateRequired = true;
     }
     
     
@@ -850,6 +972,15 @@ public class Camera {
     }
     
     /**
+     * Returns the active Camera for control.
+     *
+     * @return The active Camera for control.
+     */
+    public static Camera getActiveCameraControl() {
+        return cameraMap.get(activeCameraControl);
+    }
+    
+    /**
      * Sets the active Camera.
      *
      * @param cameraId The id of the new active Camera.
@@ -940,6 +1071,19 @@ public class Camera {
                 }
                 if (key == KeyEvent.VK_9 || key == KeyEvent.VK_NUMPAD9) {
                     setActiveCameraControl(2);
+                }
+                
+                if (key == KeyEvent.VK_E) {
+                    Camera camera = getActiveCameraControl();
+                    if (camera == null) {
+                        return;
+                    }
+                    
+                    if (camera.perspective == Perspective.THIRD_PERSON) {
+                        camera.setPerspective(Perspective.FIRST_PERSON);
+                    } else if (camera.perspective == Perspective.FIRST_PERSON) {
+                        camera.setPerspective(Perspective.THIRD_PERSON);
+                    }
                 }
             }
             

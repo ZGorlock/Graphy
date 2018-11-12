@@ -115,7 +115,7 @@ public class Graph2D extends Scene {
      */
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
-        camera.setLocation(0, Math.PI / 2, 50);
+        camera.setLocation(0, Math.PI / 2, 20);
     }
     
     /**

@@ -64,7 +64,7 @@ public class CubeFractal extends Scene {
      */
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
-        camera.setLocation(Math.PI / 2, 0, 2);
+        camera.setLocation(Math.PI / 2, 0, 1);
     }
     
     /**

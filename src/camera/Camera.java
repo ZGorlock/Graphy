@@ -8,7 +8,6 @@ package camera;
 
 import main.Environment;
 import math.Delta;
-import math.matrix.Matrix3;
 import math.vector.Vector;
 import math.vector.Vector3;
 import utility.SphericalCoordinateUtility;
@@ -184,9 +183,14 @@ public class Camera {
     private Vector m;
     
     /**
-     * The Vector of coefficients from the scalar equation of the Screen.
+     * The Vector of coefficients from the scalar equation of the Screen for projections.
      */
     private Vector e;
+    
+    /**
+     * The Vector of coefficients from the scalar equation of the Screen plane.
+     */
+    private Vector p;
     
     /**
      * The first point that defines the Screen viewport.
@@ -317,24 +321,24 @@ public class Camera {
             
             
             //satisfy equation to determine second point
-            double pax = cameraOrigin.getX();
-            double pay = cameraOrigin.getY();
-            Vector p = new Vector(pax, pay,
-                    ((n.getX() * (pax - m.getX()) + (n.getY() * (pay - m.getY())) - (n.getZ() * m.getZ()))) / -n.getZ());
+            double p2x = cameraOrigin.getX();
+            double p2y = cameraOrigin.getY();
+            Vector p2 = new Vector(p2x, p2y,
+                    ((n.getX() * (p2x - m.getX()) + (n.getY() * (p2y - m.getY())) - (n.getZ() * m.getZ()))) / -n.getZ());
             
             
             //calculate local coordinate system
-            Vector py = (phi > Math.PI / 2) ? p.minus(m) : m.minus(p);
-            Vector px = new Vector3(py).cross(n).scale(-1);
-            px = px.normalize();
-            py = py.normalize();
+            Vector ly = (phi > Math.PI / 2) ? p2.minus(m) : m.minus(p2);
+            Vector lx = new Vector3(ly).cross(n).scale(-1);
+            lx = lx.normalize();
+            ly = ly.normalize();
             
             
             //calculate screen viewport
-            s1 = px.scale(-viewportX / 2).plus(py.scale(-viewportY / 2)).plus(m);
-            s2 = px.scale(viewportX / 2).plus(py.scale(-viewportY / 2)).plus(m);
-            s3 = px.scale(viewportX / 2).plus(py.scale(viewportY / 2)).plus(m);
-            s4 = px.scale(-viewportX / 2).plus(py.scale(viewportY / 2)).plus(m);
+            s1 = lx.scale(-viewportX / 2).plus(ly.scale(-viewportY / 2)).plus(m);
+            s2 = lx.scale(viewportX / 2).plus(ly.scale(-viewportY / 2)).plus(m);
+            s3 = lx.scale(viewportX / 2).plus(ly.scale(viewportY / 2)).plus(m);
+            s4 = lx.scale(-viewportX / 2).plus(ly.scale(viewportY / 2)).plus(m);
             
             if (perspective == Perspective.FIRST_PERSON) {
                 Vector tmp = s1.clone();
@@ -352,18 +356,15 @@ public class Camera {
             
             
             //find scalar equation of screen
-            Matrix3 scalarEquationSystem = new Matrix3(new double[]{
-                    s1.getX(), s1.getY(), s1.getZ(),
-                    s2.getX(), s2.getY(), s2.getZ(),
-                    m.getX(), m.getY(), m.getZ()
-            });
-            e = scalarEquationSystem.solveSystem(new Vector3(1, 1, 1));
+            //e.x*x + e.y*y + e.z*z = 1            
+            double d = n.dot(m);
+            e = new Vector(n.getX(), n.getY(), n.getZ()).scale(1 / d);
             
             
             //draw local coordinate system normals
             cameraObject.screenNormal.setPoints(c.justify(), c.plus(n.scale(viewportX * 2 / 3)).justify());
-            cameraObject.screenXNormal.setPoints(c.justify(), c.plus(px.scale(viewportX * 2 / 3)).justify());
-            cameraObject.screenYNormal.setPoints(c.justify(), c.minus(py.scale(viewportX * 2 / 3)).justify());
+            cameraObject.screenXNormal.setPoints(c.justify(), c.plus(lx.scale(viewportX * 2 / 3)).justify());
+            cameraObject.screenYNormal.setPoints(c.justify(), c.minus(ly.scale(viewportX * 2 / 3)).justify());
             
             
             //draw camera enclosure
@@ -402,9 +403,9 @@ public class Camera {
         
         //plug vector v into equation
         Vector keq = c.minus(v);
-        Vector keqk = keq.times(e);
-        double keqc = 1 - (v.times(e)).sum();
-        double k = keqc / keqk.sum();
+        double keqk = e.dot(keq);
+        double keqc = 1 - e.dot(v);
+        double k = keqc / keqk;
         
         
         //solve projection
@@ -941,15 +942,18 @@ public class Camera {
         if (camera == null) {
             return false;
         }
+        Vector cm = camera.m.justify();
+        Vector cc = camera.c.justify();
         
         //ensure Vectors are not behind Camera
         boolean inView = true;
         for (Vector v : ovs) {
-            double d1 = Environment.origin.distance(v);
-            double d2 = Environment.origin.distance(camera.c);
-            double d3 = camera.c.distance(v);
-            if (d1 > d2 && d3 < d1) {
+            double d1 = cm.distance(v);
+            double d2 = cc.distance(v);
+            
+            if (d2 <= d1) {
                 inView = false;
+                break;
             }
         }
         if (!inView) {
@@ -959,9 +963,10 @@ public class Camera {
         //ensure Vectors are in field of view
         inView = false;
         for (Vector v : vs) {
-            if (v.getX() >= 0 && v.getX() < viewportX &&
-                    v.getY() >= 0 && v.getY() < viewportY) {
+            if ((v.getX() >= 0) && (v.getX() < viewportX) &&
+                    (v.getY() >= 0) && (v.getY() < viewportY)) {
                 inView = true;
+                break;
             }
         }
         return inView;

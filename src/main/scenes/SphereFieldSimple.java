@@ -66,7 +66,7 @@ public class SphereFieldSimple extends Scene {
      */
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
-        camera.setLocation(Math.PI / 2, 0, 50);
+        camera.setLocation(Math.PI / 2, 0, 30);
     }
     
     /**

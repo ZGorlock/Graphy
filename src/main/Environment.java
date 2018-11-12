@@ -129,8 +129,7 @@ public class Environment {
                             double d2 = o2.calculatePreparedDistance();
                             return Double.compare(d2, d1);
                         });
-                    } catch (IllegalArgumentException e) {
-                        //TODO handle this
+                    } catch (IllegalArgumentException ignored) {
                     }
                     
                     Graphics2D g2 = (Graphics2D) g;

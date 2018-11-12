@@ -67,7 +67,7 @@ public class PerspectiveDice extends Scene {
      */
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
-        camera.setLocation(0, Math.PI / 2, 3);
+        camera.setLocation(0, Math.PI / 2, 2);
     }
     
     /**

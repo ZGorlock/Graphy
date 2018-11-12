@@ -75,11 +75,11 @@ public class Test extends Scene {
      */
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
-        camera.setLocation(Math.PI / 4, 3 * Math.PI / 4, 20);
+        camera.setLocation(Math.PI / 4, 3 * Math.PI / 4, 5);
         camera.setOffset(new Vector(5, 2, 3));
         
         Camera camera2 = new Camera(true, true);
-        camera2.setLocation(Math.PI / 4, 3 * Math.PI / 4, 100);
+        camera2.setLocation(Math.PI / 4, 3 * Math.PI / 4, 50);
     }
     
     /**

@@ -6,14 +6,15 @@
 
 package objects.base.polygon;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
+
 import camera.Camera;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines a Polygon.
@@ -75,14 +76,14 @@ public class Polygon extends BaseObject {
      */
     @Override
     public void render(Graphics2D g2) {
-        if (!visible || prepared.size() != numVertices) {
+        if (!visible || (prepared.size() != numVertices) || Camera.hasVectorBehindScreen(vertices)) {
             return;
         }
         
         Camera.projectVectorToCamera(prepared);
         Camera.collapseVectorToViewport(prepared);
         
-        if (!clippingEnabled || Camera.hasVectorInView(prepared, vertices)) {
+        if (!clippingEnabled || Camera.hasVectorInView(prepared)) {
             Camera.scaleVectorToScreen(prepared);
             
             g2.setColor(getColor());

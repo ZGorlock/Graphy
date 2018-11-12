@@ -6,6 +6,10 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -13,10 +17,6 @@ import objects.base.Object;
 import objects.base.Scene;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import objects.system.Axes;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines a Test scene.
@@ -63,9 +63,9 @@ public class Test extends Scene {
         objects.add(axes);
         
         Hexahedron h1 = new Hexahedron(null, new Vector(0, 0, 0), Color.RED, 1);
-        Hexahedron h2 = new Hexahedron(null, new Vector(5, 2, 3), Color.YELLOW, 1);
+//        Hexahedron h2 = new Hexahedron(null, new Vector(5, 2, 3), Color.YELLOW, 1);
         objects.add(h1);
-        objects.add(h2);
+//        objects.add(h2);
         
         return objects;
     }

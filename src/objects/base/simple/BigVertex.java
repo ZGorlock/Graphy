@@ -6,11 +6,12 @@
 
 package objects.base.simple;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+
 import camera.Camera;
 import math.vector.Vector;
 import objects.base.AbstractObject;
-
-import java.awt.*;
 
 /**
  * Defines a Vertex of a certain size.
@@ -82,14 +83,14 @@ public class BigVertex extends Vertex {
      */
     @Override
     public void render(Graphics2D g2) {
-        if (!visible || prepared.size() != 1) {
+        if (!visible || (prepared.size() != 1) || Camera.hasVectorBehindScreen(vertices)) {
             return;
         }
         
         Camera.projectVectorToCamera(prepared);
         Camera.collapseVectorToViewport(prepared);
         
-        if (!clippingEnabled || Camera.hasVectorInView(prepared, vertices)) {
+        if (!clippingEnabled || Camera.hasVectorInView(prepared)) {
             Camera.scaleVectorToScreen(prepared);
             
             g2.setColor(getColor());

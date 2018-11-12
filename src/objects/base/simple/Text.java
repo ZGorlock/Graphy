@@ -6,14 +6,15 @@
 
 package objects.base.simple;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
+
 import camera.Camera;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines a Text object.
@@ -106,14 +107,14 @@ public class Text extends BaseObject {
      */
     @Override
     public void render(Graphics2D g2) {
-        if (!visible || prepared.size() != 1) {
+        if (!visible || (prepared.size() != 1) || Camera.hasVectorBehindScreen(vertices)) {
             return;
         }
         
         Camera.projectVectorToCamera(prepared);
         Camera.collapseVectorToViewport(prepared);
         
-        if (!clippingEnabled || Camera.hasVectorInView(prepared, vertices)) {
+        if (!clippingEnabled || Camera.hasVectorInView(prepared)) {
             Camera.scaleVectorToScreen(prepared);
             
             g2.setColor(color);

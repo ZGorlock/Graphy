@@ -372,7 +372,7 @@ public class Camera {
             //find scalar equation of screen
             //e.x*x + e.y*y + e.z*z = 1            
             double d = n.dot(m);
-            e = new Vector(n.getX(), n.getY(), n.getZ()).scale(1 / d);
+            e = new Vector(n.getX(), n.getY(), n.getZ()).scale(1.0 / d);
             
             
             //draw local coordinate system normals

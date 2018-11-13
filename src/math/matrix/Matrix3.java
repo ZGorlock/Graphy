@@ -89,7 +89,7 @@ public class Matrix3 {
         Matrix3 system = minors();
         system = system.cofactor();
         system = system.transpose();
-        system = system.scale(1 / determinant());
+        system = system.scale(1.0 / determinant());
         return system.multiply(solutionVector);
     }
     

@@ -226,7 +226,7 @@ public class Vector {
      * @return The normalized Vector.
      */
     public Vector normalize() {
-        return scale(1 / hypotenuse());
+        return scale(1.0 / hypotenuse());
     }
     
     /**

@@ -6,22 +6,30 @@
 
 package main;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import camera.Camera;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
 import objects.base.ObjectInterface;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.util.*;
-import java.util.List;
-import java.util.Timer;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The main Environment.
@@ -40,6 +48,9 @@ public class Environment {
      */
     public static final int screenX = 2560;
     
+    /**
+     * The y dimension of the Window.
+     */
     public static final int screenY = 1440;
     
     /**

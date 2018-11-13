@@ -6,26 +6,17 @@
 
 package camera;
 
-import java.awt.Color;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import main.Environment;
 import math.Delta;
 import math.vector.Vector;
 import math.vector.Vector3;
 import utility.SphericalCoordinateUtility;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Defines the functionality of a Camera.
@@ -89,9 +80,14 @@ public class Camera {
     private static final Map<Integer, Camera> cameraMap = new HashMap<>();
     
     /**
-     * The active Camera in the Environment.
+     * The active Camera view in the Environment.
      */
-    private static Camera activeCamera = null;
+    private static Camera activeView = null;
+    
+    /**
+     * The active Camera control in the Environment.
+     */
+    private static Camera activeControl = null;
     
     /**
      * The x dimension of the viewport.
@@ -412,7 +408,7 @@ public class Camera {
      */
     public Vector projectVector(Vector v) {
         //equation of plane of screen
-        //e.x*x + e.y*y + e.z*z = 1
+        //e.x*v.x + e.y*v.y + e.z*v.z = 1
         
         
         //plug vector v into equation
@@ -918,12 +914,12 @@ public class Camera {
      * @param vs The list of Vectors to project.
      */
     public static void projectVectorToCamera(List<Vector> vs) {
-        if (activeCamera == null) {
+        if (activeView == null) {
             return;
         }
         
         for (int i = 0; i < vs.size(); i++) {
-            vs.set(i, activeCamera.projectVector(vs.get(i)));
+            vs.set(i, activeView.projectVector(vs.get(i)));
         }
     }
     
@@ -933,12 +929,12 @@ public class Camera {
      * @param vs The list of Vector to be prepared for rendering.
      */
     public static void collapseVectorToViewport(List<Vector> vs) {
-        if (activeCamera == null) {
+        if (activeView == null) {
             return;
         }
         
         for (int i = 0; i < vs.size(); i++) {
-            vs.set(i, activeCamera.collapseVector(vs.get(i)));
+            vs.set(i, activeView.collapseVector(vs.get(i)));
         }
     }
     
@@ -949,11 +945,11 @@ public class Camera {
      * @return Whether any of the Vectors are behind the the Screen or not.
      */
     public static boolean hasVectorBehindScreen(Vector[] vs) {
-        if (activeCamera == null) {
+        if (activeView == null) {
             return false;
         }
-        Vector cm = activeCamera.m.justify();
-        Vector cc = activeCamera.c.justify();
+        Vector cm = activeView.m.justify();
+        Vector cc = activeView.c.justify();
     
         //ensure Vectors are not behind Camera
         boolean behind = false;
@@ -1048,7 +1044,8 @@ public class Camera {
             activeCameraView = cameraId;
             cameraMap.get(activeCameraView).cameraObject.hide();
             cameraMap.get(activeCameraView).updateRequired = true;
-            activeCamera = cameraMap.get(activeCameraView);
+            
+            activeView = cameraMap.get(activeCameraView);
         }
     }
     
@@ -1060,6 +1057,8 @@ public class Camera {
     public static void setActiveCameraControl(int cameraId) {
         if (cameraMap.containsKey(cameraId) && (cameraId != activeCameraControl)) {
             activeCameraControl = cameraId;
+            
+            activeControl = cameraMap.get(activeCameraControl);
         }
     }
     
@@ -1119,14 +1118,14 @@ public class Camera {
                 }
                 
                 if (key == KeyEvent.VK_E) {
-                    if (activeCamera == null) {
+                    if (activeControl == null) {
                         return;
                     }
                     
-                    if (activeCamera.perspective == Perspective.THIRD_PERSON) {
-                        activeCamera.setPerspective(Perspective.FIRST_PERSON);
-                    } else if (activeCamera.perspective == Perspective.FIRST_PERSON) {
-                        activeCamera.setPerspective(Perspective.THIRD_PERSON);
+                    if (activeControl.perspective == Perspective.THIRD_PERSON) {
+                        activeControl.setPerspective(Perspective.FIRST_PERSON);
+                    } else if (activeControl.perspective == Perspective.FIRST_PERSON) {
+                        activeControl.setPerspective(Perspective.THIRD_PERSON);
                     }
                 }
             }

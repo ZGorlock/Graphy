@@ -28,12 +28,12 @@ public class Camera {
     /**
      * The maximum distance from the phi maximum and minimum.
      */
-    private double phiBoundary = .0001;
+    public static final double phiBoundary = .0001;
     
     /**
      * The maximum distance for rho in first person perspective.
      */
-    private double rhoBoundary = .0001;
+    public static final double rhoBoundary = .0001;
     
     
     //Enums
@@ -712,10 +712,10 @@ public class Camera {
             phi = Math.PI - phiBoundary;
         }
         
-        if (theta > 2 * Math.PI) {
-            theta -= 2 * Math.PI;
+        if (theta > (Math.PI * 2)) {
+            theta -= (Math.PI * 2);
         } else if (theta < 0) {
-            theta = (2 * Math.PI) + theta;
+            theta = (Math.PI * 2) + theta;
         }
         
         if (perspective == Perspective.THIRD_PERSON) {

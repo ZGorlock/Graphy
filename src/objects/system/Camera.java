@@ -7,11 +7,11 @@
 package objects.system;
 
 import main.Environment;
-import objects.RectangularPyramid;
 import objects.base.Object;
 import objects.base.polygon.Rectangle;
 import objects.base.simple.BigVertex;
 import objects.base.simple.Edge;
+import objects.polyhedron.irregular.RectangularPyramid;
 
 import java.awt.*;
 

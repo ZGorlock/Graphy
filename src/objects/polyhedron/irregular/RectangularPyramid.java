@@ -1,10 +1,10 @@
 /*
  * File:    Pyramid.java
- * Package: objects
+ * Package: objects.polyhedron.irregular
  * Author:  Zachary Gill
  */
 
-package objects;
+package objects.polyhedron.irregular;
 
 import math.vector.Vector;
 import objects.base.AbstractObject;

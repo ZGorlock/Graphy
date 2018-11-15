@@ -1,5 +1,5 @@
 /*
- * File:    Test.java
+ * File:    Orbit.java
  * Package: main.scenes
  * Author:  Zachary Gill
  */
@@ -19,14 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Defines a Test scene.
+ * Defines an Orbit scene.
  */
-public class Test extends Scene {
+public class Orbit extends Scene {
     
     //Main Methods
     
     /**
-     * The main method for the Test scene.
+     * The main method for the Orbit scene.
      *
      * @param args The arguments to the main method.
      */
@@ -52,20 +52,18 @@ public class Test extends Scene {
      */
     public static List<Object> createObjects() {
         List<Object> objects = new ArrayList<>();
-
-//        RegularPolyhedron i = new Icosahedron(null, Environment.origin, new Color(0, 0, 0, 0), 1);
-//        i.addFrame(java.awt.Color.BLACK);
-//        i.displayVertexIndices();
-//        i.displayFaceIndices();
-//        objects.add(i);
         
-        Axes axes = new Axes(5);
-        objects.add(axes);
+        objects.add(new Axes(5));
         
-        Hexahedron h1 = new Hexahedron(null, new Vector(0, 0, 0), Color.RED, 1);
-//        Hexahedron h2 = new Hexahedron(null, new Vector(5, 2, 3), Color.YELLOW, 1);
+        Hexahedron h1 = new Hexahedron(null, new Vector(0, 0, 0), Color.RED, .125);
+        Hexahedron h2 = new Hexahedron(null, new Vector(3, 3, 3), Color.YELLOW, .125);
+        h1.addFrame(Color.BLACK);
+        h2.addFrame(Color.BLACK);
         objects.add(h1);
-//        objects.add(h2);
+        objects.add(h2);
+        
+//        h1.addMovementAnimation(1, 1, 1);
+        h2.addOrbitAnimation(h1, 2500);
         
         return objects;
     }
@@ -75,11 +73,8 @@ public class Test extends Scene {
      */
     public static void setupCameras() {
         Camera camera = new Camera(true, true);
-        camera.setLocation(Math.PI / 4, 3 * Math.PI / 4, 5);
-        camera.setOffset(new Vector(5, 2, 3));
-        
-        Camera camera2 = new Camera(true, true);
-        camera2.setLocation(Math.PI / 4, 3 * Math.PI / 4, 50);
+        camera.setLocation(Math.PI / 4, 3 * Math.PI / 4, 10);
+//        camera.setOffset(new Vector3(5, 2, 3));
     }
     
     /**
@@ -92,11 +87,11 @@ public class Test extends Scene {
     //Constructors
     
     /**
-     * Constructor for the Test Scene.
+     * Constructor for the Orbit Scene.
      *
      * @param center The center of the scene.
      */
-    public Test(Vector center) {
+    public Orbit(Vector center) {
         super(center);
     }
     

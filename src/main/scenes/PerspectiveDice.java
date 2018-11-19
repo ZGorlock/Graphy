@@ -6,10 +6,6 @@
 
 package main.scenes;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -18,13 +14,13 @@ import objects.base.Object;
 import objects.base.Scene;
 import objects.base.polygon.Rectangle;
 import objects.complex.VariablePlane;
-import objects.polyhedron.regular.platonic.Dodecahedron;
-import objects.polyhedron.regular.platonic.Hexahedron;
-import objects.polyhedron.regular.platonic.Icosahedron;
-import objects.polyhedron.regular.platonic.Octahedron;
-import objects.polyhedron.regular.platonic.Tetrahedron;
+import objects.polyhedron.regular.platonic.*;
 import objects.sphere.Sphere;
 import utility.SphericalCoordinateUtility;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PerspectiveDice extends Scene {
     
@@ -67,7 +63,7 @@ public class PerspectiveDice extends Scene {
         
         List<Vector> diceLocations = new ArrayList<>();
         for (double theta = 0; theta - (Math.PI * 2) < Environment.omega; theta += Math.PI * 2 / 5) {
-            diceLocations.add(SphericalCoordinateUtility.sphericalToCartesian(Math.PI /2, theta, 5));
+            diceLocations.add(SphericalCoordinateUtility.sphericalToCartesian(Math.PI / 2, theta, 5));
         }
         
         Tetrahedron d4 = new Tetrahedron(diceLocations.get(0), Color.BLACK, 1);
@@ -83,7 +79,7 @@ public class PerspectiveDice extends Scene {
         objects.add(d12);
         objects.add(d20);
         objects.add(dx);
-    
+        
         Frame d4Frame = new Frame(d4);
         Frame d6Frame = new Frame(d6);
         Frame d8Frame = new Frame(d8);

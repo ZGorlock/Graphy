@@ -950,13 +950,13 @@ public class Camera {
         }
         Vector cm = activeView.m.justify();
         Vector cc = activeView.c.justify();
-    
+        
         //ensure Vectors are not behind Camera
         boolean behind = false;
         for (Vector v : vs) {
             double d1 = cm.distance(v);
             double d2 = cc.distance(v);
-        
+            
             if (d2 <= d1) {
                 behind = true;
                 break;

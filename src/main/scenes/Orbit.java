@@ -55,15 +55,16 @@ public class Orbit extends Scene {
         
         objects.add(new Axes(5));
         
-        Hexahedron h1 = new Hexahedron(null, new Vector(0, 0, 0), Color.RED, .125);
-        Hexahedron h2 = new Hexahedron(null, new Vector(3, 3, 3), Color.YELLOW, .125);
+        Hexahedron h1 = new Hexahedron(null, new Vector(0, 0, 0), Color.RED, .5);
+        Hexahedron h2 = new Hexahedron(null, new Vector(1, 2, 3), Color.YELLOW, .5);
         h1.addFrame(Color.BLACK);
         h2.addFrame(Color.BLACK);
         objects.add(h1);
         objects.add(h2);
         
-//        h1.addMovementAnimation(1, 1, 1);
-        h2.addOrbitAnimation(h1, 2500);
+        h1.addMovementAnimation(.1, .1, .1);
+        h2.addOrbitAnimation(h1, 1000);
+//        h2.addOrbitTransformation(h1, .5, 2000);
         
         return objects;
     }

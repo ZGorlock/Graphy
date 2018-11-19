@@ -10,7 +10,6 @@ import main.Environment;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import math.vector.Vector3;
-import objects.base.simple.Edge;
 import utility.ColorUtility;
 import utility.RotationUtility;
 import utility.SphericalCoordinateUtility;
@@ -101,6 +100,11 @@ public abstract class AbstractObject implements ObjectInterface {
      */
     public final AtomicBoolean inRotationTransformation = new AtomicBoolean(false);
     
+    /**
+     * A flag indicating whether the Object is currently undergoing an orbit transformation or not.
+     */
+    public final AtomicBoolean inOrbitTransformation = new AtomicBoolean(false);
+    
     
     //Enums
     
@@ -183,10 +187,25 @@ public abstract class AbstractObject implements ObjectInterface {
         animationTimers.add(animationTimer);
         movementAnimations.add(new double[]{xSpeed, ySpeed, zSpeed});
         animationTimer.scheduleAtFixedRate(new TimerTask() {
+            
+            //Fields
+            
+            /**
+             * The movement speed vector.
+             */
             private Vector speedVector = new Vector(xSpeed, ySpeed, zSpeed);
             
+            /**
+             * The last time that the animation ran.
+             */
             private long lastTime = 0;
             
+            
+            //Methods
+            
+            /**
+             * Performs the movement animation.
+             */
             @Override
             public void run() {
                 if (lastTime == 0) {
@@ -215,16 +234,37 @@ public abstract class AbstractObject implements ObjectInterface {
     @Override
     public void addMovementTransformation(double xMovement, double yMovement, double zMovement, long period) {
         inMovementTransformation.set(true);
-        Timer transitionTimer = new Timer();
-        transitionTimer.scheduleAtFixedRate(new TimerTask() {
+        Timer transformationTimer = new Timer();
+        transformationTimer.scheduleAtFixedRate(new TimerTask() {
+            
+            //Fields
+            
+            /**
+             * The movement vector.
+             */
             private Vector movementVector = new Vector(xMovement, yMovement, zMovement);
             
+            /**
+             * The total movement so far.
+             */
             private Vector totalMovement = new Vector(0, 0, 0);
             
+            /**
+             * The total amount of time elapsed.
+             */
             private long timeCount = 0;
             
+            /**
+             * The last time the transformation ran.
+             */
             private long lastTime = 0;
             
+            
+            //Methods
+            
+            /**
+             * Performs the movement transformation.
+             */
             @Override
             public void run() {
                 if (lastTime == 0) {
@@ -239,8 +279,8 @@ public abstract class AbstractObject implements ObjectInterface {
                 
                 if (timeCount >= period) {
                     move(movementVector.minus(totalMovement));
-                    transitionTimer.purge();
-                    transitionTimer.cancel();
+                    transformationTimer.purge();
+                    transformationTimer.cancel();
                     inMovementTransformation.set(false);
                 } else {
                     double scale = (double) timeElapsed / period;
@@ -248,8 +288,6 @@ public abstract class AbstractObject implements ObjectInterface {
                     move(movementFrame);
                     totalMovement = totalMovement.plus(movementFrame);
                 }
-                
-                double scale = (double) timeElapsed / 1000;
             }
         }, 0, 1000 / Environment.FPS);
     }
@@ -267,10 +305,25 @@ public abstract class AbstractObject implements ObjectInterface {
         animationTimers.add(animationTimer);
         rotationAnimations.add(new double[]{rollSpeed, pitchSpeed, yawSpeed});
         animationTimer.scheduleAtFixedRate(new TimerTask() {
+            
+            //Fields
+            
+            /**
+             * The rotation speed vector.
+             */
             private Vector speedVector = new Vector(rollSpeed, pitchSpeed, yawSpeed);
             
+            /**
+             * The last time the animation ran.
+             */
             private long lastTime = 0;
             
+            
+            //Methods
+            
+            /**
+             * Performs the rotation animation.
+             */
             @Override
             public void run() {
                 if (lastTime == 0) {
@@ -299,16 +352,37 @@ public abstract class AbstractObject implements ObjectInterface {
     @Override
     public void addRotationTransformation(double rollRotation, double pitchRotation, double yawRotation, long period) {
         inRotationTransformation.set(true);
-        Timer transitionTimer = new Timer();
-        transitionTimer.scheduleAtFixedRate(new TimerTask() {
+        Timer transformationTimer = new Timer();
+        transformationTimer.scheduleAtFixedRate(new TimerTask() {
+            
+            //Fields
+            
+            /**
+             * The rotation vector.
+             */
             private Vector rotationVector = new Vector(rollRotation, pitchRotation, yawRotation);
             
+            /**
+             * The total rotation so far.
+             */
             private Vector totalRotation = new Vector(0, 0, 0);
             
+            /**
+             * The total time elapsed.
+             */
             private long timeCount = 0;
             
+            /**
+             * The last time the transformation ran.
+             */
             private long lastTime = 0;
             
+            
+            //Methods
+            
+            /**
+             * Performs the rotation transformation.
+             */
             @Override
             public void run() {
                 if (lastTime == 0) {
@@ -323,8 +397,8 @@ public abstract class AbstractObject implements ObjectInterface {
                 
                 if (timeCount >= period) {
                     rotateAndTransform(rotationVector.minus(totalRotation));
-                    transitionTimer.purge();
-                    transitionTimer.cancel();
+                    transformationTimer.purge();
+                    transformationTimer.cancel();
                     inRotationTransformation.set(false);
                 } else {
                     double scale = (double) timeElapsed / period;
@@ -332,8 +406,6 @@ public abstract class AbstractObject implements ObjectInterface {
                     rotateAndTransform(rotationFrame);
                     totalRotation = totalRotation.plus(rotationFrame);
                 }
-                
-                double scale = (double) timeElapsed / 1000;
             }
         }, 0, 1000 / Environment.FPS);
     }
@@ -349,8 +421,20 @@ public abstract class AbstractObject implements ObjectInterface {
         Timer animationTimer = new Timer();
         animationTimers.add(animationTimer);
         animationTimer.scheduleAtFixedRate(new TimerTask() {
+            
+            //Fields
+            
+            /**
+             * The first time the animation ran.
+             */
             private long firstTime = 0;
             
+            
+            //Methods
+            
+            /**
+             * Performs the color animation.
+             */
             @Override
             public void run() {
                 if (firstTime == 0) {
@@ -366,172 +450,246 @@ public abstract class AbstractObject implements ObjectInterface {
         }, 0, 1000 / Environment.FPS);
     }
     
-    //TODO
+    /**
+     * Adds a constant orbit animation to and Object.
+     *
+     * @param point       The point to orbit around.
+     * @param orbitPeriod The period of the orbit in milliseconds.
+     */
     public void addOrbitAnimation(Vector point, double orbitPeriod) {
         addOrbitAnimation(new Object(point, Color.BLACK), orbitPeriod);
     }
     
-    
+    /**
+     * Adds a constant orbit animation to an Object.
+     *
+     * @param object      The Object to orbit around.
+     * @param orbitPeriod The period of the orbit in milliseconds.
+     */
     public void addOrbitAnimation(Object object, double orbitPeriod) {
+        addOrbitAnimation(object, orbitPeriod, true);
+    }
+    
+    /**
+     * Adds a constant orbit animation to an Object.
+     *
+     * @param object      The Object to orbit around.
+     * @param orbitPeriod The period of the orbit in milliseconds.
+     * @param clockwise   Whether the orbit around the Object should be clockwise or counterclockwise.
+     */
+    public void addOrbitAnimation(Object object, double orbitPeriod, boolean clockwise) {
         Timer animationTimer = new Timer();
         animationTimers.add(animationTimer);
         AbstractObject o = this;
         animationTimer.scheduleAtFixedRate(new TimerTask() {
             
-            Edge e1, e2, e3, e4, e5, e6;
+            //Fields
             
+            /**
+             * The last object center for tracking relative movement.
+             */
             private Vector lastObjectCenter = object.center.clone();
             
+            /**
+             * The normal vector of the plane of motion around the object.
+             */
+            private Vector normal = Environment.origin;
+            
+            /**
+             * The direction of motion.
+             */
+            private int wise = -1;
+            
+            /**
+             * The original distance from the object.
+             */
+            private double originalRho = 0;
+            
+            /**
+             * The length of the path of motion around the object.
+             */
+            private double circumference = 0;
+            
+            /**
+             * The last time the animation ran.
+             */
             private long lastTime = 0;
             
+            
+            //Methods
+            
+            /**
+             * Performs the orbit animation.
+             */
             @Override
             public void run() {
+                Vector currentObjectCenter = object.center.clone();
+                Vector objectMovement = currentObjectCenter.minus(lastObjectCenter);
+                lastObjectCenter = currentObjectCenter;
+                
                 if (lastTime == 0) {
+                    Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(center.minus(lastObjectCenter));
+                    Vector direction = center.minus(lastObjectCenter).normalize();
+                    Vector perpendicular = SphericalCoordinateUtility.sphericalToCartesian(Math.PI / 2, sphericalLocation.getY() + (Math.PI / 2), sphericalLocation.getZ()).minus(lastObjectCenter).normalize();
                     
-                    e1 = new Edge(object, Color.RED, object.center, object.center);
-                    e2 = new Edge(object, Color.GREEN, object.center, object.center);
-                    e3 = new Edge(object, Color.BLUE, object.center, object.center);
-                    
-                    e4 = new Edge(o, Color.RED, center, center);
-                    e5 = new Edge(o, Color.GREEN, center, center);
-                    e6 = new Edge(o, Color.BLUE, center, center);
+                    normal = new Vector3(direction).cross(perpendicular).normalize();
+                    wise = (clockwise ? 1 : -1) * (((direction.getX() == 0) && (direction.getY() == 0) && (direction.getZ() > 0)) ? 1 : -1);
+                    originalRho = sphericalLocation.getZ();
+                    circumference = (Math.PI * 2 * sphericalLocation.getZ());
                     
                     lastTime = System.currentTimeMillis();
                     return;
                 }
-    
-                Vector objectMovement = lastObjectCenter.minus(object.center);
-                lastObjectCenter = object.center.clone();
-                
-                Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(center.minus(lastObjectCenter));
-                
-                Vector direction = center.minus(lastObjectCenter).normalize();
-                Vector perpendicular = SphericalCoordinateUtility.sphericalToCartesian(Math.PI / 2, sphericalLocation.getY() + (Math.PI / 2), sphericalLocation.getZ()).minus(lastObjectCenter).normalize();
-                Vector normal = new Vector3(direction).cross(perpendicular).normalize();
-                
-                Vector gravity = lastObjectCenter.minus(center).normalize();
-                Vector movement = new Vector3(gravity).cross(normal).normalize().scale(-1);
-    
-                e1.setV2(direction.scale(.5));
-                e2.setV2(perpendicular.scale(.5));
-                e3.setV2(normal.scale(.5));
-    
-                e4.setV2(center.plus(gravity.scale(.5)));
-                e5.setV2(center.plus(movement.scale(.5)));
-                e6.setV2(center.plus(normal.scale(.5)));
                 
                 long currentTime = System.currentTimeMillis();
                 long timeElapsed = currentTime - lastTime;
                 lastTime = currentTime;
                 
-                double scale = ((double) timeElapsed / orbitPeriod) * (Math.PI * 2 * sphericalLocation.getZ());
+                Vector gravity = lastObjectCenter.minus(center).normalize();
+                Vector movement = new Vector3(gravity).cross(normal).normalize().scale(wise);
                 
-                move(movement.scale(scale).plus(objectMovement));
+                double scale = ((double) timeElapsed / orbitPeriod) * circumference;
+                
+                Vector translation = movement.scale(scale).plus(objectMovement);
+                Vector newLocation = center.plus(translation);
+                Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(newLocation.minus(lastObjectCenter));
+                Vector adjustedLocation = SphericalCoordinateUtility.sphericalToCartesian(sphericalLocation.getX(), sphericalLocation.getY(), originalRho).plus(lastObjectCenter);
+                Vector adjustment = adjustedLocation.minus(newLocation);
+                
+                move(translation.plus(adjustment));
             }
         }, 0, 1000 / Environment.FPS);
     }
-
-//    public void addOrbitAnimation(Object object, double orbitPeriod) {
-//        Timer animationTimer = new Timer();
-//        animationTimers.add(animationTimer);
-//        animationTimer.scheduleAtFixedRate(new TimerTask() {
-//            private double originalPhi = 0;
-//            private double originalTheta = 0;
-//            private double originalRho = 0;
-//
-//            private double phiOffset = 0;
-//            private int phiDirection = 1;
-//            private double phiPathLength = 0;
-//
-//            private double thetaOffset = 0;
-//            private int thetaDirection = -1;
-//            private double thetaPathLength = Math.PI * 2;
-//
-//            private Vector lastObjectCenter = object.center.clone();
-//
-//            private long lastTime = 0;
-//
-//            @Override
-//            public void run() {
-//                Vector objectMovement = lastObjectCenter.minus(object.center);
-//                Vector location = center.minus(lastObjectCenter);
-//                lastObjectCenter = object.center.clone();
-//
-//                Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(location);
-//                double phi = sphericalLocation.getX();
-//                double theta = sphericalLocation.getY();
-//                double rho = sphericalLocation.getZ();
-//
-//                if (lastTime == 0) {
-//                    originalPhi = phi;
-//                    originalTheta = theta;
-//                    originalRho = rho;
-//
-//                    phiOffset = (Math.PI / 2) - originalPhi;
-//                    phiOffset = (Math.abs(phiOffset) < Environment.omega) ? 0 : 
-//                                    ((Math.abs(phiOffset - (Math.PI / 2)) < Environment.omega) ? (Math.PI / 2) : 
-//                                    ((Math.abs(phiOffset + (Math.PI / 2)) < Environment.omega) ? ((Math.PI / 2) * -1) : 
-//                                    phiOffset));
-//                    phiPathLength = Math.abs(phiOffset) * 4;
-//                    phiPathLength = Math.PI;
-//
-//                    lastTime = System.currentTimeMillis();
-//                    return;
-//                }
-//
-//                long currentTime = System.currentTimeMillis();
-//                long timeElapsed = currentTime - lastTime;
-//                lastTime = currentTime;
-//
-//                double scale = ((double) timeElapsed / orbitPeriod);
-//                double thetaSlice = thetaPathLength * scale;
-//                double phiSlice = phiPathLength * scale;
-//
-//                double newTheta = theta + (thetaSlice * thetaDirection);
-//                double newPhi = phi + (phiSlice * phiDirection);
-//
-//                if (phiPathLength == 0) {
-//                    newPhi = originalPhi;
-//                } else if (phiPathLength == (Math.PI * 2)) {
-//                    newTheta = originalTheta + thetaOffset;
-//                }
-//
-//                if (newTheta > (Math.PI * 2)) {
-//                    newTheta -= (Math.PI * 2);
-//                } else if (newTheta < 0) {
-//                    newTheta = (Math.PI * 2) + newTheta;
-//                }
-//
-//                if (phiPathLength > 0) {
-//                    if (phiPathLength == (Math.PI * 2)) {
-//                        if (newPhi < 0) {
-//                            newPhi *= -1;
-//                            phiDirection *= -1;
-//                            thetaOffset += Math.PI;
-//                        } else if (newPhi > Math.PI) {
-//                            newPhi = Math.PI - (newPhi - Math.PI);
-//                            phiDirection *= -1;
-//                            thetaOffset -= Math.PI;
-//                        }
-//                    } else {
-//
-//                        double newPhiOffset = (Math.PI / 2) - newPhi;
-//                        if (Math.abs(newPhiOffset) >= Math.abs(phiOffset)) {
-//                            double overDistance = Math.abs(newPhiOffset) - Math.abs(phiOffset);
-//                            newPhi += overDistance * -phiDirection;
-//                            phiDirection *= -1;
-//                        }
-//                    }
-//                }
-//
-//                Vector newSphericalLocation = new Vector(newPhi, newTheta, originalRho);
-//                Vector newLocation = SphericalCoordinateUtility.sphericalToCartesian(newSphericalLocation);
-//
-//                Vector movement = newLocation.minus(location);
-//                move(movement.plus(objectMovement));
-//            }
-//        }, 0, 1000 / Environment.FPS);
-//    }
+    
+    /**
+     * Adds an orbit transformation to an Object over a period of time.
+     *
+     * @param point  The point to orbit around.
+     * @param orbits The number of orbits to perform during the transformation.
+     * @param period The period over which to perform the transition in milliseconds.
+     */
+    public void addOrbitTransformation(Vector point, double orbits, double period) {
+        addOrbitTransformation(new Object(point, Color.BLACK), orbits, period);
+    }
+    
+    /**
+     * Adds an orbit transformation to an Object over a period of time.
+     *
+     * @param object The Object to orbit around.
+     * @param orbits The number of orbits to perform during the transformation.
+     * @param period The period of the orbit in milliseconds.
+     */
+    public void addOrbitTransformation(Object object, double orbits, double period) {
+        addOrbitTransformation(object, orbits, period, true);
+    }
+    
+    /**
+     * Adds an orbit transformation to an Object over a period of time.
+     *
+     * @param object    The Object to orbit around.
+     * @param orbits    The number of orbits to perform during the transformation.
+     * @param period    The period of the orbit in milliseconds.
+     * @param clockwise Whether the orbit around the Object should be clockwise or counterclockwise.
+     */
+    public void addOrbitTransformation(Object object, double orbits, double period, boolean clockwise) {
+        inOrbitTransformation.set(true);
+        double orbitPeriod = period / orbits;
+        Timer transformationTimer = new Timer();
+        transformationTimer.scheduleAtFixedRate(new TimerTask() {
+            
+            //Fields
+            
+            /**
+             * The last object center for tracking relative movement.
+             */
+            private Vector lastObjectCenter = object.center.clone();
+            
+            /**
+             * The normal vector of the plane of motion around the object.
+             */
+            private Vector normal = Environment.origin;
+            
+            /**
+             * The direction of motion.
+             */
+            private int wise = -1;
+            
+            /**
+             * The original distance from the object.
+             */
+            private double originalRho = 0;
+            
+            /**
+             * The length of the path of motion around the object.
+             */
+            private double circumference = 0;
+            
+            /**
+             * The total time elapsed.
+             */
+            private long timeCount = 0;
+            
+            /**
+             * The last time the animation ran.
+             */
+            private long lastTime = 0;
+            
+            
+            //Methods
+            
+            /**
+             * Performs the orbit transformation.
+             */
+            @Override
+            public void run() {
+                Vector currentObjectCenter = object.center.clone();
+                Vector objectMovement = currentObjectCenter.minus(lastObjectCenter);
+                lastObjectCenter = currentObjectCenter;
+                
+                if (lastTime == 0) {
+                    Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(center.minus(lastObjectCenter));
+                    Vector direction = center.minus(lastObjectCenter).normalize();
+                    Vector perpendicular = SphericalCoordinateUtility.sphericalToCartesian(Math.PI / 2, sphericalLocation.getY() + (Math.PI / 2), sphericalLocation.getZ()).minus(lastObjectCenter).normalize();
+                    
+                    normal = new Vector3(direction).cross(perpendicular).normalize();
+                    wise = (clockwise ? 1 : -1) * (((direction.getX() == 0) && (direction.getY() == 0) && (direction.getZ() > 0)) ? 1 : -1);
+                    originalRho = sphericalLocation.getZ();
+                    circumference = (Math.PI * 2 * sphericalLocation.getZ());
+                    
+                    lastTime = System.currentTimeMillis();
+                    return;
+                }
+                
+                long currentTime = System.currentTimeMillis();
+                long timeElapsed = currentTime - lastTime;
+                lastTime = currentTime;
+                timeCount += timeElapsed;
+                
+                if (timeCount > period) {
+                    timeElapsed -= (timeCount - period);
+                }
+                
+                Vector gravity = lastObjectCenter.minus(center).normalize();
+                Vector movement = new Vector3(gravity).cross(normal).normalize().scale(wise);
+                
+                double scale = ((double) timeElapsed / orbitPeriod) * circumference;
+                
+                Vector translation = movement.scale(scale).plus(objectMovement);
+                Vector newLocation = center.plus(translation);
+                Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(newLocation.minus(lastObjectCenter));
+                Vector adjustedLocation = SphericalCoordinateUtility.sphericalToCartesian(sphericalLocation.getX(), sphericalLocation.getY(), originalRho).plus(lastObjectCenter);
+                Vector adjustment = adjustedLocation.minus(newLocation);
+                
+                move(translation.plus(adjustment));
+                
+                if (timeCount >= period) {
+                    transformationTimer.purge();
+                    transformationTimer.cancel();
+                    inOrbitTransformation.set(false);
+                }
+            }
+        }, 0, 1000 / Environment.FPS);
+    }
     
     /**
      * Updates the rotation matrix for the Object.
@@ -706,6 +864,15 @@ public abstract class AbstractObject implements ObjectInterface {
      */
     public boolean inRotationTransformation() {
         return inRotationTransformation.get();
+    }
+    
+    /**
+     * Returns whether the Object is undergoing an orbit transformation or not.
+     *
+     * @return Whether the Object is undergoing an orbit transformation or not.
+     */
+    public boolean inOrbitTransformation() {
+        return inOrbitTransformation.get();
     }
     
     

@@ -261,6 +261,30 @@ public class Object extends AbstractObject {
     }
     
     /**
+     * Returns whether the Object is undergoing a movement transformation or not.
+     *
+     * @return Whether the Object is undergoing a movement transformation or not.
+     */
+    @Override
+    public boolean inMovementTransformation() {
+        if (super.inMovementTransformation.get()) {
+            return true;
+        }
+        
+        try {
+            for (ObjectInterface component : components) {
+                if (component.inMovementTransformation()) {
+                    return true;
+                }
+            }
+        } catch (ConcurrentModificationException e) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
      * Returns whether the Object is undergoing a rotation transformation or not.
      *
      * @return Whether the Object is undergoing a rotation transformation or not.
@@ -274,6 +298,30 @@ public class Object extends AbstractObject {
         try {
             for (ObjectInterface component : components) {
                 if (component.inRotationTransformation()) {
+                    return true;
+                }
+            }
+        } catch (ConcurrentModificationException e) {
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Returns whether the Object is undergoing an orbit transformation or not.
+     *
+     * @return Whether the Object is undergoing an orbit transformation or not.
+     */
+    @Override
+    public boolean inOrbitTransformation() {
+        if (super.inOrbitTransformation.get()) {
+            return true;
+        }
+        
+        try {
+            for (ObjectInterface component : components) {
+                if (component.inOrbitTransformation()) {
                     return true;
                 }
             }

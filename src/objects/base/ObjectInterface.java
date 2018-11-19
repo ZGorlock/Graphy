@@ -130,11 +130,25 @@ public interface ObjectInterface {
     void registerFrame(Frame frame);
     
     /**
+     * Returns whether the Object is undergoing a movement transformation or not.
+     *
+     * @return Whether the Object is undergoing a movement transformation or not.
+     */
+    boolean inMovementTransformation();
+    
+    /**
      * Returns whether the Object is undergoing a rotation transformation or not.
      *
      * @return Whether the Object is undergoing a rotation transformation or not.
      */
     boolean inRotationTransformation();
+    
+    /**
+     * Returns whether the Object is undergoing an orbit transformation or not.
+     *
+     * @return Whether the Object is undergoing an orbit transformation or not.
+     */
+    boolean inOrbitTransformation();
     
     
     //Setters

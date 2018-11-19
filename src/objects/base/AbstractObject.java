@@ -73,20 +73,18 @@ public abstract class AbstractObject implements ObjectInterface {
      */
     protected boolean clippingEnabled = true;
     
-    //TODO make protected
-    
     /**
      * The animations timers of the Object.
      */
     public final List<Timer> animationTimers = new ArrayList<>();
     
     /**
-     * The animations of movement set for the Object.
+     * The set of movement animations for the Object.
      */
     public final List<double[]> movementAnimations = new ArrayList<>();
     
     /**
-     * The animations of rotation set for the Object.
+     * The set of rotation animations for the Object.
      */
     public final List<double[]> rotationAnimations = new ArrayList<>();
     
@@ -303,7 +301,6 @@ public abstract class AbstractObject implements ObjectInterface {
     public void addRotationAnimation(double rollSpeed, double pitchSpeed, double yawSpeed) {
         Timer animationTimer = new Timer();
         animationTimers.add(animationTimer);
-        rotationAnimations.add(new double[]{rollSpeed, pitchSpeed, yawSpeed});
         animationTimer.scheduleAtFixedRate(new TimerTask() {
             
             //Fields

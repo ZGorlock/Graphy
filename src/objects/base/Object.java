@@ -167,12 +167,10 @@ public class Object extends AbstractObject {
     public void hide() {
         setVisible(false);
         for (ObjectInterface component : components) {
-            if (component instanceof BaseObject) {
-                component.setVisible(false);
-            } else if (component instanceof Object) {
+            if (component instanceof Object) {
                 ((Object) component).hide();
             } else {
-                //TODO
+                component.setVisible(false);
             }
         }
     }
@@ -183,12 +181,10 @@ public class Object extends AbstractObject {
     public void show() {
         setVisible(true);
         for (ObjectInterface component : components) {
-            if (component instanceof BaseObject) {
-                component.setVisible(true);
-            } else if (component instanceof Object) {
+            if (component instanceof Object) {
                 ((Object) component).show();
             } else {
-                //TODO
+                component.setVisible(true);
             }
         }
     }
@@ -352,12 +348,10 @@ public class Object extends AbstractObject {
     public List<BaseObject> getBaseComponents() {
         List<BaseObject> baseComponents = new ArrayList<>();
         for (ObjectInterface component : components) {
-            if (component instanceof BaseObject) {
-                baseComponents.add((BaseObject) component);
-            } else if (component instanceof Object) {
+            if (component instanceof Object) {
                 baseComponents.addAll(((Object) component).getBaseComponents());
-            } else {
-                //TODO
+            } else if (component instanceof BaseObject) {
+                baseComponents.add((BaseObject) component);
             }
         }
         return baseComponents;
@@ -371,12 +365,10 @@ public class Object extends AbstractObject {
     public List<Vector> getVectors() {
         List<Vector> vectors = new ArrayList<>();
         for (ObjectInterface component : components) {
-            if (component instanceof BaseObject) {
-                vectors.addAll(Arrays.asList(((BaseObject) component).vertices));
-            } else if (component instanceof Object) {
+            if (component instanceof Object) {
                 vectors.addAll(((Object) component).getVectors());
-            } else {
-                //TODO
+            } else if (component instanceof BaseObject) {
+                vectors.addAll(Arrays.asList(((BaseObject) component).vertices));
             }
         }
         return vectors;

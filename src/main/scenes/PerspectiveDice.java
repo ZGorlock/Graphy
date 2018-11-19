@@ -80,6 +80,12 @@ public class PerspectiveDice extends Scene {
         objects.add(d20);
         objects.add(dx);
         
+        d4.addOrbitAnimation(dx, 10000);
+        d6.addOrbitAnimation(dx, 10000);
+        d8.addOrbitAnimation(dx, 10000);
+        d12.addOrbitAnimation(dx, 10000);
+        d20.addOrbitAnimation(dx, 10000);
+        
         Frame d4Frame = new Frame(d4);
         Frame d6Frame = new Frame(d6);
         Frame d8Frame = new Frame(d8);

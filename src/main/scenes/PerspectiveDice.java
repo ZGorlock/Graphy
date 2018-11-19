@@ -73,6 +73,12 @@ public class PerspectiveDice extends Scene {
         Icosahedron d20 = new Icosahedron(diceLocations.get(4), Color.BLACK, 1);
         Sphere dx = new Sphere(Environment.origin, Color.BLACK, .25, Math.PI / 32);
         
+        d4.addRotationAnimation(2, 0, 0);
+        d6.addRotationAnimation(-2, 0, 0);
+        d8.addRotationAnimation(2, 0, 0);
+        d12.addRotationAnimation(-2, 0, 0);
+        d20.addRotationAnimation(2, 0, 0);
+        
         objects.add(d4);
         objects.add(d6);
         objects.add(d8);

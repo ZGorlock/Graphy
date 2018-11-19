@@ -121,4 +121,16 @@ public class Text extends BaseObject {
         }
     }
     
+    
+    //Setters
+    
+    /**
+     * Sets the text for the Text object.
+     *
+     * @param text The new text.
+     */
+    public void setText(String text) {
+        this.text = text.toCharArray();
+    }
+    
 }

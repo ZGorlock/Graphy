@@ -6,7 +6,7 @@
 
 package utility;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  * Handles color operations.
@@ -34,10 +34,18 @@ public final class ColorUtility {
      * @return The random color.
      */
     public static Color getRandomColor(int alpha) {
-        int r = (int) (Math.random() * 255) + 1;
-        int g = (int) (Math.random() * 255) + 1;
-        int b = (int) (Math.random() * 255) + 1;
-        return new Color(r, g, b, alpha);
+        Color color = getRandomColor();
+        return new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha);
+    }
+    
+    /**
+     * Returns the inverse of a color.
+     *
+     * @param color The color to invert.
+     * @return The inverted color.
+     */
+    public static Color invertColor(Color color) {
+        return new Color(color.getRGB() ^ 0x00ffffff);
     }
     
     /**

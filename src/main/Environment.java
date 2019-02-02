@@ -6,22 +6,30 @@
 
 package main;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import camera.Camera;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
 import objects.base.ObjectInterface;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.util.*;
-import java.util.List;
-import java.util.Timer;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The main Environment.
@@ -84,6 +92,11 @@ public class Environment {
     public static Vector origin = new Vector(0, 0, 0);
     
     /**
+     * The background color of the Environment.
+     */
+    public static Color background = Color.WHITE;
+    
+    /**
      * Whether the main KeyListener has been set up or not.
      */
     private static AtomicBoolean hasSetupMainKeyListener = new AtomicBoolean(false);
@@ -136,7 +149,7 @@ public class Environment {
                     }
                     
                     Graphics2D g2 = (Graphics2D) g;
-                    g2.setColor(Color.WHITE);
+                    g2.setColor(background);
                     g2.fillRect(0, 0, getWidth(), getHeight());
                     BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
                     
@@ -212,6 +225,18 @@ public class Environment {
             }
             
         });
+    }
+    
+    
+    //Setters
+    
+    /**
+     * Sets the background color of the Environment.
+     *
+     * @param background The background color.
+     */
+    public static void setBackground(Color background) {
+        Environment.background = background;
     }
     
     

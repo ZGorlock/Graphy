@@ -103,7 +103,7 @@ public class PolyhedraExplosion extends Scene {
         metatronsCube.addFrame(Color.BLACK);
         objects.add(metatronsCube);
         
-        int speciesCount = 150;
+        int speciesCount = 25;
         PolyhedraExplosion scene = new PolyhedraExplosion(Environment.origin, .1,
                 speciesCount, null,
                 speciesCount, null,

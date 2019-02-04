@@ -62,7 +62,7 @@ public final class SphericalCoordinateUtility {
     public static Vector cartesianToSpherical(double x, double y, double z) {
         double rho = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
         double phi = Math.acos(z / rho);
-        double theta = Math.atan2(y, x + ((Math.abs(x - y) < Environment.omega) ? Environment.omega : 0));
+        double theta = Math.atan2(y, x + ((Math.abs(x - y) < Environment.epsilon) ? Environment.epsilon : 0));
         return new Vector(phi, theta, rho);
     }
     

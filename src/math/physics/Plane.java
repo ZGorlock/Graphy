@@ -65,13 +65,13 @@ public final class Plane {
             Vector v2 = polygon.getVertex((i + 1) % n + 1).minus(point);
             double d1 = v1.hypotenuse();
             double d2 = v2.hypotenuse();
-            if (d1 * d2 <= Environment.epsilon) { //on a vertex
+            if (d1 * d2 <= Environment.omega) { //on a vertex
                 return true;
             } else {
                 angleSum += Math.acos(v1.dot(v2) / (d1 * d2));
             }
         }
-        return Math.abs(angleSum - (Math.PI * 2)) <= Environment.epsilon;
+        return Math.abs(angleSum - (Math.PI * 2)) <= Environment.omega;
     }
     
 }

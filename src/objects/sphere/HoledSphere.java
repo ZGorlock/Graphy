@@ -91,9 +91,9 @@ public class HoledSphere extends Object {
         int layer = 0;
         List<List<Vector>> vertices = new ArrayList<>();
         boolean offset = false;
-        for (double phi = 0; Math.PI - phi > -Environment.omega; phi += step / 2) {
+        for (double phi = 0; Math.PI - phi > -Environment.epsilon; phi += step / 2) {
             vertices.add(new ArrayList<>());
-            for (double theta = 0; Math.PI * 2 - theta > -Environment.omega; theta += step) {
+            for (double theta = 0; Math.PI * 2 - theta > -Environment.epsilon; theta += step) {
                 Vector cartesian = SphericalCoordinateUtility.sphericalToCartesian(phi, theta + (offset ? step / 2 : 0), radius);
                 vertices.get(layer).add(cartesian.plus(center));
             }

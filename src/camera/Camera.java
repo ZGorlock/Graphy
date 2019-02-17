@@ -385,10 +385,10 @@ public class Camera {
             
             //verify screen
             if (verifyViewport) {
-                if (Math.abs(viewportX - s1.distance(s2)) > Environment.omega) {
+                if (Math.abs(viewportX - s1.distance(s2)) > Environment.epsilon) {
                     System.err.println("Camera: " + cameraId + " - Screen viewportX does not match the actual viewport width");
                 }
-                if (Math.abs(viewportY - s1.distance(s3)) > Environment.omega) {
+                if (Math.abs(viewportY - s1.distance(s3)) > Environment.epsilon) {
                     System.err.println("Camera: " + cameraId + " - Screen viewportY does not match the actual viewport height");
                 }
             }

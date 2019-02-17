@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import main.Environment2D;
 import math.vector.Vector;
 
 /**
@@ -40,6 +39,11 @@ public class ParticleState {
     //Fields
     
     /**
+     * The Primordial Particle System.
+     */
+    public PrimordialParticleSystem pps;
+    
+    /**
      * The list of Particles in the state.
      */
     private final List<Particle> particles = new ArrayList<>();
@@ -55,6 +59,7 @@ public class ParticleState {
     /**
      * The constructor for a Particle State.
      * 
+     * @param pps               The Primordial Particle System.
      * @param populationDensity The density of Particles.
      * @param centerCount       The number of Particles to start in the center of the screen.
      * @param size              The size of a Particle.
@@ -63,16 +68,17 @@ public class ParticleState {
      * @param beta              The turn of the Particles in the state.
      * @param reactiveRadius    The reactive radius of Particles in the state.
      */
-    public ParticleState(double populationDensity, int centerCount, double size, double speed, double alpha, double beta, double reactiveRadius) {
+    public ParticleState(PrimordialParticleSystem pps, double populationDensity, int centerCount, double size, double speed, double alpha, double beta, double reactiveRadius) {
+        this.pps = pps;
         this.reactiveRadius = reactiveRadius * size;
         
-        int particleCount = (int) (Environment2D.screenX * Environment2D.screenY * populationDensity) - centerCount;
+        int particleCount = (int) (pps.environment.screenX * pps.environment.screenY * populationDensity) - centerCount;
         
         for (int i = 0; i < particleCount; i++) {
-            particles.add(new Particle(this, Environment2D.getRandomPosition(), getRandomOrientation(), size, speed, alpha, beta));
+            particles.add(new Particle(this, pps.environment.getRandomPosition(), getRandomOrientation(), size, speed, alpha, beta));
         }
         for (int i = 0; i < centerCount; i++) {
-            particles.add(new Particle(this, Environment2D.getCenterPosition(), getRandomOrientation(), size, speed, alpha, beta));
+            particles.add(new Particle(this, pps.environment.getCenterPosition(), getRandomOrientation(), size, speed, alpha, beta));
         }
     }
     
@@ -90,11 +96,11 @@ public class ParticleState {
     /**
      * Renders the Particle State.
      * 
-     * @param g The render screen.
+     * @param img The render screen.
      */
-    public void render(Graphics2D g) {
+    public void render(Graphics2D img) {
         for (Particle p : particles) {
-            p.render(g);
+            p.render(img);
         }
     }
     

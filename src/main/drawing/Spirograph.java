@@ -8,6 +8,7 @@ package main.drawing;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class Spirograph extends Drawing {
     /**
      * The number of points around the circle.
      */
-    private int pointCount = 250;
+    private int pointCount = 2000;
     
     /**
      * The set of points around the circle.
@@ -41,12 +42,12 @@ public class Spirograph extends Drawing {
     /**
      * The multiplier for the graph.
      */
-    private double multiplier = 2.0;
+    private double multiplier = Math.random() * 1000.0 + 2.0;
     
     /**
      * The amount to increase the multiplier by over time.
      */
-    private double multiplierStep = .0025;
+    private double multiplierStep = .00125;
     
     /**
      * The Objects used to hold the color animation.
@@ -62,14 +63,18 @@ public class Spirograph extends Drawing {
      * @param args Arguments to the main method.
      */
     public static void main(String[] args) {
-        String[] environmentArgs = new String[]{};
-        Environment2D.main(environmentArgs);
-        Environment2D.setBackground(Color.BLACK);
+        Environment2D environment = new Environment2D();
+        environment.setFPS(120);
+        environment.setScreenX(1000);
+        environment.setScreenY(1000);
+        environment.setBackground(Color.BLACK);
+        environment.setup();
         
+        Spirograph spirograph = new Spirograph(environment);
+    
         setupControls();
     
-        Spirograph spirograph = new Spirograph();
-        Environment2D.addDrawing(spirograph);
+        environment.run();
     }
     
     
@@ -77,12 +82,16 @@ public class Spirograph extends Drawing {
     
     /**
      * Constructs a Spirograph.
+     * 
+     * @param environment The Environment to render the Spirograph in.
      */
-    public Spirograph() {
+    public Spirograph(Environment2D environment) {
+        super(environment);
+        
         double slice = 2 * Math.PI / pointCount;
     
         for (int i = 0; i < pointCount; i++) {
-            points.add(Environment2D.getCenterPosition().plus(new Vector(Math.cos(slice * i), Math.sin(slice * i)).scale(radius)));
+            points.add(environment.getCenterPosition().plus(new Vector(Math.cos(slice * i), Math.sin(slice * i)).scale(radius)));
         }
         
         colorAnimation = new Object(Color.BLACK);
@@ -92,17 +101,36 @@ public class Spirograph extends Drawing {
     
     //Methods
     
+    int np = 255;
+    int npp = 0;
+    int nppp = 0;
+    int mppp = 0;
+    Color cp = Color.RED;
+    
     /**
      * Renders the Spirograph.
      *
-     * @param graphics The graphics output.
+     * @param img The graphics output.
      */
     @Override
-    public void render(Graphics2D graphics) {
+    public void render(BufferedImage img) {
+        Graphics2D graphics = (Graphics2D) img.getGraphics();
+        
         double slice = 2 * Math.PI / pointCount;
-        Vector c = Environment2D.getCenterPosition();
+        Vector c = environment.getCenterPosition();
+        
+//        np -= ((nppp % 2 == 0) ? 1 : -1);
+//        if (np == 0 || np == 255) {
+//            nppp++;
+//        }
+//        npp += ((mppp % 2 == 0) ? 1 : -1);
+//        if (npp == 0 || npp == 255) {
+//            mppp++;
+//        }
+//        graphics.setColor(new Color(npp, np, np)); //colorAnimation.getColor()
         
         graphics.setColor(colorAnimation.getColor());
+        
         for (int i = 0; i < points.size(); i++) {
             Vector p = points.get(i);
             

@@ -11,12 +11,9 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -29,151 +26,119 @@ import objects.base.Drawing;
  */
 public class Environment2D {
     
-    //Constants
+    //Fields
     
     /**
      * The number of frames to render per second.
      */
-    public static final int FPS = 120;
+    public int FPS = 120;
     
     /**
      * The x dimension of the Window.
      */
-    public static final int screenX = 2560;
+    public int screenX = 2560;
     
     /**
      * The y dimension of the Window.
      */
-    public static final int screenY = 1440;
-    
-    /**
-     * The border from the edge of the Window.
-     */
-    public static final int screenBorder = 50;
-    
-    /**
-     * The acceptable rounding error for double precision.
-     */
-    public static final double omega = 0.0000001;
-    
-    
-    //Static Fields
+    public int screenY = 1440;
     
     /**
      * The Frame of the Window.
      */
-    public static JFrame frame;
-    
-    /**
-     * The list of Drawings to be rendered in the Environment.
-     */
-    private static List<Drawing> drawings = new ArrayList<>();
+    public JFrame frame;
     
     /**
      * The coordinates to center the Environment at.
      */
-    public static Vector origin = new Vector(0, 0);
+    public Vector origin = new Vector(0, 0);
+    
+    /**
+     * The Drawing to render.
+     */
+    public Drawing drawing = null;
+    
+    /**
+     * The size of the Drawing to render.
+     */
+    public Vector drawingSize = new Vector(screenX, screenY);
+    
+    /**
+     * The offset of the Drawing to render.
+     */
+    public Vector drawingOffset = new Vector(0, 0);
     
     /**
      * The background color of the Environment.
      */
-    public static Color background = Color.WHITE;
+    public Color background = Color.WHITE;
     
     
-    //Main Method
+    //Methods
     
     /**
-     * The main method of of the program.
-     *
-     * @param args Arguments to the main method.
+     * Sets up the Environment.
      */
-    public static void main(String[] args) {
+    public void setup() {
         frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        Container pane = frame.getContentPane();
-        pane.setLayout(new BorderLayout());
+        frame.getContentPane().setLayout(new BorderLayout());
         frame.setFocusable(true);
         frame.setFocusTraversalKeysEnabled(false);
         
-        
+        frame.setSize(screenX, screenY);
+        frame.setVisible(true);
+    }
+    
+    /**
+     * Runs the Environment.
+     */
+    public void run() {
         // panel to display render results
         JPanel renderPanel = new JPanel() {
-            
+        
             public void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setColor(background);
-                g2.fillRect(0, 0, getWidth(), getHeight());
-                BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-                
-                for (Drawing drawing : drawings) {
-                    drawing.render(g2);
+                g2.fillRect(0, 0, screenX, screenY);
+                BufferedImage img = new BufferedImage((int) drawingSize.getX(), (int) drawingSize.getY(), BufferedImage.TYPE_INT_RGB);
+            
+                if (drawing != null) {
+                    drawing.render(img);
                 }
-                
-                g2.drawImage(img, 0, 0, null);
+            
+                g2.drawImage(img, (int) drawingOffset.getX(), (int) drawingOffset.getY(), null);
             }
         };
-        pane.add(renderPanel, BorderLayout.CENTER);
+        frame.getContentPane().add(renderPanel, BorderLayout.CENTER);
         
-        
-        frame.setSize(screenX, screenY);
-        frame.setVisible(true);
-        
-        
-        Timer renderTimer = new Timer();
-        renderTimer.scheduleAtFixedRate(new TimerTask() {
-            private AtomicBoolean rendering = new AtomicBoolean(false);
+        if (FPS == 0) {
+            renderPanel.repaint();
             
-            @Override
-            public void run() {
-                if (rendering.compareAndSet(false, true)) {
-                    renderPanel.repaint();
-                    rendering.set(false);
+        } else {
+            Timer renderTimer = new Timer();
+            renderTimer.scheduleAtFixedRate(new TimerTask() {
+                private AtomicBoolean rendering = new AtomicBoolean(false);
+        
+                @Override
+                public void run() {
+                    if (rendering.compareAndSet(false, true)) {
+                        renderPanel.repaint();
+                        rendering.set(false);
+                    }
                 }
-            }
-        }, 0, 1000 / FPS);
+            }, 0, 1000 / FPS);
+        }
     }
-    
-    
-    //Setters
-    
-    /**
-     * Sets the background color of the Environment.
-     * 
-     * @param background The background color.
-     */
-    public static void setBackground(Color background) {
-        Environment2D.background = background;
-    }
-    
-    
-    //Functions
-    
-    /**
-     * Adds a Drawing to the Environment at runtime.
-     *
-     * @param drawing The Drawing to add to the Environment.
-     */
-    public static void addDrawing(Drawing drawing) {
-        drawings.add(drawing);
-    }
-    
-    /**
-     * Removes a Drawing from the Environment at runtime.
-     *
-     * @param drawing The Drawing to remove from the Environment.
-     */
-    public static void removeDrawing(Drawing drawing) {
-        drawings.remove(drawing);
-    }
-    
+
     /**
      * Returns a random position on the screen.
      *
      * @return A random position on the screen.
      */
-    public static Vector getRandomPosition() {
-        return new Vector(Math.random() * Environment2D.screenX, Math.random() * Environment2D.screenY);
+    public Vector getRandomPosition() {
+        return new Vector(Math.random() * this.screenX, Math.random() * this.screenY);
     }
     
     /**
@@ -181,8 +146,67 @@ public class Environment2D {
      *
      * @return The center position on the screen.
      */
-    public static Vector getCenterPosition() {
-        return new Vector(Environment2D.screenX, Environment2D.screenY).scale(0.5);
+    public Vector getCenterPosition() {
+        return new Vector(this.screenX, this.screenY).scale(0.5);
+    }
+    
+    
+    //Setters
+    
+    /**
+     * Sets the number of frames to render per second.
+     * 
+     * @param fps The number of frames to render per second.
+     */
+    public void setFPS(int fps) {
+        this.FPS = fps;
+    }
+    
+    /**
+     * Sets the x dimension of the Window.
+     *
+     * @param screenX The x dimension of the Window.
+     */
+    public void setScreenX(int screenX) {
+        this.screenX = screenX;
+    }
+    
+    /**
+     * Sets the y dimension of the Window.
+     *
+     * @param screenY The y dimension of the Window.
+     */
+    public void setScreenY(int screenY) {
+        this.screenY = screenY;
+    }
+    
+    /**
+     * Sets the Drawing to render.
+     *
+     * @param drawing The Drawing to render.
+     */
+    public void setDrawing(Drawing drawing) {
+        this.drawing = drawing;
+    }
+    
+    /**
+     * Sets the size of the Drawing to render.
+     *
+     * @param size The size of the Drawing to render.
+     */
+    public void setDrawingSize(Vector size) {
+        this.drawingSize = size;
+        this.drawingOffset.setX((Environment.screenX > drawingSize.getX()) ? (Environment.screenX - drawingSize.getX()) / 2.0 : 0);
+        this.drawingOffset.setY((Environment.screenY > drawingSize.getY()) ? (Environment.screenY - drawingSize.getY()) / 2.0 : 0);
+    }
+    
+    /**
+     * Sets the background color of the Environment.
+     *
+     * @param background The background color.
+     */
+    public void setBackground(Color background) {
+        this.background = background;
     }
     
 }

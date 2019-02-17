@@ -6,12 +6,35 @@
 
 package objects.base;
 
-import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
+import main.Environment2D;
 
 /**
  * Defines a Drawing to render.
  */
-public abstract class Drawing {
+public class Drawing {
+    
+    //Fields
+    
+    /**
+     * The Environment to draw in.
+     */
+    public Environment2D environment;
+    
+    
+    //Constructors
+    
+    /**
+     * Constructs a Drawing.
+     * 
+     * @param environment The Environment to render the Spirograph in.
+     */
+    public Drawing(Environment2D environment) {
+        this.environment = environment;
+        environment.setDrawing(this);
+    }
+    
     
     //Static Methods
     
@@ -27,8 +50,9 @@ public abstract class Drawing {
     /**
      * Renders the Drawing.
      * 
-     * @param graphics The graphics output.
+     * @param img The graphics output.
      */
-    public abstract void render(Graphics2D graphics);
+    public void render(BufferedImage img) {
+    }
     
 }

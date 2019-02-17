@@ -150,8 +150,8 @@ public class Environment {
                     
                     Graphics2D g2 = (Graphics2D) g;
                     g2.setColor(background);
-                    g2.fillRect(0, 0, getWidth(), getHeight());
-                    BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+                    g2.fillRect(0, 0, screenX, screenY);
+                    BufferedImage img = new BufferedImage(screenX, screenY, BufferedImage.TYPE_INT_ARGB);
                     
                     for (BaseObject preparedBase : preparedBases) {
                         preparedBase.render(g2);

@@ -9,7 +9,6 @@ package main.drawing.pps;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import main.Environment2D;
 import math.vector.Vector;
 
 /**
@@ -122,22 +121,22 @@ public class Particle {
         velocity = heading.scale(speed);
         
         position = position.plus(velocity);
-        position.setX(position.getX() % Environment2D.screenX);
-        position.setY(position.getY() % Environment2D.screenY);
+        position.setX(position.getX() % state.pps.environment.screenX);
+        position.setY(position.getY() % state.pps.environment.screenY);
     }
     
     /**
      * Renders the Particle.
      *
-     * @param g The render screen.
+     * @param img The render screen.
      */
-    public void render(Graphics2D g) {
+    public void render(Graphics2D img) {
         calculateColor();
         
         Vector renderPosition = position;
         int renderSize = (int) size + 2;
-        g.setColor(color);
-        g.fillOval((int) (renderPosition.getX() - renderSize), (int) (renderPosition.getY() - renderSize), renderSize * 2, renderSize * 2);
+        img.setColor(color);
+        img.fillOval((int) (renderPosition.getX() - renderSize), (int) (renderPosition.getY() - renderSize), renderSize * 2, renderSize * 2);
 //        g.setColor(Color.WHITE);
 //        g.drawLine((int) renderPosition.getX(), (int) renderPosition.getY(), (int) (renderPosition.getX() + heading.getX() * 10), (int) (renderPosition.getY() + heading.getY() * 10));
     }

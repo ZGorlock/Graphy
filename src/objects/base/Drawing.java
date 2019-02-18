@@ -36,15 +36,6 @@ public class Drawing {
     }
     
     
-    //Static Methods
-    
-    /**
-     * Sets up controls for the drawing.
-     */
-    public static void setupControls() {
-    }
-    
-    
     //Methods
     
     /**
@@ -53,6 +44,12 @@ public class Drawing {
      * @param img The graphics output.
      */
     public void render(BufferedImage img) {
+    }
+    
+    /**
+     * Sets up controls for the drawing.
+     */
+    public void setupControls() {
     }
     
 }

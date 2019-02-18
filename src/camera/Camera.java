@@ -594,7 +594,7 @@ public class Camera {
     private void setupMouseListener() {
         final Delta delta = new Delta();
         
-        Environment.frame.addMouseListener(new MouseListener() {
+        Environment.frame.getContentPane().getComponent(0).addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
             }
@@ -620,7 +620,7 @@ public class Camera {
             }
         });
         
-        Environment.frame.addMouseMotionListener(new MouseMotionListener() {
+        Environment.frame.getContentPane().getComponent(0).addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (cameraId != activeCameraControl) {
@@ -649,7 +649,7 @@ public class Camera {
             }
         });
         
-        Environment.frame.addMouseWheelListener(e -> {
+        Environment.frame.getContentPane().getComponent(0).addMouseWheelListener(e -> {
             if (cameraId != activeCameraControl) {
                 return;
             }

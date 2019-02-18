@@ -71,8 +71,7 @@ public class Spirograph extends Drawing {
         environment.setup();
         
         Spirograph spirograph = new Spirograph(environment);
-    
-        setupControls();
+        spirograph.setupControls();
     
         environment.run();
     }

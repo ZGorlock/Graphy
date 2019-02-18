@@ -11,7 +11,6 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -113,11 +112,9 @@ public class Environment {
         frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        Container pane = frame.getContentPane();
-        pane.setLayout(new BorderLayout());
+        frame.getContentPane().setLayout(new BorderLayout());
         frame.setFocusable(true);
         frame.setFocusTraversalKeysEnabled(false);
-        
         
         // panel to display render results
         JPanel renderPanel = new JPanel() {
@@ -161,12 +158,12 @@ public class Environment {
                 }
             }
         };
-        pane.add(renderPanel, BorderLayout.CENTER);
+        frame.getContentPane().add(renderPanel, BorderLayout.CENTER);
+    
+        renderPanel.setSize(screenX, screenY);
+        frame.setSize(screenX + 16, screenY + 32);
         
-        
-        frame.setSize(screenX, screenY);
         frame.setVisible(true);
-        
         
         Timer renderTimer = new Timer();
         renderTimer.scheduleAtFixedRate(new TimerTask() {
@@ -193,7 +190,7 @@ public class Environment {
             return;
         }
         
-        Environment.frame.addKeyListener(new KeyListener() {
+        Environment.frame.getContentPane().getComponent(0).addKeyListener(new KeyListener() {
             
             @Override
             public void keyTyped(KeyEvent e) {

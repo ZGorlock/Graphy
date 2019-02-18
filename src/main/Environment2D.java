@@ -26,6 +26,19 @@ import objects.base.Drawing;
  */
 public class Environment2D {
     
+    //Constants
+    
+    /**
+     * The maximum x dimension of the Window.
+     */
+    public int MAX_SCREEN_X = 2560;
+    
+    /**
+     * The maimum y dimension of the Window.
+     */
+    public int MAX_SCREEN_Y = 1440;
+    
+    
     //Fields
     
     /**
@@ -36,12 +49,12 @@ public class Environment2D {
     /**
      * The x dimension of the Window.
      */
-    public int screenX = 2560;
+    public int screenX = MAX_SCREEN_X;
     
     /**
      * The y dimension of the Window.
      */
-    public int screenY = 1440;
+    public int screenY = MAX_SCREEN_Y;
     
     /**
      * The Frame of the Window.
@@ -61,7 +74,7 @@ public class Environment2D {
     /**
      * The size of the Drawing to render.
      */
-    public Vector drawingSize = new Vector(screenX, screenY);
+    public Vector drawingSize;
     
     /**
      * The offset of the Drawing to render.
@@ -74,6 +87,26 @@ public class Environment2D {
     public Color background = Color.WHITE;
     
     
+    //Constructors
+    
+    /**
+     * Constructs an Environment2D.
+     * 
+     * @param screenX The x dimension of the screen.
+     * @param screenY The y dimension of the screen.
+     */
+    public Environment2D(int screenX, int screenY) {
+        this.screenX = screenX;
+        this.screenY = screenY;
+    }
+    
+    /**
+     * The default constructor for an Environment2D.
+     */
+    public Environment2D() {
+    }
+    
+    
     //Methods
     
     /**
@@ -82,19 +115,17 @@ public class Environment2D {
     public void setup() {
         frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        if ((screenX == MAX_SCREEN_X) && (screenY == MAX_SCREEN_Y)) {
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        }
         frame.getContentPane().setLayout(new BorderLayout());
         frame.setFocusable(true);
         frame.setFocusTraversalKeysEnabled(false);
         
-        frame.setSize(screenX, screenY);
-        frame.setVisible(true);
-    }
-    
-    /**
-     * Runs the Environment.
-     */
-    public void run() {
+        if (drawingSize == null) {
+            drawingSize = new Vector(screenX, screenY);
+        }
+        
         // panel to display render results
         JPanel renderPanel = new JPanel() {
         
@@ -103,7 +134,7 @@ public class Environment2D {
                 g2.setColor(background);
                 g2.fillRect(0, 0, screenX, screenY);
                 BufferedImage img = new BufferedImage((int) drawingSize.getX(), (int) drawingSize.getY(), BufferedImage.TYPE_INT_RGB);
-            
+                
                 if (drawing != null) {
                     drawing.render(img);
                 }
@@ -113,8 +144,18 @@ public class Environment2D {
         };
         frame.getContentPane().add(renderPanel, BorderLayout.CENTER);
         
+        renderPanel.setSize(screenX, screenY);
+        frame.setSize(screenX + 16, screenY + 32);
+        
+        frame.setVisible(true);
+    }
+    
+    /**
+     * Runs the Environment.
+     */
+    public void run() {
         if (FPS == 0) {
-            renderPanel.repaint();
+            frame.getContentPane().getComponent(0).repaint();
             
         } else {
             Timer renderTimer = new Timer();
@@ -124,7 +165,7 @@ public class Environment2D {
                 @Override
                 public void run() {
                     if (rendering.compareAndSet(false, true)) {
-                        renderPanel.repaint();
+                        frame.getContentPane().getComponent(0).repaint();
                         rendering.set(false);
                     }
                 }

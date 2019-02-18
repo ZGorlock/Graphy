@@ -42,8 +42,7 @@ public class PrimordialParticleSystem extends Drawing {
         environment.setup();
         
         PrimordialParticleSystem pps = new PrimordialParticleSystem(environment);
-    
-        setupControls();
+        pps.setupControls();
     
         environment.run();
     }

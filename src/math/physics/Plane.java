@@ -31,7 +31,7 @@ public final class Plane {
         if (t == Double.MAX_VALUE) {
             return null;
         }
-        return linePoint.plus(lineDirection.scale(t));
+        return linePoint.plus(lineDirection.normalize().scale(t));
     }
     
     /**
@@ -44,10 +44,10 @@ public final class Plane {
      * @return The line scalar for the intersection between the line and the plane, Double.MAX_VALUE if the line is parallel to the plane.
      */
     public static double lineScalarForPointOnPlane(Vector planePoint, Vector planeNormal, Vector linePoint, Vector lineDirection) {
-        if (planeNormal.dot(lineDirection) == 0) {
+        if (planeNormal.dot(lineDirection.normalize()) == 0) {
             return Double.MAX_VALUE;
         }
-        return (planeNormal.dot(planePoint) - planeNormal.dot(linePoint)) / planeNormal.dot(lineDirection);
+        return (planeNormal.dot(planePoint) - planeNormal.dot(linePoint)) / planeNormal.dot(lineDirection.normalize());
     }
     
     /**

@@ -6,9 +6,10 @@
 
 package objects.base;
 
-import java.awt.image.BufferedImage;
-
 import main.Environment2D;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Defines a Drawing to render.
@@ -39,11 +40,26 @@ public class Drawing {
     //Methods
     
     /**
-     * Renders the Drawing.
-     * 
-     * @param img The graphics output.
+     * Sets up components for the drawing.
      */
-    public void render(BufferedImage img) {
+    public void initComponents() {
+    }
+    
+    /**
+     * Renders the Drawing.
+     *
+     * @return The rendered image.
+     */
+    public BufferedImage render() {
+        return new BufferedImage((int) environment.drawingSize.getX(), (int) environment.drawingSize.getY(), BufferedImage.TYPE_INT_RGB);
+    }
+    
+    /**
+     * Produces an overlay for the Drawing.
+     *
+     * @param g The graphics output.
+     */
+    public void overlay(Graphics2D g) {
     }
     
     /**

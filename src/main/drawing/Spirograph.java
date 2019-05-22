@@ -6,16 +6,15 @@
 
 package main.drawing;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-
 import main.Environment2D;
 import math.vector.Vector;
 import objects.base.Drawing;
 import objects.base.Object;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A Spirograph drawing.
@@ -71,6 +70,7 @@ public class Spirograph extends Drawing {
         environment.setup();
         
         Spirograph spirograph = new Spirograph(environment);
+        spirograph.initComponents();
         spirograph.setupControls();
     
         environment.run();
@@ -109,10 +109,11 @@ public class Spirograph extends Drawing {
     /**
      * Renders the Spirograph.
      *
-     * @param img The graphics output.
+     * @return The rendered Spirograph.
      */
     @Override
-    public void render(BufferedImage img) {
+    public BufferedImage render() {
+        BufferedImage img = new BufferedImage((int) environment.drawingSize.getX(), (int) environment.drawingSize.getY(), BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = (Graphics2D) img.getGraphics();
         
         double slice = 2 * Math.PI / pointCount;
@@ -144,6 +145,8 @@ public class Spirograph extends Drawing {
         graphics.drawOval((int) c.getX() - radius, (int) c.getY() - radius, radius * 2, radius * 2);
         
         multiplier += multiplierStep;
+    
+        return img;
     }
     
 }

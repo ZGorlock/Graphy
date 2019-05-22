@@ -6,20 +6,15 @@
 
 package main;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import math.vector.Vector;
+import objects.base.Drawing;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import math.vector.Vector;
-import objects.base.Drawing;
 
 /**
  * The main Environment.
@@ -84,7 +79,7 @@ public class Environment2D {
     /**
      * The background color of the Environment.
      */
-    public Color background = Color.WHITE;
+    public Color background = null;
     
     
     //Constructors
@@ -131,22 +126,25 @@ public class Environment2D {
         
             public void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g;
-                g2.setColor(background);
-                g2.fillRect(0, 0, screenX, screenY);
-                BufferedImage img = new BufferedImage((int) drawingSize.getX(), (int) drawingSize.getY(), BufferedImage.TYPE_INT_RGB);
+                if (background != null) {
+                    g2.setColor(background);
+                    g2.fillRect(0, 0, screenX, screenY);
+                }
                 
                 if (drawing != null) {
-                    drawing.render(img);
+                    BufferedImage img = drawing.render();
+                    g2.drawImage(img, (int) drawingOffset.getX(), (int) drawingOffset.getY(), null);
+                    drawing.overlay(g2);
                 }
-            
-                g2.drawImage(img, (int) drawingOffset.getX(), (int) drawingOffset.getY(), null);
             }
         };
         frame.getContentPane().add(renderPanel, BorderLayout.CENTER);
         
         renderPanel.setSize(screenX, screenY);
-        frame.setSize(screenX + 16, screenY + 32);
-        
+        frame.setSize(new Dimension(screenX + 16, screenY + 39));
+        frame.setPreferredSize(new Dimension(screenX + 16, screenY + 39));
+    
+        frame.pack();
         frame.setVisible(true);
     }
     

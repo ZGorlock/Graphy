@@ -17,8 +17,8 @@ import objects.polyhedron.regular.platonic.Hexahedron;
 import utility.SphericalCoordinateUtility;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * Defines an Clock scene.

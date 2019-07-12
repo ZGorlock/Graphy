@@ -6,12 +6,12 @@
 
 package main.drawing.pps;
 
-import java.awt.Graphics2D;
+import math.vector.Vector;
+
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import math.vector.Vector;
 
 /**
  * Defines a configuration of particles.
@@ -58,7 +58,7 @@ public class ParticleState {
     
     /**
      * The constructor for a Particle State.
-     * 
+     *
      * @param pps               The Primordial Particle System.
      * @param populationDensity The density of Particles.
      * @param centerCount       The number of Particles to start in the center of the screen.
@@ -95,7 +95,7 @@ public class ParticleState {
     
     /**
      * Renders the Particle State.
-     * 
+     *
      * @param img The render screen.
      */
     public void render(Graphics2D img) {
@@ -106,15 +106,15 @@ public class ParticleState {
     
     /**
      * Returns the number of neighbors of a Particle.
-     * 
+     *
      * @return The number of neighbors of a Particle.
      */
     public NeighborState getNeighbors(Particle particle) {
         NeighborState neighborState = new NeighborState();
-    
+        
         double particleLeftAngle = particle.getOrientation() + sensorLeftAngle;
         double particleRightAngle = particle.getOrientation() + sensorRightAngle;
-    
+        
         for (Particle p : particles) {
             if (p.equals(particle)) {
                 continue;
@@ -123,7 +123,7 @@ public class ParticleState {
                 continue;
             }
             neighborState.count++;
-        
+            
             Vector delta = p.getPosition().minus(particle.getPosition());
 
 //            while (delta.getX() < -PrimordialParticleSystem.screenX / 2) {
@@ -138,7 +138,7 @@ public class ParticleState {
 //            while (delta.getY() > PrimordialParticleSystem.screenY / 2) {
 //                delta.setY(delta.getY() - PrimordialParticleSystem.screenY);
 //            }
-        
+            
             double neighborAngle = Math.atan2(delta.getX(), delta.getY());
             if ((neighborAngle <= (particleLeftAngle + sensorAperture)) && (neighborAngle >= particleLeftAngle)) {
                 neighborState.left++;
@@ -150,7 +150,7 @@ public class ParticleState {
         
         return neighborState;
     }
-    
+
 //    /**
 //     * Returns the number of neighbors of a Particle.
 //     *

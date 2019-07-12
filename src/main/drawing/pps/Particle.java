@@ -6,10 +6,9 @@
 
 package main.drawing.pps;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-
 import math.vector.Vector;
+
+import java.awt.*;
 
 /**
  * Defines a particle.
@@ -78,7 +77,7 @@ public class Particle {
     
     /**
      * The constructor for a Particle.
-     * 
+     *
      * @param state    The Particle State of the Particle.
      * @param position The position of the Particle.
      * @param phi      The orientation of the Particle.
@@ -116,7 +115,7 @@ public class Particle {
 //        while (phi > Math.PI) {
 //            phi -= Math.PI * 2;
 //        }
-    
+        
         heading = new Vector(Math.cos(phi), Math.sin(phi));
         velocity = heading.scale(speed);
         
@@ -146,7 +145,7 @@ public class Particle {
      */
     private void calculateColor() {
         color = new Color(Integer.MAX_VALUE - Color.HSBtoRGB((float) (neighbors.count / 20.0), 1.0f, 1.0f));
-    
+        
         if (neighbors.count > 50) {
             color = Color.ORANGE;
         } else if (neighbors.count > 25) {
@@ -167,7 +166,7 @@ public class Particle {
     
     /**
      * Returns the position of the Particle.
-     * 
+     *
      * @return The position of the Particle.
      */
     public Vector getPosition() {
@@ -176,7 +175,7 @@ public class Particle {
     
     /**
      * Returns the orientation of the Particle.
-     * 
+     *
      * @return The orientation of the Particle.
      */
     public double getOrientation() {

@@ -17,10 +17,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.image.BufferedImage;
-import java.util.*;
 import java.util.List;
 import java.util.Timer;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -143,22 +142,19 @@ public class Environment {
                         g2.setColor(background);
                         g2.fillRect(0, 0, screenX, screenY);
                     }
-                    BufferedImage img = new BufferedImage(screenX, screenY, BufferedImage.TYPE_INT_ARGB);
                     
                     for (BaseObject preparedBase : preparedBases) {
                         preparedBase.render(g2);
                     }
-                    
-                    g2.drawImage(img, 0, 0, null);
                 }
             }
         };
         frame.getContentPane().add(renderPanel, BorderLayout.CENTER);
-    
+        
         renderPanel.setSize(screenX, screenY);
         frame.setSize(new Dimension(screenX + 16, screenY + 39));
         frame.setPreferredSize(new Dimension(screenX + 16, screenY + 39));
-    
+        
         frame.pack();
         frame.setVisible(true);
         

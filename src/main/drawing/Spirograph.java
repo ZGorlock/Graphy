@@ -72,7 +72,7 @@ public class Spirograph extends Drawing {
         Spirograph spirograph = new Spirograph(environment);
         spirograph.initComponents();
         spirograph.setupControls();
-    
+        
         environment.run();
     }
     
@@ -81,14 +81,14 @@ public class Spirograph extends Drawing {
     
     /**
      * Constructs a Spirograph.
-     * 
+     *
      * @param environment The Environment to render the Spirograph in.
      */
     public Spirograph(Environment2D environment) {
         super(environment);
         
         double slice = 2 * Math.PI / pointCount;
-    
+        
         for (int i = 0; i < pointCount; i++) {
             points.add(environment.getCenterPosition().plus(new Vector(Math.cos(slice * i), Math.sin(slice * i)).scale(radius)));
         }
@@ -118,7 +118,7 @@ public class Spirograph extends Drawing {
         
         double slice = 2 * Math.PI / pointCount;
         Vector c = environment.getCenterPosition();
-        
+
 //        np -= ((nppp % 2 == 0) ? 1 : -1);
 //        if (np == 0 || np == 255) {
 //            nppp++;
@@ -140,12 +140,12 @@ public class Spirograph extends Drawing {
             
             graphics.drawLine((int) p.getX(), (int) p.getY(), (int) destination.getX(), (int) destination.getY());
         }
-    
+        
         graphics.setColor(Color.WHITE);
         graphics.drawOval((int) c.getX() - radius, (int) c.getY() - radius, radius * 2, radius * 2);
         
         multiplier += multiplierStep;
-    
+        
         return img;
     }
     

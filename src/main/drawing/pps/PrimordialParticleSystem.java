@@ -20,7 +20,7 @@ public class PrimordialParticleSystem extends Drawing {
     //Fields
     
     /**
-     * The particle state. 
+     * The particle state.
      */
     public ParticleState particles;
     
@@ -43,7 +43,7 @@ public class PrimordialParticleSystem extends Drawing {
         PrimordialParticleSystem pps = new PrimordialParticleSystem(environment);
         pps.initComponents();
         pps.setupControls();
-    
+        
         environment.run();
     }
     
@@ -72,10 +72,10 @@ public class PrimordialParticleSystem extends Drawing {
     @Override
     public BufferedImage render() {
         BufferedImage img = new BufferedImage((int) environment.drawingSize.getX(), (int) environment.drawingSize.getY(), BufferedImage.TYPE_INT_RGB);
-    
+        
         particles.step();
         particles.render((Graphics2D) img.getGraphics());
-    
+        
         return img;
     }
     

@@ -6,26 +6,17 @@
 
 package camera;
 
-import java.awt.Color;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import main.Environment;
 import math.Delta;
 import math.vector.Vector;
 import math.vector.Vector3;
 import utility.SphericalCoordinateUtility;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Defines the functionality of a Camera.
@@ -922,7 +913,7 @@ public class Camera {
      *
      * @param vs The list of Vectors to project.
      */
-    public static void projectVectorToCamera(List<Vector> vs) {
+    public static void projectVectorsToCamera(List<Vector> vs) {
         if (activeView == null) {
             return;
         }
@@ -937,7 +928,7 @@ public class Camera {
      *
      * @param vs The list of Vector to be prepared for rendering.
      */
-    public static void collapseVectorToViewport(List<Vector> vs) {
+    public static void collapseVectorsToViewport(List<Vector> vs) {
         if (activeView == null) {
             return;
         }
@@ -998,7 +989,7 @@ public class Camera {
      *
      * @param vs The list of Vectors to scale.
      */
-    public static void scaleVectorToScreen(List<Vector> vs) {
+    public static void scaleVectorsToScreen(List<Vector> vs) {
         Vector viewportDim = getActiveViewportDim();
         Vector scale = new Vector(
                 Environment.screenX / viewportDim.getX(),

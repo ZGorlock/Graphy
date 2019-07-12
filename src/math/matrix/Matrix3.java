@@ -166,6 +166,20 @@ public class Matrix3 {
     }
     
     /**
+     * Calculates the inverse of the matrix.
+     *
+     * @return The inverse of the matrix.
+     * @throws ArithmeticException If the matrix cannot be inverted.
+     */
+    public Matrix3 inverse() throws ArithmeticException {
+        double determinant = determinant();
+        if (determinant == 0) {
+            throw new ArithmeticException();
+        }
+        return transpose().minors().cofactor().scale(1.0 / determinant);
+    }
+    
+    /**
      * Transforms a vector using the matrix.
      *
      * @param in The vector to transform.

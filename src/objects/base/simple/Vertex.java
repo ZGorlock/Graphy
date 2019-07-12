@@ -98,11 +98,11 @@ public class Vertex extends BaseObject {
             return;
         }
         
-        Camera.projectVectorToCamera(prepared);
-        Camera.collapseVectorToViewport(prepared);
+        Camera.projectVectorsToCamera(prepared);
+        Camera.collapseVectorsToViewport(prepared);
         
         if (!clippingEnabled || Camera.hasVectorInView(prepared)) {
-            Camera.scaleVectorToScreen(prepared);
+            Camera.scaleVectorsToScreen(prepared);
             
             g2.setColor(getColor());
             g2.drawRect((int) prepared.get(0).getX(), (int) prepared.get(0).getY(), 1, 1);

@@ -11,8 +11,8 @@ import math.vector.Vector;
 import utility.RotationUtility;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * Defines the base properties of an Object.

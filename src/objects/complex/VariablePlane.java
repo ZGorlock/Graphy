@@ -14,11 +14,11 @@ import objects.base.polygon.Rectangle;
 import objects.base.polygon.Triangle;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
- * Defines a Variable Plane
+ * Defines a Variable Plane.
  */
 public class VariablePlane extends Object {
     

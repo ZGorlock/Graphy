@@ -110,11 +110,11 @@ public class Text extends BaseObject {
             return;
         }
         
-        Camera.projectVectorToCamera(prepared);
-        Camera.collapseVectorToViewport(prepared);
+        Camera.projectVectorsToCamera(prepared);
+        Camera.collapseVectorsToViewport(prepared);
         
         if (!clippingEnabled || Camera.hasVectorInView(prepared)) {
-            Camera.scaleVectorToScreen(prepared);
+            Camera.scaleVectorsToScreen(prepared);
             
             g2.setColor(color);
             g2.drawChars(text, 0, text.length, (int) prepared.get(0).getX(), (int) prepared.get(0).getY());

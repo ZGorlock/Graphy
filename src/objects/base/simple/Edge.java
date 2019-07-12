@@ -102,11 +102,11 @@ public class Edge extends BaseObject {
             return;
         }
         
-        Camera.projectVectorToCamera(prepared);
-        Camera.collapseVectorToViewport(prepared);
+        Camera.projectVectorsToCamera(prepared);
+        Camera.collapseVectorsToViewport(prepared);
         
         if (!clippingEnabled || Camera.hasVectorInView(prepared)) {
-            Camera.scaleVectorToScreen(prepared);
+            Camera.scaleVectorsToScreen(prepared);
             
             g2.setColor(getColor());
             switch (displayMode) {

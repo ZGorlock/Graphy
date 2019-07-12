@@ -6,21 +6,15 @@
 
 package main;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import math.vector.Vector;
+import objects.base.Drawing;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import math.vector.Vector;
-import objects.base.Drawing;
 
 /**
  * The main Environment.
@@ -92,7 +86,7 @@ public class Environment2D {
     
     /**
      * Constructs an Environment2D.
-     * 
+     *
      * @param screenX The x dimension of the screen.
      * @param screenY The y dimension of the screen.
      */
@@ -129,7 +123,7 @@ public class Environment2D {
         
         // panel to display render results
         JPanel renderPanel = new JPanel() {
-        
+            
             public void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g;
                 if (background != null) {
@@ -149,7 +143,7 @@ public class Environment2D {
         renderPanel.setSize(screenX, screenY);
         frame.setSize(new Dimension(screenX + 16, screenY + 39));
         frame.setPreferredSize(new Dimension(screenX + 16, screenY + 39));
-    
+        
         frame.pack();
         frame.setVisible(true);
     }
@@ -165,7 +159,7 @@ public class Environment2D {
             Timer renderTimer = new Timer();
             renderTimer.scheduleAtFixedRate(new TimerTask() {
                 private AtomicBoolean rendering = new AtomicBoolean(false);
-        
+                
                 @Override
                 public void run() {
                     if (rendering.compareAndSet(false, true)) {
@@ -176,7 +170,7 @@ public class Environment2D {
             }, 0, 1000 / FPS);
         }
     }
-
+    
     /**
      * Returns a random position on the screen.
      *
@@ -200,7 +194,7 @@ public class Environment2D {
     
     /**
      * Sets the number of frames to render per second.
-     * 
+     *
      * @param fps The number of frames to render per second.
      */
     public void setFPS(int fps) {

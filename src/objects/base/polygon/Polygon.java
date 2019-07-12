@@ -79,16 +79,15 @@ public class Polygon extends BaseObject {
             return;
         }
         
-        Camera.projectVectorToCamera(prepared);
-        Camera.collapseVectorToViewport(prepared);
+        Camera.projectVectorsToCamera(prepared);
+        Camera.collapseVectorsToViewport(prepared);
         
         if (!clippingEnabled || Camera.hasVectorInView(prepared)) {
-            Camera.scaleVectorToScreen(prepared);
+            Camera.scaleVectorsToScreen(prepared);
             
             g2.setColor(getColor());
             switch (displayMode) {
                 case VERTEX:
-                    
                     for (Vector v : prepared) {
                         g2.drawRect((int) v.getX(), (int) v.getY(), 1, 1);
                     }

@@ -17,8 +17,8 @@ import objects.system.Axes;
 import utility.EquationUtility;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * Defines a Graph2D scene.

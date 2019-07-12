@@ -28,7 +28,7 @@ public class Drawing {
     
     /**
      * Constructs a Drawing.
-     * 
+     *
      * @param environment The Environment to render the Spirograph in.
      */
     public Drawing(Environment2D environment) {

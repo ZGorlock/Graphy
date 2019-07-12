@@ -45,6 +45,21 @@ public class DrawingPane extends BaseObject {
      */
     public BufferedImage image;
     
+    /**
+     * The projective matrix for the DrawingPane.
+     */
+    private Matrix3 projectiveMatrix;
+    
+    /**
+     * The prepared vectors from the last rendering.
+     */
+    private List<Vector> lastPrepared;
+    
+    /**
+     * The image dimensions from the last rendering.
+     */
+    private Vector lastImageDimensions;
+    
     
     //Constructors
     
@@ -61,6 +76,7 @@ public class DrawingPane extends BaseObject {
         
         this.bounds = bounds;
         this.image = image;
+        this.projectiveMatrix = null;
         
         visible = true;
     }
@@ -186,31 +202,54 @@ public class DrawingPane extends BaseObject {
             return;
         }
         
-        Matrix3 projectiveMatrixSrc = new Matrix3(new double[]{
-                prepared.get(0).getX(), prepared.get(1).getX(), prepared.get(3).getX(),
-                prepared.get(0).getY(), prepared.get(1).getY(), prepared.get(3).getY(),
-                1.0, 1.0, 1.0});
-        Vector solutionSrc = new Vector(prepared.get(2).getX(), prepared.get(2).getY(), 1.0);
-        
-        Vector coordinateSystemSrc = projectiveMatrixSrc.solveSystem(solutionSrc);
-        Matrix3 coordinateMatrixSrc = new Matrix3(new double[]{
-                coordinateSystemSrc.getX(), coordinateSystemSrc.getY(), coordinateSystemSrc.getZ(),
-                coordinateSystemSrc.getX(), coordinateSystemSrc.getY(), coordinateSystemSrc.getZ(),
-                coordinateSystemSrc.getX(), coordinateSystemSrc.getY(), coordinateSystemSrc.getZ()
-        });
-        projectiveMatrixSrc = projectiveMatrixSrc.scale(coordinateMatrixSrc);
-        
-        Matrix3 projectiveMatrixDest = new Matrix3(new double[]{
-                0, image.getWidth() - 1, 0,
-                0, 0, image.getHeight() - 1,
-                -1.0, 1.0, 1.0});
-        
-        try {
-            projectiveMatrixSrc = projectiveMatrixSrc.inverse();
-        } catch (ArithmeticException ignored) {
-            return;
+        boolean needsUpdate = false;
+        if ((lastImageDimensions == null) || (lastPrepared == null) ||
+                (lastImageDimensions.getX() != (image.getWidth() - 1)) || (lastImageDimensions.getY() != (image.getHeight() - 1))) {
+            needsUpdate = true;
+        } else {
+            for (int i = 0; i < 4; i++) {
+                if ((prepared.get(i).getX() != lastPrepared.get(i).getX()) || (prepared.get(i).getY() != lastPrepared.get(i).getY())) {
+                    needsUpdate = true;
+                    break;
+                }
+            }
         }
-        Matrix3 combinedProjectiveMatrix = projectiveMatrixDest.multiply(projectiveMatrixSrc);
+        
+        Matrix3 projectiveMatrix = this.projectiveMatrix;
+        if (needsUpdate || (projectiveMatrix == null)) {
+            lastPrepared = new ArrayList<>();
+            for (Vector v : prepared) {
+                lastPrepared.add(v.clone());
+            }
+            lastImageDimensions = new Vector(image.getWidth() - 1, image.getHeight() - 1);
+            
+            Matrix3 projectiveMatrixSrc = new Matrix3(new double[]{
+                    prepared.get(0).getX(), prepared.get(1).getX(), prepared.get(3).getX(),
+                    prepared.get(0).getY(), prepared.get(1).getY(), prepared.get(3).getY(),
+                    1.0, 1.0, 1.0});
+            Vector solutionSrc = new Vector(prepared.get(2).getX(), prepared.get(2).getY(), 1.0);
+            
+            Vector coordinateSystemSrc = projectiveMatrixSrc.solveSystem(solutionSrc);
+            Matrix3 coordinateMatrixSrc = new Matrix3(new double[]{
+                    coordinateSystemSrc.getX(), coordinateSystemSrc.getY(), coordinateSystemSrc.getZ(),
+                    coordinateSystemSrc.getX(), coordinateSystemSrc.getY(), coordinateSystemSrc.getZ(),
+                    coordinateSystemSrc.getX(), coordinateSystemSrc.getY(), coordinateSystemSrc.getZ()
+            });
+            projectiveMatrixSrc = projectiveMatrixSrc.scale(coordinateMatrixSrc);
+            
+            Matrix3 projectiveMatrixDest = new Matrix3(new double[]{
+                    0, image.getWidth() - 1, 0,
+                    0, 0, image.getHeight() - 1,
+                    -1.0, 1.0, 1.0});
+            
+            try {
+                projectiveMatrixSrc = projectiveMatrixSrc.inverse();
+            } catch (ArithmeticException ignored) {
+                return;
+            }
+            projectiveMatrix = projectiveMatrixDest.multiply(projectiveMatrixSrc);
+            this.projectiveMatrix = projectiveMatrix;
+        }
         
         Stack<Point> stack = new Stack<>();
         stack.push(new Point(((int) prepared.get(0).getX() + (int) prepared.get(2).getX()) / 2, ((int) prepared.get(0).getY() + (int) prepared.get(2).getY()) / 2));
@@ -227,7 +266,7 @@ public class DrawingPane extends BaseObject {
                 continue;
             }
             imgTmp.setRGB(x, y, TOUCH_COLOR);
-            Vector homogeneousSourcePoint = combinedProjectiveMatrix.multiply(new Vector(x, y, 1.0));
+            Vector homogeneousSourcePoint = projectiveMatrix.multiply(new Vector(x, y, 1.0));
             int gX = (int) (homogeneousSourcePoint.getX() / homogeneousSourcePoint.getZ());
             int gY = (int) (homogeneousSourcePoint.getY() / homogeneousSourcePoint.getZ());
             g2.setColor(new Color(image.getRGB(gX, gY)));

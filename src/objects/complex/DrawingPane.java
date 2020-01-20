@@ -6,6 +6,14 @@
 
 package objects.complex;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
 import camera.Camera;
 import main.Environment;
 import math.matrix.Matrix3;
@@ -13,12 +21,7 @@ import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
 import objects.base.polygon.Rectangle;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import utility.ColorUtility;
 
 /**
  * Defines a DrawingPane.
@@ -46,6 +49,11 @@ public class DrawingPane extends BaseObject {
     public BufferedImage image;
     
     /**
+     * A flag indicating whether or not to invert the colors of the DrawingPane.
+     */
+    public boolean invert;
+    
+    /**
      * The projective matrix for the DrawingPane.
      */
     private Matrix3 projectiveMatrix;
@@ -70,15 +78,29 @@ public class DrawingPane extends BaseObject {
      * @param color  The color of the DrawingPane.
      * @param bounds The bounds of the DrawingPane.
      * @param image  The image of the DrawingPane.
+     * @param invert Whether or not to invert the colors of the DrawingPane.
      */
-    public DrawingPane(AbstractObject parent, Color color, Rectangle bounds, BufferedImage image) {
+    public DrawingPane(AbstractObject parent, Color color, Rectangle bounds, BufferedImage image, boolean invert) {
         super(parent, color, bounds.getCenter(), bounds.getP1(), bounds.getP2(), bounds.getP3(), bounds.getP4());
         
         this.bounds = bounds;
         this.image = image;
+        this.invert = invert;
         this.projectiveMatrix = null;
         
         visible = true;
+    }
+    
+    /**
+     * The constructor for a DrawingPane.
+     *
+     * @param parent The parent of the DrawingPane.
+     * @param color  The color of the DrawingPane.
+     * @param bounds The bounds of the DrawingPane.
+     * @param image  The image of the DrawingPane.
+     */
+    public DrawingPane(AbstractObject parent, Color color, Rectangle bounds, BufferedImage image) {
+        this(parent, color, bounds, image, false);
     }
     
     /**
@@ -260,18 +282,19 @@ public class DrawingPane extends BaseObject {
             Point p = stack.pop();
             int x = (int) p.getX();
             int y = (int) p.getY();
-            
+    
             if ((x < 0) || (x > width) || (y < 0) || (y > height) ||
-                    imgTmp.getRGB(x, y) == TOUCH_COLOR) {
+                imgTmp.getRGB(x, y) == TOUCH_COLOR) {
                 continue;
             }
             imgTmp.setRGB(x, y, TOUCH_COLOR);
             Vector homogeneousSourcePoint = projectiveMatrix.multiply(new Vector(x, y, 1.0));
             int gX = (int) (homogeneousSourcePoint.getX() / homogeneousSourcePoint.getZ());
             int gY = (int) (homogeneousSourcePoint.getY() / homogeneousSourcePoint.getZ());
-            g2.setColor(new Color(image.getRGB(gX, gY)));
+            Color gC = new Color(image.getRGB(gX, gY));
+            g2.setColor(invert ? ColorUtility.invertColor(gC) : gC);
             g2.drawRect(x, y, 1, 1);
-            
+    
             stack.push(new Point(x + 1, y));
             stack.push(new Point(x - 1, y));
             stack.push(new Point(x, y + 1));

@@ -6,6 +6,14 @@
 
 package main.scenes;
 
+import javax.imageio.ImageIO;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -14,14 +22,6 @@ import objects.base.Scene;
 import objects.base.polygon.Rectangle;
 import objects.complex.DrawingPane;
 import objects.system.Axes;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines a Drawing scene.
@@ -57,21 +57,23 @@ public class Drawing extends Scene {
      */
     public static List<Object> createObjects() {
         List<Object> objects = new ArrayList<>();
-        
+    
         BufferedImage image = null;
         try {
-            image = ImageIO.read(new File("resource/a.jpg"));
+            image = ImageIO.read(new File("resource/tree.jpg"));
         } catch (IOException ignored) {
         }
-        
+    
         Object drawing = new Object(Color.BLACK);
         Rectangle bounds = new Rectangle(new Vector(-2, 0, 3), new Vector(2, 0, 3), new Vector(2, 0, -3), new Vector(-2, 0, -3));
         DrawingPane drawingPane = new DrawingPane(null, Color.BLACK, bounds, image);
         drawing.registerComponent(drawingPane);
+//        drawing.addRotationAnimation(Math.PI / 2, Math.PI / 2, Math.PI / 2);
+    
         objects.add(drawing);
-        
+    
         objects.add(new Axes(5));
-        
+    
         return objects;
     }
     

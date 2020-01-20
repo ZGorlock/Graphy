@@ -6,6 +6,14 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -14,16 +22,12 @@ import objects.base.Frame;
 import objects.base.Object;
 import objects.base.Scene;
 import objects.polyhedron.regular.MetatronsCube;
-import objects.polyhedron.regular.platonic.*;
+import objects.polyhedron.regular.platonic.Dodecahedron;
+import objects.polyhedron.regular.platonic.Hexahedron;
+import objects.polyhedron.regular.platonic.Icosahedron;
+import objects.polyhedron.regular.platonic.Octahedron;
+import objects.polyhedron.regular.platonic.Tetrahedron;
 import utility.ColorUtility;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Defines a Polyhedra Explosion scene.
@@ -102,8 +106,8 @@ public class PolyhedraExplosion extends Scene {
         MetatronsCube metatronsCube = new MetatronsCube(Environment.origin, 1, new Color(255, 0, 0, 64), new Color(255, 165, 0, 64), new Color(0, 255, 0, 64), new Color(0, 0, 255, 64), new Color(165, 0, 165, 64));
         metatronsCube.addFrame(Color.BLACK);
         objects.add(metatronsCube);
-        
-        int speciesCount = 25;
+    
+        int speciesCount = 100;
         PolyhedraExplosion scene = new PolyhedraExplosion(Environment.origin, .1,
                 speciesCount, null,
                 speciesCount, null,

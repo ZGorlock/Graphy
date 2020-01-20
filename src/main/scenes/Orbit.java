@@ -6,6 +6,10 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -13,10 +17,6 @@ import objects.base.Object;
 import objects.base.Scene;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import objects.system.Axes;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines an Orbit scene.
@@ -52,20 +52,24 @@ public class Orbit extends Scene {
      */
     public static List<Object> createObjects() {
         List<Object> objects = new ArrayList<>();
-        
+    
         objects.add(new Axes(5));
-        
+    
         Hexahedron h1 = new Hexahedron(null, new Vector(0, 0, 0), Color.RED, .5);
-        Hexahedron h2 = new Hexahedron(null, new Vector(2, 3, 4), Color.YELLOW, .5);
+        Hexahedron h2 = new Hexahedron(null, new Vector(0, 5, 3), Color.YELLOW, .5);
+        Hexahedron h3 = new Hexahedron(null, new Vector(0, 7, 1), Color.BLUE, .5);
         h1.addFrame(Color.BLACK);
         h2.addFrame(Color.BLACK);
+        h3.addFrame(Color.BLACK);
         objects.add(h1);
         objects.add(h2);
-        
-        h1.addMovementAnimation(.1, .1, .1);
-        h2.addOrbitAnimation(h1, 2500);
+        objects.add(h3);
+
+//        h1.addMovementAnimation(.1, .1, .1);
+        h3.addOrbitAnimation(h2, 2500);
+        h2.addOrbitAnimation(h1, 10000);
 //        h2.addOrbitTransformation(h1, .5, 2000);
-        
+    
         return objects;
     }
     

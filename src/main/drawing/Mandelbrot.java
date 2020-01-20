@@ -6,16 +6,23 @@
 
 package main.drawing;
 
-import main.Environment2D;
-import math.vector.BigVector;
-import math.vector.Vector;
-import math.vector.Vector2;
-import objects.base.Drawing;
-
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
@@ -25,10 +32,21 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
-import java.util.*;
+import java.util.TimerTask;
+import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import main.Environment2D;
+import math.vector.BigVector;
+import math.vector.Vector;
+import math.vector.Vector2;
+import objects.base.Drawing;
 
 /**
  * A Mandelbrot drawing.
@@ -82,7 +100,7 @@ public class Mandelbrot extends Drawing {
     /**
      * The size of the screen to render the Mandelbrot on.
      */
-    public static final Vector SCREEN_SIZE = new Vector(800, 600);
+    public static final Vector SCREEN_SIZE = new Vector(2560, 1408);
     
     /**
      * The number of threads to use while rendering the Mandelbrot.
@@ -243,7 +261,7 @@ public class Mandelbrot extends Drawing {
     /**
      * Whether or not to automatically slow zoom in on a point.
      */
-    private boolean slowZoom = true;
+    private boolean slowZoom = false;
     
     /**
      * The point to automatically slow zoom to.
@@ -268,7 +286,7 @@ public class Mandelbrot extends Drawing {
     /**
      * Whether or not to capture the frames of the Mandelbrot to images.
      */
-    private boolean saveFrames = true;
+    private boolean saveFrames = false;
     
     /**
      * The index of the current captured frame.
@@ -346,14 +364,15 @@ public class Mandelbrot extends Drawing {
         
         if (displayMetrics) {
             g.setColor(Color.WHITE);
-            String[] data = new String[]{
-                    "r = " + centre.getX(),
-                    "i = " + centre.getY(),
+            String[] data = new String[] {
+                    "r = " + centre.getX().toPlainString(),
+                    "i = " + centre.getY().toPlainString(),
+                    "s = " + size.toPlainString(),
                     "iteration_limit = " + iterationLimit,
                     "calculation_time = " + ((calculationTime == null) ? "0.0 s" : calculationTime)
             };
             g.setFont(new Font("Console", Font.PLAIN, FONT_SIZE));
-            
+    
             int y = environment.screenY - (FONT_SIZE * (data.length + 2));
             for (String d : data) {
                 g.drawString(d, FONT_SIZE, y += FONT_SIZE);

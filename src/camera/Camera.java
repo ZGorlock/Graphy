@@ -6,27 +6,19 @@
 
 package camera;
 
-import java.awt.Color;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import main.Environment;
 import math.Delta;
 import math.vector.Vector;
 import math.vector.Vector3;
 import objects.base.Scene;
 import utility.SphericalCoordinateUtility;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Defines the functionality of a Camera.
@@ -183,6 +175,11 @@ public class Camera {
     private double movementSpeed = .05;
     
     /**
+     * A flag indicating whether or not the Camera should operate in pan mode.
+     */
+    private boolean panMode = false;
+    
+    /**
      * The perspective mode of the Camera.
      */
     private Perspective perspective = Perspective.THIRD_PERSON;
@@ -320,7 +317,7 @@ public class Camera {
             
             
             //center of screen, m
-            Vector cameraOrigin = Environment.ORIGIN.plus(offset).justify();
+            Vector cameraOrigin = Environment.origin.plus(offset).justify();
             m = cartesian.plus(cameraOrigin);
             
             
@@ -550,29 +547,31 @@ public class Camera {
                     double oldPhi = phi;
                     double oldTheta = theta;
                     double oldRho = rho;
-                    Vector oldOrigin = Environment.ORIGIN.clone();
+                    Vector oldOrigin = Environment.origin.clone();
                     
                     Vector headingMovement = heading.scale(movementSpeed);
                     Vector perpendicularMovement = new Vector3(0, 0, 1).cross(heading).scale(movementSpeed);
                     
                     for (Integer key : pressed) {
-                        if (key == KeyEvent.VK_W) {
-                            phi -= phiSpeed * perspective.getScale();
-                        }
-                        if (key == KeyEvent.VK_S) {
-                            phi += phiSpeed * perspective.getScale();
-                        }
-                        if (key == KeyEvent.VK_A) {
-                            theta -= thetaSpeed * perspective.getScale();
-                        }
-                        if (key == KeyEvent.VK_D) {
-                            theta += thetaSpeed * perspective.getScale();
-                        }
-                        if (key == KeyEvent.VK_Q) {
-                            rho -= rhoSpeed;
-                        }
-                        if (key == KeyEvent.VK_Z) {
-                            rho += rhoSpeed;
+                        if (!panMode) {
+                            if (key == KeyEvent.VK_W) {
+                                phi -= phiSpeed * perspective.getScale();
+                            }
+                            if (key == KeyEvent.VK_S) {
+                                phi += phiSpeed * perspective.getScale();
+                            }
+                            if (key == KeyEvent.VK_A) {
+                                theta -= thetaSpeed * perspective.getScale();
+                            }
+                            if (key == KeyEvent.VK_D) {
+                                theta += thetaSpeed * perspective.getScale();
+                            }
+                            if (key == KeyEvent.VK_Q) {
+                                rho -= rhoSpeed;
+                            }
+                            if (key == KeyEvent.VK_Z) {
+                                rho += rhoSpeed;
+                            }
                         }
                         
                         if (key == KeyEvent.VK_LEFT) {
@@ -603,6 +602,7 @@ public class Camera {
      */
     private void setupMouseListener() {
         final Delta delta = new Delta();
+        final AtomicInteger button = new AtomicInteger(0);
         
         scene.environment.frame.getContentPane().getComponent(0).addMouseListener(new MouseListener() {
             @Override
@@ -611,6 +611,7 @@ public class Camera {
             
             @Override
             public void mousePressed(MouseEvent e) {
+                button.set(e.getButton());
                 delta.x = e.getX();
                 delta.y = e.getY();
             }
@@ -637,19 +638,30 @@ public class Camera {
                     return;
                 }
                 
-                double deltaX = e.getX() - delta.x;
-                double deltaY = e.getY() - delta.y;
-                delta.x = e.getX();
-                delta.y = e.getY();
-                
-                double oldTheta = theta;
-                double oldPhi = phi;
-                
-                theta -= (thetaSpeed / 4 * deltaX) / (perspective == Perspective.FIRST_PERSON ? 4 : 1);
-                phi -= (phiSpeed / 4 * deltaY) / (perspective == Perspective.FIRST_PERSON ? 4 : 1);
-                bindLocation();
-                
-                if (phi != oldPhi || theta != oldTheta) {
+                if (!panMode) {
+                    double deltaX = e.getX() - delta.x;
+                    double deltaY = e.getY() - delta.y;
+                    delta.x = e.getX();
+                    delta.y = e.getY();
+                    
+                    double oldTheta = theta;
+                    double oldPhi = phi;
+                    
+                    theta -= (thetaSpeed / 4 * deltaX) / (perspective == Perspective.FIRST_PERSON ? 4 : 1);
+                    phi -= (phiSpeed / 4 * deltaY) / (perspective == Perspective.FIRST_PERSON ? 4 : 1);
+                    bindLocation();
+                    
+                    if (phi != oldPhi || theta != oldTheta) {
+                        updateRequired = true;
+                    }
+                    
+                } else if (button.get() == MouseEvent.BUTTON3) {
+                    double deltaX = e.getX() - delta.x;
+                    double deltaY = e.getY() - delta.y;
+                    delta.x = e.getX();
+                    delta.y = e.getY();
+                    
+                    Environment.origin = Environment.origin.plus(new Vector(-deltaX, deltaY, 0).scale(rho / 1000));
                     updateRequired = true;
                 }
             }
@@ -894,6 +906,15 @@ public class Camera {
      */
     public void translateCamera(Vector offset) {
         setOffset(this.offset.plus(offset));
+    }
+    
+    /**
+     * Sets the Camera to pan mode or not.
+     *
+     * @param panMode The flag indicating whether or not the Camera should be in pan mode.
+     */
+    public void setPanMode(boolean panMode) {
+        this.panMode = panMode;
     }
     
     /**

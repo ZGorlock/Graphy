@@ -6,7 +6,23 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e22397f-9631-4e96-a2b2-7430a02a411c" name="Default" comment="Objectified Environment">
+    <list default="true" id="2e22397f-9631-4e96-a2b2-7430a02a411c" name="Default" comment="Abstracted Scene and Drawing start up">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawing/Mandelbrot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/Mandelbrot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawing/MandelbrotOld.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/MandelbrotOld.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawing/pps/Particle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/pps/Particle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawing/pps/ParticleState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/pps/ParticleState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scenes/Clock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/Clock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/math/vector/BigVector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/vector/BigVector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/math/vector/Vector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/vector/Vector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/simple/Vertex.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/simple/Vertex.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Icosahedron.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Icosahedron.java" afterDir="false" />
+    </list>
+    <list id="14cdeba6-4c72-487e-bc1d-bb197f7550f1" name="ignore" comment="" />
+    <list id="7030d8f1-87b9-48d8-b837-de6aa9ceb5bf" name="local" comment="" />
+    <list id="4aee5fba-e3ad-4a48-8507-937f9c41bf31" name="MapMaker" comment="">
       <change afterPath="$PROJECT_DIR$/resource/mapMaker2D/border.png" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/resource/mapMaker2D/doorHorizontal.png" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/resource/mapMaker2D/doorVertical.png" afterDir="false" />
@@ -31,36 +47,7 @@
       <change afterPath="$PROJECT_DIR$/resource/mapMaker2D/windowVertical.png" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/mapMaker2D/DndMapMaker2D.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/mapMaker2D/Piece.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Graphy.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Graphy.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Environment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Environment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Environment2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Environment2D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/drawing/Mandelbrot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/Mandelbrot.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/drawing/MandelbrotOld.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/MandelbrotOld.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/drawing/Spirograph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/Spirograph.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/drawing/pps/PrimordialParticleSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/pps/PrimordialParticleSystem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/AnimatedCube.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/AnimatedCube.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/Clock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/Clock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/CubeField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/CubeField.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/CubeFractal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/CubeFractal.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/Graph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/Graph.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/Graph2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/Graph2D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/MapPanningDemo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/MapPanningDemo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/OrbitDemo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/OrbitDemo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/PerspectiveDice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/PerspectiveDice.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/PictureFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/PictureFrame.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/PolyhedraExplosion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/PolyhedraExplosion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/RotationEquivalenceDemo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/RotationEquivalenceDemo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/RubiksCube.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/RubiksCube.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/SphereField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/SphereField.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/Test.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/VariablePlaneDemo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/VariablePlaneDemo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/objects/base/Drawing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/Drawing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/objects/base/Scene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/Scene.java" afterDir="false" />
     </list>
-    <list id="14cdeba6-4c72-487e-bc1d-bb197f7550f1" name="ignore" comment="" />
-    <list id="7030d8f1-87b9-48d8-b837-de6aa9ceb5bf" name="local" comment="" />
-    <list id="4aee5fba-e3ad-4a48-8507-937f9c41bf31" name="MapMaker" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -103,39 +90,40 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://E:/Coding/JAVA/Graphy/src/main/Environment2D.java" />
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1558920136709" />
-    <property name="last_opened_file_path" value="E:/Downloads/MapMaker.patch" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/.idea/inspectionProfiles" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="settings.github" />
-    <property name="settings.editor.splitter.proportion" value="0.2" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Java" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Coding\JAVA\Graphy\.idea\inspectionProfiles" />
       <recent name="E:\Coding\JAVA\Graphy\src\main\scenes" />
-      <recent name="E:\Coding\JAVA\Graphy\images\a" />
+      <recent name="E:\Coding\JAVA\Graphy" />
+      <recent name="E:\Coding\JAVA\Graphy\src\main\pps" />
+      <recent name="E:\Coding\JAVA\Graphy\src\main\primordialParticleSystem" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="objects.base" />
       <recent name="main" />
       <recent name="objects.sphere" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
+    <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\Coding\JAVA\Graphy\src\main\scenes" />
-      <recent name="E:\Coding\JAVA\Graphy" />
-      <recent name="E:\Coding\JAVA\Graphy\src\main\pps" />
-      <recent name="E:\Coding\JAVA\Graphy\src\main\primordialParticleSystem" />
+      <recent name="E:\Coding\JAVA\Graphy\images\a" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Spirograph">
+  <component name="RunManager" selected="Application.Clock">
     <configuration default="true" type="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AnimatedCube" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="main.scenes.AnimatedCube" />
+    <configuration name="Clock" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="main.scenes.Clock" />
       <module name="Graphy" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
@@ -241,18 +229,18 @@
     </configuration>
     <list>
       <item itemvalue="Application.Mandelbrot" />
-      <item itemvalue="Application.AnimatedCube" />
       <item itemvalue="Application.MandelbrotOld" />
       <item itemvalue="Application.PrimordialParticleSystem" />
       <item itemvalue="Application.Spirograph" />
+      <item itemvalue="Application.Clock" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Clock" />
         <item itemvalue="Application.Spirograph" />
         <item itemvalue="Application.PrimordialParticleSystem" />
         <item itemvalue="Application.MandelbrotOld" />
         <item itemvalue="Application.Mandelbrot" />
-        <item itemvalue="Application.AnimatedCube" />
       </list>
     </recent_temporary>
   </component>
@@ -443,7 +431,14 @@
       <option name="project" value="LOCAL" />
       <updated>1579577578274</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Abstracted Scene and Drawing start up">
+      <created>1579648889168</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1579648889168</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -499,7 +494,8 @@
     <MESSAGE value="Added zoom handling to the Mandelbrot Drawing" />
     <MESSAGE value="Demo Improvements" />
     <MESSAGE value="Objectified Environment" />
-    <option name="LAST_COMMIT_MESSAGE" value="Objectified Environment" />
+    <MESSAGE value="Abstracted Scene and Drawing start up" />
+    <option name="LAST_COMMIT_MESSAGE" value="Abstracted Scene and Drawing start up" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="WindowStateProjectService">
@@ -507,46 +503,54 @@
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="643" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579575171975" />
-    <state x="648" y="77" key="CommitChangelistDialog2" timestamp="1579577577751">
+    <state x="725" y="373" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1579649506122">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="648" y="77" key="CommitChangelistDialog2/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579577577751" />
-    <state x="93" y="93" width="1862" height="926" key="DiffContextDialog" timestamp="1579648813956">
+    <state x="725" y="373" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579649506122" />
+    <state x="648" y="77" key="CommitChangelistDialog2" timestamp="1579648888655">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="93" y="93" width="1862" height="926" key="DiffContextDialog/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579648813956" />
+    <state x="648" y="77" key="CommitChangelistDialog2/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579648888655" />
+    <state x="93" y="93" width="1862" height="926" key="DiffContextDialog" timestamp="1579649186638">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="93" y="93" width="1862" height="926" key="DiffContextDialog/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579649186638" />
     <state x="755" y="249" key="FileChooserDialogImpl" timestamp="1579644450398">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="755" y="249" key="FileChooserDialogImpl/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579644450398" />
-    <state width="1993" height="217" key="GridCell.Tab.0.bottom" timestamp="1579648787615">
+    <state width="1993" height="217" key="GridCell.Tab.0.bottom" timestamp="1579650072345">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1993" height="217" key="GridCell.Tab.0.bottom/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579648787615" />
-    <state width="1993" height="217" key="GridCell.Tab.0.center" timestamp="1579648787615">
+    <state width="1993" height="217" key="GridCell.Tab.0.bottom/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579650072345" />
+    <state width="1993" height="217" key="GridCell.Tab.0.center" timestamp="1579650072345">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1993" height="217" key="GridCell.Tab.0.center/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579648787615" />
-    <state width="1993" height="217" key="GridCell.Tab.0.left" timestamp="1579648787615">
+    <state width="1993" height="217" key="GridCell.Tab.0.center/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579650072345" />
+    <state width="1993" height="217" key="GridCell.Tab.0.left" timestamp="1579650072345">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1993" height="217" key="GridCell.Tab.0.left/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579648787615" />
-    <state width="1993" height="217" key="GridCell.Tab.0.right" timestamp="1579648787615">
+    <state width="1993" height="217" key="GridCell.Tab.0.left/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579650072345" />
+    <state width="1993" height="217" key="GridCell.Tab.0.right" timestamp="1579650072345">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1993" height="217" key="GridCell.Tab.0.right/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579648787615" />
-    <state x="834" y="195" key="RollbackChangesDialog" timestamp="1579557720924">
+    <state width="1993" height="217" key="GridCell.Tab.0.right/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579650072345" />
+    <state x="834" y="195" key="RollbackChangesDialog" timestamp="1579649476086">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="834" y="195" key="RollbackChangesDialog/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579557720924" />
+    <state x="834" y="195" key="RollbackChangesDialog/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579649476086" />
+    <state x="417" y="44" key="SettingsEditor" timestamp="1579649472055">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="417" y="44" key="SettingsEditor/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579649472055" />
     <state x="868" y="450" key="VCS.ChangelistChooser" timestamp="1579644075160">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="868" y="450" key="VCS.ChangelistChooser/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579644075160" />
-    <state x="517" y="219" key="Vcs.Push.Dialog.v2" timestamp="1579577579424">
+    <state x="517" y="219" key="Vcs.Push.Dialog.v2" timestamp="1579648892733">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="517" y="219" key="Vcs.Push.Dialog.v2/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579577579424" />
+    <state x="517" y="219" key="Vcs.Push.Dialog.v2/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579648892733" />
     <state x="2554" y="0" width="1037" height="1158" key="dock-window-1" timestamp="1579644666236">
       <screen x="2560" y="0" width="2048" height="1152" />
     </state>
@@ -580,10 +584,10 @@
     </state>
     <state x="142" y="239" width="740" height="662" key="find.popup/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579648374419" />
     <state x="2702" y="248" width="740" height="662" key="find.popup/0.0.2048.1112/2560.0.2048.1152@2560.0.2048.1152" timestamp="1579563916335" />
-    <state x="90" y="113" width="840" height="999" key="search.everywhere.popup" timestamp="1579647630589">
+    <state x="90" y="113" width="840" height="999" key="search.everywhere.popup" timestamp="1579649734539">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="90" y="113" width="840" height="999" key="search.everywhere.popup/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579647630589" />
+    <state x="90" y="113" width="840" height="999" key="search.everywhere.popup/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579649734539" />
     <state x="2650" y="117" width="840" height="1034" key="search.everywhere.popup/0.0.2048.1112/2560.0.2048.1152@2560.0.2048.1152" timestamp="1579564337221" />
     <state x="604" y="189" key="vcs.ApplyPatchDifferentiatedDialog" timestamp="1579644452676">
       <screen x="0" y="0" width="2048" height="1112" />
@@ -664,100 +668,5 @@
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
     </expressions>
-  </component>
-  <component name="masterDetails">
-    <states>
-      <state key="ArtifactsStructureConfigurable.UI">
-        <settings>
-          <artifact-editor>
-            <show-content>
-              <type id="library" />
-              <type id="artifact" />
-            </show-content>
-          </artifact-editor>
-          <last-edited>Grapher</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-                <option value="0.5" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="FacetStructureConfigurable.UI">
-        <settings>
-          <last-edited>No facets are configured</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="GlobalLibrariesConfigurable.UI">
-        <settings>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="JdkListConfigurable.UI">
-        <settings>
-          <last-edited>1.8</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ModuleStructureConfigurable.UI">
-        <settings>
-          <last-edited>Graphy</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-                <option value="0.6" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ProjectJDKs.UI">
-        <settings>
-          <last-edited>1.8</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ProjectLibrariesConfigurable.UI">
-        <settings>
-          <last-edited>lib</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-    </states>
   </component>
 </project>

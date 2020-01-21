@@ -9,6 +9,7 @@ package main.drawing.pps;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import main.Environment2D;
 import math.vector.Vector;
 
 /**
@@ -121,8 +122,8 @@ public class Particle {
         velocity = heading.scale(speed);
         
         position = position.plus(velocity);
-        position.setX(position.getX() % state.pps.environment.screenX);
-        position.setY(position.getY() % state.pps.environment.screenY);
+        position.setX(position.getX() % Environment2D.screenX);
+        position.setY(position.getY() % Environment2D.screenY);
     }
     
     /**

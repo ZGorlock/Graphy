@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import main.Environment2D;
 import math.vector.Vector;
 
 /**
@@ -72,7 +73,7 @@ public class ParticleState {
         this.pps = pps;
         this.reactiveRadius = reactiveRadius * size;
         
-        int particleCount = (int) (pps.environment.screenX * pps.environment.screenY * populationDensity) - centerCount;
+        int particleCount = (int) (Environment2D.screenX * Environment2D.screenY * populationDensity) - centerCount;
         
         for (int i = 0; i < particleCount; i++) {
             particles.add(new Particle(this, pps.environment.getRandomPosition(), getRandomOrientation(), size, speed, alpha, beta));

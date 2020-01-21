@@ -7,6 +7,7 @@
 package main.scenes;
 
 import java.awt.Color;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -74,10 +75,15 @@ public class Clock extends Scene {
         while ((System.currentTimeMillis() / 1000) == lastSecond) {
         }
         
-        Date now = new Date();
-        double hour = (((now.getHours() % 12) * 3600) + (now.getMinutes() * 60) + (now.getSeconds())) / 43200.0;
-        double minute = ((now.getMinutes() * 60) + (now.getSeconds())) / 3600.0;
-        double second = now.getSeconds() / 60.0;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        int nowHour = cal.get(Calendar.HOUR_OF_DAY);
+        int nowMinute = cal.get(Calendar.MINUTE);
+        int nowSecond = cal.get(Calendar.SECOND);
+        
+        double hour = (((nowHour % 12) * 3600) + (nowMinute * 60) + (nowSecond)) / 43200.0;
+        double minute = ((nowMinute * 60) + (nowSecond)) / 3600.0;
+        double second = nowSecond / 60.0;
         
         Hexahedron hourMark = new Hexahedron(SphericalCoordinateUtility.sphericalToCartesian(Math.PI / 2, (Math.PI / 2) - (hour * Math.PI * 2), 4), Color.BLACK, .5);
         Hexahedron minuteMark = new Hexahedron(SphericalCoordinateUtility.sphericalToCartesian(Math.PI / 2, (Math.PI / 2) - (minute * Math.PI * 2), 6), Color.BLACK, .25);
@@ -108,8 +114,15 @@ public class Clock extends Scene {
              */
             @Override
             public void run() {
-                Date now = new Date();
-                time.setText((((now.getHours() % 12) < 10) ? "0" : "") + (now.getHours() % 12) + ':' + ((now.getMinutes() < 10) ? "0" : "") + now.getMinutes() + ':' + ((now.getSeconds() < 10) ? "0" : "") + now.getSeconds());
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(new Date());
+                int nowHour = cal.get(Calendar.HOUR_OF_DAY);
+                int nowMinute = cal.get(Calendar.MINUTE);
+                int nowSecond = cal.get(Calendar.SECOND);
+                time.setText(
+                        (((nowHour % 12) < 10) ? "0" : "") + (nowHour % 12) + ':' + 
+                                ((nowMinute < 10) ? "0" : "") +nowMinute + ':' + 
+                                ((nowSecond < 10) ? "0" : "") + nowSecond);
             }
         }, 0, 1000 / Environment.fps);
     }

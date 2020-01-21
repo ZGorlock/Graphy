@@ -122,7 +122,7 @@ public class Vector {
      *
      * @return The cloned Vector.
      */
-    @Override
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     public Vector clone() {
         return new Vector(components);
     }
@@ -134,7 +134,7 @@ public class Vector {
      */
     public Vector reverse() {
         double[] reversedComponents = new double[components.length];
-        for (int i = 0; i < Math.ceil(components.length / 2); i++) {
+        for (int i = 0; i < Math.ceil(components.length / 2.0); i++) {
             reversedComponents[i] = components[components.length - 1 - i];
             reversedComponents[components.length - 1 - i] = components[i];
         }

@@ -1,5 +1,5 @@
 /*
- * File:    Isocahedron.java
+ * File:    Icosahedron.java
  * Package: objects.polyhedron.regular.platonic
  * Author:  Zachary Gill
  */
@@ -76,9 +76,8 @@ public class Icosahedron extends RegularPolyhedron {
     @Override
     protected void calculate() {
         components.clear();
-        
-        double a = GOLDEN_RATIO;
-        double b = 1 + a;
+    
+        double b = 1 + GOLDEN_RATIO;
         
         vertices = new Vector[ICOSAHEDRON_VERTICES];
         int v = 0;

@@ -157,7 +157,7 @@ public class BigVector {
      *
      * @return The cloned Vector.
      */
-    @Override
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     public BigVector clone() {
         BigVector v = new BigVector(components);
         v.setMathContext(mathContext);
@@ -171,7 +171,7 @@ public class BigVector {
      */
     public BigVector reverse() {
         BigDecimal[] reversedComponents = new BigDecimal[components.length];
-        for (int i = 0; i < Math.ceil(components.length / 2); i++) {
+        for (int i = 0; i < Math.ceil(components.length / 2.0); i++) {
             reversedComponents[i] = components[components.length - 1 - i];
             reversedComponents[components.length - 1 - i] = components[i];
         }

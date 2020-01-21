@@ -6,8 +6,6 @@
 
 package main.drawing;
 
-import javax.imageio.ImageIO;
-import javax.swing.SwingUtilities;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
@@ -18,6 +16,8 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.imageio.ImageIO;
+import javax.swing.SwingUtilities;
 
 import main.Environment2D;
 import math.vector.Vector;
@@ -204,9 +204,9 @@ public class MandelbrotOld extends Drawing {
      */
     @Override
     public void run() {
-        this.dimension = Math.max(environment.screenX, environment.screenY);
-        this.offset.setX((dimension > environment.screenX) ? (environment.screenX - dimension) / 2.0 : 0);
-        this.offset.setY((dimension > environment.screenY) ? (environment.screenY - dimension) / 2.0 : 0);
+        this.dimension = Math.max(Environment2D.screenX, Environment2D.screenY);
+        this.offset.setX((dimension > Environment2D.screenX) ? (Environment2D.screenX - dimension) / 2.0 : 0);
+        this.offset.setY((dimension > Environment2D.screenY) ? (Environment2D.screenY - dimension) / 2.0 : 0);
 
         if (slowZoomEnabled) {
             zoomEnabled = false;
@@ -250,13 +250,13 @@ public class MandelbrotOld extends Drawing {
         
         for (int row = 0; row < dimension; row++) {
             int trueRow = row + (int) offset.getY();
-            if ((trueRow < 0) || (trueRow >= environment.screenY)) {
+            if ((trueRow < 0) || (trueRow >= Environment2D.screenY)) {
                 continue;
             }
             
             for (int col = 0; col < dimension; col++) {
                 int trueCol = col + (int) offset.getX();
-                if ((trueCol < 0) || (trueCol >= environment.screenX)) {
+                if ((trueCol < 0) || (trueCol >= Environment2D.screenX)) {
                     continue;
                 }
                 
@@ -285,6 +285,7 @@ public class MandelbrotOld extends Drawing {
         if (slowZoomEnabled && captureZoom) {
             File outputFolder = new File("tmp");
             if (!outputFolder.exists()) {
+                //noinspection ResultOfMethodCallIgnored
                 outputFolder.mkdir();
             }
             File capture = new File(outputFolder, "capture_" + captureIndex++ + ".jpg");
@@ -362,8 +363,8 @@ public class MandelbrotOld extends Drawing {
      */
     public Vector clickToMandelbrot(Vector point) {
         return new Vector(
-                mapValue(point.getX(), 0, environment.screenX, bounds.getP1().getX(), bounds.getP2().getX()),
-                mapValue(point.getY(), 0, environment.screenY, bounds.getP1().getY(), bounds.getP4().getY())
+                mapValue(point.getX(), 0, Environment2D.screenX, bounds.getP1().getX(), bounds.getP2().getX()),
+                mapValue(point.getY(), 0, Environment2D.screenY, bounds.getP1().getY(), bounds.getP4().getY())
         );
     }
     

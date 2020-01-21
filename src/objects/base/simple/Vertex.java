@@ -6,13 +6,14 @@
 
 package objects.base.simple;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
+
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines a Vertex.
@@ -136,7 +137,7 @@ public class Vertex extends BaseObject {
      *
      * @return The cloned Vertex.
      */
-    @Override
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     public Vertex clone() {
         return new Vertex(getPoint());
     }

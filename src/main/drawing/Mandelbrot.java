@@ -6,12 +6,6 @@
 
 package main.drawing;
 
-import javax.imageio.ImageIO;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -42,6 +36,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import javax.imageio.ImageIO;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
 
 import main.Environment2D;
 import math.vector.BigVector;
@@ -254,7 +254,7 @@ public class Mandelbrot extends Drawing {
     /**
      * The width of the Mandelbrot.
      */
-    private BigDecimal size = new BigDecimal(3.0);
+    private BigDecimal size = BigDecimal.valueOf(3.0);
     
     /**
      * The palette used to color the Mandelbrot.
@@ -279,7 +279,7 @@ public class Mandelbrot extends Drawing {
     /**
      * The temporary progress of the rendering being calculated.
      */
-    private AtomicInteger tmpProgress[];
+    private AtomicInteger[] tmpProgress;
     
     /**
      * The number of points that are out of bounds for the current calculation.
@@ -391,10 +391,10 @@ public class Mandelbrot extends Drawing {
     public void initComponents() {
         environment.frame.setTitle("Mandelbrot");
         
-        progressBar = new JProgressBar(0, environment.screenX * environment.screenY);
-        progressBar.setSize(new Dimension(environment.screenX - 1, BAR_HEIGHT));
-        progressBar.setPreferredSize(new Dimension(environment.screenX, BAR_HEIGHT));
-        progressBar.setBounds(0, environment.screenY - BAR_HEIGHT, progressBar.getWidth(), progressBar.getHeight());
+        progressBar = new JProgressBar(0, Environment2D.screenX * Environment2D.screenY);
+        progressBar.setSize(new Dimension(Environment2D.screenX - 1, BAR_HEIGHT));
+        progressBar.setPreferredSize(new Dimension(Environment2D.screenX, BAR_HEIGHT));
+        progressBar.setBounds(0, Environment2D.screenY - BAR_HEIGHT, progressBar.getWidth(), progressBar.getHeight());
         progressBar.setVisible(false);
         environment.frame.getContentPane().add(progressBar, BorderLayout.SOUTH);
 
@@ -440,7 +440,7 @@ public class Mandelbrot extends Drawing {
             
             size = new BigDecimal(pointData[0].substring(2));
             centre = new BigVector(new BigDecimal(pointData[1].substring(2)), new BigDecimal(pointData[2].substring(2)));
-            iterationLimit = Integer.valueOf(pointData[3].substring(2));
+            iterationLimit = Integer.parseInt(pointData[3].substring(2));
             
             updateImage();
         };
@@ -485,7 +485,7 @@ public class Mandelbrot extends Drawing {
                 int y = e.getY();
                 
                 if (e.isControlDown() && SwingUtilities.isRightMouseButton(e)) {
-                    size = new BigDecimal(3.0);
+                    size = BigDecimal.valueOf(3.0);
                     centre = new BigVector(BigDecimal.valueOf(-0.75), BigDecimal.ZERO);
                     iterationLimit = 1024;
                     
@@ -500,8 +500,8 @@ public class Mandelbrot extends Drawing {
                 
                 if (e.getClickCount() == 2) {
                     Vector mul = new Vector(
-                            ((double) x / environment.screenY) - ((environment.screenX / 2.0) / environment.screenY),
-                            ((environment.screenY / 2.0) - y) / environment.screenY);
+                            ((double) x / Environment2D.screenY) - ((Environment2D.screenX / 2.0) / Environment2D.screenY),
+                            ((Environment2D.screenY / 2.0) - y) / Environment2D.screenY);
                     offset = new BigVector(mul).scale(size);
                     leftSizeScale = BigDecimal.valueOf(0.2);
                     rightSizeScale = BigDecimal.valueOf(5);
@@ -511,15 +511,15 @@ public class Mandelbrot extends Drawing {
                     if ((mouseDraggedSize > 0) && !SwingUtilities.isRightMouseButton(e)) {
                         int s = mouseDraggedSize / 2;
                         if (((x - mouseSelected.getX()) <= s) && ((mouseSelected.getX() - x) <= s)) {
-                            s = (mouseDraggedSize * environment.screenY) / environment.screenX / 2;
+                            s = (mouseDraggedSize * Environment2D.screenY) / Environment2D.screenX / 2;
                             if (((y - mouseSelected.getY()) < s) && ((mouseSelected.getY() - y) < s)) {
                                 
                                 Vector mul = new Vector(
-                                        (mouseSelected.getX() / environment.screenY) - (environment.screenX * 0.5 / environment.screenY),
-                                        (0.5 * environment.screenY - mouseSelected.getY()) / environment.screenY);
+                                        (mouseSelected.getX() / Environment2D.screenY) - (Environment2D.screenX * 0.5 / Environment2D.screenY),
+                                        (0.5 * Environment2D.screenY - mouseSelected.getY()) / Environment2D.screenY);
                                 offset = new BigVector(mul).scale(size);
-                                leftSizeScale = BigDecimal.valueOf(mouseDraggedSize / (double) environment.screenX);
-                                rightSizeScale = BigDecimal.valueOf(environment.screenX / (double) mouseDraggedSize);
+                                leftSizeScale = BigDecimal.valueOf(mouseDraggedSize / (double) Environment2D.screenX);
+                                rightSizeScale = BigDecimal.valueOf(Environment2D.screenX / (double) mouseDraggedSize);
                                 doScaling = true;
                             }
                         }
@@ -585,7 +585,7 @@ public class Mandelbrot extends Drawing {
                 int y = e.getY();
                 
                 mouseDraggedSize = 2 * Math.abs(x - (int) mousePressed.getX());
-                int ds2 = (Math.abs(y - (int) mousePressed.getY()) * 2 * environment.screenX) / environment.screenY;
+                int ds2 = (Math.abs(y - (int) mousePressed.getY()) * 2 * Environment2D.screenX) / Environment2D.screenY;
                 mouseDraggedSize = Math.max(mouseDraggedSize, ds2);
                 environment.run();
                 mouseSelected = mousePressed.clone();
@@ -614,7 +614,7 @@ public class Mandelbrot extends Drawing {
                 
                 if (e.isControlDown()) {
                     if (key == KeyEvent.VK_Q) {
-                        size = new BigDecimal(3.0);
+                        size = BigDecimal.valueOf(3.0);
                         centre = new BigVector(BigDecimal.valueOf(-0.75), BigDecimal.ZERO);
                         iterationLimit = 1024;
                         
@@ -673,7 +673,7 @@ public class Mandelbrot extends Drawing {
         g.setColor(Color.GRAY);
         if (mouseDraggedSize > 0) {
             int width = mouseDraggedSize;
-            int height = (mouseDraggedSize * environment.screenY) / environment.screenX;
+            int height = (mouseDraggedSize * Environment2D.screenY) / Environment2D.screenX;
             g.draw3DRect((int) mousePressed.getX() - width / 2, (int) mousePressed.getY() - height / 2, width, height, true);
         }
 
@@ -688,7 +688,7 @@ public class Mandelbrot extends Drawing {
             };
             g.setFont(new Font("Console", Font.PLAIN, FONT_SIZE));
 
-            int y = environment.screenY - (FONT_SIZE * (data.length + 2));
+            int y = Environment2D.screenY - (FONT_SIZE * (data.length + 2));
             for (String d : data) {
                 g.drawString(d, FONT_SIZE, y += FONT_SIZE);
             }
@@ -706,9 +706,9 @@ public class Mandelbrot extends Drawing {
                     List<String> zoomData = Files.readAllLines(Paths.get(zoomFile.getAbsolutePath()));
                     centre = new BigVector(new BigDecimal(zoomData.get(0)), new BigDecimal(zoomData.get(1)));
                     size = new BigDecimal(zoomData.get(2));
-                    zoomFactor = Double.valueOf(zoomData.get(3));
-                    iterationLimit = Integer.valueOf(zoomData.get(4));
-                    frameIndex = Long.valueOf(zoomData.get(5));
+                    zoomFactor = Double.parseDouble(zoomData.get(3));
+                    iterationLimit = Integer.parseInt(zoomData.get(4));
+                    frameIndex = Long.parseLong(zoomData.get(5));
                     initialized = true;
                 } catch (Exception ignored) {
                 }
@@ -795,7 +795,7 @@ public class Mandelbrot extends Drawing {
         mathContext = new MathContext(precision, RoundingMode.HALF_UP);
         
         double imageSize;
-        BigDecimal bd280 = new BigDecimal(1e-280);
+        BigDecimal bd280 = BigDecimal.valueOf(1e-280);
         if (size.compareTo(bd280) < 0) {
             BigDecimal modSize = size;
             while (modSize.compareTo(bd280) < 0) {
@@ -857,7 +857,7 @@ public class Mandelbrot extends Drawing {
                     timer.purge();
                     timer.cancel();
                     progressBar.setVisible(false);
-                    calculationTime = Double.toString((double) (System.currentTimeMillis() - startTime) / 1000) + " s";
+                    calculationTime = (double) (System.currentTimeMillis() - startTime) / 1000 + " s";
                     
                     environment.run();
                     updateSlowZoom();
@@ -1054,9 +1054,652 @@ public class Mandelbrot extends Drawing {
     //Sub-Classes
     
     /**
+     * Holds a buffer of the calculation of the Mandelbrot data.
+     */
+    private class IndexBuffer2D {
+        
+        //Fields
+        
+        /**
+         * The width of the buffer.
+         */
+        public int width;
+        
+        /**
+         * The height of the buffer.
+         */
+        public int height;
+        
+        /**
+         * The stride of the buffer.
+         */
+        public int stride;
+        
+        /**
+         * The offset of the buffer.
+         */
+        public int offset;
+        
+        /**
+         * The buffer of the calculation of the Mandelbrot data.
+         */
+        public int[] buffer;
+        
+        
+        //Constructors
+        
+        /**
+         * Constructs a new IndexBuffer2D of a specified dimension.
+         *
+         * @param width  The width of the buffer.
+         * @param height The height of the buffer.
+         */
+        public IndexBuffer2D(int width, int height) {
+            this.buffer = new int[width * height];
+            this.width = width;
+            this.height = height;
+            this.stride = width;
+        }
+        
+        /**
+         * Constructs a new IndexBuffer2D.
+         *
+         * @param buffer The initial buffer of the calculation of the Mandelbrot data.
+         * @param width  The width of the buffer.
+         * @param height The height of the buffer.
+         * @param stride The stride of the buffer.
+         * @param offset The offset of the buffer.
+         */
+        public IndexBuffer2D(int[] buffer, int width, int height, int stride, int offset) {
+            this.buffer = buffer;
+            this.width = width;
+            this.height = height;
+            this.stride = stride;
+            this.offset = offset;
+        }
+        
+        
+        //Methods
+        
+        /**
+         * Gets a value from the buffer at a specified position.
+         *
+         * @param x The x coordinate of the value.
+         * @param y The y coordinate of the value.
+         * @return The value from the buffer at the specified position.
+         */
+        public int get(int x, int y) {
+            return buffer[offset + x + y * stride];
+        }
+        
+        /**
+         * Sets a value in the buffer at a specified position.
+         *
+         * @param x     The x coordinate of the value to set.
+         * @param y     The y coordinate of the value to set.
+         * @param value The value to set at the position.
+         */
+        public void set(int x, int y, int value) {
+            buffer[offset + x + y * stride] = value;
+        }
+        
+        /**
+         * Clears the buffer and sets a default value to all positions.
+         *
+         * @param value The default value to set for all positions in the buffer.
+         */
+        public void clear(int value) {
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    set(x, y, value);
+                }
+            }
+        }
+        
+        /**
+         * Creates a sub buffer for a rectangular area of a parent buffer.
+         *
+         * @param p1 The upper left point of the rectangular area for the sub buffer.
+         * @param p2 The lower right point of the rectangular area for the sub buffer.
+         * @return A sub buffer for the rectangular area specified.
+         */
+        public IndexBuffer2D subBuffer(Vector p1, Vector p2) {
+            return new IndexBuffer2D(buffer, (int) (p2.getX() - p1.getX()), (int) (p2.getY() - p1.getY()), stride, (int) ((p1.getY() * stride) + p1.getX() + offset));
+        }
+        
+        /**
+         * Creates an image from the buffer using a palette to color the data.
+         *
+         * @param palette The palette used to color the data in the buffer.
+         * @return An image of the buffer data of the Mandelbrot.
+         */
+        public BufferedImage makeTexture(Palette palette) {
+            BufferedImage image = null;
+            int i, j, k, l, m, n, o, p, q, w, h;
+            
+            try {
+                switch (Mandelbrot.sampleType) {
+                    case SUPER_SAMPLE_NONE:
+                        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+                        
+                        for (int y = 0, y2 = height - 1; y < height; y++, y2--) {
+                            for (int x = 0; x < width; x++) {
+                                i = get(x, y);
+                                image.setRGB(x, y2, palette.getAverageColor(i));
+                                
+                            }
+                        }
+                        break;
+                    case SUPER_SAMPLE_2X:
+                        w = width - 1;
+                        h = height / 2;
+                        image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+                        
+                        for (int y = 0, y2 = h - 1; y < h; y++, y2--) {
+                            for (int x = 0; x < w; x++) {
+                                i = get(x, y);
+                                j = get(x, y + 1);
+                                k = get(x, y + h + 1);
+                                l = get(x + 1, y + h + 1);
+                                image.setRGB(x, y2, palette.getAverageColor(i, j, k, l));
+                            }
+                        }
+                        break;
+                    case SUPER_SAMPLE_4X:
+                        w = width / 2;
+                        h = height / 2;
+                        image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+                        
+                        for (int y = 0, y2 = height - 2; y < height; y += 2, y2 -= 2) {
+                            for (int x = 0; x < width; x += 2) {
+                                i = get(x, y);
+                                j = get(x, y + 1);
+                                k = get(x + 1, y + 1);
+                                l = get(x + 1, y);
+                                image.setRGB(x / 2, y2 / 2, palette.getAverageColor(i, j, k, l));
+                            }
+                        }
+                        break;
+                    case SUPER_SAMPLE_4X_9:
+                        w = width / 2;
+                        h = height / 2;
+                        image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+                        
+                        for (int y = 0, y2 = height - 3; y < height - 1; y += 2, y2 -= 2) {
+                            for (int x = 0; x < width - 1; x += 2) {
+                                i = get(x, y);
+                                j = get(x, y + 1);
+                                k = get(x + 1, y + 1);
+                                l = get(x + 1, y);
+                                m = get(x + 2, y);
+                                n = get(x + 2, y + 1);
+                                o = get(x + 2, y + 2);
+                                p = get(x + 1, y + 2);
+                                q = get(x, y + 2);
+                                image.setRGB(x / 2, y2 / 2, palette.getAverageColor(i, j, k, l, m, n, o, p, q));
+                            }
+                        }
+                        break;
+                    case SUPER_SAMPLE_9X:
+                        w = width / 3;
+                        h = height / 3;
+                        image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+                        
+                        for (int y = 0, y2 = height - 2; y < height; y += 3, y2 -= 3) {
+                            for (int x = 0; x < width; x += 3) {
+                                i = get(x, y);
+                                j = get(x, y + 1);
+                                k = get(x + 1, y + 1);
+                                l = get(x + 1, y);
+                                m = get(x + 2, y);
+                                n = get(x + 2, y + 1);
+                                o = get(x + 2, y + 2);
+                                p = get(x + 1, y + 2);
+                                q = get(x, y + 2);
+                                image.setRGB(x / 3, y2 / 3, palette.getAverageColor(i, j, k, l, m, n, o, p, q));
+                            }
+                        }
+                        break;
+                }
+            } catch (OutOfMemoryError e) {
+                return null;
+            }
+            
+            if (saveFrames) {
+                File imgDir = new File("images");
+                if (!imgDir.exists()) {
+                    //noinspection ResultOfMethodCallIgnored
+                    imgDir.mkdir();
+                }
+                StringBuilder imgName = new StringBuilder(String.valueOf(frameIndex++));
+                while (imgName.length() < 6) {
+                    imgName.insert(0, "0");
+                }
+                imgName.insert(0, "Mandelbrot_");
+                imgName.append(".jpg");
+                File imgOut = new File(imgDir, imgName.toString());
+                try {
+                    ImageIO.write(image, "jpg", imgOut);
+                } catch (IOException e) {
+                    System.out.println("Failed to save image: " + imgOut.getAbsolutePath());
+                }
+            }
+            
+            return image;
+        }
+        
+    }
+    
+    /**
+     * Finds the best reference point for a calculation of the Mandelbrot.
+     */
+    private static class FindBestReferencePoint {
+        
+        //Fields
+        
+        /**
+         * The approximation that will hold the best reference point that is determined.
+         */
+        private Approximation approximation;
+        
+        /**
+         * The store of potential best reference points.
+         */
+        private TreeMap<Integer, FBRPEntry> store;
+        
+        /**
+         * The current best reference point.
+         */
+        private Map.Entry<Integer, FBRPEntry> maxCount;
+        
+        /**
+         * The depth of the current best reference point.
+         */
+        private int maxCountDepth;
+        
+        /**
+         * A store of the iteration limit of different potential best reference points.
+         */
+        private int[][] data;
+        
+        /**
+         * The number of potential best reference points in the store that have an iteration higher than the expected iteration limit.
+         */
+        private int countAboveAccuracyLimit;
+        
+        /**
+         * The step to move when calculating the best reference point.
+         */
+        private Vector step;
+        
+        /**
+         * The number of steps used when calculating the best reference point.
+         */
+        private Vector steps;
+        
+        /**
+         * The starting points to use when calculating the best reference point.
+         */
+        private Vector start;
+        
+        
+        //Constructors
+        
+        /**
+         * Creates a new FindBestReferencePoint.
+         *
+         * @param initialApproximation The initial approximation to find the best reference point for.
+         */
+        public FindBestReferencePoint(Approximation initialApproximation) {
+            approximation = initialApproximation;
+            store = new TreeMap<>();
+            data = new int[20][20];
+            countAboveAccuracyLimit = 0;
+        }
+        
+        
+        //Methods
+        
+        /**
+         * Determines the best reference point.
+         *
+         * @return The approximation holding the best reference point.
+         */
+        public Approximation calculate() {
+            if (approximation.numIterationsN > Mandelbrot.iterationLimit - 200) {
+                return approximation;
+            }
+            Approximation centerCheckApproximation = null;
+            
+            Vector point = new Vector(0, 0);
+            Vector initialPoint = approximation.screenOffset.clone();
+            Vector oldMaxPoint = new Vector(0, 0);
+            
+            double range = 2.0;
+            int initial;
+            
+            doAPass(point, 1.6, 9);
+            
+            boolean skipZoomBodge = false;
+            for (int pass = 0; pass < 100; pass++) {
+                Iterator<Map.Entry<Integer, FBRPEntry>> iterator = store.entrySet().iterator();
+                List<Map.Entry<Integer, FBRPEntry>> top = new ArrayList<>();
+                top.add(iterator.next());
+                if (iterator.hasNext()) {
+                    top.add(iterator.next());
+                } else {
+                    top.add(top.get(0));
+                }
+                top.add(maxCount);
+                
+                if (((top.get(1).getValue()).count > ((top.get(0).getValue()).count * 5)) ||
+                    (((top.get(1).getValue()).count >= (3 * (top.get(0).getValue()).count)) && ((top.get(2).getValue()).count >= (3 * (top.get(0).getValue()).count)))) {
+                    top.set(0, top.get(1));
+                } else if (((top.get(2).getValue()).count > ((top.get(1).getValue()).count * 5)) &&
+                           ((-top.get(2).getKey() > approximation.numIterationsN) || ((top.get(2).getValue()).count > (maxCountDepth * 2)))) {
+                    top.set(0, top.get(2));
+                }
+                point = (top.get(0).getValue()).total.scale(1.0 / (top.get(0).getValue()).count);
+                
+                if ((pass == 0) && ((Math.abs(point.getX()) > 0.3) || (Math.abs(point.getY()) > 0.3))) {
+                    centerCheckApproximation = new Approximation(approximation);
+                }
+                
+                if ((top.get(0).getKey() >= (approximation.numIterationsN + 1)) ||
+                    (((top.get(0).getValue()).count > 10) && ((top.get(0).getKey() > (approximation.numIterationsN - 100)) || (top.get(0) == top.get(2))))) {
+                    if (((top.get(0).getValue()).count == 1) && (Vector2.squareSum(point) < (Math.pow(range, 2) * 0.005))) {
+                        initial = -1;
+                    } else {
+                        initial = approximation.numIterationsN;
+                        int test = approximation.calculateIterations(approximation, point.minus(approximation.screenOffset));
+                        if (((test > initial) || (test == 0)) && (((top.get(0).getValue()).count <= 10) || (test == -top.get(0).getKey()))) {
+                            approximation.reFillInCubic(point);
+                        } else {
+                            initial = -1;
+                        }
+                    }
+                    
+                    if ((initial >= approximation.numIterationsN) || (initial == -1)) {
+                        point = (top.get(0).getValue()).nonAveraged.clone();
+                        approximation.reFillInCubic(point);
+                    }
+                    
+                    if ((((top.get(0).getValue()).count > 10) || (countAboveAccuracyLimit > 10)) || skipZoomBodge || (approximation.numIterationsN < initial)) {
+                        double delta = range * 0.025;
+                        point = oldMaxPoint.plus(new Vector(
+                                delta * ((point.getX() > oldMaxPoint.getX()) ? 1 : -1),
+                                delta * ((point.getY() > oldMaxPoint.getY()) ? 1 : -1)));
+                        range *= 0.95;
+                        skipZoomBodge = true;
+                    }
+                } else {
+                    int test;
+                    if (((Math.abs((top.get(0).getValue()).nonAveraged.getX() - approximation.screenOffset.getX()) > (range / 8)) ||
+                         (Math.abs((top.get(0).getValue()).nonAveraged.getY() - approximation.screenOffset.getY()) > (range / 8))) &&
+                        ((top.get(0).getValue()).count >= 3)) {
+                        if (-top.get(0).getKey() > (approximation.calculateIterations(approximation, new Vector(0.001, 0.001)) + 500)) {
+                            point = (top.get(0).getValue()).nonAveraged.clone();
+                            approximation.reFillInCubic(point);
+                        }
+                    }
+                }
+                
+                if (((top.get(0).getValue()).count <= 10) && (countAboveAccuracyLimit <= 10) && !skipZoomBodge) {
+                    if (!((range > 0.02) && (approximation.numIterationsN < (Mandelbrot.iterationLimit - 100)))) {
+                        break;
+                    }
+                    range /= 3.0;
+                } else {
+                    if (approximation.numIterationsN >= (Mandelbrot.iterationLimit - 100)) {
+                        break;
+                    }
+                    skipZoomBodge = ((top.get(0).getValue()).count > 40);
+                }
+                
+                store = new TreeMap<>();
+                countAboveAccuracyLimit = 0;
+                
+                if ((Math.abs(oldMaxPoint.getX() - point.getX()) * 2) > range) {
+                    range = Math.abs(oldMaxPoint.getX() - point.getX()) * 2.1;
+                }
+                if ((Math.abs(oldMaxPoint.getY() - point.getY()) * 2) > range) {
+                    range = Math.abs(oldMaxPoint.getY() - point.getY()) * 2.1;
+                }
+                
+                oldMaxPoint = point.clone();
+                doAPass(point, range, 10);
+            }
+            
+            if (centerCheckApproximation != null) {
+                if ((Math.abs(point.getX()) > 0.3) || (Math.abs(point.getY()) > 0.3)) {
+                    point = new Vector(0, 0);
+                    range = 0.6;
+                    
+                    for (int pass = 0; pass < 50; pass++) {
+                        skipZoomBodge = false;
+                        
+                        store = new TreeMap<>();
+                        countAboveAccuracyLimit = 0;
+                        doAPass(point, range, 10);
+                        
+                        Iterator<Map.Entry<Integer, FBRPEntry>> iterator = store.entrySet().iterator();
+                        List<Map.Entry<Integer, FBRPEntry>> top = new ArrayList<>();
+                        top.add(iterator.next());
+                        if (iterator.hasNext()) {
+                            top.add(iterator.next());
+                        } else {
+                            top.add(top.get(0));
+                        }
+                        top.add(maxCount);
+                        
+                        if (((top.get(0).getValue()).count == 1) && ((top.get(1).getValue()).count == 1) &&
+                            ((Math.abs((top.get(0).getValue()).total.getX() - (top.get(1).getValue()).total.getX()) > (range / 13.5)) ||
+                             (Math.abs((top.get(0).getValue()).total.getY() - (top.get(1).getValue()).total.getY()) > (range / 13.5))) &&
+                            ((top.get(2).getValue().count < 10) || (-top.get(2).getKey() < centerCheckApproximation.numIterationsN))) {
+                            int maxIterations = -1;
+                            Vector maxPoint = new Vector(0, 0);
+                            
+                            Vector repeater = initialPoint.minus(start.dividedBy(step));
+                            for (int y = 0; y < steps.getX() - 1; y++) {
+                                for (int x = 0; x < steps.getY() - 1; x++) {
+                                    int i = data[y][x] + data[y][x + 1] + data[y + 1][x + 1] + data[y + 1][x];
+                                    i -= Math.max(Math.max(data[y][x], data[y][x + 1]), Math.max(data[y + 1][x + 1], data[y + 1][x]));
+                                    
+                                    if ((repeater.getX() >= x) && (repeater.getX() <= (x + 1)) && (repeater.getY() >= y) && (repeater.getY() <= (y + 1))) {
+                                        i -= 1000;
+                                    }
+                                    if (i > maxIterations) {
+                                        maxPoint = new Vector(x, y);
+                                        maxIterations = i;
+                                    }
+                                }
+                            }
+                            
+                            point = new Vector(0, 0);
+                            for (int i = 0; i <= 1; i++) {
+                                for (int j = 0; j <= 1; j++) {
+                                    point = point.plus(start.plus(
+                                            step.times(new Vector(maxPoint.getX() + i, maxPoint.getY() + j)).scale(
+                                                    data[(int) maxPoint.getY() + j][(int) maxPoint.getX() + i] - store.lastKey())));
+                                }
+                            }
+                            point = point.scale(1.0 / ((-4 * store.lastKey()) +
+                                                       data[(int) maxPoint.getY()][(int) maxPoint.getX()] +
+                                                       data[(int) maxPoint.getY()][(int) maxPoint.getX() + 1] +
+                                                       data[(int) maxPoint.getY() + 1][(int) maxPoint.getX() + 1] +
+                                                       data[(int) maxPoint.getY() + 1][(int) maxPoint.getX()]));
+                            
+                            range *= 0.5;
+                            if (range <= 0.02) {
+                                break;
+                            }
+                            
+                            int test = approximation.calculateIterations(approximation, point.minus(approximation.screenOffset));
+                            if ((test > approximation.numIterationsN) || (test == 0)) {
+                                approximation.reFillInCubic(point);
+                            }
+                            
+                            store = new TreeMap<>();
+                            countAboveAccuracyLimit = 0;
+                            doAPass(point, range, 10);
+                            continue;
+                        }
+                        
+                        if (((top.get(1).getValue()).count > ((top.get(0).getValue()).count * 5)) ||
+                            (((top.get(1).getValue()).count >= (3 * (top.get(0).getValue()).count)) && ((top.get(2).getValue()).count >= (3 * (top.get(0).getValue()).count)))) {
+                            top.set(0, top.get(1));
+                        } else if (((top.get(2).getValue()).count > ((top.get(1).getValue()).count * 5)) && (-top.get(2).getKey() > centerCheckApproximation.numIterationsN) && ((maxCount.getValue()).count >= (maxCountDepth * 0.67777))) {
+                            top.set(0, top.get(2));
+                        }
+                        
+                        point = (top.get(0).getValue()).total.scale(1.0 / (top.get(0).getValue()).count);
+                        
+                        if (((-top.get(0).getKey() >= (centerCheckApproximation.numIterationsN + 1)) ||
+                             (((top.get(0).getValue()).count > 10) && (-top.get(0).getKey() > (centerCheckApproximation.numIterationsN - 100))))) {
+                            if (((top.get(0).getValue()).count >= 5) && (approximation != centerCheckApproximation)) {
+                                approximation = centerCheckApproximation;
+                                skipZoomBodge = true;
+                            }
+                            
+                            if (approximation == centerCheckApproximation) {
+                                if ((top.get(0).getValue()).count == 1) {
+                                    initial = -1;
+                                } else {
+                                    initial = approximation.numIterationsN;
+                                    int test = approximation.calculateIterations(approximation, point.minus(approximation.screenOffset));
+                                    if ((test > initial) || (test == 0)) {
+                                        approximation.reFillInCubic(point);
+                                    } else {
+                                        initial = -1;
+                                    }
+                                }
+                                
+                                if ((initial >= approximation.numIterationsN) || (initial == -1)) {
+                                    point = (top.get(0).getValue()).nonAveraged.clone();
+                                    approximation.reFillInCubic(point);
+                                }
+                            }
+                        } else {
+                            break;
+                        }
+                        
+                        if (!((range > 0.02) && (approximation.numIterationsN < (Mandelbrot.iterationLimit - 100)))) {
+                            break;
+                        }
+                        
+                        if ((countAboveAccuracyLimit < 10) && !skipZoomBodge) {
+                            range /= 3.0;
+                        } else {
+                            range *= 0.95;
+                        }
+                    }
+                }
+            }
+            
+            return approximation;
+        }
+        
+        /**
+         * Performs a pass with the current parameters trying to determine the best reference point.
+         *
+         * @param point   The point to center around.
+         * @param dim     The dimension of the square around the center point to test.
+         * @param numRows The number of rows in the dimension.
+         */
+        private void doAPass(Vector point, double dim, int numRows) {
+            Vector dimension = new Vector(dim, dim);
+            step = dimension.scale(1.0 / (numRows - 1));
+            steps = new Vector(numRows, numRows);
+            start = point.minus(dimension.scale(0.5));
+            Vector end = point.plus(dimension.plus(step).scale(0.5));
+            
+            int y = 0;
+            for (double q = start.getY(); q < end.getY(); q += step.getY()) {
+                int x = 0;
+                for (double p = start.getX(); p < end.getX(); p += step.getX()) {
+                    Vector currentPoint = new Vector(p, q);
+                    
+                    int i = approximation.calculateIterations(approximation, currentPoint.minus(approximation.screenOffset));
+                    if (i == 0) {
+                        i = 0x7fffffff;
+                    }
+                    data[y][x] = i;
+                    
+                    if (i > (approximation.numIterationsN + 200)) {
+                        countAboveAccuracyLimit++;
+                    }
+                    
+                    FBRPEntry entry = store.get(-i);
+                    if (entry == null) {
+                        entry = new FBRPEntry();
+                        store.put(-i, entry);
+                    }
+                    
+                    entry.count++;
+                    entry.total = entry.total.plus(currentPoint);
+                    
+                    double d = Vector2.squareSum(currentPoint);
+                    if (d < entry.d) {
+                        entry.nonAveraged = currentPoint.clone();
+                        entry.d = d;
+                    }
+                    
+                    x++;
+                }
+                y++;
+            }
+            
+            int maxCount = 0;
+            int depth = 0;
+            for (Map.Entry<Integer, FBRPEntry> storeEntry : store.entrySet()) {
+                FBRPEntry thisEntry = storeEntry.getValue();
+                if (thisEntry.count > maxCount) {
+                    this.maxCount = storeEntry;
+                    maxCount = thisEntry.count;
+                    maxCountDepth = depth;
+                }
+                depth += thisEntry.count;
+            }
+        }
+        
+        
+        //Sub-Classes
+        
+        /**
+         * Holds data about a specific candidate for the best reference point.
+         */
+        private static class FBRPEntry {
+            
+            //Fields
+            
+            /**
+             * The number of times this candidate has been passed.
+             */
+            public int count = 0;
+            
+            /**
+             * The sum of the points that this candidate has hit.
+             */
+            public Vector total = new Vector(0, 0);
+            
+            /**
+             * The last point that this candidate has hit.
+             */
+            public Vector nonAveraged = new Vector(0, 0);
+            
+            /**
+             * The minimum hypotenuse of all the points this candidate has hit.
+             */
+            public double d = 1000000.0;
+            
+        }
+        
+    }
+    
+    /**
      * Holds an approximation of a reference point in the Mandelbrot image.
      */
-    class Approximation {
+    private static class Approximation {
         
         //Fields
         
@@ -1103,7 +1746,7 @@ public class Mandelbrot extends Drawing {
         /**
          * The distance to the edge for each reference point in the list of reference points.
          */
-        public double distanceToEdge[];
+        public double[] distanceToEdge;
         
         /**
          * The screen offset of the reference point.
@@ -1602,246 +2245,9 @@ public class Mandelbrot extends Drawing {
     }
     
     /**
-     * Holds a buffer of the calculation of the Mandelbrot data.
-     */
-    class IndexBuffer2D {
-        
-        //Fields
-        
-        /**
-         * The width of the buffer.
-         */
-        public int width;
-        
-        /**
-         * The height of the buffer.
-         */
-        public int height;
-        
-        /**
-         * The stride of the buffer.
-         */
-        public int stride;
-        
-        /**
-         * The offset of the buffer.
-         */
-        public int offset;
-        
-        /**
-         * The buffer of the calculation of the Mandelbrot data.
-         */
-        public int buffer[];
-        
-        
-        //Constructors
-        
-        /**
-         * Constructs a new IndexBuffer2D of a specified dimension.
-         *
-         * @param width  The width of the buffer.
-         * @param height The height of the buffer.
-         */
-        public IndexBuffer2D(int width, int height) {
-            this.buffer = new int[width * height];
-            this.width = width;
-            this.height = height;
-            this.stride = width;
-        }
-        
-        /**
-         * Constructs a new IndexBuffer2D.
-         *
-         * @param buffer The initial buffer of the calculation of the Mandelbrot data.
-         * @param width  The width of the buffer.
-         * @param height The height of the buffer.
-         * @param stride The stride of the buffer.
-         * @param offset The offset of the buffer.
-         */
-        public IndexBuffer2D(int buffer[], int width, int height, int stride, int offset) {
-            this.buffer = buffer;
-            this.width = width;
-            this.height = height;
-            this.stride = stride;
-            this.offset = offset;
-        }
-        
-        
-        //Methods
-        
-        /**
-         * Gets a value from the buffer at a specified position.
-         *
-         * @param x The x coordinate of the value.
-         * @param y The y coordinate of the value.
-         * @return The value from the buffer at the specified position.
-         */
-        public int get(int x, int y) {
-            return buffer[offset + x + y * stride];
-        }
-        
-        /**
-         * Sets a value in the buffer at a specified position.
-         *
-         * @param x     The x coordinate of the value to set.
-         * @param y     The y coordinate of the value to set.
-         * @param value The value to set at the position.
-         */
-        public void set(int x, int y, int value) {
-            buffer[offset + x + y * stride] = value;
-        }
-        
-        /**
-         * Clears the buffer and sets a default value to all positions.
-         *
-         * @param value The default value to set for all positions in the buffer.
-         */
-        public void clear(int value) {
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    set(x, y, value);
-                }
-            }
-        }
-        
-        /**
-         * Creates a sub buffer for a rectangular area of a parent buffer.
-         *
-         * @param p1 The upper left point of the rectangular area for the sub buffer.
-         * @param p2 The lower right point of the rectangular area for the sub buffer.
-         * @return A sub buffer for the rectangular area specified.
-         */
-        public IndexBuffer2D subBuffer(Vector p1, Vector p2) {
-            return new IndexBuffer2D(buffer, (int) (p2.getX() - p1.getX()), (int) (p2.getY() - p1.getY()), stride, (int) ((p1.getY() * stride) + p1.getX() + offset));
-        }
-        
-        /**
-         * Creates an image from the buffer using a palette to color the data.
-         *
-         * @param palette The palette used to color the data in the buffer.
-         * @return An image of the buffer data of the Mandelbrot.
-         */
-        public BufferedImage makeTexture(Palette palette) {
-            BufferedImage image = null;
-            int i, j, k, l, m, n, o, p, q, w, h;
-            
-            try {
-                switch (Mandelbrot.sampleType) {
-                    case SUPER_SAMPLE_NONE:
-                        image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-                        
-                        for (int y = 0, y2 = height - 1; y < height; y++, y2--) {
-                            for (int x = 0; x < width; x++) {
-                                i = get(x, y);
-                                image.setRGB(x, y2, palette.getAverageColor(i));
-                                
-                            }
-                        }
-                        break;
-                    case SUPER_SAMPLE_2X:
-                        w = width - 1;
-                        h = height / 2;
-                        image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-                        
-                        for (int y = 0, y2 = h - 1; y < h; y++, y2--) {
-                            for (int x = 0; x < w; x++) {
-                                i = get(x, y);
-                                j = get(x, y + 1);
-                                k = get(x, y + h + 1);
-                                l = get(x + 1, y + h + 1);
-                                image.setRGB(x, y2, palette.getAverageColor(i, j, k, l));
-                            }
-                        }
-                        break;
-                    case SUPER_SAMPLE_4X:
-                        w = width / 2;
-                        h = height / 2;
-                        image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-                        
-                        for (int y = 0, y2 = height - 2; y < height; y += 2, y2 -= 2) {
-                            for (int x = 0; x < width; x += 2) {
-                                i = get(x, y);
-                                j = get(x, y + 1);
-                                k = get(x + 1, y + 1);
-                                l = get(x + 1, y);
-                                image.setRGB(x / 2, y2 / 2, palette.getAverageColor(i, j, k, l));
-                            }
-                        }
-                        break;
-                    case SUPER_SAMPLE_4X_9:
-                        w = width / 2;
-                        h = height / 2;
-                        image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-                        
-                        for (int y = 0, y2 = height - 3; y < height - 1; y += 2, y2 -= 2) {
-                            for (int x = 0; x < width - 1; x += 2) {
-                                i = get(x, y);
-                                j = get(x, y + 1);
-                                k = get(x + 1, y + 1);
-                                l = get(x + 1, y);
-                                m = get(x + 2, y);
-                                n = get(x + 2, y + 1);
-                                o = get(x + 2, y + 2);
-                                p = get(x + 1, y + 2);
-                                q = get(x, y + 2);
-                                image.setRGB(x / 2, y2 / 2, palette.getAverageColor(i, j, k, l, m, n, o, p, q));
-                            }
-                        }
-                        break;
-                    case SUPER_SAMPLE_9X:
-                        w = width / 3;
-                        h = height / 3;
-                        image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-                        
-                        for (int y = 0, y2 = height - 2; y < height; y += 3, y2 -= 3) {
-                            for (int x = 0; x < width; x += 3) {
-                                i = get(x, y);
-                                j = get(x, y + 1);
-                                k = get(x + 1, y + 1);
-                                l = get(x + 1, y);
-                                m = get(x + 2, y);
-                                n = get(x + 2, y + 1);
-                                o = get(x + 2, y + 2);
-                                p = get(x + 1, y + 2);
-                                q = get(x, y + 2);
-                                image.setRGB(x / 3, y2 / 3, palette.getAverageColor(i, j, k, l, m, n, o, p, q));
-                            }
-                        }
-                        break;
-                }
-            } catch (OutOfMemoryError e) {
-                return null;
-            }
-            
-            if (saveFrames) {
-                File imgDir = new File("images");
-                if (!imgDir.exists()) {
-                    //noinspection ResultOfMethodCallIgnored
-                    imgDir.mkdir();
-                }
-                StringBuilder imgName = new StringBuilder(String.valueOf(frameIndex++));
-                while (imgName.length() < 6) {
-                    imgName.insert(0, "0");
-                }
-                imgName.insert(0, "Mandelbrot_");
-                imgName.append(".jpg");
-                File imgOut = new File(imgDir, imgName.toString());
-                try {
-                    ImageIO.write(image, "jpg", imgOut);
-                } catch (IOException e) {
-                    System.out.println("Failed to save image: " + imgOut.getAbsolutePath());
-                }
-            }
-            
-            return image;
-        }
-        
-    }
-    
-    /**
      * Holds a color palette used to render the Mandelbrot calculations.
      */
-    class Palette {
+    private static class Palette {
         
         //Constants
         
@@ -1856,7 +2262,7 @@ public class Mandelbrot extends Drawing {
         /**
          * The color palette used to render the Mandelbrot calculations.
          */
-        private int palette[];
+        private int[] palette;
         
         /**
          * The rate of divisions between colors in the palette.
@@ -2004,412 +2410,6 @@ public class Mandelbrot extends Drawing {
             b &= Mandelbrot.paletteFilters[2];
             
             return r + g + b;
-        }
-        
-    }
-    
-    /**
-     * Finds the best reference point for a calculation of the Mandelbrot.
-     */
-    class FindBestReferencePoint {
-        
-        //Fields
-        
-        /**
-         * The approximation that will hold the best reference point that is determined.
-         */
-        private Approximation approximation;
-        
-        /**
-         * The store of potential best reference points.
-         */
-        private TreeMap<Integer, FBRPEntry> store;
-        
-        /**
-         * The current best reference point.
-         */
-        private Map.Entry<Integer, FBRPEntry> maxCount;
-        
-        /**
-         * The depth of the current best reference point.
-         */
-        private int maxCountDepth;
-        
-        /**
-         * A store of the iteration limit of different potential best reference points.
-         */
-        private int data[][];
-        
-        /**
-         * The number of potential best reference points in the store that have an iteration higher than the expected iteration limit.
-         */
-        private int countAboveAccuracyLimit;
-        
-        /**
-         * The step to move when calculating the best reference point.
-         */
-        private Vector step;
-        
-        /**
-         * The number of steps used when calculating the best reference point.
-         */
-        private Vector steps;
-        
-        /**
-         * The starting points to use when calculating the best reference point.
-         */
-        private Vector start;
-        
-        
-        //Constructors
-        
-        /**
-         * Creates a new FindBestReferencePoint.
-         *
-         * @param initialApproximation The initial approximation to find the best reference point for.
-         */
-        public FindBestReferencePoint(Approximation initialApproximation) {
-            approximation = initialApproximation;
-            store = new TreeMap<>();
-            data = new int[20][20];
-            countAboveAccuracyLimit = 0;
-        }
-        
-        
-        //Methods
-        
-        /**
-         * Determines the best reference point.
-         *
-         * @return The approximation holding the best reference point.
-         */
-        public Approximation calculate() {
-            if (approximation.numIterationsN > Mandelbrot.iterationLimit - 200) {
-                return approximation;
-            }
-            Approximation centerCheckApproximation = null;
-            
-            Vector point = new Vector(0, 0);
-            Vector initialPoint = approximation.screenOffset.clone();
-            Vector oldMaxPoint = new Vector(0, 0);
-            
-            double range = 2.0;
-            int initial;
-            
-            doAPass(point, 1.6, 9);
-            
-            boolean skipZoomBodge = false;
-            for (int pass = 0; pass < 100; pass++) {
-                Iterator<Map.Entry<Integer, FBRPEntry>> iterator = store.entrySet().iterator();
-                List<Map.Entry<Integer, FBRPEntry>> top = new ArrayList<>();
-                top.add(iterator.next());
-                if (iterator.hasNext()) {
-                    top.add(iterator.next());
-                } else {
-                    top.add(top.get(0));
-                }
-                top.add(maxCount);
-                
-                if (((top.get(1).getValue()).count > ((top.get(0).getValue()).count * 5)) ||
-                    (((top.get(1).getValue()).count >= (3 * (top.get(0).getValue()).count)) && ((top.get(2).getValue()).count >= (3 * (top.get(0).getValue()).count)))) {
-                    top.set(0, top.get(1));
-                } else if (((top.get(2).getValue()).count > ((top.get(1).getValue()).count * 5)) &&
-                           ((-top.get(2).getKey() > approximation.numIterationsN) || ((top.get(2).getValue()).count > (maxCountDepth * 2)))) {
-                    top.set(0, top.get(2));
-                }
-                point = (top.get(0).getValue()).total.scale(1.0 / (top.get(0).getValue()).count);
-                
-                if ((pass == 0) && ((Math.abs(point.getX()) > 0.3) || (Math.abs(point.getY()) > 0.3))) {
-                    centerCheckApproximation = new Approximation(approximation);
-                }
-                
-                if ((top.get(0).getKey() >= (approximation.numIterationsN + 1)) ||
-                    (((top.get(0).getValue()).count > 10) && ((top.get(0).getKey() > (approximation.numIterationsN - 100)) || (top.get(0) == top.get(2))))) {
-                    if (((top.get(0).getValue()).count == 1) && (Vector2.squareSum(point) < (Math.pow(range, 2) * 0.005))) {
-                        initial = -1;
-                    } else {
-                        initial = approximation.numIterationsN;
-                        int test = approximation.calculateIterations(approximation, point.minus(approximation.screenOffset));
-                        if (((test > initial) || (test == 0)) && (((top.get(0).getValue()).count <= 10) || (test == -top.get(0).getKey()))) {
-                            approximation.reFillInCubic(point);
-                        } else {
-                            initial = -1;
-                        }
-                    }
-                    
-                    if ((initial >= approximation.numIterationsN) || (initial == -1)) {
-                        point = (top.get(0).getValue()).nonAveraged.clone();
-                        approximation.reFillInCubic(point);
-                    }
-                    
-                    if ((((top.get(0).getValue()).count > 10) || (countAboveAccuracyLimit > 10)) || skipZoomBodge || (approximation.numIterationsN < initial)) {
-                        double delta = range * 0.025;
-                        point = oldMaxPoint.plus(new Vector(
-                                delta * ((point.getX() > oldMaxPoint.getX()) ? 1 : -1),
-                                delta * ((point.getY() > oldMaxPoint.getY()) ? 1 : -1)));
-                        range *= 0.95;
-                        skipZoomBodge = true;
-                    }
-                } else {
-                    int test;
-                    if (((Math.abs((top.get(0).getValue()).nonAveraged.getX() - approximation.screenOffset.getX()) > (range / 8)) ||
-                         (Math.abs((top.get(0).getValue()).nonAveraged.getY() - approximation.screenOffset.getY()) > (range / 8))) &&
-                        ((top.get(0).getValue()).count >= 3)) {
-                        if (-top.get(0).getKey() > (approximation.calculateIterations(approximation, new Vector(0.001, 0.001)) + 500)) {
-                            point = (top.get(0).getValue()).nonAveraged.clone();
-                            approximation.reFillInCubic(point);
-                        }
-                    }
-                }
-                
-                if (((top.get(0).getValue()).count <= 10) && (countAboveAccuracyLimit <= 10) && !skipZoomBodge) {
-                    if (!((range > 0.02) && (approximation.numIterationsN < (Mandelbrot.iterationLimit - 100)))) {
-                        break;
-                    }
-                    range /= 3.0;
-                } else {
-                    if (approximation.numIterationsN >= (Mandelbrot.iterationLimit - 100)) {
-                        break;
-                    }
-                    skipZoomBodge = ((top.get(0).getValue()).count > 40);
-                }
-                
-                store = new TreeMap<>();
-                countAboveAccuracyLimit = 0;
-                
-                if ((Math.abs(oldMaxPoint.getX() - point.getX()) * 2) > range) {
-                    range = Math.abs(oldMaxPoint.getX() - point.getX()) * 2.1;
-                }
-                if ((Math.abs(oldMaxPoint.getY() - point.getY()) * 2) > range) {
-                    range = Math.abs(oldMaxPoint.getY() - point.getY()) * 2.1;
-                }
-                
-                oldMaxPoint = point.clone();
-                doAPass(point, range, 10);
-            }
-            
-            if (centerCheckApproximation != null) {
-                if ((Math.abs(point.getX()) > 0.3) || (Math.abs(point.getY()) > 0.3)) {
-                    point = new Vector(0, 0);
-                    range = 0.6;
-                    
-                    for (int pass = 0; pass < 50; pass++) {
-                        skipZoomBodge = false;
-                        
-                        store = new TreeMap<>();
-                        countAboveAccuracyLimit = 0;
-                        doAPass(point, range, 10);
-                        
-                        Iterator<Map.Entry<Integer, FBRPEntry>> iterator = store.entrySet().iterator();
-                        List<Map.Entry<Integer, FBRPEntry>> top = new ArrayList<>();
-                        top.add(iterator.next());
-                        if (iterator.hasNext()) {
-                            top.add(iterator.next());
-                        } else {
-                            top.add(top.get(0));
-                        }
-                        top.add(maxCount);
-                        
-                        if (((top.get(0).getValue()).count == 1) && ((top.get(1).getValue()).count == 1) &&
-                            ((Math.abs((top.get(0).getValue()).total.getX() - (top.get(1).getValue()).total.getX()) > (range / 13.5)) ||
-                             (Math.abs((top.get(0).getValue()).total.getY() - (top.get(1).getValue()).total.getY()) > (range / 13.5))) &&
-                            ((top.get(2).getValue().count < 10) || (-top.get(2).getKey() < centerCheckApproximation.numIterationsN))) {
-                            int maxIterations = -1;
-                            Vector maxPoint = new Vector(0, 0);
-                            
-                            Vector repeater = initialPoint.minus(start.dividedBy(step));
-                            for (int y = 0; y < steps.getX() - 1; y++) {
-                                for (int x = 0; x < steps.getY() - 1; x++) {
-                                    int i = data[y][x] + data[y][x + 1] + data[y + 1][x + 1] + data[y + 1][x];
-                                    i -= Math.max(Math.max(data[y][x], data[y][x + 1]), Math.max(data[y + 1][x + 1], data[y + 1][x]));
-                                    
-                                    if ((repeater.getX() >= x) && (repeater.getX() <= (x + 1)) && (repeater.getY() >= y) && (repeater.getY() <= (y + 1))) {
-                                        i -= 1000;
-                                    }
-                                    if (i > maxIterations) {
-                                        maxPoint = new Vector(x, y);
-                                        maxIterations = i;
-                                    }
-                                }
-                            }
-                            
-                            point = new Vector(0, 0);
-                            for (int i = 0; i <= 1; i++) {
-                                for (int j = 0; j <= 1; j++) {
-                                    point = point.plus(start.plus(
-                                            step.times(new Vector(maxPoint.getX() + i, maxPoint.getY() + j)).scale(
-                                                    data[(int) maxPoint.getY() + j][(int) maxPoint.getX() + i] - store.lastKey())));
-                                }
-                            }
-                            point = point.scale(1.0 / ((-4 * store.lastKey()) +
-                                                       data[(int) maxPoint.getY()][(int) maxPoint.getX()] +
-                                                       data[(int) maxPoint.getY()][(int) maxPoint.getX() + 1] +
-                                                       data[(int) maxPoint.getY() + 1][(int) maxPoint.getX() + 1] +
-                                                       data[(int) maxPoint.getY() + 1][(int) maxPoint.getX()]));
-                            
-                            range *= 0.5;
-                            if (range <= 0.02) {
-                                break;
-                            }
-                            
-                            int test = approximation.calculateIterations(approximation, point.minus(approximation.screenOffset));
-                            if ((test > approximation.numIterationsN) || (test == 0)) {
-                                approximation.reFillInCubic(point);
-                            }
-                            
-                            store = new TreeMap<>();
-                            countAboveAccuracyLimit = 0;
-                            doAPass(point, range, 10);
-                            continue;
-                        }
-                        
-                        if (((top.get(1).getValue()).count > ((top.get(0).getValue()).count * 5)) ||
-                            (((top.get(1).getValue()).count >= (3 * (top.get(0).getValue()).count)) && ((top.get(2).getValue()).count >= (3 * (top.get(0).getValue()).count)))) {
-                            top.set(0, top.get(1));
-                        } else if (((top.get(2).getValue()).count > ((top.get(1).getValue()).count * 5)) && (-top.get(2).getKey() > centerCheckApproximation.numIterationsN) && ((maxCount.getValue()).count >= (maxCountDepth * 0.67777))) {
-                            top.set(0, top.get(2));
-                        }
-                        
-                        point = (top.get(0).getValue()).total.scale(1.0 / (top.get(0).getValue()).count);
-                        
-                        if (((-top.get(0).getKey() >= (centerCheckApproximation.numIterationsN + 1)) ||
-                             (((top.get(0).getValue()).count > 10) && (-top.get(0).getKey() > (centerCheckApproximation.numIterationsN - 100))))) {
-                            if (((top.get(0).getValue()).count >= 5) && (approximation != centerCheckApproximation)) {
-                                approximation = centerCheckApproximation;
-                                skipZoomBodge = true;
-                            }
-                            
-                            if (approximation == centerCheckApproximation) {
-                                if ((top.get(0).getValue()).count == 1) {
-                                    initial = -1;
-                                } else {
-                                    initial = approximation.numIterationsN;
-                                    int test = approximation.calculateIterations(approximation, point.minus(approximation.screenOffset));
-                                    if ((test > initial) || (test == 0)) {
-                                        approximation.reFillInCubic(point);
-                                    } else {
-                                        initial = -1;
-                                    }
-                                }
-                                
-                                if ((initial >= approximation.numIterationsN) || (initial == -1)) {
-                                    point = (top.get(0).getValue()).nonAveraged.clone();
-                                    approximation.reFillInCubic(point);
-                                }
-                            }
-                        } else {
-                            break;
-                        }
-                        
-                        if (!((range > 0.02) && (approximation.numIterationsN < (Mandelbrot.iterationLimit - 100)))) {
-                            break;
-                        }
-                        
-                        if ((countAboveAccuracyLimit < 10) && !skipZoomBodge) {
-                            range /= 3.0;
-                        } else {
-                            range *= 0.95;
-                        }
-                    }
-                }
-            }
-            
-            return approximation;
-        }
-        
-        /**
-         * Performs a pass with the current parameters trying to determine the best reference point.
-         *
-         * @param point   The point to center around.
-         * @param dim     The dimension of the square around the center point to test.
-         * @param numRows The number of rows in the dimension.
-         */
-        private void doAPass(Vector point, double dim, int numRows) {
-            Vector dimension = new Vector(dim, dim);
-            step = dimension.scale(1.0 / (numRows - 1));
-            steps = new Vector(numRows, numRows);
-            start = point.minus(dimension.scale(0.5));
-            Vector end = point.plus(dimension.plus(step).scale(0.5));
-            
-            int y = 0;
-            for (double q = start.getY(); q < end.getY(); q += step.getY()) {
-                int x = 0;
-                for (double p = start.getX(); p < end.getX(); p += step.getX()) {
-                    Vector currentPoint = new Vector(p, q);
-                    
-                    int i = approximation.calculateIterations(approximation, currentPoint.minus(approximation.screenOffset));
-                    if (i == 0) {
-                        i = 0x7fffffff;
-                    }
-                    data[y][x] = i;
-                    
-                    if (i > (approximation.numIterationsN + 200)) {
-                        countAboveAccuracyLimit++;
-                    }
-                    
-                    FBRPEntry entry = store.get(-i);
-                    if (entry == null) {
-                        entry = new FBRPEntry();
-                        store.put(-i, entry);
-                    }
-                    
-                    entry.count++;
-                    entry.total = entry.total.plus(currentPoint);
-                    
-                    double d = Vector2.squareSum(currentPoint);
-                    if (d < entry.d) {
-                        entry.nonAveraged = currentPoint.clone();
-                        entry.d = d;
-                    }
-                    
-                    x++;
-                }
-                y++;
-            }
-            
-            int maxCount = 0;
-            int depth = 0;
-            for (Map.Entry<Integer, FBRPEntry> storeEntry : store.entrySet()) {
-                FBRPEntry thisEntry = storeEntry.getValue();
-                if (thisEntry.count > maxCount) {
-                    this.maxCount = storeEntry;
-                    maxCount = thisEntry.count;
-                    maxCountDepth = depth;
-                }
-                depth += thisEntry.count;
-            }
-        }
-        
-        
-        //Sub-Classes
-        
-        /**
-         * Holds data about a specific candidate for the best reference point.
-         */
-        private class FBRPEntry {
-            
-            //Fields
-            
-            /**
-             * The number of times this candidate has been passed.
-             */
-            public int count = 0;
-            
-            /**
-             * The sum of the points that this candidate has hit.
-             */
-            public Vector total = new Vector(0, 0);
-            
-            /**
-             * The last point that this candidate has hit.
-             */
-            public Vector nonAveraged = new Vector(0, 0);
-            
-            /**
-             * The minimum hypotenuse of all the points this candidate has hit.
-             */
-            public double d = 1000000.0;
-            
         }
         
     }

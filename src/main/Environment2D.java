@@ -6,9 +6,6 @@
 
 package main;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -18,6 +15,9 @@ import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import math.vector.Vector;
 import objects.base.Drawing;
@@ -28,7 +28,7 @@ import objects.base.Drawing;
 public class Environment2D {
     
     //Constants
-
+    
     /**
      * The maximum number of frames to render per second.
      */
@@ -43,20 +43,20 @@ public class Environment2D {
      * The maximum y dimension of the Window.
      */
     public static final int MAX_SCREEN_Y = Environment.MAX_SCREEN_Y;
-
-
+    
+    
     //Static Fields
-
+    
     /**
      * The number of frames to render per second.
      */
     public static int fps = MAX_FPS;
-
+    
     /**
      * The x dimension of the Window.
      */
     public static int screenX = MAX_SCREEN_X;
-
+    
     /**
      * The y dimension of the Window.
      */
@@ -69,7 +69,7 @@ public class Environment2D {
      * The Frame of the Window.
      */
     public JFrame frame;
-
+    
     /**
      * The Panel to render the Drawing in.
      */
@@ -164,7 +164,7 @@ public class Environment2D {
         frame.pack();
         frame.setVisible(true);
     }
-
+    
     /**
      * Sizes the window.
      */
@@ -226,7 +226,7 @@ public class Environment2D {
     public void setFps(int fps) {
         Environment2D.fps = fps;
     }
-
+    
     /**
      * Sets the dimensions of the Window.
      *

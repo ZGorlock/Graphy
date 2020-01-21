@@ -51,13 +51,13 @@ public class Drawing {
      */
     public void setupControls() {
     }
-
+    
     /**
      * Starts drawing the Drawing.
      */
     public void run() {
     }
-
+    
     /**
      * Renders the Drawing.
      *
@@ -66,7 +66,7 @@ public class Drawing {
     public BufferedImage render() {
         return new BufferedImage((int) environment.drawingSize.getX(), (int) environment.drawingSize.getY(), BufferedImage.TYPE_INT_RGB);
     }
-
+    
     /**
      * Produces an overlay for the Drawing.
      *
@@ -74,10 +74,10 @@ public class Drawing {
      */
     public void overlay(Graphics2D g) {
     }
-
-
+    
+    
     //Static Methods
-
+    
     /**
      * Runs a Drawing.
      *
@@ -88,13 +88,13 @@ public class Drawing {
         Environment2D environment = new Environment2D();
         environment.setFps(0);
         environment.setup();
-
+        
         Constructor<? extends Drawing> constructor = drawingClass.getDeclaredConstructor(Environment2D.class);
         Drawing drawing = constructor.newInstance(environment);
         drawing.initComponents();
         drawing.setupControls();
         drawing.run();
-
+        
         environment.run();
     }
     

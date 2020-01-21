@@ -76,7 +76,7 @@ public class Vertex extends BaseObject {
         if (!prePrepare()) {
             return new ArrayList<>();
         }
-    
+        
         List<BaseObject> preparedBases = new ArrayList<>();
         
         prepared.clear();
@@ -98,7 +98,7 @@ public class Vertex extends BaseObject {
         if (!preRender(prepared, vertices, 1)) {
             return;
         }
-            
+        
         g2.setColor(getColor());
         g2.drawRect((int) prepared.get(0).getX(), (int) prepared.get(0).getY(), 1, 1);
     }

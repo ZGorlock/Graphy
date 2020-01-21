@@ -143,7 +143,7 @@ public class MandelbrotOld extends Drawing {
     
     
     //Methods
-
+    
     /**
      * Sets up components for the Mandelbrot.
      */
@@ -152,7 +152,7 @@ public class MandelbrotOld extends Drawing {
         environment.setSize(1000, 1000);
         environment.setBackground(Color.BLACK);
     }
-
+    
     /**
      * Sets up controls for the Mandelbrot.
      */
@@ -162,13 +162,13 @@ public class MandelbrotOld extends Drawing {
             @Override
             public void mouseClicked(MouseEvent e) {
             }
-
+            
             @Override
             public void mousePressed(MouseEvent e) {
                 if (!zoomEnabled) {
                     return;
                 }
-
+                
                 double zoom;
                 if (SwingUtilities.isLeftMouseButton(e)) {
                     zoom = ZOOM_STEP;
@@ -177,28 +177,28 @@ public class MandelbrotOld extends Drawing {
                 } else {
                     return;
                 }
-
+                
                 Vector coordinate = clickToMandelbrot(new Vector(e.getX(), e.getY()));
-
+                
                 zoom(coordinate, zoom);
             }
-
+            
             @Override
             public void mouseReleased(MouseEvent e) {
             }
-
+            
             @Override
             public void mouseEntered(MouseEvent e) {
-
+                
             }
-
+            
             @Override
             public void mouseExited(MouseEvent e) {
-
+                
             }
         });
     }
-
+    
     /**
      * Starts drawing the Mandelbrot.
      */
@@ -207,7 +207,7 @@ public class MandelbrotOld extends Drawing {
         this.dimension = Math.max(Environment2D.screenX, Environment2D.screenY);
         this.offset.setX((dimension > Environment2D.screenX) ? (Environment2D.screenX - dimension) / 2.0 : 0);
         this.offset.setY((dimension > Environment2D.screenY) ? (Environment2D.screenY - dimension) / 2.0 : 0);
-
+        
         if (slowZoomEnabled) {
             zoomEnabled = false;
             bounds = new Rectangle(new Vector(MIN_BOUND, MAX_BOUND).plus(slowZoomTo), new Vector(MAX_BOUND, MAX_BOUND).plus(slowZoomTo), new Vector(MAX_BOUND, MIN_BOUND).plus(slowZoomTo), new Vector(MIN_BOUND, MIN_BOUND).plus(slowZoomTo));
@@ -216,9 +216,9 @@ public class MandelbrotOld extends Drawing {
             bounds = new Rectangle(new Vector(MIN_BOUND, MAX_BOUND), new Vector(MAX_BOUND, MAX_BOUND), new Vector(MAX_BOUND, MIN_BOUND), new Vector(MIN_BOUND, MIN_BOUND));
             bounds.setCenter(new Vector(0, 0));
         }
-
+        
         populateColors();
-
+        
         if (slowZoomEnabled) {
             Timer slowZoom = new Timer();
             slowZoom.scheduleAtFixedRate(new TimerTask() {
@@ -301,7 +301,7 @@ public class MandelbrotOld extends Drawing {
         
         return img;
     }
-
+    
     /**
      * Produces an overlay for the Mandelbrot.
      *

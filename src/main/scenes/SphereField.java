@@ -36,7 +36,7 @@ public class SphereField extends Scene {
      * @param args The arguments to the main method.
      * @throws Exception When the Scene class cannot be constructed.
      */
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         runScene(SphereField.class);
     }
     

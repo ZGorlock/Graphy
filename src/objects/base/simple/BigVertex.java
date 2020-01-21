@@ -6,10 +6,11 @@
 
 package objects.base.simple;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+
 import math.vector.Vector;
 import objects.base.AbstractObject;
-
-import java.awt.*;
 
 /**
  * Defines a Vertex of a certain size.
@@ -84,7 +85,7 @@ public class BigVertex extends Vertex {
         if (!preRender(prepared, vertices, 1)) {
             return;
         }
-            
+        
         g2.setColor(getColor());
         for (int i = -size; i <= size; i++) {
             for (int j = -size; j <= size; j++) {

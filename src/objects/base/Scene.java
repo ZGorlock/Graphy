@@ -60,10 +60,10 @@ public abstract class Scene extends Object {
     
     
     //Static Methods
-
+    
     /**
      * Runs a Scene.
-     * 
+     *
      * @param sceneClass The class of Scene to run.
      * @throws Exception When the Scene class cannot be constructed.
      */
@@ -71,14 +71,14 @@ public abstract class Scene extends Object {
         Environment environment = new Environment();
         environment.setup();
         environment.setupMainKeyListener();
-
+        
         Constructor<? extends Scene> constructor = sceneClass.getDeclaredConstructor(Environment.class);
         Scene scene = constructor.newInstance(environment);
         scene.initComponents();
         scene.setupCameras();
         scene.setupControls();
         scene.calculate();
-
+        
         environment.addObject(scene);
         environment.run();
     }

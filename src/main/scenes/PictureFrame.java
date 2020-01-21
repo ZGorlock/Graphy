@@ -6,11 +6,11 @@
 
 package main.scenes;
 
-import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import javax.imageio.ImageIO;
 
 import camera.Camera;
 import main.Environment;
@@ -34,7 +34,7 @@ public class PictureFrame extends Scene {
      * @param args The arguments to the main method.
      * @throws Exception When the Scene class cannot be constructed.
      */
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         runScene(PictureFrame.class);
     }
     

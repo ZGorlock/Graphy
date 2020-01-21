@@ -6,6 +6,14 @@
 
 package objects.complex;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
 import main.Environment;
 import math.matrix.Matrix3;
 import math.vector.Vector;
@@ -13,12 +21,6 @@ import objects.base.AbstractObject;
 import objects.base.BaseObject;
 import objects.base.polygon.Rectangle;
 import utility.ColorUtility;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
 
 /**
  * Defines a DrawingPane.
@@ -213,7 +215,7 @@ public class DrawingPane extends BaseObject {
         
         boolean needsUpdate = false;
         if ((lastImageDimensions == null) || (lastPrepared == null) ||
-            (lastImageDimensions.getX() != (image.getWidth() - 1)) || (lastImageDimensions.getY() != (image.getHeight() - 1))) {
+                (lastImageDimensions.getX() != (image.getWidth() - 1)) || (lastImageDimensions.getY() != (image.getHeight() - 1))) {
             needsUpdate = true;
         } else {
             for (int i = 0; i < 4; i++) {
@@ -271,7 +273,7 @@ public class DrawingPane extends BaseObject {
             int y = (int) p.getY();
             
             if ((x < 0) || (x > width) || (y < 0) || (y > height) ||
-                imgTmp.getRGB(x, y) == TOUCH_COLOR) {
+                    imgTmp.getRGB(x, y) == TOUCH_COLOR) {
                 continue;
             }
             imgTmp.setRGB(x, y, TOUCH_COLOR);

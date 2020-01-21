@@ -6,19 +6,28 @@
 
 package camera;
 
+import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import main.Environment;
 import math.Delta;
 import math.vector.Vector;
 import math.vector.Vector3;
 import objects.base.Scene;
 import utility.SphericalCoordinateUtility;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.util.List;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Defines the functionality of a Camera.
@@ -1016,7 +1025,7 @@ public class Camera {
         boolean inView = false;
         for (Vector v : vs) {
             if ((v.getX() >= 0) && (v.getX() < viewportX) &&
-                (v.getY() >= 0) && (v.getY() < viewportY)) {
+                    (v.getY() >= 0) && (v.getY() < viewportY)) {
                 inView = true;
                 break;
             }

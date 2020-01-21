@@ -76,7 +76,7 @@ public class Icosahedron extends RegularPolyhedron {
     @Override
     protected void calculate() {
         components.clear();
-    
+        
         double b = 1 + GOLDEN_RATIO;
         
         vertices = new Vector[ICOSAHEDRON_VERTICES];

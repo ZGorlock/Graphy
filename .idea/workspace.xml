@@ -507,14 +507,14 @@
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="725" y="373" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579649506122" />
-    <state x="648" y="77" key="CommitChangelistDialog2" timestamp="1579648888655">
+    <state x="648" y="77" key="CommitChangelistDialog2" timestamp="1579650731349">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="648" y="77" key="CommitChangelistDialog2/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579648888655" />
-    <state x="93" y="93" width="1862" height="926" key="DiffContextDialog" timestamp="1579649186638">
+    <state x="648" y="77" key="CommitChangelistDialog2/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579650731349" />
+    <state x="93" y="93" width="1862" height="926" key="DiffContextDialog" timestamp="1579650810792">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="93" y="93" width="1862" height="926" key="DiffContextDialog/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579649186638" />
+    <state x="93" y="93" width="1862" height="926" key="DiffContextDialog/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579650810792" />
     <state x="755" y="249" key="FileChooserDialogImpl" timestamp="1579644450398">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
@@ -547,10 +547,10 @@
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="868" y="450" key="VCS.ChangelistChooser/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579644075160" />
-    <state x="517" y="219" key="Vcs.Push.Dialog.v2" timestamp="1579648892733">
+    <state x="517" y="219" key="Vcs.Push.Dialog.v2" timestamp="1579650733737">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="517" y="219" key="Vcs.Push.Dialog.v2/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579648892733" />
+    <state x="517" y="219" key="Vcs.Push.Dialog.v2/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579650733737" />
     <state x="2554" y="0" width="1037" height="1158" key="dock-window-1" timestamp="1579644666236">
       <screen x="2560" y="0" width="2048" height="1152" />
     </state>

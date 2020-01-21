@@ -6,9 +6,6 @@
 
 package main;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -23,6 +20,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 import camera.Camera;
 import math.vector.Vector;
@@ -108,7 +108,7 @@ public class Environment {
      * The Frame of the Window.
      */
     public JFrame frame;
-
+    
     /**
      * The Panel to render the Scene in.
      */
@@ -216,7 +216,7 @@ public class Environment {
         frame.pack();
         frame.setVisible(true);
     }
-
+    
     /**
      * Sizes the window.
      */
@@ -320,10 +320,10 @@ public class Environment {
     public void setFps(int fps) {
         Environment.fps = fps;
     }
-
+    
     /**
      * Sets the dimensions of the Window.
-     * 
+     *
      * @param screenX The x dimension of the Window.
      * @param screenY The y dimension of the Window.
      */

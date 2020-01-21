@@ -81,7 +81,7 @@ public class Spirograph extends Drawing {
     
     
     //Methods
-
+    
     /**
      * Sets up components for the Spirograph.
      */
@@ -91,25 +91,25 @@ public class Spirograph extends Drawing {
         environment.setSize(1250, 1250);
         environment.setBackground(Color.BLACK);
     }
-
+    
     /**
      * Sets up controls for the Spirograph.
      */
     @Override
     public void setupControls() {
     }
-
+    
     /**
      * Starts drawing the Spirograph.
      */
     @Override
     public void run() {
         double slice = 2 * Math.PI / pointCount;
-
+        
         for (int i = 0; i < pointCount; i++) {
             points.add(environment.getCenterPosition().plus(new Vector(Math.cos(slice * i), Math.sin(slice * i)).scale(radius)));
         }
-
+        
         colorAnimation = new Object(Color.BLACK);
         colorAnimation.addColorAnimation(50000, 0);
     }
@@ -146,7 +146,7 @@ public class Spirograph extends Drawing {
         
         return img;
     }
-
+    
     /**
      * Produces an overlay for the Spirograph.
      *

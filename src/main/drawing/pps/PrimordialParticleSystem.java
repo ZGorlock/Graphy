@@ -52,7 +52,7 @@ public class PrimordialParticleSystem extends Drawing {
     
     
     //Methods
-
+    
     /**
      * Sets up components for the Primordial Particle System.
      */
@@ -62,14 +62,14 @@ public class PrimordialParticleSystem extends Drawing {
         environment.setSize(1000, 1000);
         environment.setBackground(Color.BLACK);
     }
-
+    
     /**
      * Sets up controls for the Primordial Particle System.
      */
     @Override
     public void setupControls() {
     }
-
+    
     /**
      * Starts drawing the Primordial Particle System.
      */
@@ -92,7 +92,7 @@ public class PrimordialParticleSystem extends Drawing {
         
         return img;
     }
-
+    
     /**
      * Produces an overlay for the Primordial Particle System.
      *

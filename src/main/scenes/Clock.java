@@ -120,8 +120,8 @@ public class Clock extends Scene {
                 int nowMinute = cal.get(Calendar.MINUTE);
                 int nowSecond = cal.get(Calendar.SECOND);
                 time.setText(
-                        (((nowHour % 12) < 10) ? "0" : "") + (nowHour % 12) + ':' + 
-                                ((nowMinute < 10) ? "0" : "") +nowMinute + ':' + 
+                        (((nowHour % 12) < 10) ? "0" : "") + (nowHour % 12) + ':' +
+                                ((nowMinute < 10) ? "0" : "") + nowMinute + ':' +
                                 ((nowSecond < 10) ? "0" : "") + nowSecond);
             }
         }, 0, 1000 / Environment.fps);

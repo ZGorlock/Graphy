@@ -6,13 +6,14 @@
 
 package objects.base.simple;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
+
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines a Text object.
@@ -87,7 +88,7 @@ public class Text extends BaseObject {
         if (!prePrepare()) {
             return new ArrayList<>();
         }
-    
+        
         List<BaseObject> preparedBases = new ArrayList<>();
         
         prepared.clear();

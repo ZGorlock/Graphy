@@ -108,8 +108,8 @@ public class Matrix3 {
      */
     public double determinant() {
         return (values[0] * ((values[4] * values[8]) - (values[5] * values[7]))) -
-               (values[1] * ((values[3] * values[8]) - (values[5] * values[6]))) +
-               (values[2] * ((values[3] * values[7]) - (values[4] * values[6])));
+                (values[1] * ((values[3] * values[8]) - (values[5] * values[6]))) +
+                (values[2] * ((values[3] * values[7]) - (values[4] * values[6])));
     }
     
     /**

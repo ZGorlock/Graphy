@@ -6,14 +6,14 @@
 
 package main.scenes;
 
+import java.awt.Color;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Frame;
 import objects.base.Scene;
 import objects.sphere.Sphere;
-
-import java.awt.*;
 
 /**
  * Defines a Sphere Field scene.
@@ -34,19 +34,10 @@ public class SphereField extends Scene {
      * The main method for the Sphere Field scene.
      *
      * @param args The arguments to the main method.
+     * @throws Exception When the Scene class cannot be constructed.
      */
-    public static void main(String[] args) {
-        Environment environment = new Environment();
-        environment.setup();
-        environment.setupMainKeyListener();
-        
-        SphereField sphereField = new SphereField(environment);
-        sphereField.initComponents();
-        sphereField.setupCameras();
-        sphereField.setupControls();
-        
-        environment.addObject(sphereField);
-        environment.run();
+    public static void main(String[] args) throws Exception{
+        runScene(SphereField.class);
     }
     
     
@@ -59,8 +50,6 @@ public class SphereField extends Scene {
      */
     public SphereField(Environment environment) {
         super(environment);
-        
-        calculate();
     }
     
     

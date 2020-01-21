@@ -6,20 +6,24 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import camera.Camera;
 import main.Environment;
 import objects.base.AbstractObject;
 import objects.base.Frame;
 import objects.base.Scene;
 import objects.polyhedron.regular.MetatronsCube;
-import objects.polyhedron.regular.platonic.*;
+import objects.polyhedron.regular.platonic.Dodecahedron;
+import objects.polyhedron.regular.platonic.Hexahedron;
+import objects.polyhedron.regular.platonic.Icosahedron;
+import objects.polyhedron.regular.platonic.Octahedron;
+import objects.polyhedron.regular.platonic.Tetrahedron;
 import utility.ColorUtility;
-
-import java.awt.*;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Defines a Polyhedra Explosion scene.
@@ -113,19 +117,10 @@ public class PolyhedraExplosion extends Scene {
      * The main method for the Rubik's Cube scene.
      *
      * @param args The arguments to the main method.
+     * @throws Exception When the Scene class cannot be constructed.
      */
-    public static void main(String[] args) {
-        Environment environment = new Environment();
-        environment.setup();
-        environment.setupMainKeyListener();
-        
-        PolyhedraExplosion polyhedraExplosion = new PolyhedraExplosion(environment);
-        polyhedraExplosion.initComponents();
-        polyhedraExplosion.setupCameras();
-        polyhedraExplosion.setupControls();
-        
-        environment.addObject(polyhedraExplosion);
-        environment.run();
+    public static void main(String[] args) throws Exception {
+        runScene(PolyhedraExplosion.class);
     }
     
     
@@ -138,8 +133,6 @@ public class PolyhedraExplosion extends Scene {
      */
     public PolyhedraExplosion(Environment environment) {
         super(environment);
-        
-        calculate();
     }
     
     
@@ -461,6 +454,7 @@ public class PolyhedraExplosion extends Scene {
      */
     @Override
     public void initComponents() {
+        environment.setBackground(Color.BLACK);
     }
     
     /**

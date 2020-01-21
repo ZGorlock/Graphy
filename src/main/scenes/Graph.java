@@ -6,6 +6,14 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.UniqueVectorSet;
@@ -15,10 +23,6 @@ import objects.base.Scene;
 import objects.base.polygon.Rectangle;
 import objects.system.Axes;
 import utility.EquationUtility;
-
-import java.awt.*;
-import java.util.List;
-import java.util.*;
 
 /**
  * Defines a Graph scene.
@@ -49,19 +53,10 @@ public class Graph extends Scene {
      * The main method for the Graph scene.
      *
      * @param args The arguments to the main method.
+     * @throws Exception When the Scene class cannot be constructed.
      */
-    public static void main(String[] args) {
-        Environment environment = new Environment();
-        environment.setup();
-        environment.setupMainKeyListener();
-        
-        Graph graph = new Graph(environment);
-        graph.initComponents();
-        graph.setupCameras();
-        graph.setupControls();
-        
-        environment.addObject(graph);
-        environment.run();
+    public static void main(String[] args) throws Exception {
+        runScene(Graph.class);
     }
     
     
@@ -74,8 +69,6 @@ public class Graph extends Scene {
      */
     public Graph(Environment environment) {
         super(environment);
-        
-        calculate();
     }
     
     
@@ -86,7 +79,6 @@ public class Graph extends Scene {
      */
     @Override
     public void calculate() {
-        ;
         registerComponent(new Axes(5));
         
         Object plane = new Object(Color.BLACK);

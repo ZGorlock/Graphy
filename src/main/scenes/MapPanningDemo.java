@@ -6,13 +6,13 @@
 
 package main.scenes;
 
+import java.awt.Color;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Scene;
 import objects.base.polygon.Square;
-
-import java.awt.*;
 
 /**
  * Defines an Map Panning Demo scene.
@@ -38,19 +38,10 @@ public class MapPanningDemo extends Scene {
      * The main method for the Map Panning Demo scene.
      *
      * @param args The arguments to the main method.
+     * @throws Exception When the Scene class cannot be constructed.
      */
-    public static void main(String[] args) {
-        Environment environment = new Environment();
-        environment.setup();
-        environment.setupMainKeyListener();
-        
-        MapPanningDemo mapMaker2D = new MapPanningDemo(environment);
-        mapMaker2D.initComponents();
-        mapMaker2D.setupCameras();
-        mapMaker2D.setupControls();
-        
-        environment.addObject(mapMaker2D);
-        environment.run();
+    public static void main(String[] args) throws Exception {
+        runScene(MapPanningDemo.class);
     }
     
     
@@ -63,8 +54,6 @@ public class MapPanningDemo extends Scene {
      */
     public MapPanningDemo(Environment environment) {
         super(environment);
-        
-        calculate();
     }
     
     

@@ -6,11 +6,11 @@
 
 package main.scenes;
 
+import java.awt.Color;
+
 import camera.Camera;
 import main.Environment;
 import objects.base.Scene;
-
-import java.awt.*;
 
 /**
  * Defines a Cube Fractal scene.
@@ -23,19 +23,10 @@ public class CubeFractal extends Scene {
      * The main method for the Cube Fractal scene.
      *
      * @param args The arguments to the main method.
+     * @throws Exception When the Scene class cannot be constructed.
      */
-    public static void main(String[] args) {
-        Environment environment = new Environment();
-        environment.setup();
-        environment.setupMainKeyListener();
-        
-        CubeFractal cubeFractal = new CubeFractal(environment);
-        cubeFractal.initComponents();
-        cubeFractal.setupCameras();
-        cubeFractal.setupControls();
-        
-        environment.addObject(cubeFractal);
-        environment.run();
+    public static void main(String[] args) throws Exception {
+        runScene(CubeField.class);
     }
     
     
@@ -48,8 +39,6 @@ public class CubeFractal extends Scene {
      */
     public CubeFractal(Environment environment) {
         super(environment);
-        
-        calculate();
     }
     
     

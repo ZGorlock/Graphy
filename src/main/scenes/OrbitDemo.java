@@ -6,14 +6,14 @@
 
 package main.scenes;
 
+import java.awt.Color;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Scene;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import objects.system.Axes;
-
-import java.awt.*;
 
 /**
  * Defines an Orbit Demo scene.
@@ -26,19 +26,10 @@ public class OrbitDemo extends Scene {
      * The main method for the Orbit Demo scene.
      *
      * @param args The arguments to the main method.
+     * @throws Exception When the Scene class cannot be constructed.
      */
-    public static void main(String[] args) {
-        Environment environment = new Environment();
-        environment.setup();
-        environment.setupMainKeyListener();
-        
-        OrbitDemo orbit = new OrbitDemo(environment);
-        orbit.initComponents();
-        orbit.setupCameras();
-        orbit.setupControls();
-        
-        environment.addObject(orbit);
-        environment.run();
+    public static void main(String[] args) throws Exception {
+        runScene(OrbitDemo.class);
     }
     
     
@@ -51,8 +42,6 @@ public class OrbitDemo extends Scene {
      */
     public OrbitDemo(Environment environment) {
         super(environment);
-        
-        calculate();
     }
     
     
@@ -63,7 +52,6 @@ public class OrbitDemo extends Scene {
      */
     @Override
     public void calculate() {
-        
         registerComponent(new Axes(5));
         
         Hexahedron h1 = new Hexahedron(null, new Vector(0, 0, 0), Color.RED, .5);

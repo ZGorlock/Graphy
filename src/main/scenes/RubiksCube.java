@@ -6,6 +6,18 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -13,13 +25,6 @@ import objects.base.Object;
 import objects.base.Scene;
 import objects.base.group.RotationGroup;
 import objects.polyhedron.regular.platonic.Hexahedron;
-
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.List;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Defines a Rubik's Cube scene.
@@ -128,19 +133,10 @@ public class RubiksCube extends Scene {
      * The main method for the Rubik's Cube scene.
      *
      * @param args The arguments to the main method.
+     * @throws Exception When the Scene class cannot be constructed.
      */
-    public static void main(String[] args) {
-        Environment environment = new Environment();
-        environment.setup();
-        environment.setupMainKeyListener();
-        
-        RubiksCube rubiksCube = new RubiksCube(environment);
-        rubiksCube.initComponents();
-        rubiksCube.setupCameras();
-        rubiksCube.setupControls();
-        
-        environment.addObject(rubiksCube);
-        environment.run();
+    public static void main(String[] args) throws Exception {
+        runScene(RubiksCube.class);
     }
     
     
@@ -153,8 +149,6 @@ public class RubiksCube extends Scene {
      */
     public RubiksCube(Environment environment) {
         super(environment);
-        
-        calculate();
     }
     
     

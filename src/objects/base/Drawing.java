@@ -6,10 +6,11 @@
 
 package objects.base;
 
-import main.Environment2D;
-
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Constructor;
+
+import main.Environment2D;
 
 /**
  * Defines a Drawing to render.
@@ -46,6 +47,18 @@ public class Drawing {
     }
     
     /**
+     * Sets up controls for the Drawing.
+     */
+    public void setupControls() {
+    }
+
+    /**
+     * Starts drawing the Drawing.
+     */
+    public void run() {
+    }
+
+    /**
      * Renders the Drawing.
      *
      * @return The rendered image.
@@ -53,7 +66,7 @@ public class Drawing {
     public BufferedImage render() {
         return new BufferedImage((int) environment.drawingSize.getX(), (int) environment.drawingSize.getY(), BufferedImage.TYPE_INT_RGB);
     }
-    
+
     /**
      * Produces an overlay for the Drawing.
      *
@@ -61,11 +74,28 @@ public class Drawing {
      */
     public void overlay(Graphics2D g) {
     }
-    
+
+
+    //Static Methods
+
     /**
-     * Sets up controls for the Drawing.
+     * Runs a Drawing.
+     *
+     * @param drawingClass The class of Drawing to run.
+     * @throws Exception When the Drawing class cannot be constructed.
      */
-    public void setupControls() {
+    protected static void runDrawing(Class<? extends Drawing> drawingClass) throws Exception {
+        Environment2D environment = new Environment2D();
+        environment.setFps(0);
+        environment.setup();
+
+        Constructor<? extends Drawing> constructor = drawingClass.getDeclaredConstructor(Environment2D.class);
+        Drawing drawing = constructor.newInstance(environment);
+        drawing.initComponents();
+        drawing.setupControls();
+        drawing.run();
+
+        environment.run();
     }
     
 }

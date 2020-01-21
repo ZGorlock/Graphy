@@ -6,6 +6,14 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.UniqueVectorSet;
@@ -15,10 +23,6 @@ import objects.base.Scene;
 import objects.base.simple.Edge;
 import objects.system.Axes;
 import utility.EquationUtility;
-
-import java.awt.*;
-import java.util.List;
-import java.util.*;
 
 /**
  * Defines a Graph2D scene.
@@ -44,19 +48,10 @@ public class Graph2D extends Scene {
      * The main method for the Graph2D scene.
      *
      * @param args The arguments to the main method.
+     * @throws Exception When the Scene class cannot be constructed.
      */
-    public static void main(String[] args) {
-        Environment environment = new Environment();
-        environment.setup();
-        environment.setupMainKeyListener();
-        
-        Graph2D graph2D = new Graph2D(environment);
-        graph2D.initComponents();
-        graph2D.setupCameras();
-        graph2D.setupControls();
-        
-        environment.addObject(graph2D);
-        environment.run();
+    public static void main(String[] args) throws Exception {
+        runScene(Graph2D.class);
     }
     
     //Constructors
@@ -68,8 +63,6 @@ public class Graph2D extends Scene {
      */
     public Graph2D(Environment environment) {
         super(environment);
-        
-        calculate();
     }
     
     

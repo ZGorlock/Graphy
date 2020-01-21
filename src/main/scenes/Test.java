@@ -6,14 +6,14 @@
 
 package main.scenes;
 
+import java.awt.Color;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Scene;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import objects.system.Axes;
-
-import java.awt.*;
 
 /**
  * Defines a Test scene.
@@ -26,19 +26,10 @@ public class Test extends Scene {
      * The main method for the Test scene.
      *
      * @param args The arguments to the main method.
+     * @throws Exception When the Scene class cannot be constructed.
      */
-    public static void main(String[] args) {
-        Environment environment = new Environment();
-        environment.setup();
-        environment.setupMainKeyListener();
-        
-        Test test = new Test(environment);
-        test.initComponents();
-        test.setupCameras();
-        test.setupControls();
-        
-        environment.addObject(test);
-        environment.run();
+    public static void main(String[] args) throws Exception {
+        runScene(Test.class);
     }
     
     
@@ -51,8 +42,6 @@ public class Test extends Scene {
      */
     public Test(Environment environment) {
         super(environment);
-        
-        calculate();
     }
     
     

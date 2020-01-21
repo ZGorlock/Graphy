@@ -6,6 +6,11 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -14,11 +19,6 @@ import objects.base.group.LockedEdge;
 import objects.base.simple.Text;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import utility.SphericalCoordinateUtility;
-
-import java.awt.*;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Defines an Clock scene.
@@ -32,18 +32,8 @@ public class Clock extends Scene {
      *
      * @param args The arguments to the main method.
      */
-    public static void main(String[] args) {
-        Environment environment = new Environment();
-        environment.setup();
-        environment.setupMainKeyListener();
-        
-        Clock clock = new Clock(environment);
-        clock.initComponents();
-        clock.setupCameras();
-        clock.setupControls();
-        
-        environment.addObject(clock);
-        environment.run();
+    public static void main(String[] args) throws Exception {
+        runScene(Clock.class);
     }
     
     
@@ -56,8 +46,6 @@ public class Clock extends Scene {
      */
     public Clock(Environment environment) {
         super(environment);
-        
-        calculate();
     }
     
     

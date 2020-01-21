@@ -6,14 +6,14 @@
 
 package main.scenes;
 
+import java.awt.Color;
+
 import camera.Camera;
 import main.Environment;
 import objects.base.Frame;
 import objects.base.Scene;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import utility.ColorUtility;
-
-import java.awt.*;
 
 /**
  * Defines a Animated Cube scene.
@@ -26,19 +26,10 @@ public class AnimatedCube extends Scene {
      * The main method for the Animated Cube scene.
      *
      * @param args The arguments to the main method.
+     * @throws Exception When the Scene class cannot be constructed.
      */
-    public static void main(String[] args) {
-        Environment environment = new Environment();
-        environment.setup();
-        environment.setupMainKeyListener();
-        
-        AnimatedCube animatedCube = new AnimatedCube(environment);
-        animatedCube.initComponents();
-        animatedCube.setupCameras();
-        animatedCube.setupControls();
-        
-        environment.addObject(animatedCube);
-        environment.run();
+    public static void main(String[] args) throws Exception {
+        runScene(AnimatedCube.class);
     }
     
     
@@ -51,8 +42,6 @@ public class AnimatedCube extends Scene {
      */
     public AnimatedCube(Environment environment) {
         super(environment);
-        
-        calculate();
     }
     
     

@@ -6,14 +6,14 @@
 
 package main.scenes;
 
+import java.awt.Color;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Scene;
 import objects.base.polygon.Rectangle;
 import objects.complex.VariablePlane;
-
-import java.awt.*;
 
 /**
  * Defines a Variable Plane Demo scene.
@@ -26,19 +26,10 @@ public class VariablePlaneDemo extends Scene {
      * The main method for the Variable Plane Demo scene.
      *
      * @param args The arguments to the main method.
+     * @throws Exception When the Scene class cannot be constructed.
      */
-    public static void main(String[] args) {
-        Environment environment = new Environment();
-        environment.setup();
-        environment.setupMainKeyListener();
-        
-        VariablePlaneDemo variablePlaneDemo = new VariablePlaneDemo(environment);
-        variablePlaneDemo.initComponents();
-        variablePlaneDemo.setupCameras();
-        variablePlaneDemo.setupControls();
-        
-        environment.addObject(variablePlaneDemo);
-        environment.run();
+    public static void main(String[] args) throws Exception {
+        runScene(VariablePlaneDemo.class);
     }
     
     
@@ -51,8 +42,6 @@ public class VariablePlaneDemo extends Scene {
      */
     public VariablePlaneDemo(Environment environment) {
         super(environment);
-        
-        calculate();
     }
     
     

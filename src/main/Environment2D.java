@@ -28,6 +28,11 @@ import objects.base.Drawing;
 public class Environment2D {
     
     //Constants
+
+    /**
+     * The maximum number of frames to render per second.
+     */
+    public static final int MAX_FPS = 120;
     
     /**
      * The maximum x dimension of the Window.
@@ -38,29 +43,37 @@ public class Environment2D {
      * The maximum y dimension of the Window.
      */
     public static final int MAX_SCREEN_Y = Environment.MAX_SCREEN_Y;
+
+
+    //Static Fields
+
+    /**
+     * The number of frames to render per second.
+     */
+    public static int fps = MAX_FPS;
+
+    /**
+     * The x dimension of the Window.
+     */
+    public static int screenX = MAX_SCREEN_X;
+
+    /**
+     * The y dimension of the Window.
+     */
+    public static int screenY = MAX_SCREEN_Y;
     
     
     //Fields
     
     /**
-     * The number of frames to render per second.
-     */
-    public int fps = 120;
-    
-    /**
-     * The x dimension of the Window.
-     */
-    public int screenX = MAX_SCREEN_X;
-    
-    /**
-     * The y dimension of the Window.
-     */
-    public int screenY = MAX_SCREEN_Y;
-    
-    /**
      * The Frame of the Window.
      */
     public JFrame frame;
+
+    /**
+     * The Panel to render the Drawing in.
+     */
+    public JPanel renderPanel;
     
     /**
      * The coordinates to center the Environment at.
@@ -97,8 +110,8 @@ public class Environment2D {
      * @param screenY The y dimension of the screen.
      */
     public Environment2D(int screenX, int screenY) {
-        this.screenX = screenX;
-        this.screenY = screenY;
+        Environment2D.screenX = screenX;
+        Environment2D.screenY = screenY;
     }
     
     /**
@@ -128,7 +141,7 @@ public class Environment2D {
         }
         
         // panel to display render results
-        JPanel renderPanel = new JPanel() {
+        renderPanel = new JPanel() {
             
             public void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g;
@@ -146,12 +159,19 @@ public class Environment2D {
         };
         frame.getContentPane().add(renderPanel, BorderLayout.CENTER);
         
-        renderPanel.setSize(screenX, screenY);
-        frame.setSize(new Dimension(screenX + 16, screenY + 39));
-        frame.setPreferredSize(new Dimension(screenX + 16, screenY + 39));
+        sizeWindow();
         
         frame.pack();
         frame.setVisible(true);
+    }
+
+    /**
+     * Sizes the window.
+     */
+    public void sizeWindow() {
+        renderPanel.setSize(screenX, screenY);
+        frame.setSize(new Dimension(screenX + 16, screenY + 39));
+        frame.setPreferredSize(new Dimension(screenX + 16, screenY + 39));
     }
     
     /**
@@ -183,7 +203,7 @@ public class Environment2D {
      * @return A random position on the screen.
      */
     public Vector getRandomPosition() {
-        return new Vector(Math.random() * this.screenX, Math.random() * this.screenY);
+        return new Vector(Math.random() * Environment2D.screenX, Math.random() * Environment2D.screenY);
     }
     
     /**
@@ -192,7 +212,7 @@ public class Environment2D {
      * @return The center position on the screen.
      */
     public Vector getCenterPosition() {
-        return new Vector(this.screenX, this.screenY).scale(0.5);
+        return new Vector(Environment2D.screenX, Environment2D.screenY).scale(0.5);
     }
     
     
@@ -204,7 +224,19 @@ public class Environment2D {
      * @param fps The number of frames to render per second.
      */
     public void setFps(int fps) {
-        this.fps = fps;
+        Environment2D.fps = fps;
+    }
+
+    /**
+     * Sets the dimensions of the Window.
+     *
+     * @param screenX The x dimension of the Window.
+     * @param screenY The y dimension of the Window.
+     */
+    public void setSize(int screenX, int screenY) {
+        setScreenX(screenX);
+        setScreenY(screenY);
+        sizeWindow();
     }
     
     /**
@@ -213,7 +245,8 @@ public class Environment2D {
      * @param screenX The x dimension of the Window.
      */
     public void setScreenX(int screenX) {
-        this.screenX = screenX;
+        Environment2D.screenX = screenX;
+        sizeWindow();
     }
     
     /**
@@ -222,7 +255,8 @@ public class Environment2D {
      * @param screenY The y dimension of the Window.
      */
     public void setScreenY(int screenY) {
-        this.screenY = screenY;
+        Environment2D.screenY = screenY;
+        sizeWindow();
     }
     
     /**

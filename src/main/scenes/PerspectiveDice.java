@@ -6,6 +6,10 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -13,13 +17,13 @@ import objects.base.Frame;
 import objects.base.Scene;
 import objects.base.polygon.Rectangle;
 import objects.complex.VariablePlane;
-import objects.polyhedron.regular.platonic.*;
+import objects.polyhedron.regular.platonic.Dodecahedron;
+import objects.polyhedron.regular.platonic.Hexahedron;
+import objects.polyhedron.regular.platonic.Icosahedron;
+import objects.polyhedron.regular.platonic.Octahedron;
+import objects.polyhedron.regular.platonic.Tetrahedron;
 import objects.sphere.Sphere;
 import utility.SphericalCoordinateUtility;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class PerspectiveDice extends Scene {
     
@@ -29,19 +33,10 @@ public class PerspectiveDice extends Scene {
      * The main method for the Perspective Dice scene.
      *
      * @param args The arguments to the main method.
+     * @throws Exception When the Scene class cannot be constructed.
      */
-    public static void main(String[] args) {
-        Environment environment = new Environment();
-        environment.setup();
-        environment.setupMainKeyListener();
-        
-        PerspectiveDice perspectiveDice = new PerspectiveDice(environment);
-        perspectiveDice.initComponents();
-        perspectiveDice.setupCameras();
-        perspectiveDice.setupControls();
-        
-        environment.addObject(perspectiveDice);
-        environment.run();
+    public static void main(String[] args) throws Exception {
+        runScene(PerspectiveDice.class);
     }
     
     
@@ -54,8 +49,6 @@ public class PerspectiveDice extends Scene {
      */
     public PerspectiveDice(Environment environment) {
         super(environment);
-        
-        calculate();
     }
     
     

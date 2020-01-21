@@ -6,21 +6,30 @@
 
 package main;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import camera.Camera;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
 import objects.base.ObjectInterface;
 import objects.base.Scene;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.List;
-import java.util.Timer;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The main Environment.
@@ -48,11 +57,6 @@ public class Environment {
      * The maximum z dimension of the Window.
      */
     public static final int MAX_SCREEN_Z = 720;
-    
-    /**
-     * The border from the edge of the Window.
-     */
-    public static final int SCREEN_BORDER = 50;
     
     /**
      * The origin of the Environment at.
@@ -104,6 +108,11 @@ public class Environment {
      * The Frame of the Window.
      */
     public JFrame frame;
+
+    /**
+     * The Panel to render the Scene in.
+     */
+    public JPanel renderPanel;
     
     /**
      * The Scene to render.
@@ -160,7 +169,7 @@ public class Environment {
         frame.setFocusTraversalKeysEnabled(false);
         
         // panel to display render results
-        JPanel renderPanel = new JPanel() {
+        renderPanel = new JPanel() {
             
             public void paintComponent(Graphics g) {
                 
@@ -202,12 +211,19 @@ public class Environment {
         };
         frame.getContentPane().add(renderPanel, BorderLayout.CENTER);
         
-        renderPanel.setSize(screenX, screenY);
-        frame.setSize(new Dimension(screenX + 16, screenY + 39));
-        frame.setPreferredSize(new Dimension(screenX + 16, screenY + 39));
+        sizeWindow();
         
         frame.pack();
         frame.setVisible(true);
+    }
+
+    /**
+     * Sizes the window.
+     */
+    public void sizeWindow() {
+        renderPanel.setSize(screenX, screenY);
+        frame.setSize(new Dimension(screenX + 16, screenY + 39));
+        frame.setPreferredSize(new Dimension(screenX + 16, screenY + 39));
     }
     
     /**
@@ -302,7 +318,19 @@ public class Environment {
      * @param fps The number of frames to render per second.
      */
     public void setFps(int fps) {
-        this.fps = fps;
+        Environment.fps = fps;
+    }
+
+    /**
+     * Sets the dimensions of the Window.
+     * 
+     * @param screenX The x dimension of the Window.
+     * @param screenY The y dimension of the Window.
+     */
+    public void setSize(int screenX, int screenY) {
+        setScreenX(screenX);
+        setScreenY(screenY);
+        sizeWindow();
     }
     
     /**
@@ -311,7 +339,8 @@ public class Environment {
      * @param screenX The x dimension of the Window.
      */
     public void setScreenX(int screenX) {
-        this.screenX = screenX;
+        Environment.screenX = screenX;
+        sizeWindow();
     }
     
     /**
@@ -320,7 +349,8 @@ public class Environment {
      * @param screenY The y dimension of the Window.
      */
     public void setScreenY(int screenY) {
-        this.screenY = screenY;
+        Environment.screenY = screenY;
+        sizeWindow();
     }
     
     /**
@@ -329,7 +359,7 @@ public class Environment {
      * @param screenZ The z dimension of the Window.
      */
     public void setScreenZ(int screenZ) {
-        this.screenZ = screenZ;
+        Environment.screenZ = screenZ;
     }
     
     /**
@@ -338,7 +368,7 @@ public class Environment {
      * @param origin The coordinates to center the Environment at.
      */
     public void setOrigin(Vector origin) {
-        this.origin = origin;
+        Environment.origin = origin;
     }
     
     /**

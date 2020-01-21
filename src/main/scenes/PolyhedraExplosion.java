@@ -7,8 +7,6 @@
 package main.scenes;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -16,10 +14,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import camera.Camera;
 import main.Environment;
-import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.Frame;
-import objects.base.Object;
 import objects.base.Scene;
 import objects.polyhedron.regular.MetatronsCube;
 import objects.polyhedron.regular.platonic.Dodecahedron;
@@ -34,46 +30,88 @@ import utility.ColorUtility;
  */
 public class PolyhedraExplosion extends Scene {
     
+    //Static Fields
+    
+    /**
+     * The number of each polyhedra species to put in the scene.
+     */
+    public static final int speciesCount = 100;
+    
+    /**
+     * The radius of the enclosing sphere of each polyhedron.
+     */
+    public static final double speciesRadius = 0.1;
+    
+    /**
+     * The alpha of the colors of each polyhedron.
+     */
+    public static final int speciesAlpha = 255;
+    
+    
     //Fields
     
     /**
-     * The number of each polyhedron species to include in the scene.
+     * The number of tetrahedron species to include in the scene.
      */
-    private int tetrahedronCount;
-    
-    private int hexahedronCount;
-    
-    private int octahedronCount;
-    
-    private int dodecahedronCount;
-    
-    private int icosahedronCount;
+    private int tetrahedronCount = speciesCount;
     
     /**
-     * The color of each of polyhedron species, null for random colors.
+     * The number of hexahedron species to include in the scene.
+     */
+    private int hexahedronCount = speciesCount;
+    
+    /**
+     * The number of octahedron species to include in the scene.
+     */
+    private int octahedronCount = speciesCount;
+    
+    /**
+     * The number of dodecahedron species to include in the scene.
+     */
+    private int dodecahedronCount = speciesCount;
+    
+    /**
+     * The number of icosahedron species to include in the scene.
+     */
+    private int icosahedronCount = speciesCount;
+    
+    /**
+     * The color of the tetrahedron species, null for random colors.
      */
     private Color tetrahedronColor;
     
+    /**
+     * The color of the hexahedron species, null for random colors.
+     */
     private Color hexahedronColor;
     
+    /**
+     * The color of the octahedron species, null for random colors.
+     */
     private Color octahedronColor;
     
+    /**
+     * The color of the dodecahedron species, null for random colors.
+     */
     private Color dodecahedronColor;
     
+    /**
+     * The color of the icosahedron species, null for random colors.
+     */
     private Color icosahedronColor;
     
     /**
      * The radius of the enclosing sphere of each polyhedron.
      */
-    private double radius;
+    private double radius = speciesRadius;
     
     /**
      * The alpha of the colors of each polyhedron.
      */
-    private int alpha;
+    private int alpha = speciesAlpha;
     
     
-    //Main Methods
+    //Main Method
     
     /**
      * The main method for the Rubik's Cube scene.
@@ -81,58 +119,16 @@ public class PolyhedraExplosion extends Scene {
      * @param args The arguments to the main method.
      */
     public static void main(String[] args) {
-        String[] environmentArgs = new String[]{};
-        Environment.main(environmentArgs);
-        Environment.setupMainKeyListener();
+        Environment environment = new Environment();
+        environment.setup();
+        environment.setupMainKeyListener();
         
-        List<Object> objects = createObjects();
-        for (Object object : objects) {
-            Environment.addObject(object);
-        }
+        PolyhedraExplosion polyhedraExplosion = new PolyhedraExplosion(environment);
+        polyhedraExplosion.setupCameras();
+        polyhedraExplosion.setupControls();
         
-        setupCameras();
-        
-        setupControls();
-    }
-    
-    /**
-     * Creates objects for the scene.
-     *
-     * @return A list of Objects that were created for the scene.
-     */
-    public static List<Object> createObjects() {
-        List<Object> objects = new ArrayList<>();
-        
-        MetatronsCube metatronsCube = new MetatronsCube(Environment.origin, 1, new Color(255, 0, 0, 64), new Color(255, 165, 0, 64), new Color(0, 255, 0, 64), new Color(0, 0, 255, 64), new Color(165, 0, 165, 64));
-        metatronsCube.addFrame(Color.BLACK);
-        objects.add(metatronsCube);
-    
-        int speciesCount = 100;
-        PolyhedraExplosion scene = new PolyhedraExplosion(Environment.origin, .1,
-                speciesCount, null,
-                speciesCount, null,
-                speciesCount, null,
-                speciesCount, null,
-                speciesCount, null,
-                255
-        );
-        objects.add(scene);
-        
-        return objects;
-    }
-    
-    /**
-     * Sets up cameras for the scene.
-     */
-    public static void setupCameras() {
-        Camera camera = new Camera(true, true);
-        camera.setLocation(Math.PI / 2, 0, 5);
-    }
-    
-    /**
-     * Sets up controls for the scene.
-     */
-    public static void setupControls() {
+        environment.addObject(polyhedraExplosion);
+        environment.run();
     }
     
     
@@ -141,35 +137,10 @@ public class PolyhedraExplosion extends Scene {
     /**
      * Constructor for a Polyhedra Explosion scene.
      *
-     * @param center            The center of the scene.
-     * @param radius            The radius of the sphere enclosing each polyhedron.
-     * @param tetrahedronCount  The number of tetrahedrons to include.
-     * @param tetrahedronColor  The color of the tetrahedrons, null for random colors.
-     * @param hexahedronCount   The number of hexahedrons to include.
-     * @param hexahedronColor   The color of the hexahedrons, null for random colors.
-     * @param octahedronCount   The number of octahedrons to include.
-     * @param octahedronColor   The color of the octahedrons, null for random colors.
-     * @param dodecahedronCount The number of dodecahedrons to include.
-     * @param dodecahedronColor The color of the dodecahedrons, null for random colors.
-     * @param icosahedronCount  The number of icosahedrons to include.
-     * @param icosahedronColor  The color of the icosahedrons, null for random colors.
-     * @param alpha             The alpha of the colors of each polyhedron.
+     * @param environment The Environment to render the Polyhedra Explosion in.
      */
-    public PolyhedraExplosion(Vector center, double radius, int tetrahedronCount, Color tetrahedronColor, int hexahedronCount, Color hexahedronColor, int octahedronCount, Color octahedronColor, int dodecahedronCount, Color dodecahedronColor, int icosahedronCount, Color icosahedronColor, int alpha) {
-        super(center);
-        
-        this.radius = radius;
-        this.tetrahedronCount = tetrahedronCount;
-        this.tetrahedronColor = tetrahedronColor;
-        this.hexahedronCount = hexahedronCount;
-        this.hexahedronColor = hexahedronColor;
-        this.octahedronCount = octahedronCount;
-        this.octahedronColor = octahedronColor;
-        this.dodecahedronCount = dodecahedronCount;
-        this.dodecahedronColor = dodecahedronColor;
-        this.icosahedronCount = icosahedronCount;
-        this.icosahedronColor = icosahedronColor;
-        this.alpha = alpha;
+    public PolyhedraExplosion(Environment environment) {
+        super(environment);
         
         calculate();
     }
@@ -178,10 +149,14 @@ public class PolyhedraExplosion extends Scene {
     //Methods
     
     /**
-     * Calculates the entities of the Polyhedra Explosion scene.
+     * Calculates the components that compose the Polyhedra Explosion.
      */
     @Override
     public void calculate() {
+        MetatronsCube metatronsCube = new MetatronsCube(Environment.ORIGIN, 1, new Color(255, 0, 0, 64), new Color(255, 165, 0, 64), new Color(0, 255, 0, 64), new Color(0, 0, 255, 64), new Color(165, 0, 165, 64));
+        metatronsCube.addFrame(Color.BLACK);
+        registerComponent(metatronsCube);
+        
         AtomicBoolean cameraInMotion = new AtomicBoolean(false);
         final AtomicInteger[] loop = {new AtomicInteger(1)};
         for (int i = 0; i < hexahedronCount; i++) {
@@ -482,6 +457,22 @@ public class PolyhedraExplosion extends Scene {
             }, 0);
             icosahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
         }
+    }
+    
+    /**
+     * Sets up cameras for the Polyhedra Explosion scene.
+     */
+    @Override
+    public void setupCameras() {
+        Camera camera = new Camera(this, true, true);
+        camera.setLocation(Math.PI / 2, 0, 5);
+    }
+    
+    /**
+     * Sets up controls for the Polyhedra Explosion scene.
+     */
+    @Override
+    public void setupControls() {
     }
     
 }

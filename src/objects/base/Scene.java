@@ -6,48 +6,49 @@
 
 package objects.base;
 
-import math.vector.Vector;
+import java.awt.Color;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
+import main.Environment;
 
 /**
  * Defines a Scene to render.
  */
 public abstract class Scene extends Object {
     
+    //Fields
+    
+    /**
+     * The Environment to render the Scene.
+     */
+    public Environment environment;
+    
+    
     //Constructors
     
     /**
-     * Constructor for a Scene.
+     * Constructs a Scene.
      *
-     * @param center The center of the scene.
+     * @param environment The Environment to render the Scene in.
      */
-    public Scene(Vector center) {
-        super(center, Color.BLACK);
+    public Scene(Environment environment) {
+        super(Environment.ORIGIN, Color.BLACK);
+        this.environment = environment;
+        environment.setScene(this);
     }
     
     
     //Static Methods
     
     /**
-     * Creates objects for the scene.
-     */
-    public static List<Object> createObjects() {
-        return new ArrayList<>();
-    }
-    
-    /**
      * Sets up cameras for the scene.
      */
-    public static void setupCameras() {
+    public void setupCameras() {
     }
     
     /**
      * Sets up controls for the scene.
      */
-    public static void setupControls() {
+    public void setupControls() {
     }
     
 }

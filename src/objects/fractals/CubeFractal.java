@@ -6,13 +6,13 @@
 
 package objects.fractals;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import math.vector.Vector;
 import objects.base.Object;
 import objects.polyhedron.regular.platonic.Hexahedron;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines a Cube Fractal.

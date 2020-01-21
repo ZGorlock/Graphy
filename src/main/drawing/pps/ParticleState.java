@@ -6,12 +6,12 @@
 
 package main.drawing.pps;
 
-import math.vector.Vector;
-
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import math.vector.Vector;
 
 /**
  * Defines a configuration of particles.

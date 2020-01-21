@@ -6,16 +6,22 @@
 
 package objects.complex;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import math.vector.UniqueVectorSet;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.Object;
 import objects.base.polygon.Rectangle;
 import objects.base.polygon.Triangle;
-
-import java.awt.*;
-import java.util.List;
-import java.util.*;
 
 /**
  * Defines a Variable Plane.

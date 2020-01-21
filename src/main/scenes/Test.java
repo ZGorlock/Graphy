@@ -6,17 +6,14 @@
 
 package main.scenes;
 
+import java.awt.Color;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
-import objects.base.Object;
 import objects.base.Scene;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import objects.system.Axes;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines a Test scene.
@@ -31,73 +28,73 @@ public class Test extends Scene {
      * @param args The arguments to the main method.
      */
     public static void main(String[] args) {
-        String[] environmentArgs = new String[]{};
-        Environment.main(environmentArgs);
-        Environment.setupMainKeyListener();
+        Environment environment = new Environment();
+        environment.setup();
+        environment.setupMainKeyListener();
         
-        List<Object> objects = createObjects();
-        for (Object object : objects) {
-            Environment.addObject(object);
-        }
+        Test test = new Test(environment);
+        test.setupCameras();
+        test.setupControls();
         
-        setupCameras();
-        
-        setupControls();
-    }
-    
-    /**
-     * Creates objects for the scene.
-     *
-     * @return A list of Objects that were created for the scene.
-     */
-    public static List<Object> createObjects() {
-        List<Object> objects = new ArrayList<>();
-
-//        RegularPolyhedron i = new Icosahedron(null, Environment.origin, new Color(0, 0, 0, 0), 1);
-//        i.addFrame(java.awt.Color.BLACK);
-//        i.displayVertexIndices();
-//        i.displayFaceIndices();
-//        objects.add(i);
-        
-        Axes axes = new Axes(5);
-        objects.add(axes);
-        
-        Hexahedron h1 = new Hexahedron(null, new Vector(0, 0, 0), Color.RED, 1);
-//        Hexahedron h2 = new Hexahedron(null, new Vector(5, 2, 3), Color.YELLOW, 1);
-        objects.add(h1);
-//        objects.add(h2);
-        
-        return objects;
-    }
-    
-    /**
-     * Sets up cameras for the scene.
-     */
-    public static void setupCameras() {
-        Camera camera = new Camera(true, true);
-        camera.setLocation(Math.PI / 4, 3 * Math.PI / 4, 5);
-        camera.setOffset(new Vector(5, 2, 3));
-        
-        Camera camera2 = new Camera(true, true);
-        camera2.setLocation(Math.PI / 4, 3 * Math.PI / 4, 50);
-    }
-    
-    /**
-     * Sets up controls for the scene.
-     */
-    public static void setupControls() {
+        environment.addObject(test);
+        environment.run();
     }
     
     
     //Constructors
     
     /**
-     * Constructor for the Test Scene.
+     * Constructor for the Test scene.
      *
-     * @param center The center of the scene.
+     * @param environment The Environment to render the Test in.
      */
-    public Test(Vector center) {
-        super(center);
+    public Test(Environment environment) {
+        super(environment);
+        
+        calculate();
+    }
+    
+    
+    //Methods
+    
+    /**
+     * Calculates the components that compose the Test.
+     */
+    @Override
+    public void calculate() {
+//        RegularPolyhedron i = new Icosahedron(null, Environment.origin, new Color(0, 0, 0, 0), 1);
+//        i.addFrame(java.awt.Color.BLACK);
+//        i.displayVertexIndices();
+//        i.displayFaceIndices();
+//        registerComponent(i);
+        
+        Axes axes = new Axes(5);
+        registerComponent(axes);
+        
+        Hexahedron h1 = new Hexahedron(null, new Vector(0, 0, 0), Color.RED, 1);
+//        Hexahedron h2 = new Hexahedron(null, new Vector(5, 2, 3), Color.YELLOW, 1);
+        registerComponent(h1);
+//        registerComponent(h2);
+    }
+    
+    /**
+     * Sets up cameras for the Test scene.
+     */
+    @Override
+    public void setupCameras() {
+        Camera camera = new Camera(this, true, true);
+        camera.setLocation(Math.PI / 4, 3 * Math.PI / 4, 5);
+        camera.setOffset(new Vector(5, 2, 3));
+        
+        Camera camera2 = new Camera(this, true, true);
+        camera2.setLocation(Math.PI / 4, 3 * Math.PI / 4, 50);
+    }
+    
+    /**
+     * Sets up controls for the Test scene.
+     */
+    @Override
+    public void setupControls() {
     }
     
 }

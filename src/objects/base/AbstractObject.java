@@ -6,6 +6,14 @@
 
 package objects.base;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import main.Environment;
 import math.matrix.Matrix3;
 import math.vector.Vector;
@@ -13,13 +21,6 @@ import math.vector.Vector3;
 import utility.ColorUtility;
 import utility.RotationUtility;
 import utility.SphericalCoordinateUtility;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Defines an abstract implementation of an Object.
@@ -106,7 +107,6 @@ public abstract class AbstractObject implements ObjectInterface {
     
     //Enums
     
-    
     /**
      * The enumeration of display modes for Objects.
      */
@@ -183,7 +183,7 @@ public abstract class AbstractObject implements ObjectInterface {
     public void addMovementAnimation(double xSpeed, double ySpeed, double zSpeed) {
         Timer animationTimer = new Timer();
         animationTimers.add(animationTimer);
-        movementAnimations.add(new double[]{xSpeed, ySpeed, zSpeed});
+        movementAnimations.add(new double[] {xSpeed, ySpeed, zSpeed});
         animationTimer.scheduleAtFixedRate(new TimerTask() {
             
             //Fields
@@ -218,7 +218,7 @@ public abstract class AbstractObject implements ObjectInterface {
                 double scale = (double) timeElapsed / 1000;
                 move(speedVector.scale(scale));
             }
-        }, 0, 1000 / Environment.FPS);
+        }, 0, 1000 / Environment.fps);
     }
     
     /**
@@ -287,7 +287,7 @@ public abstract class AbstractObject implements ObjectInterface {
                     totalMovement = totalMovement.plus(movementFrame);
                 }
             }
-        }, 0, 1000 / Environment.FPS);
+        }, 0, 1000 / Environment.fps);
     }
     
     /**
@@ -335,7 +335,7 @@ public abstract class AbstractObject implements ObjectInterface {
                 double scale = (double) timeElapsed / 1000;
                 rotate(speedVector.scale(scale));
             }
-        }, 0, 1000 / Environment.FPS);
+        }, 0, 1000 / Environment.fps);
     }
     
     /**
@@ -404,7 +404,7 @@ public abstract class AbstractObject implements ObjectInterface {
                     totalRotation = totalRotation.plus(rotationFrame);
                 }
             }
-        }, 0, 1000 / Environment.FPS);
+        }, 0, 1000 / Environment.fps);
     }
     
     /**
@@ -444,7 +444,7 @@ public abstract class AbstractObject implements ObjectInterface {
                 float hue = (float) timeElapsed / period;
                 setColor(ColorUtility.getColorByHue(hue));
             }
-        }, 0, 1000 / Environment.FPS);
+        }, 0, 1000 / Environment.fps);
     }
     
     /**
@@ -490,7 +490,7 @@ public abstract class AbstractObject implements ObjectInterface {
             /**
              * The normal vector of the plane of motion around the object.
              */
-            private Vector normal = Environment.origin;
+            private Vector normal = Environment.ORIGIN;
             
             /**
              * The direction of motion.
@@ -555,7 +555,7 @@ public abstract class AbstractObject implements ObjectInterface {
                 
                 move(translation.plus(adjustment));
             }
-        }, 0, 1000 / Environment.FPS);
+        }, 0, 1000 / Environment.fps);
     }
     
     /**
@@ -604,7 +604,7 @@ public abstract class AbstractObject implements ObjectInterface {
             /**
              * The normal vector of the plane of motion around the object.
              */
-            private Vector normal = Environment.origin;
+            private Vector normal = Environment.ORIGIN;
             
             /**
              * The direction of motion.
@@ -685,7 +685,7 @@ public abstract class AbstractObject implements ObjectInterface {
                     inOrbitTransformation.set(false);
                 }
             }
-        }, 0, 1000 / Environment.FPS);
+        }, 0, 1000 / Environment.fps);
     }
     
     /**

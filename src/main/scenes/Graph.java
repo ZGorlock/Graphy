@@ -6,6 +6,14 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.UniqueVectorSet;
@@ -16,16 +24,12 @@ import objects.base.polygon.Rectangle;
 import objects.system.Axes;
 import utility.EquationUtility;
 
-import java.awt.*;
-import java.util.List;
-import java.util.*;
-
 /**
  * Defines a Graph scene.
  */
 public class Graph extends Scene {
     
-    //Constants
+    //Static Fields
     
     /**
      * The density of the graph.
@@ -37,16 +41,13 @@ public class Graph extends Scene {
      */
     public static int boundDiameter = 10;
     
-    
-    //Fields
-    
     /**
      * The equation to graph
      */
-    private static EquationUtility.MathOperation graph = EquationUtility.parseMath("x^3 - y^3 - x^2 + y^2 - x + y");
+    private static EquationUtility.MathOperation equation = EquationUtility.parseMath("x^3 - y^3 - x^2 + y^2 - x + y");
     
     
-    //Main Methods
+    //Main Method
     
     /**
      * The main method for the Graph scene.
@@ -54,30 +55,44 @@ public class Graph extends Scene {
      * @param args The arguments to the main method.
      */
     public static void main(String[] args) {
-        String[] environmentArgs = new String[]{};
-        Environment.main(environmentArgs);
-        Environment.setupMainKeyListener();
+        Environment environment = new Environment();
+        environment.setup();
+        environment.setupMainKeyListener();
         
-        List<Object> objects = createObjects();
-        for (Object object : objects) {
-            Environment.addObject(object);
-        }
+        Graph graph = new Graph(environment);
+        graph.setupCameras();
+        graph.setupControls();
         
-        setupCameras();
-        
-        setupControls();
+        environment.addObject(graph);
+        environment.run();
     }
     
+    
+    //Constructors
+    
     /**
-     * Creates objects for the scene.
+     * Constructor for the Graph Scene.
      *
-     * @return A list of Objects that were created for the scene.
+     * @param environment The Environment to render the Graph in.
      */
-    public static List<Object> createObjects() {
-        List<Object> objects = new ArrayList<>();
-        objects.add(new Axes(5));
+    public Graph(Environment environment) {
+        super(environment);
         
-        Object plain = new Object(Color.BLACK);
+        calculate();
+    }
+    
+    
+    //Methods
+    
+    /**
+     * Calculates the components that compose the Graph.
+     */
+    @Override
+    public void calculate() {
+        ;
+        registerComponent(new Axes(5));
+        
+        Object plane = new Object(Color.BLACK);
         
         Set<Vector> vs = new HashSet<>();
         UniqueVectorSet uniqueVectorSet = new UniqueVectorSet();
@@ -93,7 +108,7 @@ public class Graph extends Scene {
                 
                 uniqueVectorSet.alignVectorsToSet(vt);
                 
-                Rectangle t = new Rectangle(plain, Color.WHITE, vt.get(0), vt.get(1), vt.get(2), vt.get(3));
+                Rectangle t = new Rectangle(plane, Color.WHITE, vt.get(0), vt.get(1), vt.get(2), vt.get(3));
                 t.addFrame(Color.BLACK);
                 
                 vs.addAll(vt);
@@ -104,7 +119,7 @@ public class Graph extends Scene {
             Map<String, Number> vars = new HashMap<>();
             vars.put("x", v.getX());
             vars.put("y", v.getY());
-            v.setZ(graph.evaluate(vars).doubleValue());
+            v.setZ(equation.evaluate(vars).doubleValue());
             if (v.getZ() != v.getZ()) {
                 v.setZ(0);
             }
@@ -116,35 +131,21 @@ public class Graph extends Scene {
             }
         }
         
-        objects.add(plain);
-        
-        return objects;
+        registerComponent(plane);
     }
     
     /**
-     * Sets up cameras for the scene.
+     * Sets up cameras for the Graph scene.
      */
-    public static void setupCameras() {
-        Camera camera = new Camera(true, true);
+    public void setupCameras() {
+        Camera camera = new Camera(this, true, true);
         camera.setLocation(Math.PI / 4, 5 * Math.PI / 4, 25);
     }
     
     /**
-     * Sets up controls for the scene.
+     * Sets up controls for the Graph scene.
      */
-    public static void setupControls() {
-    }
-    
-    
-    //Constructors
-    
-    /**
-     * Constructor for the Graph Scene.
-     *
-     * @param center The center of the scene.
-     */
-    public Graph(Vector center) {
-        super(center);
+    public void setupControls() {
     }
     
 }

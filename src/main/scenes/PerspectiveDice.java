@@ -6,63 +6,78 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Frame;
-import objects.base.Object;
 import objects.base.Scene;
 import objects.base.polygon.Rectangle;
 import objects.complex.VariablePlane;
-import objects.polyhedron.regular.platonic.*;
+import objects.polyhedron.regular.platonic.Dodecahedron;
+import objects.polyhedron.regular.platonic.Hexahedron;
+import objects.polyhedron.regular.platonic.Icosahedron;
+import objects.polyhedron.regular.platonic.Octahedron;
+import objects.polyhedron.regular.platonic.Tetrahedron;
 import objects.sphere.Sphere;
 import utility.SphericalCoordinateUtility;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-
 public class PerspectiveDice extends Scene {
     
-    //Main Methods
+    //Main Method
     
     /**
-     * The main method for the Rubik's Cube scene.
+     * The main method for the Perspective Dice scene.
      *
      * @param args The arguments to the main method.
      */
     public static void main(String[] args) {
-        String[] environmentArgs = new String[]{};
-        Environment.main(environmentArgs);
-        Environment.setupMainKeyListener();
+        Environment environment = new Environment();
+        environment.setup();
+        environment.setupMainKeyListener();
         
-        List<Object> objects = createObjects();
-        for (Object object : objects) {
-            Environment.addObject(object);
-        }
+        PerspectiveDice perspectiveDice = new PerspectiveDice(environment);
+        perspectiveDice.setupCameras();
+        perspectiveDice.setupControls();
         
-        setupCameras();
-        
-        setupControls();
+        environment.addObject(perspectiveDice);
+        environment.run();
     }
     
+    
+    //Constructors
+    
     /**
-     * Creates objects for the scene.
+     * Constructor for the Perspective Dice scene.
      *
-     * @return A list of Objects that were created for the scene.
+     * @param environment The Environment to render the Perspective Dice in.
      */
-    public static List<Object> createObjects() {
-        List<Object> objects = new ArrayList<>();
+    public PerspectiveDice(Environment environment) {
+        super(environment);
         
+        calculate();
+    }
+    
+    
+    //Methods
+    
+    /**
+     * Calculates the components that compose the Perspective Dice.
+     */
+    @Override
+    public void calculate() {
         Rectangle floorBounds = new Rectangle(new Vector(-10, -10, -2), new Vector(-10, 10, -2), new Vector(10, 10, -2), new Vector(10, -10, -2));
         VariablePlane floor = new VariablePlane(Color.BLACK, floorBounds, 0.5, .065, 1.5);
         Frame floorFrame = new Frame(floor);
         floorFrame.addColorAnimation(5000, 2500);
-        objects.add(floor);
-        objects.add(floorFrame);
+        registerComponent(floor);
+        registerComponent(floorFrame);
         
         List<Vector> diceLocations = new ArrayList<>();
-        for (double theta = 0; theta - (Math.PI * 2) < Environment.omega; theta += Math.PI * 2 / 5) {
+        for (double theta = 0; theta - (Math.PI * 2) < Environment.OMEGA; theta += Math.PI * 2 / 5) {
             diceLocations.add(SphericalCoordinateUtility.sphericalToCartesian(Math.PI / 2, theta, 5));
         }
         
@@ -71,7 +86,7 @@ public class PerspectiveDice extends Scene {
         Octahedron d8 = new Octahedron(diceLocations.get(2), Color.BLACK, 1);
         Dodecahedron d12 = new Dodecahedron(diceLocations.get(3), Color.BLACK, 1);
         Icosahedron d20 = new Icosahedron(diceLocations.get(4), Color.BLACK, 1);
-        Sphere dx = new Sphere(Environment.origin, Color.BLACK, .25, Math.PI / 32);
+        Sphere dx = new Sphere(Environment.ORIGIN, Color.BLACK, .25, Math.PI / 32);
         
         d4.addRotationAnimation(2, 0, 0);
         d6.addRotationAnimation(-2, 0, 0);
@@ -79,12 +94,12 @@ public class PerspectiveDice extends Scene {
         d12.addRotationAnimation(-2, 0, 0);
         d20.addRotationAnimation(2, 0, 0);
         
-        objects.add(d4);
-        objects.add(d6);
-        objects.add(d8);
-        objects.add(d12);
-        objects.add(d20);
-        objects.add(dx);
+        registerComponent(d4);
+        registerComponent(d6);
+        registerComponent(d8);
+        registerComponent(d12);
+        registerComponent(d20);
+        registerComponent(dx);
         
         d4.addOrbitAnimation(dx, 10000);
         d6.addOrbitAnimation(dx, 10000);
@@ -106,42 +121,30 @@ public class PerspectiveDice extends Scene {
         d20Frame.addColorAnimation(5000, 0);
         dxFrame.addColorAnimation(5000, 0);
         
-        objects.add(d4Frame);
-        objects.add(d6Frame);
-        objects.add(d8Frame);
-        objects.add(d12Frame);
-        objects.add(d20Frame);
-        objects.add(dxFrame);
-        
-        return objects;
+        registerComponent(d4Frame);
+        registerComponent(d6Frame);
+        registerComponent(d8Frame);
+        registerComponent(d12Frame);
+        registerComponent(d20Frame);
+        registerComponent(dxFrame);
     }
     
     /**
-     * Sets up cameras for the scene.
+     * Sets up cameras for the Perspective Dice scene.
      */
-    public static void setupCameras() {
-        Camera camera = new Camera(true, true);
+    @Override
+    public void setupCameras() {
+        Camera camera = new Camera(this, true, true);
         camera.setLocation(Math.PI / 2, Math.PI / 2, 2);
         camera.setOffset(new Vector(0, 1, 0));
         camera.setPerspective(Camera.Perspective.FIRST_PERSON);
     }
     
     /**
-     * Sets up controls for the scene.
+     * Sets up controls for the Perspective Dice scene.
      */
-    public static void setupControls() {
-    }
-    
-    
-    //Constructors
-    
-    /**
-     * Constructor for a Perspective Dice scene.
-     *
-     * @param center The center of the scene.
-     */
-    public PerspectiveDice(Vector center) {
-        super(center);
+    @Override
+    public void setupControls() {
     }
     
 }

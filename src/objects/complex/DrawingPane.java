@@ -226,7 +226,7 @@ public class DrawingPane extends BaseObject {
         
         boolean needsUpdate = false;
         if ((lastImageDimensions == null) || (lastPrepared == null) ||
-                (lastImageDimensions.getX() != (image.getWidth() - 1)) || (lastImageDimensions.getY() != (image.getHeight() - 1))) {
+            (lastImageDimensions.getX() != (image.getWidth() - 1)) || (lastImageDimensions.getY() != (image.getHeight() - 1))) {
             needsUpdate = true;
         } else {
             for (int i = 0; i < 4; i++) {
@@ -245,21 +245,21 @@ public class DrawingPane extends BaseObject {
             }
             lastImageDimensions = new Vector(image.getWidth() - 1, image.getHeight() - 1);
             
-            Matrix3 projectiveMatrixSrc = new Matrix3(new double[]{
+            Matrix3 projectiveMatrixSrc = new Matrix3(new double[] {
                     prepared.get(0).getX(), prepared.get(1).getX(), prepared.get(3).getX(),
                     prepared.get(0).getY(), prepared.get(1).getY(), prepared.get(3).getY(),
                     1.0, 1.0, 1.0});
             Vector solutionSrc = new Vector(prepared.get(2).getX(), prepared.get(2).getY(), 1.0);
             
             Vector coordinateSystemSrc = projectiveMatrixSrc.solveSystem(solutionSrc);
-            Matrix3 coordinateMatrixSrc = new Matrix3(new double[]{
+            Matrix3 coordinateMatrixSrc = new Matrix3(new double[] {
                     coordinateSystemSrc.getX(), coordinateSystemSrc.getY(), coordinateSystemSrc.getZ(),
                     coordinateSystemSrc.getX(), coordinateSystemSrc.getY(), coordinateSystemSrc.getZ(),
                     coordinateSystemSrc.getX(), coordinateSystemSrc.getY(), coordinateSystemSrc.getZ()
             });
             projectiveMatrixSrc = projectiveMatrixSrc.scale(coordinateMatrixSrc);
             
-            Matrix3 projectiveMatrixDest = new Matrix3(new double[]{
+            Matrix3 projectiveMatrixDest = new Matrix3(new double[] {
                     0, image.getWidth() - 1, 0,
                     0, 0, image.getHeight() - 1,
                     -1.0, 1.0, 1.0});
@@ -282,7 +282,7 @@ public class DrawingPane extends BaseObject {
             Point p = stack.pop();
             int x = (int) p.getX();
             int y = (int) p.getY();
-    
+            
             if ((x < 0) || (x > width) || (y < 0) || (y > height) ||
                 imgTmp.getRGB(x, y) == TOUCH_COLOR) {
                 continue;
@@ -294,7 +294,7 @@ public class DrawingPane extends BaseObject {
             Color gC = new Color(image.getRGB(gX, gY));
             g2.setColor(invert ? ColorUtility.invertColor(gC) : gC);
             g2.drawRect(x, y, 1, 1);
-    
+            
             stack.push(new Point(x + 1, y));
             stack.push(new Point(x - 1, y));
             stack.push(new Point(x, y + 1));

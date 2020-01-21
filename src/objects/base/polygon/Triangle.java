@@ -6,10 +6,10 @@
 
 package objects.base.polygon;
 
+import java.awt.Color;
+
 import math.vector.Vector;
 import objects.base.AbstractObject;
-
-import java.awt.*;
 
 /**
  * Defines a Triangle.

@@ -6,11 +6,12 @@
 
 package main.drawing.pps;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+
 import main.Environment2D;
 import objects.base.Drawing;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
 
 /**
  * The Primordial Particle System.
@@ -34,7 +35,7 @@ public class PrimordialParticleSystem extends Drawing {
      */
     public static void main(String[] args) {
         Environment2D environment = new Environment2D();
-        environment.setFPS(120);
+        environment.setFps(120);
         environment.setScreenX(1000);
         environment.setScreenY(1000);
         environment.setBackground(Color.BLACK);

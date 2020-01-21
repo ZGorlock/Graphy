@@ -6,17 +6,27 @@
 
 package camera;
 
+import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import main.Environment;
 import math.Delta;
 import math.vector.Vector;
 import math.vector.Vector3;
+import objects.base.Scene;
 import utility.SphericalCoordinateUtility;
-
-import java.awt.*;
-import java.awt.event.*;
-import java.util.List;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Defines the functionality of a Camera.
@@ -60,6 +70,21 @@ public class Camera {
     //Static Fields
     
     /**
+     * The Scene the camera is viewing.
+     */
+    private static Scene scene;
+    
+    /**
+     * The x dimension of the viewport.
+     */
+    private static double viewportX = Environment.MAX_SCREEN_X / 1000.0;
+    
+    /**
+     * The y dimension of the viewport.
+     */
+    private static double viewportY = Environment.MAX_SCREEN_Y / 1000.0;
+    
+    /**
      * The next Camera id to be used.
      */
     private static int nextCameraId = 0;
@@ -88,16 +113,6 @@ public class Camera {
      * The active Camera control in the Environment.
      */
     private static Camera activeControl = null;
-    
-    /**
-     * The x dimension of the viewport.
-     */
-    private static double viewportX = Environment.screenX / 1000.0;
-    
-    /**
-     * The y dimension of the viewport.
-     */
-    private static double viewportY = Environment.screenY / 1000.0;
     
     /**
      * Whether the static KeyListener has been set up or not.
@@ -248,10 +263,14 @@ public class Camera {
     /**
      * The constructor for a Camera.
      */
-    public Camera(boolean cameraControls, boolean cameraMovement) {
-        cameraId = nextCameraId;
+    public Camera(Scene scene, boolean cameraControls, boolean cameraMovement) {
+        this.cameraId = nextCameraId;
         nextCameraId++;
         cameraMap.put(cameraId, this);
+        
+        Camera.scene = scene;
+        viewportX = Environment.screenX / 1000.0;
+        viewportY = Environment.screenY / 1000.0;
         
         offset = new Vector(0, 0, 0);
         
@@ -260,7 +279,7 @@ public class Camera {
         if ((activeCameraView == -1) || (activeCameraControl == -1)) {
             setActiveCamera(cameraId);
         }
-        Environment.addObject(cameraObject);
+        scene.registerComponent(cameraObject);
         
         if (cameraMovement) {
             setupKeyListener();
@@ -276,7 +295,7 @@ public class Camera {
             public void run() {
                 calculateCamera();
             }
-        }, 500 / Environment.FPS, 1000 / Environment.FPS);
+        }, 500 / Environment.fps, 1000 / Environment.fps);
     }
     
     
@@ -301,7 +320,7 @@ public class Camera {
             
             
             //center of screen, m
-            Vector cameraOrigin = Environment.origin.plus(offset).justify();
+            Vector cameraOrigin = Environment.ORIGIN.plus(offset).justify();
             m = cartesian.plus(cameraOrigin);
             
             
@@ -385,10 +404,10 @@ public class Camera {
             
             //verify screen
             if (verifyViewport) {
-                if (Math.abs(viewportX - s1.distance(s2)) > Environment.omega) {
+                if (Math.abs(viewportX - s1.distance(s2)) > Environment.OMEGA) {
                     System.err.println("Camera: " + cameraId + " - Screen viewportX does not match the actual viewport width");
                 }
-                if (Math.abs(viewportY - s1.distance(s3)) > Environment.omega) {
+                if (Math.abs(viewportY - s1.distance(s3)) > Environment.OMEGA) {
                     System.err.println("Camera: " + cameraId + " - Screen viewportY does not match the actual viewport height");
                 }
             }
@@ -479,7 +498,7 @@ public class Camera {
         timer.purge();
         timer.cancel();
         cameraObject.setVisible(false);
-        Environment.removeObject(cameraObject);
+        scene.unregisterComponent(cameraObject);
         cameraMap.remove(cameraId);
     }
     
@@ -489,7 +508,7 @@ public class Camera {
     private void setupKeyListener() {
         final Set<Integer> pressed = new HashSet<>();
         
-        Environment.frame.addKeyListener(new KeyListener() {
+        scene.environment.frame.addKeyListener(new KeyListener() {
             
             @Override
             public void keyTyped(KeyEvent e) {
@@ -531,7 +550,7 @@ public class Camera {
                     double oldPhi = phi;
                     double oldTheta = theta;
                     double oldRho = rho;
-                    Vector oldOrigin = Environment.origin.clone();
+                    Vector oldOrigin = Environment.ORIGIN.clone();
                     
                     Vector headingMovement = heading.scale(movementSpeed);
                     Vector perpendicularMovement = new Vector3(0, 0, 1).cross(heading).scale(movementSpeed);
@@ -585,7 +604,7 @@ public class Camera {
     private void setupMouseListener() {
         final Delta delta = new Delta();
         
-        Environment.frame.getContentPane().getComponent(0).addMouseListener(new MouseListener() {
+        scene.environment.frame.getContentPane().getComponent(0).addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
             }
@@ -611,7 +630,7 @@ public class Camera {
             }
         });
         
-        Environment.frame.getContentPane().getComponent(0).addMouseMotionListener(new MouseMotionListener() {
+        scene.environment.frame.getContentPane().getComponent(0).addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (cameraId != activeCameraControl) {
@@ -640,7 +659,7 @@ public class Camera {
             }
         });
         
-        Environment.frame.getContentPane().getComponent(0).addMouseWheelListener(e -> {
+        scene.environment.frame.getContentPane().getComponent(0).addMouseWheelListener(e -> {
             if (cameraId != activeCameraControl) {
                 return;
             }
@@ -699,7 +718,7 @@ public class Camera {
                 }
                 
             }
-        }, 0, (long) (1000.0 / Environment.FPS / 2));
+        }, 0, (long) (1000.0 / Environment.fps / 2));
     }
     
     /**
@@ -976,7 +995,7 @@ public class Camera {
         boolean inView = false;
         for (Vector v : vs) {
             if ((v.getX() >= 0) && (v.getX() < viewportX) &&
-                    (v.getY() >= 0) && (v.getY() < viewportY)) {
+                (v.getY() >= 0) && (v.getY() < viewportY)) {
                 inView = true;
                 break;
             }
@@ -1079,7 +1098,7 @@ public class Camera {
             return;
         }
         
-        Environment.frame.addKeyListener(new KeyListener() {
+        scene.environment.frame.addKeyListener(new KeyListener() {
             
             @Override
             public void keyTyped(KeyEvent e) {

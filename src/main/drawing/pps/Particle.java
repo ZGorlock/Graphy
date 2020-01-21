@@ -6,9 +6,10 @@
 
 package main.drawing.pps;
 
-import math.vector.Vector;
+import java.awt.Color;
+import java.awt.Graphics2D;
 
-import java.awt.*;
+import math.vector.Vector;
 
 /**
  * Defines a particle.

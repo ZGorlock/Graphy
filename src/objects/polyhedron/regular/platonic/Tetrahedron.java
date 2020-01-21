@@ -6,12 +6,12 @@
 
 package objects.polyhedron.regular.platonic;
 
+import java.awt.Color;
+
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.polygon.Triangle;
 import objects.polyhedron.regular.RegularPolyhedron;
-
-import java.awt.*;
 
 /**
  * Defines a Tetrahedron.
@@ -79,8 +79,8 @@ public class Tetrahedron extends RegularPolyhedron {
         
         vertices = new Vector[TETRAHEDRON_VERTICES];
         int v = 0;
-        for (int i : new int[]{-1, 1}) {
-            for (int j : new int[]{-1, 1}) {
+        for (int i : new int[] {-1, 1}) {
+            for (int j : new int[] {-1, 1}) {
                 vertices[v++] = new Vector(i, j, (i == j) ? 1 : -1).scale(radius).plus(center);
             }
         }

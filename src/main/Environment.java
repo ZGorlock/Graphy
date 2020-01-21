@@ -6,21 +6,30 @@
 
 package main;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import camera.Camera;
-import math.matrix.Matrix3;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
 import objects.base.ObjectInterface;
-
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.List;
-import java.util.Timer;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
+import objects.base.Scene;
 
 /**
  * The main Environment.
@@ -30,77 +39,123 @@ public class Environment {
     //Constants
     
     /**
-     * The number of frames to render per second.
+     * The maximum number of frames to render per second.
      */
-    public static final int FPS = 120;
+    public static final int MAX_FPS = 120;
     
     /**
-     * The x dimension of the Window.
+     * The maximum x dimension of the Window.
      */
-    public static final int screenX = 2560;
+    public static final int MAX_SCREEN_X = Toolkit.getDefaultToolkit().getScreenSize().width;
     
     /**
-     * The y dimension of the Window.
+     * The maximum y dimension of the Window.
      */
-    public static final int screenY = 1440;
+    public static final int MAX_SCREEN_Y = Toolkit.getDefaultToolkit().getScreenSize().height;
     
     /**
-     * The z dimension of the Window.
+     * The maximum z dimension of the Window.
      */
-    public static final int screenZ = 720;
+    public static final int MAX_SCREEN_Z = 720;
     
     /**
      * The border from the edge of the Window.
      */
-    public static final int screenBorder = 50;
+    public static final int SCREEN_BORDER = 50;
+    
+    /**
+     * The origin of the Environment at.
+     */
+    public static final Vector ORIGIN = new Vector(0, 0, 0);
     
     /**
      * The acceptable rounding error for double precision.
      */
-    public static final double omega = 0.0000001;
+    public static final double OMEGA = 0.0000001;
     
     
     //Static Fields
     
     /**
-     * The Frame of the Window.
+     * The number of frames to render per second.
      */
-    public static JFrame frame;
+    public static int fps = MAX_FPS;
     
     /**
-     * The transformation matrix for pitch and yaw.
+     * The x dimension of the Window.
      */
-    public static Matrix3 transform;
+    public static int screenX = MAX_SCREEN_X;
     
     /**
-     * The list of Objects to be rendered in the Environment.
+     * The y dimension of the Window.
      */
-    private static List<ObjectInterface> objects = new ArrayList<>();
+    public static int screenY = MAX_SCREEN_Y;
+    
+    /**
+     * The z dimension of the Window.
+     */
+    public static int screenZ = MAX_SCREEN_Z;
     
     /**
      * The coordinates to center the Environment at.
      */
-    public static Vector origin = new Vector(0, 0, 0);
+    public static Vector origin = ORIGIN.clone();
+    
+    
+    //Fields
+    
+    /**
+     * The Frame of the Window.
+     */
+    public JFrame frame;
+    
+    /**
+     * The Scene to render.
+     */
+    public Scene scene = null;
+    
+    /**
+     * The list of Objects to be rendered in the Environment.
+     */
+    public List<ObjectInterface> objects = new ArrayList<>();
     
     /**
      * The background color of the Environment.
      */
-    public static Color background = Color.WHITE;
+    public Color background = Color.WHITE;
     
     /**
      * Whether the main KeyListener has been set up or not.
      */
-    private static AtomicBoolean hasSetupMainKeyListener = new AtomicBoolean(false);
+    private AtomicBoolean hasSetupMainKeyListener = new AtomicBoolean(false);
     
     
-    //Main Method
+    //Constructors
     
     /**
-     * The main method of of the program.
+     * Constructs an Environment.
      *
-     * @param args Arguments to the main method.
+     * @param screenX The x dimension of the screen.
+     * @param screenY The y dimension of the screen.
      */
-    public static void main(String[] args) {
+    public Environment(int screenX, int screenY) {
+        Environment.screenX = screenX;
+        Environment.screenY = screenY;
+    }
+    
+    /**
+     * The default constructor for an Environment.
+     */
+    public Environment() {
+    }
+    
+    
+    //Methods
+    
+    /**
+     * Sets up the Environment.
+     */
+    public void setup() {
         frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -157,33 +212,40 @@ public class Environment {
         
         frame.pack();
         frame.setVisible(true);
-        
-        Timer renderTimer = new Timer();
-        renderTimer.scheduleAtFixedRate(new TimerTask() {
-            private AtomicBoolean rendering = new AtomicBoolean(false);
-            
-            @Override
-            public void run() {
-                if (rendering.compareAndSet(false, true)) {
-                    renderPanel.repaint();
-                    rendering.set(false);
-                }
-            }
-        }, 0, 1000 / FPS);
     }
     
-    
-    //Static Methods
+    /**
+     * Runs the Environment.
+     */
+    public void run() {
+        if (fps == 0) {
+            frame.getContentPane().getComponent(0).repaint();
+            
+        } else {
+            Timer renderTimer = new Timer();
+            renderTimer.scheduleAtFixedRate(new TimerTask() {
+                private AtomicBoolean rendering = new AtomicBoolean(false);
+                
+                @Override
+                public void run() {
+                    if (rendering.compareAndSet(false, true)) {
+                        frame.getContentPane().getComponent(0).repaint();
+                        rendering.set(false);
+                    }
+                }
+            }, 0, 1000 / fps);
+        }
+    }
     
     /**
-     * Adds the KeyListener for the Camera main environment controls.
+     * Adds the KeyListener for the main environment controls.
      */
-    public static void setupMainKeyListener() {
+    public void setupMainKeyListener() {
         if (!hasSetupMainKeyListener.compareAndSet(false, true)) {
             return;
         }
         
-        Environment.frame.getContentPane().getComponent(0).addKeyListener(new KeyListener() {
+        frame.getContentPane().getComponent(0).addKeyListener(new KeyListener() {
             
             @Override
             public void keyTyped(KeyEvent e) {
@@ -217,27 +279,12 @@ public class Environment {
         });
     }
     
-    
-    //Setters
-    
-    /**
-     * Sets the background color of the Environment.
-     *
-     * @param background The background color.
-     */
-    public static void setBackground(Color background) {
-        Environment.background = background;
-    }
-    
-    
-    //Functions
-    
     /**
      * Adds an Object to the Environment at runtime.
      *
      * @param object The Object to add to the Environment.
      */
-    public static void addObject(ObjectInterface object) {
+    public void addObject(ObjectInterface object) {
         objects.add(object);
     }
     
@@ -246,8 +293,74 @@ public class Environment {
      *
      * @param object The Object to remove from the Environment.
      */
-    public static void removeObject(ObjectInterface object) {
+    public void removeObject(ObjectInterface object) {
         objects.remove(object);
+    }
+    
+    
+    //Setters
+    
+    /**
+     * Sets the number of frames to render per second.
+     *
+     * @param fps The number of frames to render per second.
+     */
+    public void setFps(int fps) {
+        this.fps = fps;
+    }
+    
+    /**
+     * Sets the x dimension of the Window.
+     *
+     * @param screenX The x dimension of the Window.
+     */
+    public void setScreenX(int screenX) {
+        this.screenX = screenX;
+    }
+    
+    /**
+     * Sets the y dimension of the Window.
+     *
+     * @param screenY The y dimension of the Window.
+     */
+    public void setScreenY(int screenY) {
+        this.screenY = screenY;
+    }
+    
+    /**
+     * Sets the z dimension of the Window.
+     *
+     * @param screenZ The z dimension of the Window.
+     */
+    public void setScreenZ(int screenZ) {
+        this.screenZ = screenZ;
+    }
+    
+    /**
+     * Sets the coordinates to center the Environment at.
+     *
+     * @param origin The coordinates to center the Environment at.
+     */
+    public void setOrigin(Vector origin) {
+        this.origin = origin;
+    }
+    
+    /**
+     * Sets the Scene to render.
+     *
+     * @param scene The Scene to render.
+     */
+    public void setScene(Scene scene) {
+        this.scene = scene;
+    }
+    
+    /**
+     * Sets the background color of the Environment.
+     *
+     * @param background The background color of the Environment.
+     */
+    public void setBackground(Color background) {
+        this.background = background;
     }
     
 }

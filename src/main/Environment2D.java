@@ -6,15 +6,21 @@
 
 package main;
 
-import math.vector.Vector;
-import objects.base.Drawing;
-
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import math.vector.Vector;
+import objects.base.Drawing;
 
 /**
  * The main Environment.
@@ -26,12 +32,12 @@ public class Environment2D {
     /**
      * The maximum x dimension of the Window.
      */
-    public static final int MAX_SCREEN_X = 2560;
+    public static final int MAX_SCREEN_X = Environment.MAX_SCREEN_X;
     
     /**
      * The maximum y dimension of the Window.
      */
-    public static final int MAX_SCREEN_Y = 1440;
+    public static final int MAX_SCREEN_Y = Environment.MAX_SCREEN_Y;
     
     
     //Fields
@@ -39,7 +45,7 @@ public class Environment2D {
     /**
      * The number of frames to render per second.
      */
-    public int FPS = 120;
+    public int fps = 120;
     
     /**
      * The x dimension of the Window.
@@ -152,7 +158,7 @@ public class Environment2D {
      * Runs the Environment.
      */
     public void run() {
-        if (FPS == 0) {
+        if (fps == 0) {
             frame.getContentPane().getComponent(0).repaint();
             
         } else {
@@ -167,7 +173,7 @@ public class Environment2D {
                         rendering.set(false);
                     }
                 }
-            }, 0, 1000 / FPS);
+            }, 0, 1000 / fps);
         }
     }
     
@@ -197,8 +203,8 @@ public class Environment2D {
      *
      * @param fps The number of frames to render per second.
      */
-    public void setFPS(int fps) {
-        this.FPS = fps;
+    public void setFps(int fps) {
+        this.fps = fps;
     }
     
     /**
@@ -235,8 +241,8 @@ public class Environment2D {
      */
     public void setDrawingSize(Vector size) {
         this.drawingSize = size;
-        this.drawingOffset.setX((Environment.screenX > drawingSize.getX()) ? (Environment.screenX - drawingSize.getX()) / 2.0 : 0);
-        this.drawingOffset.setY((Environment.screenY > drawingSize.getY()) ? (Environment.screenY - drawingSize.getY()) / 2.0 : 0);
+        this.drawingOffset.setX((screenX > drawingSize.getX()) ? (screenX - drawingSize.getX()) / 2.0 : 0);
+        this.drawingOffset.setY((screenY > drawingSize.getY()) ? (screenY - drawingSize.getY()) / 2.0 : 0);
     }
     
     /**

@@ -1,5 +1,5 @@
 /*
- * File:    Drawing.java
+ * File:    PictureFrame.java
  * Package: main.scenes
  * Author:  Zachary Gill
  */
@@ -11,8 +11,6 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import camera.Camera;
 import main.Environment;
@@ -24,83 +22,82 @@ import objects.complex.DrawingPane;
 import objects.system.Axes;
 
 /**
- * Defines a Drawing scene.
+ * Defines a Picture Frame scene.
  */
-public class Drawing extends Scene {
+public class PictureFrame extends Scene {
     
-    //Main Methods
+    //Main Method
     
     /**
-     * The main method for the Drawing scene.
+     * The main method for the Picture Frame scene.
      *
      * @param args The arguments to the main method.
      */
     public static void main(String[] args) {
-        String[] environmentArgs = new String[]{};
-        Environment.main(environmentArgs);
-        Environment.setupMainKeyListener();
+        Environment environment = new Environment();
+        environment.setup();
+        environment.setupMainKeyListener();
         
-        List<Object> objects = createObjects();
-        for (Object object : objects) {
-            Environment.addObject(object);
-        }
+        PictureFrame pictureFrame = new PictureFrame(environment);
+        pictureFrame.setupCameras();
+        pictureFrame.setupControls();
         
-        setupCameras();
-        
-        setupControls();
-    }
-    
-    /**
-     * Creates objects for the scene.
-     *
-     * @return A list of Objects that were created for the scene.
-     */
-    public static List<Object> createObjects() {
-        List<Object> objects = new ArrayList<>();
-    
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(new File("resource/tree.jpg"));
-        } catch (IOException ignored) {
-        }
-    
-        Object drawing = new Object(Color.BLACK);
-        Rectangle bounds = new Rectangle(new Vector(-2, 0, 3), new Vector(2, 0, 3), new Vector(2, 0, -3), new Vector(-2, 0, -3));
-        DrawingPane drawingPane = new DrawingPane(null, Color.BLACK, bounds, image);
-        drawing.registerComponent(drawingPane);
-//        drawing.addRotationAnimation(Math.PI / 2, Math.PI / 2, Math.PI / 2);
-    
-        objects.add(drawing);
-    
-        objects.add(new Axes(5));
-    
-        return objects;
-    }
-    
-    /**
-     * Sets up cameras for the scene.
-     */
-    public static void setupCameras() {
-        Camera camera = new Camera(true, true);
-        camera.setLocation(Math.PI / 2, Math.PI / 2, 30);
-    }
-    
-    /**
-     * Sets up controls for the scene.
-     */
-    public static void setupControls() {
+        environment.addObject(pictureFrame);
+        environment.run();
     }
     
     
     //Constructors
     
     /**
-     * Constructor for the Drawing Scene.
+     * Constructor for the Picture Frame scene.
      *
-     * @param center The center of the scene.
+     * @param environment The Environment to render the Picture Frame in.
      */
-    public Drawing(Vector center) {
-        super(center);
+    public PictureFrame(Environment environment) {
+        super(environment);
+        
+        calculate();
+    }
+    
+    
+    //Methods
+    
+    /**
+     * Calculates the components that compose the Picture Frame.
+     */
+    @Override
+    public void calculate() {
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(new File("resource/tree.jpg"));
+        } catch (IOException ignored) {
+        }
+        
+        Object drawing = new Object(Color.BLACK);
+        Rectangle bounds = new Rectangle(new Vector(-2, 0, 3), new Vector(2, 0, 3), new Vector(2, 0, -3), new Vector(-2, 0, -3));
+        DrawingPane drawingPane = new DrawingPane(null, Color.BLACK, bounds, image);
+        drawing.registerComponent(drawingPane);
+//        drawing.addRotationAnimation(Math.PI / 2, Math.PI / 2, Math.PI / 2);
+        
+        registerComponent(drawing);
+        registerComponent(new Axes(5));
+    }
+    
+    /**
+     * Sets up cameras for the Picture Frame scene.
+     */
+    @Override
+    public void setupCameras() {
+        Camera camera = new Camera(this, true, true);
+        camera.setLocation(Math.PI / 2, Math.PI / 2, 30);
+    }
+    
+    /**
+     * Sets up controls for the Picture Frame scene.
+     */
+    @Override
+    public void setupControls() {
     }
     
 }

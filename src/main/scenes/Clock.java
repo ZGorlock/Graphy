@@ -6,26 +6,26 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
-import objects.base.Object;
 import objects.base.Scene;
 import objects.base.group.LockedEdge;
 import objects.base.simple.Text;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import utility.SphericalCoordinateUtility;
 
-import java.awt.*;
-import java.util.List;
-import java.util.*;
-
 /**
  * Defines an Clock scene.
  */
 public class Clock extends Scene {
     
-    //Main Methods
+    //Main Method
     
     /**
      * The main method for the Clock scene.
@@ -33,42 +33,51 @@ public class Clock extends Scene {
      * @param args The arguments to the main method.
      */
     public static void main(String[] args) {
-        String[] environmentArgs = new String[]{};
-        Environment.main(environmentArgs);
-        Environment.setupMainKeyListener();
+        Environment environment = new Environment();
+        environment.setup();
+        environment.setupMainKeyListener();
         
-        List<Object> objects = createObjects();
-        for (Object object : objects) {
-            Environment.addObject(object);
-        }
+        Clock clock = new Clock(environment);
+        clock.setupCameras();
+        clock.setupControls();
         
-        setupCameras();
-        
-        setupControls();
+        environment.addObject(clock);
+        environment.run();
     }
     
+    
+    //Constructors
+    
     /**
-     * Creates objects for the scene.
+     * Constructor for the Clock Scene.
      *
-     * @return A list of Objects that were created for the scene.
+     * @param environment The Environment to render the Clock in.
      */
-    public static List<Object> createObjects() {
-        List<Object> objects = new ArrayList<>();
+    public Clock(Environment environment) {
+        super(environment);
         
-        Hexahedron c = new Hexahedron(Environment.origin, Color.BLACK, 1);
+        calculate();
+    }
+    
+    
+    //Methods
+    
+    /**
+     * Calculates the components that compose the Clock.
+     */
+    @Override
+    public void calculate() {
+        Hexahedron c = new Hexahedron(Environment.ORIGIN, Color.BLACK, 1);
         Text time = new Text(c, Color.WHITE, c.getCenter().plus(new Vector(-.55, -.15, 1)), "00:00:00");
         c.addFrame(Color.WHITE);
+        registerComponent(c);
         
-        List<Hexahedron> numbers = new ArrayList<>();
         for (int i = 1; i <= 12; i++) {
             Hexahedron number = new Hexahedron(SphericalCoordinateUtility.sphericalToCartesian(Math.PI / 2, (Math.PI / 2) - (Math.PI / 6 * i), 10), Color.WHITE, 1);
             number.addFrame(Color.BLACK);
             Text text = new Text(number, number.getCenter().plus(new Vector(0 - ((i > 9) ? .15 : 0), -.15, 1)), String.valueOf(i));
-            numbers.add(number);
+            registerComponent(number);
         }
-        
-        objects.add(c);
-        objects.addAll(numbers);
         
         long lastSecond = System.currentTimeMillis() / 1000;
         
@@ -92,9 +101,9 @@ public class Clock extends Scene {
         new LockedEdge(minuteMark, Color.BLACK, c, minuteMark);
         new LockedEdge(secondMark, Color.BLACK, c, secondMark);
         
-        objects.add(hourMark);
-        objects.add(minuteMark);
-        objects.add(secondMark);
+        registerComponent(hourMark);
+        registerComponent(minuteMark);
+        registerComponent(secondMark);
         
         hourMark.addOrbitAnimation(c, 43200000);
         minuteMark.addOrbitAnimation(c, 3600000);
@@ -113,35 +122,23 @@ public class Clock extends Scene {
                 Date now = new Date();
                 time.setText((((now.getHours() % 12) < 10) ? "0" : "") + (now.getHours() % 12) + ':' + ((now.getMinutes() < 10) ? "0" : "") + now.getMinutes() + ':' + ((now.getSeconds() < 10) ? "0" : "") + now.getSeconds());
             }
-        }, 0, 1000 / Environment.FPS);
-        
-        return objects;
+        }, 0, 1000 / Environment.fps);
     }
     
     /**
-     * Sets up cameras for the scene.
+     * Sets up cameras for the Clock scene.
      */
-    public static void setupCameras() {
-        Camera camera = new Camera(true, true);
+    @Override
+    public void setupCameras() {
+        Camera camera = new Camera(this, true, true);
         camera.setLocation(0, Math.PI / 2, 25);
     }
     
     /**
-     * Sets up controls for the scene.
+     * Sets up controls for the Clock scene.
      */
-    public static void setupControls() {
-    }
-    
-    
-    //Constructors
-    
-    /**
-     * Constructor for the Clock Scene.
-     *
-     * @param center The center of the scene.
-     */
-    public Clock(Vector center) {
-        super(center);
+    @Override
+    public void setupControls() {
     }
     
 }

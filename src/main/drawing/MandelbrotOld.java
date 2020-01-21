@@ -6,14 +6,9 @@
 
 package main.drawing;
 
-import main.Environment2D;
-import math.vector.Vector;
-import objects.base.Drawing;
-import objects.base.polygon.Rectangle;
-
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.SwingUtilities;
+import java.awt.Color;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -22,6 +17,11 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import main.Environment2D;
+import math.vector.Vector;
+import objects.base.Drawing;
+import objects.base.polygon.Rectangle;
 
 /**
  * A Mandelbrot drawing.
@@ -125,7 +125,7 @@ public class MandelbrotOld extends Drawing {
      */
     public static void main(String[] args) {
         Environment2D environment = new Environment2D(1000, 1000);
-        environment.setFPS(0);
+        environment.setFps(0);
         environment.setBackground(Color.BLACK);
         environment.setup();
         

@@ -6,25 +6,21 @@
 
 package main.scenes;
 
+import java.awt.Color;
+
 import camera.Camera;
 import main.Environment;
-import math.vector.Vector;
 import objects.base.Frame;
-import objects.base.Object;
 import objects.base.Scene;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import utility.ColorUtility;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines a Animated Cube scene.
  */
 public class AnimatedCube extends Scene {
     
-    //Main Methods
+    //Main Method
     
     /**
      * The main method for the Animated Cube scene.
@@ -32,29 +28,41 @@ public class AnimatedCube extends Scene {
      * @param args The arguments to the main method.
      */
     public static void main(String[] args) {
-        String[] environmentArgs = new String[]{};
-        Environment.main(environmentArgs);
-        Environment.setupMainKeyListener();
+        Environment environment = new Environment();
+        environment.setup();
+        environment.setupMainKeyListener();
         
-        List<Object> objects = createObjects();
-        for (Object object : objects) {
-            Environment.addObject(object);
-        }
+        AnimatedCube animatedCube = new AnimatedCube(environment);
+        animatedCube.setupCameras();
+        animatedCube.setupControls();
         
-        setupCameras();
-        
-        setupControls();
+        environment.addObject(animatedCube);
+        environment.run();
     }
     
+    
+    //Constructors
+    
     /**
-     * Creates objects for the scene.
+     * Constructor for the Animated Cube scene.
      *
-     * @return A list of Objects that were created for the scene.
+     * @param environment The Environment to render the Animated Cube in.
      */
-    public static List<Object> createObjects() {
-        List<Object> objects = new ArrayList<>();
+    public AnimatedCube(Environment environment) {
+        super(environment);
         
-        Hexahedron cube = new Hexahedron(Environment.origin, Color.BLUE, 2);
+        calculate();
+    }
+    
+    
+    //Methods
+    
+    /**
+     * Calculates the components that compose the Animated Cube.
+     */
+    @Override
+    public void calculate() {
+        Hexahedron cube = new Hexahedron(Environment.ORIGIN, Color.BLUE, 2);
         cube.addRotationAnimation(Math.PI / 4, Math.PI / 4, Math.PI / 4);
         
         for (int f = 1; f < 6; f++) {
@@ -64,35 +72,21 @@ public class AnimatedCube extends Scene {
         
         frame.addColorAnimation(5000, 2500);
         cube.addColorAnimation(5000, 0);
-        objects.add(cube);
-        
-        return objects;
+        registerComponent(cube);
     }
     
     /**
-     * Sets up cameras for the scene.
+     * Sets up cameras for the Animated Cube scene.
      */
-    public static void setupCameras() {
-        Camera camera = new Camera(true, true);
+    public void setupCameras() {
+        Camera camera = new Camera(this, true, true);
         camera.setLocation(Math.PI / 2, 0, 8);
     }
     
     /**
-     * Sets up controls for the scene.
+     * Sets up controls for the Animated Cube scene.
      */
-    public static void setupControls() {
-    }
-    
-    
-    //Constructors
-    
-    /**
-     * Constructor for the Animated Cube Scene.
-     *
-     * @param center The center of the scene.
-     */
-    public AnimatedCube(Vector center) {
-        super(center);
+    public void setupControls() {
     }
     
 }

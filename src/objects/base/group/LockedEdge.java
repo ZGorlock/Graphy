@@ -6,13 +6,13 @@
 
 package objects.base.group;
 
+import java.awt.Color;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import main.Environment;
 import objects.base.AbstractObject;
 import objects.base.simple.Edge;
-
-import java.awt.*;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Defines a Locked Edge.
@@ -45,7 +45,7 @@ public class LockedEdge extends Edge {
                 setV1(o1.getCenter());
                 setV2(o2.getCenter());
             }
-        }, 0, 1000 / Environment.FPS);
+        }, 0, 1000 / Environment.fps);
     }
     
 }

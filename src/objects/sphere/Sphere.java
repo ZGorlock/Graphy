@@ -6,16 +6,16 @@
 
 package objects.sphere;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import main.Environment;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.Object;
 import objects.base.polygon.Triangle;
 import utility.SphericalCoordinateUtility;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines a Sphere.
@@ -124,9 +124,9 @@ public class Sphere extends Object {
         int layer = 0;
         List<List<Vector>> vertices = new ArrayList<>();
         boolean offset = false;
-        for (double phi = 0; Math.PI - phi > -Environment.omega; phi += step / 2) {
+        for (double phi = 0; Math.PI - phi > -Environment.OMEGA; phi += step / 2) {
             vertices.add(new ArrayList<>());
-            for (double theta = 0; Math.PI * 2 - theta > -Environment.omega; theta += step) {
+            for (double theta = 0; Math.PI * 2 - theta > -Environment.OMEGA; theta += step) {
                 Vector cartesian = SphericalCoordinateUtility.sphericalToCartesian(phi, theta + (offset ? step / 2 : 0), radius);
                 vertices.get(layer).add(cartesian.plus(center));
             }

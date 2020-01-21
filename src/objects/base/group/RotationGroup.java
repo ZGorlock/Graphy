@@ -6,16 +6,17 @@
 
 package objects.base.group;
 
-import math.vector.Vector;
-import objects.base.AbstractObject;
-import objects.base.BaseObject;
-import objects.base.Object;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import math.vector.Vector;
+import objects.base.AbstractObject;
+import objects.base.BaseObject;
+import objects.base.Object;
 
 /**
  * Defines a rotation for a group of Objects.

@@ -6,12 +6,12 @@
 
 package objects.polyhedron.regular.platonic;
 
+import java.awt.Color;
+
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.polygon.Triangle;
 import objects.polyhedron.regular.RegularPolyhedron;
-
-import java.awt.*;
 
 /**
  * Defines an Icosahedron.
@@ -82,8 +82,8 @@ public class Icosahedron extends RegularPolyhedron {
         
         vertices = new Vector[ICOSAHEDRON_VERTICES];
         int v = 0;
-        for (int i : new int[]{-1, 1}) {
-            for (int j : new int[]{-1, 1}) {
+        for (int i : new int[] {-1, 1}) {
+            for (int j : new int[] {-1, 1}) {
                 vertices[v++] = new Vector(0, i, b * j).scale(radius).plus(center);
                 vertices[v++] = new Vector(i, b * j, 0).scale(radius).plus(center);
                 vertices[v++] = new Vector(b * i, 0, j).scale(radius).plus(center);

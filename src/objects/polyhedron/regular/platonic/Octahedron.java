@@ -6,12 +6,12 @@
 
 package objects.polyhedron.regular.platonic;
 
+import java.awt.Color;
+
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.polygon.Triangle;
 import objects.polyhedron.regular.RegularPolyhedron;
-
-import java.awt.*;
 
 /**
  * Defines an Octahedron.
@@ -79,7 +79,7 @@ public class Octahedron extends RegularPolyhedron {
         
         vertices = new Vector[OCTAHEDRON_VERTICES];
         int v = 0;
-        for (int i : new int[]{-1, 1}) {
+        for (int i : new int[] {-1, 1}) {
             vertices[v++] = new Vector(0, 0, i).scale(radius).plus(center);
             vertices[v++] = new Vector(0, i, 0).scale(radius).plus(center);
             vertices[v++] = new Vector(i, 0, 0).scale(radius).plus(center);

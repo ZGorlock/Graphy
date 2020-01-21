@@ -6,27 +6,24 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
-import objects.base.Object;
 import objects.base.Scene;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import objects.system.Axes;
 import utility.ColorUtility;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Defines a Rotation Equivalence Demo scene.
  */
 public class RotationEquivalenceDemo extends Scene {
     
-    //Main Methods
+    //Main Method
     
     /**
      * The main method for the Rotation Equivalence Demo scene.
@@ -34,30 +31,42 @@ public class RotationEquivalenceDemo extends Scene {
      * @param args The arguments to the main method.
      */
     public static void main(String[] args) {
-        String[] environmentArgs = new String[]{};
-        Environment.main(environmentArgs);
-        Environment.setupMainKeyListener();
+        Environment environment = new Environment();
+        environment.setup();
+        environment.setupMainKeyListener();
         
-        List<Object> objects = createObjects();
-        for (Object object : objects) {
-            Environment.addObject(object);
-        }
+        RotationEquivalenceDemo rotationEquivalenceDemo = new RotationEquivalenceDemo(environment);
+        rotationEquivalenceDemo.setupCameras();
+        rotationEquivalenceDemo.setupControls();
         
-        setupCameras();
-        
-        setupControls();
+        environment.addObject(rotationEquivalenceDemo);
+        environment.run();
     }
     
+    
+    //Constructors
+    
     /**
-     * Creates objects for the scene.
+     * Constructor for the Rotation Equivalence Demo Scene.
      *
-     * @return A list of Objects that were created for the scene.
+     * @param environment The Environment to render the Rotation Equivalence Demo in.
      */
-    public static List<Object> createObjects() {
-        List<Object> objects = new ArrayList<>();
+    public RotationEquivalenceDemo(Environment environment) {
+        super(environment);
         
-        Hexahedron cube1 = new Hexahedron(Environment.origin.plus(new Vector(0, 4, 0)), Color.BLUE, 2);
-        Hexahedron cube2 = new Hexahedron(Environment.origin.plus(new Vector(0, -4, 0)), Color.BLUE, 2);
+        calculate();
+    }
+    
+    
+    //Methods
+    
+    /**
+     * Calculates the components that compose the Rotation Equivalence Demo.
+     */
+    @Override
+    public void calculate() {
+        Hexahedron cube1 = new Hexahedron(Environment.ORIGIN.plus(new Vector(0, 4, 0)), Color.BLUE, 2);
+        Hexahedron cube2 = new Hexahedron(Environment.ORIGIN.plus(new Vector(0, -4, 0)), Color.BLUE, 2);
         
         cube1.addRotationTransformation(Math.PI, 0, 0, 2500);
         Timer t = new Timer();
@@ -95,37 +104,25 @@ public class RotationEquivalenceDemo extends Scene {
         cube1.addFrame(Color.BLACK);
         cube2.addFrame(Color.BLACK);
         
-        objects.add(cube1);
-        objects.add(cube2);
-        objects.add(new Axes(5));
-        
-        return objects;
+        registerComponent(cube1);
+        registerComponent(cube2);
+        registerComponent(new Axes(5));
     }
     
     /**
-     * Sets up cameras for the scene.
+     * Sets up cameras for the Rotation Equivalence Demo scene.
      */
-    public static void setupCameras() {
-        Camera camera = new Camera(true, true);
+    @Override
+    public void setupCameras() {
+        Camera camera = new Camera(this, true, true);
         camera.setLocation(Math.PI / 2, 0, 12);
     }
     
     /**
-     * Sets up controls for the scene.
+     * Sets up controls for the Rotation Equivalence Demo scene.
      */
-    public static void setupControls() {
-    }
-    
-    
-    //Constructors
-    
-    /**
-     * Constructor for the Rotation Equivalence Demo Scene.
-     *
-     * @param center The center of the scene.
-     */
-    public RotationEquivalenceDemo(Vector center) {
-        super(center);
+    @Override
+    public void setupControls() {
     }
     
 }

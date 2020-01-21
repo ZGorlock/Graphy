@@ -6,14 +6,14 @@
 
 package objects.system;
 
+import java.awt.Color;
+
 import main.Environment;
 import objects.base.Object;
 import objects.base.polygon.Rectangle;
 import objects.base.simple.BigVertex;
 import objects.base.simple.Edge;
 import objects.polyhedron.irregular.RectangularPyramid;
-
-import java.awt.*;
 
 /**
  * Defines a Camera Object.
@@ -49,15 +49,15 @@ public class Camera extends Object {
      * The constructor for a Camera.
      */
     public Camera() {
-        super(Environment.origin, Color.BLACK);
+        super(Environment.ORIGIN, Color.BLACK);
         
-        camera = new BigVertex(this, Color.RED, Environment.origin, 3);
-        screenNormal = new Edge(this, Color.BLUE, Environment.origin, Environment.origin);
-        screenXNormal = new Edge(this, Color.RED, Environment.origin, Environment.origin);
-        screenYNormal = new Edge(this, Color.GREEN, Environment.origin, Environment.origin);
+        camera = new BigVertex(this, Color.RED, Environment.ORIGIN, 3);
+        screenNormal = new Edge(this, Color.BLUE, Environment.ORIGIN, Environment.ORIGIN);
+        screenXNormal = new Edge(this, Color.RED, Environment.ORIGIN, Environment.ORIGIN);
+        screenYNormal = new Edge(this, Color.GREEN, Environment.ORIGIN, Environment.ORIGIN);
         
-        screen = new Rectangle(Color.RED, Environment.origin, Environment.origin, Environment.origin, Environment.origin); //not rendered
-        cameraEnclosure = new RectangularPyramid(this, new Color(192, 192, 192, 64), screen, Environment.origin);
+        screen = new Rectangle(Color.RED, Environment.ORIGIN, Environment.ORIGIN, Environment.ORIGIN, Environment.ORIGIN); //not rendered
+        cameraEnclosure = new RectangularPyramid(this, new Color(192, 192, 192, 64), screen, Environment.ORIGIN);
         cameraEnclosure.addFrame(Color.BLACK);
         
         setDisplayMode(DisplayMode.FACE);

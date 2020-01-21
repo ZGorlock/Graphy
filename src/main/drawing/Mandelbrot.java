@@ -17,6 +17,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -100,7 +101,7 @@ public class Mandelbrot extends Drawing {
     /**
      * The size of the screen to render the Mandelbrot on.
      */
-    public static final Vector SCREEN_SIZE = new Vector(2560, 1408);
+    public static final Vector SCREEN_SIZE = new Vector(Toolkit.getDefaultToolkit().getScreenSize().width - 32, Toolkit.getDefaultToolkit().getScreenSize().height - 32);
     
     /**
      * The number of threads to use while rendering the Mandelbrot.
@@ -308,7 +309,7 @@ public class Mandelbrot extends Drawing {
      */
     public static void main(String[] args) {
         Environment2D environment = new Environment2D((int) SCREEN_SIZE.getX(), (int) SCREEN_SIZE.getY());
-        environment.setFPS(0);
+        environment.setFps(0);
         environment.setup();
         
         Mandelbrot mandelbrot = new Mandelbrot(environment);
@@ -372,7 +373,7 @@ public class Mandelbrot extends Drawing {
                     "calculation_time = " + ((calculationTime == null) ? "0.0 s" : calculationTime)
             };
             g.setFont(new Font("Console", Font.PLAIN, FONT_SIZE));
-    
+            
             int y = environment.screenY - (FONT_SIZE * (data.length + 2));
             for (String d : data) {
                 g.drawString(d, FONT_SIZE, y += FONT_SIZE);
@@ -569,6 +570,7 @@ public class Mandelbrot extends Drawing {
     /**
      * Sets up components for the Mandelbrot.
      */
+    @Override
     public void initComponents() {
         environment.frame.setTitle("Mandelbrot");
         
@@ -1070,7 +1072,6 @@ public class Mandelbrot extends Drawing {
     
     
     //Sub-Classes
-    
     
     /**
      * Holds an approximation of a reference point in the Mandelbrot image.
@@ -1620,7 +1621,6 @@ public class Mandelbrot extends Drawing {
         
     }
     
-    
     /**
      * Holds a buffer of the calculation of the Mandelbrot data.
      */
@@ -1858,7 +1858,6 @@ public class Mandelbrot extends Drawing {
         
     }
     
-    
     /**
      * Holds a color palette used to render the Mandelbrot calculations.
      */
@@ -2029,7 +2028,6 @@ public class Mandelbrot extends Drawing {
         
     }
     
-    
     /**
      * Finds the best reference point for a calculation of the Mandelbrot.
      */
@@ -2133,10 +2131,10 @@ public class Mandelbrot extends Drawing {
                 top.add(maxCount);
                 
                 if (((top.get(1).getValue()).count > ((top.get(0).getValue()).count * 5)) ||
-                        (((top.get(1).getValue()).count >= (3 * (top.get(0).getValue()).count)) && ((top.get(2).getValue()).count >= (3 * (top.get(0).getValue()).count)))) {
+                    (((top.get(1).getValue()).count >= (3 * (top.get(0).getValue()).count)) && ((top.get(2).getValue()).count >= (3 * (top.get(0).getValue()).count)))) {
                     top.set(0, top.get(1));
                 } else if (((top.get(2).getValue()).count > ((top.get(1).getValue()).count * 5)) &&
-                        ((-top.get(2).getKey() > approximation.numIterationsN) || ((top.get(2).getValue()).count > (maxCountDepth * 2)))) {
+                           ((-top.get(2).getKey() > approximation.numIterationsN) || ((top.get(2).getValue()).count > (maxCountDepth * 2)))) {
                     top.set(0, top.get(2));
                 }
                 point = (top.get(0).getValue()).total.scale(1.0 / (top.get(0).getValue()).count);
@@ -2146,7 +2144,7 @@ public class Mandelbrot extends Drawing {
                 }
                 
                 if ((top.get(0).getKey() >= (approximation.numIterationsN + 1)) ||
-                        (((top.get(0).getValue()).count > 10) && ((top.get(0).getKey() > (approximation.numIterationsN - 100)) || (top.get(0) == top.get(2))))) {
+                    (((top.get(0).getValue()).count > 10) && ((top.get(0).getKey() > (approximation.numIterationsN - 100)) || (top.get(0) == top.get(2))))) {
                     if (((top.get(0).getValue()).count == 1) && (Vector2.squareSum(point) < (Math.pow(range, 2) * 0.005))) {
                         initial = -1;
                     } else {
@@ -2175,8 +2173,8 @@ public class Mandelbrot extends Drawing {
                 } else {
                     int test;
                     if (((Math.abs((top.get(0).getValue()).nonAveraged.getX() - approximation.screenOffset.getX()) > (range / 8)) ||
-                            (Math.abs((top.get(0).getValue()).nonAveraged.getY() - approximation.screenOffset.getY()) > (range / 8))) &&
-                            ((top.get(0).getValue()).count >= 3)) {
+                         (Math.abs((top.get(0).getValue()).nonAveraged.getY() - approximation.screenOffset.getY()) > (range / 8))) &&
+                        ((top.get(0).getValue()).count >= 3)) {
                         if (-top.get(0).getKey() > (approximation.calculateIterations(approximation, new Vector(0.001, 0.001)) + 500)) {
                             point = (top.get(0).getValue()).nonAveraged.clone();
                             approximation.reFillInCubic(point);
@@ -2233,9 +2231,9 @@ public class Mandelbrot extends Drawing {
                         top.add(maxCount);
                         
                         if (((top.get(0).getValue()).count == 1) && ((top.get(1).getValue()).count == 1) &&
-                                ((Math.abs((top.get(0).getValue()).total.getX() - (top.get(1).getValue()).total.getX()) > (range / 13.5)) ||
-                                        (Math.abs((top.get(0).getValue()).total.getY() - (top.get(1).getValue()).total.getY()) > (range / 13.5))) &&
-                                ((top.get(2).getValue().count < 10) || (-top.get(2).getKey() < centerCheckApproximation.numIterationsN))) {
+                            ((Math.abs((top.get(0).getValue()).total.getX() - (top.get(1).getValue()).total.getX()) > (range / 13.5)) ||
+                             (Math.abs((top.get(0).getValue()).total.getY() - (top.get(1).getValue()).total.getY()) > (range / 13.5))) &&
+                            ((top.get(2).getValue().count < 10) || (-top.get(2).getKey() < centerCheckApproximation.numIterationsN))) {
                             int maxIterations = -1;
                             Vector maxPoint = new Vector(0, 0);
                             
@@ -2264,10 +2262,10 @@ public class Mandelbrot extends Drawing {
                                 }
                             }
                             point = point.scale(1.0 / ((-4 * store.lastKey()) +
-                                    data[(int) maxPoint.getY()][(int) maxPoint.getX()] +
-                                    data[(int) maxPoint.getY()][(int) maxPoint.getX() + 1] +
-                                    data[(int) maxPoint.getY() + 1][(int) maxPoint.getX() + 1] +
-                                    data[(int) maxPoint.getY() + 1][(int) maxPoint.getX()]));
+                                                       data[(int) maxPoint.getY()][(int) maxPoint.getX()] +
+                                                       data[(int) maxPoint.getY()][(int) maxPoint.getX() + 1] +
+                                                       data[(int) maxPoint.getY() + 1][(int) maxPoint.getX() + 1] +
+                                                       data[(int) maxPoint.getY() + 1][(int) maxPoint.getX()]));
                             
                             range *= 0.5;
                             if (range <= 0.02) {
@@ -2286,7 +2284,7 @@ public class Mandelbrot extends Drawing {
                         }
                         
                         if (((top.get(1).getValue()).count > ((top.get(0).getValue()).count * 5)) ||
-                                (((top.get(1).getValue()).count >= (3 * (top.get(0).getValue()).count)) && ((top.get(2).getValue()).count >= (3 * (top.get(0).getValue()).count)))) {
+                            (((top.get(1).getValue()).count >= (3 * (top.get(0).getValue()).count)) && ((top.get(2).getValue()).count >= (3 * (top.get(0).getValue()).count)))) {
                             top.set(0, top.get(1));
                         } else if (((top.get(2).getValue()).count > ((top.get(1).getValue()).count * 5)) && (-top.get(2).getKey() > centerCheckApproximation.numIterationsN) && ((maxCount.getValue()).count >= (maxCountDepth * 0.67777))) {
                             top.set(0, top.get(2));
@@ -2295,7 +2293,7 @@ public class Mandelbrot extends Drawing {
                         point = (top.get(0).getValue()).total.scale(1.0 / (top.get(0).getValue()).count);
                         
                         if (((-top.get(0).getKey() >= (centerCheckApproximation.numIterationsN + 1)) ||
-                                (((top.get(0).getValue()).count > 10) && (-top.get(0).getKey() > (centerCheckApproximation.numIterationsN - 100))))) {
+                             (((top.get(0).getValue()).count > 10) && (-top.get(0).getKey() > (centerCheckApproximation.numIterationsN - 100))))) {
                             if (((top.get(0).getValue()).count >= 5) && (approximation != centerCheckApproximation)) {
                                 approximation = centerCheckApproximation;
                                 skipZoomBodge = true;
@@ -2404,7 +2402,6 @@ public class Mandelbrot extends Drawing {
         
         
         //Sub-Classes
-        
         
         /**
          * Holds data about a specific candidate for the best reference point.

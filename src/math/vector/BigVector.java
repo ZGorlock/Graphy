@@ -62,7 +62,7 @@ public class BigVector {
      */
     public BigVector(List<BigDecimal> components) {
         this.components = new BigDecimal[components.size()];
-        System.arraycopy(components.toArray(new BigDecimal[]{}), 0, this.components, 0, components.size());
+        System.arraycopy(components.toArray(new BigDecimal[] {}), 0, this.components, 0, components.size());
     }
     
     /**
@@ -194,6 +194,7 @@ public class BigVector {
      *
      * @param v The other Vector.
      * @return The distance between the two Vectors.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
     public double distance(BigVector v) throws ArithmeticException {
@@ -213,6 +214,7 @@ public class BigVector {
      *
      * @param v The other Vector.
      * @return The midpoint between the two Vectors.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
     public BigVector midpoint(BigVector v) throws ArithmeticException {
@@ -224,6 +226,7 @@ public class BigVector {
      *
      * @param vs The set of Vectors.
      * @return The average of the Vectors.
+     *
      * @throws ArithmeticException When the Vectors are not all of the same dimension.
      */
     public BigVector average(BigVector... vs) throws ArithmeticException {
@@ -251,10 +254,11 @@ public class BigVector {
      *
      * @param vs The list of Vectors.
      * @return The average of the Vectors.
+     *
      * @throws ArithmeticException When the Vectors are not all of the same dimension.
      */
     public BigVector average(List<BigVector> vs) throws ArithmeticException {
-        return average(vs.toArray(new BigVector[]{}));
+        return average(vs.toArray(new BigVector[] {}));
     }
     
     /**
@@ -262,6 +266,7 @@ public class BigVector {
      *
      * @param v The other Vector.
      * @return The dot product.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
     public double dot(BigVector v) throws ArithmeticException {
@@ -359,6 +364,7 @@ public class BigVector {
      *
      * @param v The other Vector.
      * @return The Vector produced as a result of the addition.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
     public BigVector plus(BigVector v) throws ArithmeticException {
@@ -380,6 +386,7 @@ public class BigVector {
      *
      * @param v The other Vector.
      * @return The Vector produced as a result of the subtraction.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
     public BigVector minus(BigVector v) throws ArithmeticException {
@@ -401,6 +408,7 @@ public class BigVector {
      *
      * @param v The other Vector.
      * @return The Vector produced as a result of the multiplication.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
     public BigVector times(BigVector v) throws ArithmeticException {
@@ -422,6 +430,7 @@ public class BigVector {
      *
      * @param d The constant.
      * @return The Vector produced as a result of the scaling.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
     public BigVector scale(BigDecimal d) throws ArithmeticException {
@@ -439,6 +448,7 @@ public class BigVector {
      *
      * @param d The constant.
      * @return The Vector produced as a result of the scaling.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
     public BigVector scale(double d) throws ArithmeticException {
@@ -450,6 +460,7 @@ public class BigVector {
      *
      * @param v The other Vector.
      * @return The Vector produced as a result of the division.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
     public BigVector dividedBy(BigVector v) throws ArithmeticException {
@@ -554,6 +565,7 @@ public class BigVector {
      *
      * @param i The index of the component.
      * @return The component of the Vector at the index.
+     *
      * @throws IndexOutOfBoundsException When the Vector does not contain a component of the specified index.
      */
     public BigDecimal get(int i) throws IndexOutOfBoundsException {
@@ -652,6 +664,7 @@ public class BigVector {
      *
      * @param vs The set of Vectors.
      * @return The average of the Vectors.
+     *
      * @throws ArithmeticException When the Vectors are not all of the same dimension.
      */
     public static BigVector averageVector(BigVector... vs) throws ArithmeticException {

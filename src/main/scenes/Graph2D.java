@@ -6,6 +6,14 @@
 
 package main.scenes;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import camera.Camera;
 import main.Environment;
 import math.vector.UniqueVectorSet;
@@ -16,32 +24,25 @@ import objects.base.simple.Edge;
 import objects.system.Axes;
 import utility.EquationUtility;
 
-import java.awt.*;
-import java.util.List;
-import java.util.*;
-
 /**
  * Defines a Graph2D scene.
  */
 public class Graph2D extends Scene {
     
-    //Constants
+    //Static Fields
     
     /**
      * The density of the graph.
      */
     public static double density = 0.01;
     
-    
-    //Fields
-    
     /**
      * The equation to graph
      */
-    private static EquationUtility.MathOperation graph = EquationUtility.parseMath("x + 3");
+    private static EquationUtility.MathOperation equation = EquationUtility.parseMath("x + 3");
     
     
-    //Main Methods
+    //Main Method
     
     /**
      * The main method for the Graph2D scene.
@@ -49,30 +50,42 @@ public class Graph2D extends Scene {
      * @param args The arguments to the main method.
      */
     public static void main(String[] args) {
-        String[] environmentArgs = new String[]{};
-        Environment.main(environmentArgs);
-        Environment.setupMainKeyListener();
+        Environment environment = new Environment();
+        environment.setup();
+        environment.setupMainKeyListener();
         
-        List<Object> objects = createObjects();
-        for (Object object : objects) {
-            Environment.addObject(object);
-        }
+        Graph2D graph2D = new Graph2D(environment);
+        graph2D.setupCameras();
+        graph2D.setupControls();
         
-        setupCameras();
-        
-        setupControls();
+        environment.addObject(graph2D);
+        environment.run();
     }
     
+    //Constructors
+    
     /**
-     * Creates objects for the scene.
+     * Constructor for the Graph2D Scene.
      *
-     * @return A list of Objects that were created for the scene.
+     * @param environment The Environment to render the Graph2D in.
      */
-    public static List<Object> createObjects() {
-        List<Object> objects = new ArrayList<>();
-        objects.add(new Axes(5));
+    public Graph2D(Environment environment) {
+        super(environment);
         
-        Object plain = new Object(Color.BLACK);
+        calculate();
+    }
+    
+    
+    //Methods
+    
+    /**
+     * Calculates the components that compose the Graph2D.
+     */
+    @Override
+    public void calculate() {
+        registerComponent(new Axes(5));
+        
+        Object plane = new Object(Color.BLACK);
         
         Set<Vector> vs = new HashSet<>();
         UniqueVectorSet uniqueVectorSet = new UniqueVectorSet();
@@ -85,7 +98,7 @@ public class Graph2D extends Scene {
             
             uniqueVectorSet.alignVectorsToSet(vt);
             
-            Edge t = new Edge(plain, Color.BLACK, vt.get(0), vt.get(1));
+            Edge t = new Edge(plane, Color.BLACK, vt.get(0), vt.get(1));
             
             vs.addAll(vt);
         }
@@ -93,7 +106,7 @@ public class Graph2D extends Scene {
         for (Vector v : vs) {
             Map<String, Number> vars = new HashMap<>();
             vars.put("x", Math.atan(v.getX()));
-            v.setY(graph.evaluate(vars).doubleValue());
+            v.setY(equation.evaluate(vars).doubleValue());
             if (v.getY() != v.getY()) {
                 v.setY(0);
             }
@@ -105,35 +118,23 @@ public class Graph2D extends Scene {
             }
         }
         
-        objects.add(plain);
-        
-        return objects;
+        registerComponent(plane);
     }
     
     /**
-     * Sets up cameras for the scene.
+     * Sets up cameras for the Graph2D scene.
      */
-    public static void setupCameras() {
-        Camera camera = new Camera(true, true);
+    @Override
+    public void setupCameras() {
+        Camera camera = new Camera(this, true, true);
         camera.setLocation(0, Math.PI / 2, 20);
     }
     
     /**
-     * Sets up controls for the scene.
+     * Sets up controls for the Graph2D scene.
      */
-    public static void setupControls() {
-    }
-    
-    
-    //Constructors
-    
-    /**
-     * Constructor for the Graph2D Scene.
-     *
-     * @param center The center of the scene.
-     */
-    public Graph2D(Vector center) {
-        super(center);
+    @Override
+    public void setupControls() {
     }
     
 }

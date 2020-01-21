@@ -6,15 +6,15 @@
 
 package objects.system;
 
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Object;
 import objects.base.simple.Edge;
 import objects.base.simple.Text;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Defines the coordinate axes.
@@ -54,7 +54,7 @@ public class Axes extends Object {
      * @param displaySubAxes Whether or not to display the sub axes.
      */
     public Axes(int axesRadius, boolean displaySubAxes) {
-        super(Environment.origin, Color.BLACK);
+        super(Environment.ORIGIN, Color.BLACK);
         
         this.axesRadius = axesRadius;
         this.displaySubAxes = displaySubAxes;

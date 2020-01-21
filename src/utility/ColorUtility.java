@@ -6,7 +6,7 @@
 
 package utility;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  * Handles color operations.

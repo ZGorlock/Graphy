@@ -6,14 +6,14 @@
 
 package math.physics;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import math.vector.Vector;
 import math.vector.Vector3;
 import objects.base.ObjectInterface;
 import objects.base.polygon.Polygon;
 import objects.polyhedron.Polyhedron;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Includes functions for Space.

@@ -6,11 +6,12 @@
 
 package objects.base.simple;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+
 import camera.Camera;
 import math.vector.Vector;
 import objects.base.AbstractObject;
-
-import java.awt.*;
 
 /**
  * Defines a Vertex of a certain size.

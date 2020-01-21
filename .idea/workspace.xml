@@ -6,19 +6,82 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e22397f-9631-4e96-a2b2-7430a02a411c" name="Default" comment="Added zoom handling to the Mandelbrot Drawing">
+    <list default="true" id="2e22397f-9631-4e96-a2b2-7430a02a411c" name="Default" comment="Demo Improvements">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resource/a.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/resource/tree.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/camera/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/camera/Camera.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Environment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Environment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Environment2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Environment2D.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/drawing/Mandelbrot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/Mandelbrot.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawing/MandelbrotOld.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/MandelbrotOld.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawing/Spirograph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/Spirograph.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawing/pps/Particle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/pps/Particle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawing/pps/ParticleState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/pps/ParticleState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawing/pps/PrimordialParticleSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/pps/PrimordialParticleSystem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scenes/AnimatedCube.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/AnimatedCube.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/Drawing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/Drawing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scenes/Clock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/Clock.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scenes/CubeField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/CubeField.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scenes/CubeFractal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/CubeFractal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scenes/Drawing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/PictureFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scenes/Graph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/Graph.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scenes/Graph2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/Graph2D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scenes/Orbit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/OrbitDemo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scenes/PerspectiveDice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/PerspectiveDice.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/scenes/PolyhedraExplosion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/PolyhedraExplosion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scenes/RotationEquivalenceDemo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/RotationEquivalenceDemo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scenes/RubiksCube.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/RubiksCube.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scenes/SphereField.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/SphereField.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scenes/SphereFieldSimple.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scenes/Test.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/Test.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/scenes/VariablePlaneDemo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/VariablePlaneDemo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/math/matrix/Matrix3.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/matrix/Matrix3.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/math/matrix/Matrix4.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/matrix/Matrix4.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/math/physics/Metrics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/physics/Metrics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/math/physics/Plane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/physics/Plane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/math/physics/Space.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/physics/Space.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/math/vector/BigVector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/vector/BigVector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/math/vector/Vector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/vector/Vector.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/math/vector/Vector3.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/vector/Vector3.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/AbstractObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/AbstractObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/BaseObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/BaseObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/Drawing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/Drawing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/Frame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/Frame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/Object.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/Object.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/ObjectInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/ObjectInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/Scene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/Scene.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/group/LockedEdge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/group/LockedEdge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/group/RotationGroup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/group/RotationGroup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/polygon/Pentagon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/polygon/Pentagon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/polygon/Polygon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/polygon/Polygon.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/polygon/Rectangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/polygon/Rectangle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/polygon/Triangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/polygon/Triangle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/simple/BigVertex.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/simple/BigVertex.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/simple/Edge.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/simple/Edge.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/simple/Text.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/simple/Text.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/simple/Vertex.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/simple/Vertex.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/objects/complex/DrawingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/complex/DrawingPane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/complex/VariablePlane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/complex/VariablePlane.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/fractals/CubeFractal.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/fractals/CubeFractal.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/polyhedron/Polyhedron.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/polyhedron/Polyhedron.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/polyhedron/irregular/RectangularPyramid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/polyhedron/irregular/RectangularPyramid.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/polyhedron/regular/MetatronsCube.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/MetatronsCube.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/polyhedron/regular/RegularPolyhedron.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/RegularPolyhedron.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Dodecahedron.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Dodecahedron.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Hexahedron.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Hexahedron.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Icosahedron.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Icosahedron.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Octahedron.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Octahedron.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Tetrahedron.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Tetrahedron.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/sphere/HoledSphere.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/sphere/HoledSphere.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/sphere/Sphere.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/sphere/Sphere.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/system/Axes.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/system/Axes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/system/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/system/Camera.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/system/Origin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/system/Origin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utility/ColorUtility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utility/ColorUtility.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utility/EquationUtility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utility/EquationUtility.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utility/RotationUtility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utility/RotationUtility.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utility/SphericalCoordinateUtility.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/utility/SphericalCoordinateUtility.java" afterDir="false" />
     </list>
     <list id="14cdeba6-4c72-487e-bc1d-bb197f7550f1" name="ignore" comment="" />
-    <list id="7030d8f1-87b9-48d8-b837-de6aa9ceb5bf" name="local" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/Orbit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/Orbit.java" afterDir="false" />
-    </list>
+    <list id="7030d8f1-87b9-48d8-b837-de6aa9ceb5bf" name="local" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -40,81 +103,9 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>moveCa</find>
-      <find>Sphere</find>
-      <find>an Sphere</find>
-      <find>10</find>
-      <find>Camera camera =</find>
-      <find>1 /</find>
-      <find>15</find>
-      <find>5000</find>
-      <find>10000</find>
-      <find>pb.x</find>
-      <find>controls</find>
-      <find>center =</find>
-      <find>setCenter</find>
-      <find>frame.add</find>
-      <find>frame.add.*Listener</find>
-      <find>, RoundingMode.HALF_EVEN</find>
-      <find>offset</find>
-      <find>Syste</find>
-      <find>overlay</find>
-      <find>render</find>
-      <find>render(</find>
-      <find>image</find>
-      <find>TimerTask</find>
-      <find>makeTe</find>
-      <find>size = size</find>
-      <find>environment.run()</find>
-      <find>POINTS_OF_INTEREST</find>
-      <find>/ 2.0</find>
-      <find>writ</find>
-      <find>zoomFactor</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>m.</replace>
-      <replace>(m</replace>
-      <replace>prepared</replace>
-      <replace>Tetrahedron</replace>
-      <replace>[</replace>
-      <replace>],</replace>
-      <replace>an Oct</replace>
-      <replace>Dodecahedron</replace>
-      <replace>Pentagon</replace>
-      <replace>Icosahedron</replace>
-      <replace>this, center</replace>
-      <replace>Color</replace>
-      <replace>center</replace>
-      <replace>radius);</replace>
-      <replace>(this, center</replace>
-      <replace>b.add(</replace>
-      <replace>color</replace>
-      <replace>a Holed Sphere</replace>
-      <replace>Holed Sphere</replace>
-      <replace>a Sphere</replace>
-      <replace>15</replace>
-      <replace>10</replace>
-      <replace>100000</replace>
-      <replace>1000</replace>
-      <replace>pa.getX()</replace>
-      <replace>pa.getY()</replace>
-      <replace>pb.getY()</replace>
-      <replace>pb.getX()</replace>
-      <replace>pc.getY()</replace>
-      <replace>pc.getX()</replace>
-    </replaceStrings>
-  </component>
   <component name="Git.Settings">
     <option name="ROOT_SYNC" value="DONT_SYNC" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-9" />
-    <option name="y" value="-9" />
-    <option name="width" value="2578" />
-    <option name="height" value="1410" />
   </component>
   <component name="ProjectId" id="1Wg3kM3WKyOGsJYcSWNpjoqe7m9" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -128,7 +119,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://E:/Coding/JAVA/Graphy/src/main/Environment2D.java" />
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1558920136709" />
-    <property name="last_opened_file_path" value="E:/Downloads/Movie-Tracker/Server" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/scenes" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -136,26 +127,31 @@
     <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Coding\JAVA\Graphy\src\main\scenes" />
+      <recent name="E:\Coding\JAVA\Graphy\images\a" />
+    </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="objects.base" />
       <recent name="main" />
       <recent name="objects.sphere" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Coding\JAVA\Graphy\src\main\scenes" />
       <recent name="E:\Coding\JAVA\Graphy" />
       <recent name="E:\Coding\JAVA\Graphy\src\main\pps" />
       <recent name="E:\Coding\JAVA\Graphy\src\main\primordialParticleSystem" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Orbit">
+  <component name="RunManager" selected="Application.VariablePlaneDemo">
     <configuration default="true" type="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AnimatedCube" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="main.scenes.AnimatedCube" />
+    <configuration name="RotationEquivalenceDemo" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="main.scenes.RotationEquivalenceDemo" />
       <module name="Graphy" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
@@ -168,36 +164,8 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Drawing" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="main.scenes.Drawing" />
-      <module name="Graphy" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="main.scenes.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="Orbit" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="main.scenes.Orbit" />
-      <module name="Graphy" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="main.scenes.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="PerspectiveDice" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="main.scenes.PerspectiveDice" />
+    <configuration name="RubiksCube" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="main.scenes.RubiksCube" />
       <module name="Graphy" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
@@ -212,6 +180,34 @@
     </configuration>
     <configuration name="SphereField" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="main.scenes.SphereField" />
+      <module name="Graphy" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="main.scenes.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="main.scenes.Test" />
+      <module name="Graphy" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="main.scenes.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="VariablePlaneDemo" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="main.scenes.VariablePlaneDemo" />
       <module name="Graphy" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
@@ -260,19 +256,19 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.AnimatedCube" />
-      <item itemvalue="Application.Drawing" />
-      <item itemvalue="Application.PerspectiveDice" />
+      <item itemvalue="Application.RotationEquivalenceDemo" />
+      <item itemvalue="Application.RubiksCube" />
       <item itemvalue="Application.SphereField" />
-      <item itemvalue="Application.Orbit" />
+      <item itemvalue="Application.Test" />
+      <item itemvalue="Application.VariablePlaneDemo" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Orbit" />
-        <item itemvalue="Application.Drawing" />
-        <item itemvalue="Application.AnimatedCube" />
+        <item itemvalue="Application.VariablePlaneDemo" />
+        <item itemvalue="Application.Test" />
         <item itemvalue="Application.SphereField" />
-        <item itemvalue="Application.PerspectiveDice" />
+        <item itemvalue="Application.RubiksCube" />
+        <item itemvalue="Application.RotationEquivalenceDemo" />
       </list>
     </recent_temporary>
   </component>
@@ -448,7 +444,14 @@
       <option name="project" value="LOCAL" />
       <updated>1558574723975</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Demo Improvements">
+      <created>1579557857049</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1579557857049</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -502,39 +505,86 @@
     <MESSAGE value="Updated .gitignore" />
     <MESSAGE value="Added Mandelbrot Drawing" />
     <MESSAGE value="Added zoom handling to the Mandelbrot Drawing" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added zoom handling to the Mandelbrot Drawing" />
+    <MESSAGE value="Demo Improvements" />
+    <option name="LAST_COMMIT_MESSAGE" value="Demo Improvements" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="648" y="77" key="CommitChangelistDialog2" timestamp="1579557771868">
+    <state x="643" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1579575171975">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="648" y="77" key="CommitChangelistDialog2/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579557771868" />
-    <state x="93" y="93" width="1862" height="926" key="DiffContextDialog" timestamp="1579557807116">
+    <state x="643" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579575171975" />
+    <state x="648" y="77" key="CommitChangelistDialog2" timestamp="1579557856447">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="93" y="93" width="1862" height="926" key="DiffContextDialog/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579557807116" />
-    <state width="1993" height="279" key="GridCell.Tab.0.bottom" timestamp="1579557820681">
+    <state x="648" y="77" key="CommitChangelistDialog2/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579557856447" />
+    <state x="93" y="93" width="1862" height="926" key="DiffContextDialog" timestamp="1579577556041">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1993" height="279" key="GridCell.Tab.0.bottom/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579557820681" />
-    <state width="1993" height="279" key="GridCell.Tab.0.center" timestamp="1579557820681">
+    <state x="93" y="93" width="1862" height="926" key="DiffContextDialog/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579577556041" />
+    <state width="1993" height="217" key="GridCell.Tab.0.bottom" timestamp="1579577514939">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1993" height="279" key="GridCell.Tab.0.center/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579557820681" />
-    <state width="1993" height="279" key="GridCell.Tab.0.left" timestamp="1579557820681">
+    <state width="1993" height="217" key="GridCell.Tab.0.bottom/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579577514939" />
+    <state width="1993" height="217" key="GridCell.Tab.0.center" timestamp="1579577514939">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1993" height="279" key="GridCell.Tab.0.left/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579557820681" />
-    <state width="1993" height="279" key="GridCell.Tab.0.right" timestamp="1579557820681">
+    <state width="1993" height="217" key="GridCell.Tab.0.center/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579577514939" />
+    <state width="1993" height="217" key="GridCell.Tab.0.left" timestamp="1579577514939">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1993" height="279" key="GridCell.Tab.0.right/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579557820681" />
+    <state width="1993" height="217" key="GridCell.Tab.0.left/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579577514939" />
+    <state width="1993" height="217" key="GridCell.Tab.0.right" timestamp="1579577514939">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="1993" height="217" key="GridCell.Tab.0.right/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579577514939" />
     <state x="834" y="195" key="RollbackChangesDialog" timestamp="1579557720924">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="834" y="195" key="RollbackChangesDialog/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579557720924" />
+    <state x="517" y="219" key="Vcs.Push.Dialog.v2" timestamp="1579557858288">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="517" y="219" key="Vcs.Push.Dialog.v2/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579557858288" />
+    <state x="2554" y="0" width="1037" height="1158" key="dock-window-1" timestamp="1579564436216">
+      <screen x="2560" y="0" width="2048" height="1152" />
+    </state>
+    <state x="2554" y="0" width="1037" height="1158" key="dock-window-1/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579564436216" />
+    <state x="1052" y="0" width="1010" height="1069" key="dock-window-2" timestamp="1579565383738">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="1052" y="0" width="1010" height="1069" key="dock-window-2/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579565383738" />
+    <state x="830" y="207" width="1037" height="1158" key="dock-window-3" timestamp="1579567344980">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="830" y="207" width="1037" height="1158" key="dock-window-3/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579567344980" />
+    <state x="2554" y="0" width="1037" height="1158" key="dock-window-4" timestamp="1579570682990">
+      <screen x="2560" y="0" width="2048" height="1152" />
+    </state>
+    <state x="2554" y="0" width="1037" height="1158" key="dock-window-4/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579570682990" />
+    <state x="861" y="0" width="1201" height="817" key="dock-window-5" timestamp="1579571270526">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="861" y="0" width="1201" height="817" key="dock-window-5/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579571270526" />
+    <state x="3056" y="252" width="1201" height="817" key="dock-window-6" timestamp="1579571270526">
+      <screen x="2560" y="0" width="2048" height="1152" />
+    </state>
+    <state x="3056" y="252" width="1201" height="817" key="dock-window-6/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579571270526" />
+    <state x="2464" y="-8" width="1432" height="817" maximized="true" key="dock-window-7" timestamp="1579577112088">
+      <screen x="2560" y="0" width="2048" height="1152" />
+    </state>
+    <state x="2464" y="-8" width="1432" height="817" maximized="true" key="dock-window-7/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579577112088" />
+    <state x="142" y="239" width="740" height="662" key="find.popup" timestamp="1579577490333">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="142" y="239" width="740" height="662" key="find.popup/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579577490333" />
+    <state x="2702" y="248" width="740" height="662" key="find.popup/0.0.2048.1112/2560.0.2048.1152@2560.0.2048.1152" timestamp="1579563916335" />
+    <state x="90" y="113" width="840" height="999" key="search.everywhere.popup" timestamp="1579574200668">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="90" y="113" width="840" height="999" key="search.everywhere.popup/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579574200668" />
+    <state x="2650" y="117" width="840" height="1034" key="search.everywhere.popup/0.0.2048.1112/2560.0.2048.1152@2560.0.2048.1152" timestamp="1579564337221" />
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />

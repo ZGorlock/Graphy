@@ -52,6 +52,7 @@ public class Matrix3 {
      *
      * @param other The vector.
      * @return The vector result of the multiplication.
+     *
      * @throws ArithmeticException When the vector is not of the proper size.
      */
     public Vector multiply(Vector other) throws ArithmeticException {
@@ -107,8 +108,8 @@ public class Matrix3 {
      */
     public double determinant() {
         return (values[0] * ((values[4] * values[8]) - (values[5] * values[7]))) -
-                (values[1] * ((values[3] * values[8]) - (values[5] * values[6]))) +
-                (values[2] * ((values[3] * values[7]) - (values[4] * values[6])));
+               (values[1] * ((values[3] * values[8]) - (values[5] * values[6]))) +
+               (values[2] * ((values[3] * values[7]) - (values[4] * values[6])));
     }
     
     /**
@@ -117,7 +118,7 @@ public class Matrix3 {
      * @return The minors of the matrix.
      */
     public Matrix3 minors() {
-        return new Matrix3(new double[]{
+        return new Matrix3(new double[] {
                 subMatrix2(4, 5, 7, 8).determinant(), subMatrix2(3, 5, 6, 8).determinant(), subMatrix2(3, 4, 6, 7).determinant(),
                 subMatrix2(1, 2, 7, 8).determinant(), subMatrix2(0, 2, 6, 8).determinant(), subMatrix2(0, 1, 6, 7).determinant(),
                 subMatrix2(1, 2, 4, 5).determinant(), subMatrix2(0, 2, 3, 5).determinant(), subMatrix2(0, 1, 3, 4).determinant()
@@ -130,7 +131,7 @@ public class Matrix3 {
      * @return The transpose of the matrix.
      */
     public Matrix3 transpose() {
-        return new Matrix3(new double[]{
+        return new Matrix3(new double[] {
                 values[0], values[3], values[6],
                 values[1], values[4], values[7],
                 values[2], values[5], values[8]
@@ -143,7 +144,7 @@ public class Matrix3 {
      * @return The cofactored matrix.
      */
     public Matrix3 cofactor() {
-        return scale(new Matrix3(new double[]{
+        return scale(new Matrix3(new double[] {
                 1, -1, 1,
                 -1, 1, -1,
                 1, -1, 1
@@ -155,6 +156,7 @@ public class Matrix3 {
      *
      * @param solutionVector The solution vector.
      * @return The solution to the system of equations.
+     *
      * @throws ArithmeticException When the solution vector is not of the proper size.
      */
     public Vector solveSystem(Vector solutionVector) throws ArithmeticException {
@@ -169,6 +171,7 @@ public class Matrix3 {
      * Calculates the inverse of the matrix.
      *
      * @return The inverse of the matrix.
+     *
      * @throws ArithmeticException If the matrix cannot be inverted.
      */
     public Matrix3 inverse() throws ArithmeticException {
@@ -184,6 +187,7 @@ public class Matrix3 {
      *
      * @param in The vector to transform.
      * @return The transformed vector.
+     *
      * @throws ArithmeticException When the vector is not of the proper size.
      */
     public Vector transform(Vector in) throws ArithmeticException {
@@ -208,7 +212,7 @@ public class Matrix3 {
      * @return The 2D sub-matrix.
      */
     public Matrix2 subMatrix2(int a11, int a12, int a21, int a22) {
-        return new Matrix2(new double[]{
+        return new Matrix2(new double[] {
                 values[a11], values[a12],
                 values[a21], values[a22]
         });

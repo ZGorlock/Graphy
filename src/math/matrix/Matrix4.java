@@ -58,6 +58,7 @@ public class Matrix4 {
      *
      * @param other The vector.
      * @return The vector result of the multiplication.
+     *
      * @throws ArithmeticException When the vector is not of the proper size.
      */
     public Vector multiply(Vector other) throws ArithmeticException {

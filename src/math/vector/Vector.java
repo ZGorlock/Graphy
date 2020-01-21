@@ -41,7 +41,7 @@ public class Vector {
      */
     public Vector(List<Double> components) {
         this.components = new double[components.size()];
-        System.arraycopy(components.toArray(new Double[]{}), 0, this.components, 0, components.size());
+        System.arraycopy(components.toArray(new Double[] {}), 0, this.components, 0, components.size());
     }
     
     /**
@@ -155,6 +155,7 @@ public class Vector {
      *
      * @param v The other Vector.
      * @return The distance between the two Vectors.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
     public double distance(Vector v) throws ArithmeticException {
@@ -174,6 +175,7 @@ public class Vector {
      *
      * @param v The other Vector.
      * @return The midpoint between the two Vectors.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
     public Vector midpoint(Vector v) throws ArithmeticException {
@@ -185,6 +187,7 @@ public class Vector {
      *
      * @param vs The set of Vectors.
      * @return The average of the Vectors.
+     *
      * @throws ArithmeticException When the Vectors are not all of the same dimension.
      */
     public Vector average(Vector... vs) throws ArithmeticException {
@@ -210,10 +213,11 @@ public class Vector {
      *
      * @param vs The list of Vectors.
      * @return The average of the Vectors.
+     *
      * @throws ArithmeticException When the Vectors are not all of the same dimension.
      */
     public Vector average(List<Vector> vs) throws ArithmeticException {
-        return average(vs.toArray(new Vector[]{}));
+        return average(vs.toArray(new Vector[] {}));
     }
     
     /**
@@ -221,6 +225,7 @@ public class Vector {
      *
      * @param v The other Vector.
      * @return The dot product.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
     public double dot(Vector v) throws ArithmeticException {
@@ -271,6 +276,7 @@ public class Vector {
      *
      * @param v The other Vector.
      * @return The Vector produced as a result of the addition.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
     public Vector plus(Vector v) throws ArithmeticException {
@@ -290,6 +296,7 @@ public class Vector {
      *
      * @param v The other Vector.
      * @return The Vector produced as a result of the subtraction.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
     public Vector minus(Vector v) throws ArithmeticException {
@@ -309,6 +316,7 @@ public class Vector {
      *
      * @param v The other Vector.
      * @return The Vector produced as a result of the multiplication.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
     public Vector times(Vector v) throws ArithmeticException {
@@ -328,6 +336,7 @@ public class Vector {
      *
      * @param d The constant.
      * @return The Vector produced as a result of the scaling.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
     public Vector scale(double d) throws ArithmeticException {
@@ -343,6 +352,7 @@ public class Vector {
      *
      * @param v The other Vector.
      * @return The Vector produced as a result of the division.
+     *
      * @throws ArithmeticException When the two Vectors are not of the same dimension.
      */
     public Vector dividedBy(Vector v) throws ArithmeticException {
@@ -443,6 +453,7 @@ public class Vector {
      *
      * @param i The index of the component.
      * @return The component of the Vector at the index.
+     *
      * @throws IndexOutOfBoundsException When the Vector does not contain a component of the specified index.
      */
     public double get(int i) throws IndexOutOfBoundsException {
@@ -523,6 +534,7 @@ public class Vector {
      *
      * @param vs The set of Vectors.
      * @return The average of the Vectors.
+     *
      * @throws ArithmeticException When the Vectors are not all of the same dimension.
      */
     public static Vector averageVector(Vector... vs) throws ArithmeticException {

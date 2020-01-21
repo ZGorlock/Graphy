@@ -6,14 +6,7 @@
 
 package objects.base;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-
+import camera.Camera;
 import main.Environment;
 import math.matrix.Matrix3;
 import math.vector.Vector;
@@ -21,6 +14,14 @@ import math.vector.Vector3;
 import utility.ColorUtility;
 import utility.RotationUtility;
 import utility.SphericalCoordinateUtility;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Defines an abstract implementation of an Object.
@@ -72,7 +73,12 @@ public abstract class AbstractObject implements ObjectInterface {
     /**
      * The clipping mode of the Object.
      */
-    protected boolean clippingEnabled = true;
+    protected boolean clippingEnabled = false;
+    
+    /**
+     * The render delay in frames for the Object.
+     */
+    protected AtomicInteger renderDelay = new AtomicInteger(0);
     
     /**
      * The animations timers of the Object.
@@ -120,12 +126,59 @@ public abstract class AbstractObject implements ObjectInterface {
     //Methods
     
     /**
+     * Performs pre-preparing steps on the Object.
+     *
+     * @return Whether or not the Object should continue preparing.
+     */
+    @Override
+    public boolean prePrepare() {
+        if (!Environment.ENABLE_RENDER_BUFFERING || renderDelay.decrementAndGet() <= 0) {
+            if (!visible) {
+                renderDelay.set(Environment.ENABLE_RENDER_BUFFERING ? ((int) (Math.random() * (Environment.fps / 8))) : 1);
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+    
+    /**
      * Prepares the Object to be rendered.
      *
      * @return The list of BaseObjects that were prepared.
      */
     @Override
     public abstract List<BaseObject> prepare();
+    
+    /**
+     * Performs pre-rendering steps on the Object.
+     *
+     * @param prepared     The list of BaseObjects that were prepared.
+     * @param vertices     The list of vertices of the Object.
+     * @param expectedSize The expected size of the list of BaseObjects that were prepared, or -1 if a check should not be performed.
+     * @return Whether or not the Object should continue rendering.
+     */
+    @Override
+    public boolean preRender(List<Vector> prepared, Vector[] vertices, int expectedSize) {
+        if (!Environment.ENABLE_RENDER_BUFFERING || renderDelay.get() <= 0) {
+            if (!visible || ((expectedSize >= 0) && (prepared.size() != expectedSize)) || Camera.hasVectorBehindScreen(vertices)) {
+                renderDelay.set(Environment.ENABLE_RENDER_BUFFERING ? ((int) (Math.random() * (Environment.fps / 8))) : 1);
+                return false;
+            }
+            
+            Camera.projectVectorsToCamera(prepared);
+            Camera.collapseVectorsToViewport(prepared);
+            if (!Camera.hasVectorInView(prepared)) {
+                renderDelay.set(Environment.ENABLE_RENDER_BUFFERING ? ((int) (Math.random() * (Environment.fps / 8))) : 1);
+                return false;
+            } else {
+                renderDelay.set(1);
+                Camera.scaleVectorsToScreen(prepared);
+                return true;
+            }
+        }
+        return false;
+    }
     
     /**
      * Renders the Object on the screen.

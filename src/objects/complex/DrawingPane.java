@@ -6,15 +6,6 @@
 
 package objects.complex;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
-
-import camera.Camera;
 import main.Environment;
 import math.matrix.Matrix3;
 import math.vector.Vector;
@@ -22,6 +13,12 @@ import objects.base.AbstractObject;
 import objects.base.BaseObject;
 import objects.base.polygon.Rectangle;
 import utility.ColorUtility;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 
 /**
  * Defines a DrawingPane.
@@ -125,9 +122,6 @@ public class DrawingPane extends BaseObject {
     @Override
     public java.util.List<BaseObject> prepare() {
         List<BaseObject> preparedBases = new ArrayList<>();
-        if (!visible) {
-            return preparedBases;
-        }
         
         prepared.clear();
         for (Vector vertex : vertices) {
@@ -147,70 +141,63 @@ public class DrawingPane extends BaseObject {
      */
     @Override
     public void render(Graphics2D g2) {
-        if (!visible || Camera.hasVectorBehindScreen(vertices)) {
+        if (!preRender(prepared, vertices, -1)) {
             return;
         }
         
-        Camera.projectVectorsToCamera(prepared);
-        Camera.collapseVectorsToViewport(prepared);
-        
-        if (!clippingEnabled || Camera.hasVectorInView(prepared)) {
-            Camera.scaleVectorsToScreen(prepared);
+        g2.setColor(getColor());
+        switch (displayMode) {
+            case VERTEX:
+                for (Vector v : prepared) {
+                    g2.drawRect((int) v.getX(), (int) v.getY(), 1, 1);
+                }
+                break;
             
-            g2.setColor(getColor());
-            switch (displayMode) {
-                case VERTEX:
-                    for (Vector v : prepared) {
-                        g2.drawRect((int) v.getX(), (int) v.getY(), 1, 1);
-                    }
-                    break;
-                
-                case EDGE:
-                    for (int i = 1; i < 4; i++) {
-                        g2.drawLine((int) prepared.get(i - 1).getX(), (int) prepared.get(i - 1).getY(), (int) prepared.get(i).getX(), (int) prepared.get(i).getY());
-                    }
-                    g2.drawLine((int) prepared.get(3).getX(), (int) prepared.get(3).getY(), (int) prepared.get(0).getX(), (int) prepared.get(0).getY());
-                    break;
-                
-                case FACE:
-                    BufferedImage imgTmp = new BufferedImage(Environment.screenX, Environment.screenY, BufferedImage.TYPE_INT_RGB);
-                    Graphics2D g2Tmp = imgTmp.createGraphics();
-                    g2Tmp.setColor(new Color(TOUCH_COLOR));
-                    g2Tmp.fillRect(0, 0, imgTmp.getWidth(), imgTmp.getHeight());
-                    
-                    int[] xPoints = new int[4];
-                    int[] yPoints = new int[4];
-                    for (int i = 0; i < 4; i++) {
-                        xPoints[i] = (int) prepared.get(i).getX();
-                        yPoints[i] = (int) prepared.get(i).getY();
-                    }
-                    java.awt.Polygon face = new java.awt.Polygon(
-                            xPoints,
-                            yPoints,
-                            4
-                    );
-                    g2Tmp.setColor(new Color(0, 0, 0));
-                    g2Tmp.fillPolygon(face);
-                    
-                    g2Tmp.setColor(new Color(TOUCH_COLOR));
-                    for (int i = 1; i < 4; i++) {
-                        g2Tmp.drawLine((int) prepared.get(i - 1).getX(), (int) prepared.get(i - 1).getY(), (int) prepared.get(i).getX(), (int) prepared.get(i).getY());
-                    }
-                    g2Tmp.drawLine((int) prepared.get(3).getX(), (int) prepared.get(3).getY(), (int) prepared.get(0).getX(), (int) prepared.get(0).getY());
-                    
-                    draw(g2, imgTmp);
-                    
-                    g2.setColor(getColor());
-                    for (int i = 1; i < 4; i++) {
-                        g2.drawLine((int) prepared.get(i - 1).getX(), (int) prepared.get(i - 1).getY(), (int) prepared.get(i).getX(), (int) prepared.get(i).getY());
-                    }
-                    g2.drawLine((int) prepared.get(3).getX(), (int) prepared.get(3).getY(), (int) prepared.get(0).getX(), (int) prepared.get(0).getY());
-                    
-                    break;
-            }
+            case EDGE:
+                for (int i = 1; i < 4; i++) {
+                    g2.drawLine((int) prepared.get(i - 1).getX(), (int) prepared.get(i - 1).getY(), (int) prepared.get(i).getX(), (int) prepared.get(i).getY());
+                }
+                g2.drawLine((int) prepared.get(3).getX(), (int) prepared.get(3).getY(), (int) prepared.get(0).getX(), (int) prepared.get(0).getY());
+                break;
             
-            renderFrame(g2);
+            case FACE:
+                BufferedImage imgTmp = new BufferedImage(Environment.screenX, Environment.screenY, BufferedImage.TYPE_INT_RGB);
+                Graphics2D g2Tmp = imgTmp.createGraphics();
+                g2Tmp.setColor(new Color(TOUCH_COLOR));
+                g2Tmp.fillRect(0, 0, imgTmp.getWidth(), imgTmp.getHeight());
+                
+                int[] xPoints = new int[4];
+                int[] yPoints = new int[4];
+                for (int i = 0; i < 4; i++) {
+                    xPoints[i] = (int) prepared.get(i).getX();
+                    yPoints[i] = (int) prepared.get(i).getY();
+                }
+                java.awt.Polygon face = new java.awt.Polygon(
+                        xPoints,
+                        yPoints,
+                        4
+                );
+                g2Tmp.setColor(new Color(0, 0, 0));
+                g2Tmp.fillPolygon(face);
+                
+                g2Tmp.setColor(new Color(TOUCH_COLOR));
+                for (int i = 1; i < 4; i++) {
+                    g2Tmp.drawLine((int) prepared.get(i - 1).getX(), (int) prepared.get(i - 1).getY(), (int) prepared.get(i).getX(), (int) prepared.get(i).getY());
+                }
+                g2Tmp.drawLine((int) prepared.get(3).getX(), (int) prepared.get(3).getY(), (int) prepared.get(0).getX(), (int) prepared.get(0).getY());
+                
+                draw(g2, imgTmp);
+                
+                g2.setColor(getColor());
+                for (int i = 1; i < 4; i++) {
+                    g2.drawLine((int) prepared.get(i - 1).getX(), (int) prepared.get(i - 1).getY(), (int) prepared.get(i).getX(), (int) prepared.get(i).getY());
+                }
+                g2.drawLine((int) prepared.get(3).getX(), (int) prepared.get(3).getY(), (int) prepared.get(0).getX(), (int) prepared.get(0).getY());
+                
+                break;
         }
+        
+        renderFrame(g2);
     }
     
     /**

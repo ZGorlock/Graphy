@@ -6,15 +6,13 @@
 
 package objects.base.polygon;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
-
-import camera.Camera;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Defines a Polygon.
@@ -53,10 +51,11 @@ public class Polygon extends BaseObject {
      */
     @Override
     public List<BaseObject> prepare() {
-        List<BaseObject> preparedBases = new ArrayList<>();
-        if (!visible) {
-            return preparedBases;
+        if (!prePrepare()) {
+            return new ArrayList<>();
         }
+        
+        List<BaseObject> preparedBases = new ArrayList<>();
         
         prepared.clear();
         for (Vector vertex : vertices) {
@@ -76,58 +75,51 @@ public class Polygon extends BaseObject {
      */
     @Override
     public void render(Graphics2D g2) {
-        if (!visible || (prepared.size() != numVertices) || Camera.hasVectorBehindScreen(vertices)) {
+        if (!preRender(prepared, vertices, numVertices)) {
             return;
         }
         
-        Camera.projectVectorsToCamera(prepared);
-        Camera.collapseVectorsToViewport(prepared);
-        
-        if (!clippingEnabled || Camera.hasVectorInView(prepared)) {
-            Camera.scaleVectorsToScreen(prepared);
+        g2.setColor(getColor());
+        switch (displayMode) {
+            case VERTEX:
+                for (Vector v : prepared) {
+                    g2.drawRect((int) v.getX(), (int) v.getY(), 1, 1);
+                }
+                break;
             
-            g2.setColor(getColor());
-            switch (displayMode) {
-                case VERTEX:
-                    for (Vector v : prepared) {
-                        g2.drawRect((int) v.getX(), (int) v.getY(), 1, 1);
-                    }
+            case EDGE:
+                if (numVertices < 2) {
                     break;
+                }
                 
-                case EDGE:
-                    if (numVertices < 2) {
-                        break;
-                    }
-                    
-                    for (int i = 1; i < numVertices; i++) {
-                        g2.drawLine((int) prepared.get(i - 1).getX(), (int) prepared.get(i - 1).getY(), (int) prepared.get(i).getX(), (int) prepared.get(i).getY());
-                    }
-                    g2.drawLine((int) prepared.get(numVertices - 1).getX(), (int) prepared.get(numVertices - 1).getY(), (int) prepared.get(0).getX(), (int) prepared.get(0).getY());
-                    break;
-                
-                case FACE:
-                    if (numVertices < 3) {
-                        break;
-                    }
-                    
-                    int[] xPoints = new int[numVertices];
-                    int[] yPoints = new int[numVertices];
-                    for (int i = 0; i < numVertices; i++) {
-                        xPoints[i] = (int) prepared.get(i).getX();
-                        yPoints[i] = (int) prepared.get(i).getY();
-                    }
-                    
-                    java.awt.Polygon face = new java.awt.Polygon(
-                            xPoints,
-                            yPoints,
-                            numVertices
-                    );
-                    g2.fillPolygon(face);
-                    break;
-            }
+                for (int i = 1; i < numVertices; i++) {
+                    g2.drawLine((int) prepared.get(i - 1).getX(), (int) prepared.get(i - 1).getY(), (int) prepared.get(i).getX(), (int) prepared.get(i).getY());
+                }
+                g2.drawLine((int) prepared.get(numVertices - 1).getX(), (int) prepared.get(numVertices - 1).getY(), (int) prepared.get(0).getX(), (int) prepared.get(0).getY());
+                break;
             
-            renderFrame(g2);
+            case FACE:
+                if (numVertices < 3) {
+                    break;
+                }
+                
+                int[] xPoints = new int[numVertices];
+                int[] yPoints = new int[numVertices];
+                for (int i = 0; i < numVertices; i++) {
+                    xPoints[i] = (int) prepared.get(i).getX();
+                    yPoints[i] = (int) prepared.get(i).getY();
+                }
+                
+                java.awt.Polygon face = new java.awt.Polygon(
+                        xPoints,
+                        yPoints,
+                        numVertices
+                );
+                g2.fillPolygon(face);
+                break;
         }
+            
+        renderFrame(g2);
     }
     
     
@@ -143,7 +135,7 @@ public class Polygon extends BaseObject {
         if (n < 1 || n > numVertices) {
             return new Vector(0, 0, 0);
         }
-        return vertices[n - 1];
+        return vertices[n - 1].clone();
     }
     
     

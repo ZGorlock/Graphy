@@ -6,30 +6,21 @@
 
 package main;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.WindowConstants;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import camera.Camera;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
 import objects.base.ObjectInterface;
 import objects.base.Scene;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.List;
+import java.util.Timer;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The main Environment.
@@ -67,6 +58,11 @@ public class Environment {
      * The origin of the Environment at.
      */
     public static final Vector ORIGIN = new Vector(0, 0, 0);
+    
+    /**
+     * A flag indicating whether or not render buffering should be utilized.
+     */
+    public static final boolean ENABLE_RENDER_BUFFERING = true;
     
     /**
      * The acceptable rounding error for double precision.

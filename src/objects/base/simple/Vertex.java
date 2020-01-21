@@ -6,15 +6,13 @@
 
 package objects.base.simple;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
-
-import camera.Camera;
 import math.vector.Vector;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Defines a Vertex.
@@ -74,10 +72,11 @@ public class Vertex extends BaseObject {
      */
     @Override
     public List<BaseObject> prepare() {
-        List<BaseObject> preparedBases = new ArrayList<>();
-        if (!visible) {
-            return preparedBases;
+        if (!prePrepare()) {
+            return new ArrayList<>();
         }
+    
+        List<BaseObject> preparedBases = new ArrayList<>();
         
         prepared.clear();
         prepared.add(vertices[0].clone().justify());
@@ -95,19 +94,12 @@ public class Vertex extends BaseObject {
      */
     @Override
     public void render(Graphics2D g2) {
-        if (!visible || (prepared.size() != 1) || Camera.hasVectorBehindScreen(vertices)) {
+        if (!preRender(prepared, vertices, 1)) {
             return;
         }
-        
-        Camera.projectVectorsToCamera(prepared);
-        Camera.collapseVectorsToViewport(prepared);
-        
-        if (!clippingEnabled || Camera.hasVectorInView(prepared)) {
-            Camera.scaleVectorsToScreen(prepared);
             
-            g2.setColor(getColor());
-            g2.drawRect((int) prepared.get(0).getX(), (int) prepared.get(0).getY(), 1, 1);
-        }
+        g2.setColor(getColor());
+        g2.drawRect((int) prepared.get(0).getX(), (int) prepared.get(0).getY(), 1, 1);
     }
     
     /**

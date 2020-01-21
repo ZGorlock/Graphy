@@ -6,12 +6,11 @@
 
 package objects.base;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.util.List;
-
 import math.matrix.Matrix3;
 import math.vector.Vector;
+
+import java.awt.*;
+import java.util.List;
 
 /**
  * The interface that defines the contract for creating an Object class.
@@ -21,11 +20,28 @@ public interface ObjectInterface {
     //Methods
     
     /**
+     * Performs pre-preparing steps on the Object.
+     *
+     * @return Whether or not the Object should continue preparing.
+     */
+    boolean prePrepare();
+    
+    /**
      * Prepares the Object to be rendered.
      *
      * @return The list of BaseObjects that were prepared.
      */
     List<BaseObject> prepare();
+    
+    /**
+     * Performs pre-rendering steps on the Object.
+     *
+     * @param prepared     The list of BaseObjects that were prepared.
+     * @param vertices     The list of vertices of the Object.
+     * @param expectedSize The expected size of the list of BaseObjects that were prepared, or -1 if a check should not be performed.
+     * @return Whether or not the Object should continue rendering.
+     */
+    boolean preRender(List<Vector> prepared, Vector[] vertices, int expectedSize);
     
     /**
      * Renders the Object on the screen.

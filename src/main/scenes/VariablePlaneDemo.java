@@ -6,14 +6,14 @@
 
 package main.scenes;
 
-import java.awt.Color;
-
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Scene;
 import objects.base.polygon.Rectangle;
 import objects.complex.VariablePlane;
+
+import java.awt.*;
 
 /**
  * Defines a Variable Plane Demo scene.
@@ -33,6 +33,7 @@ public class VariablePlaneDemo extends Scene {
         environment.setupMainKeyListener();
         
         VariablePlaneDemo variablePlaneDemo = new VariablePlaneDemo(environment);
+        variablePlaneDemo.initComponents();
         variablePlaneDemo.setupCameras();
         variablePlaneDemo.setupControls();
         
@@ -65,6 +66,13 @@ public class VariablePlaneDemo extends Scene {
         VariablePlane plane = new objects.complex.VariablePlane(Color.WHITE, new Rectangle(new Vector(-10, -10, 0), new Vector(-10, 10, 0), new Vector(10, 10, 0), new Vector(10, -10, 0)), 1, 0.5, 1.0);
         plane.addFrame(Color.BLACK);
         registerComponent(plane);
+    }
+    
+    /**
+     * Sets up components for the Variable Plane Demo scene.
+     */
+    @Override
+    public void initComponents() {
     }
     
     /**

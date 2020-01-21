@@ -6,14 +6,14 @@
 
 package main.scenes;
 
-import java.awt.Color;
-
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Scene;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import objects.system.Axes;
+
+import java.awt.*;
 
 /**
  * Defines an Orbit Demo scene.
@@ -33,6 +33,7 @@ public class OrbitDemo extends Scene {
         environment.setupMainKeyListener();
         
         OrbitDemo orbit = new OrbitDemo(environment);
+        orbit.initComponents();
         orbit.setupCameras();
         orbit.setupControls();
         
@@ -79,6 +80,13 @@ public class OrbitDemo extends Scene {
         h3.addOrbitAnimation(h2, 2500);
         h2.addOrbitAnimation(h1, 10000);
 //        h2.addOrbitTransformation(h1, .5, 2000);
+    }
+    
+    /**
+     * Sets up components for the Orbit Demo scene.
+     */
+    @Override
+    public void initComponents() {
     }
     
     /**

@@ -6,9 +6,9 @@
 
 package objects.base;
 
-import java.awt.Color;
-
 import main.Environment;
+
+import java.awt.*;
 
 /**
  * Defines a Scene to render.
@@ -37,16 +37,22 @@ public abstract class Scene extends Object {
     }
     
     
-    //Static Methods
+    //Methods
     
     /**
-     * Sets up cameras for the scene.
+     * Sets up components for the Scene.
+     */
+    public void initComponents() {
+    }
+    
+    /**
+     * Sets up cameras for the Scene.
      */
     public void setupCameras() {
     }
     
     /**
-     * Sets up controls for the scene.
+     * Sets up controls for the Scene.
      */
     public void setupControls() {
     }

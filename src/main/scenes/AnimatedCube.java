@@ -6,14 +6,14 @@
 
 package main.scenes;
 
-import java.awt.Color;
-
 import camera.Camera;
 import main.Environment;
 import objects.base.Frame;
 import objects.base.Scene;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import utility.ColorUtility;
+
+import java.awt.*;
 
 /**
  * Defines a Animated Cube scene.
@@ -33,6 +33,7 @@ public class AnimatedCube extends Scene {
         environment.setupMainKeyListener();
         
         AnimatedCube animatedCube = new AnimatedCube(environment);
+        animatedCube.initComponents();
         animatedCube.setupCameras();
         animatedCube.setupControls();
         
@@ -76,8 +77,16 @@ public class AnimatedCube extends Scene {
     }
     
     /**
+     * Sets up components for the Animated Cube scene.
+     */
+    @Override
+    public void initComponents() {
+    }
+    
+    /**
      * Sets up cameras for the Animated Cube scene.
      */
+    @Override
     public void setupCameras() {
         Camera camera = new Camera(this, true, true);
         camera.setLocation(Math.PI / 2, 0, 8);
@@ -86,6 +95,7 @@ public class AnimatedCube extends Scene {
     /**
      * Sets up controls for the Animated Cube scene.
      */
+    @Override
     public void setupControls() {
     }
     

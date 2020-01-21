@@ -6,11 +6,6 @@
 
 package main.scenes;
 
-import java.awt.Color;
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -19,6 +14,11 @@ import objects.base.group.LockedEdge;
 import objects.base.simple.Text;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import utility.SphericalCoordinateUtility;
+
+import java.awt.*;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Defines an Clock scene.
@@ -38,6 +38,7 @@ public class Clock extends Scene {
         environment.setupMainKeyListener();
         
         Clock clock = new Clock(environment);
+        clock.initComponents();
         clock.setupCameras();
         clock.setupControls();
         
@@ -123,6 +124,13 @@ public class Clock extends Scene {
                 time.setText((((now.getHours() % 12) < 10) ? "0" : "") + (now.getHours() % 12) + ':' + ((now.getMinutes() < 10) ? "0" : "") + now.getMinutes() + ':' + ((now.getSeconds() < 10) ? "0" : "") + now.getSeconds());
             }
         }, 0, 1000 / Environment.fps);
+    }
+    
+    /**
+     * Sets up components for the Clock scene.
+     */
+    @Override
+    public void initComponents() {
     }
     
     /**

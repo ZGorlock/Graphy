@@ -6,12 +6,6 @@
 
 package main.scenes;
 
-import javax.imageio.ImageIO;
-import java.awt.Color;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -20,6 +14,12 @@ import objects.base.Scene;
 import objects.base.polygon.Rectangle;
 import objects.complex.DrawingPane;
 import objects.system.Axes;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Defines a Picture Frame scene.
@@ -39,6 +39,7 @@ public class PictureFrame extends Scene {
         environment.setupMainKeyListener();
         
         PictureFrame pictureFrame = new PictureFrame(environment);
+        pictureFrame.initComponents();
         pictureFrame.setupCameras();
         pictureFrame.setupControls();
         
@@ -82,6 +83,13 @@ public class PictureFrame extends Scene {
         
         registerComponent(drawing);
         registerComponent(new Axes(5));
+    }
+    
+    /**
+     * Sets up components for the Picture Frame scene.
+     */
+    @Override
+    public void initComponents() {
     }
     
     /**

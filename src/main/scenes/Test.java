@@ -6,14 +6,14 @@
 
 package main.scenes;
 
-import java.awt.Color;
-
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Scene;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import objects.system.Axes;
+
+import java.awt.*;
 
 /**
  * Defines a Test scene.
@@ -33,6 +33,7 @@ public class Test extends Scene {
         environment.setupMainKeyListener();
         
         Test test = new Test(environment);
+        test.initComponents();
         test.setupCameras();
         test.setupControls();
         
@@ -75,6 +76,13 @@ public class Test extends Scene {
 //        Hexahedron h2 = new Hexahedron(null, new Vector(5, 2, 3), Color.YELLOW, 1);
         registerComponent(h1);
 //        registerComponent(h2);
+    }
+    
+    /**
+     * Sets up components for the Test scene.
+     */
+    @Override
+    public void initComponents() {
     }
     
     /**

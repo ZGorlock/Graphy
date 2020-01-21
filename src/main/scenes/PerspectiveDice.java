@@ -6,10 +6,6 @@
 
 package main.scenes;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -17,13 +13,13 @@ import objects.base.Frame;
 import objects.base.Scene;
 import objects.base.polygon.Rectangle;
 import objects.complex.VariablePlane;
-import objects.polyhedron.regular.platonic.Dodecahedron;
-import objects.polyhedron.regular.platonic.Hexahedron;
-import objects.polyhedron.regular.platonic.Icosahedron;
-import objects.polyhedron.regular.platonic.Octahedron;
-import objects.polyhedron.regular.platonic.Tetrahedron;
+import objects.polyhedron.regular.platonic.*;
 import objects.sphere.Sphere;
 import utility.SphericalCoordinateUtility;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PerspectiveDice extends Scene {
     
@@ -40,6 +36,7 @@ public class PerspectiveDice extends Scene {
         environment.setupMainKeyListener();
         
         PerspectiveDice perspectiveDice = new PerspectiveDice(environment);
+        perspectiveDice.initComponents();
         perspectiveDice.setupCameras();
         perspectiveDice.setupControls();
         
@@ -127,6 +124,13 @@ public class PerspectiveDice extends Scene {
         registerComponent(d12Frame);
         registerComponent(d20Frame);
         registerComponent(dxFrame);
+    }
+    
+    /**
+     * Sets up components for the Perspective Dice scene.
+     */
+    @Override
+    public void initComponents() {
     }
     
     /**

@@ -6,10 +6,10 @@
 
 package objects.base;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
 import main.Environment2D;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * Defines a Drawing to render.
@@ -40,7 +40,7 @@ public class Drawing {
     //Methods
     
     /**
-     * Sets up components for the drawing.
+     * Sets up components for the Drawing.
      */
     public void initComponents() {
     }
@@ -63,7 +63,7 @@ public class Drawing {
     }
     
     /**
-     * Sets up controls for the drawing.
+     * Sets up controls for the Drawing.
      */
     public void setupControls() {
     }

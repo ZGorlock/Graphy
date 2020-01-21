@@ -6,14 +6,14 @@
 
 package main.scenes;
 
-import java.awt.Color;
-
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Frame;
 import objects.base.Scene;
 import objects.sphere.Sphere;
+
+import java.awt.*;
 
 /**
  * Defines a Sphere Field scene.
@@ -41,6 +41,7 @@ public class SphereField extends Scene {
         environment.setupMainKeyListener();
         
         SphereField sphereField = new SphereField(environment);
+        sphereField.initComponents();
         sphereField.setupCameras();
         sphereField.setupControls();
         
@@ -84,6 +85,13 @@ public class SphereField extends Scene {
             }
             registerComponent(sphere);
         }
+    }
+    
+    /**
+     * Sets up components for the Sphere Field scene.
+     */
+    @Override
+    public void initComponents() {
     }
     
     /**

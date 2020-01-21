@@ -6,11 +6,11 @@
 
 package main.scenes;
 
-import java.awt.Color;
-
 import camera.Camera;
 import main.Environment;
 import objects.base.Scene;
+
+import java.awt.*;
 
 /**
  * Defines a Cube Fractal scene.
@@ -30,6 +30,7 @@ public class CubeFractal extends Scene {
         environment.setupMainKeyListener();
         
         CubeFractal cubeFractal = new CubeFractal(environment);
+        cubeFractal.initComponents();
         cubeFractal.setupCameras();
         cubeFractal.setupControls();
         
@@ -63,6 +64,13 @@ public class CubeFractal extends Scene {
         cubeFractal.addColorAnimation(10000, 0);
         cubeFractal.addFrame(Color.WHITE);
         registerComponent(cubeFractal);
+    }
+    
+    /**
+     * Sets up components for the Cube Fractal scene.
+     */
+    @Override
+    public void initComponents() {
     }
     
     /**

@@ -6,24 +6,16 @@
 
 package main.drawing;
 
+import main.Environment2D;
+import math.vector.BigVector;
+import math.vector.Vector;
+import math.vector.Vector2;
+import objects.base.Drawing;
+
 import javax.imageio.ImageIO;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Toolkit;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
@@ -33,21 +25,10 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Timer;
-import java.util.TimerTask;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import main.Environment2D;
-import math.vector.BigVector;
-import math.vector.Vector;
-import math.vector.Vector2;
-import objects.base.Drawing;
 
 /**
  * A Mandelbrot drawing.
@@ -340,6 +321,79 @@ public class Mandelbrot extends Drawing {
     //Methods
     
     /**
+     * Sets up components for the Mandelbrot.
+     */
+    @Override
+    public void initComponents() {
+        environment.frame.setTitle("Mandelbrot");
+        
+        progressBar = new JProgressBar(0, environment.screenX * environment.screenY);
+        progressBar.setSize(new Dimension(environment.screenX - 1, BAR_HEIGHT));
+        progressBar.setPreferredSize(new Dimension(environment.screenX, BAR_HEIGHT));
+        progressBar.setBounds(0, environment.screenY - BAR_HEIGHT, progressBar.getWidth(), progressBar.getHeight());
+        progressBar.setVisible(false);
+        environment.frame.getContentPane().add(progressBar, BorderLayout.SOUTH);
+        
+        JMenu qualityOptions = new JMenu("Quality");
+        ActionListener qualityActionListener = e -> {
+            for (SuperSampleType qualityEntry : SuperSampleType.values()) {
+                if (qualityEntry.getQuality().equals(e.getActionCommand())) {
+                    sampleType = qualityEntry;
+                    createBuffer();
+                    
+                    updateImage();
+                }
+            }
+        };
+        for (SuperSampleType qualityEntry : SuperSampleType.values()) {
+            JMenuItem qualityOption = new JMenuItem(qualityEntry.getQuality());
+            qualityOption.addActionListener(qualityActionListener);
+            qualityOptions.add(qualityOption);
+        }
+        
+        JMenu paletteOptions = new JMenu("Palette");
+        ActionListener paletteActionListener = e -> {
+            String[] paletteValues = PALETTES.get(e.getActionCommand()).split(",");
+            for (int i = 0; i < paletteValues.length; i++) {
+                paletteFilters[i] = Integer.valueOf(paletteValues[i], 16);
+            }
+            
+            if (image != null) {
+                image = buffer.makeTexture(palette);
+                environment.run();
+            }
+        };
+        for (Map.Entry<String, String> paletteEntry : PALETTES.entrySet()) {
+            JMenuItem paletteOption = new JMenuItem(paletteEntry.getKey());
+            paletteOption.addActionListener(paletteActionListener);
+            paletteOptions.add(paletteOption);
+        }
+        
+        JMenu pointOptions = new JMenu("Points of Interest");
+        ActionListener pointActionListener = e -> {
+            String[] pointData = POINTS_OF_INTEREST.get(e.getActionCommand()).split(",");
+            
+            size = new BigDecimal(pointData[0].substring(2));
+            centre = new BigVector(new BigDecimal(pointData[1].substring(2)), new BigDecimal(pointData[2].substring(2)));
+            iterationLimit = Integer.valueOf(pointData[3].substring(2));
+            
+            updateImage();
+        };
+        for (Map.Entry<String, String> pointEntry : POINTS_OF_INTEREST.entrySet()) {
+            JMenuItem pointOption = new JMenuItem(pointEntry.getKey());
+            pointOption.addActionListener(pointActionListener);
+            pointOptions.add(pointOption);
+        }
+        
+        menuBar = new JMenuBar();
+        menuBar.add(qualityOptions);
+        menuBar.add(paletteOptions);
+        menuBar.add(pointOptions);
+        menuBar.setVisible(false);
+        environment.frame.setJMenuBar(menuBar);
+    }
+    
+    /**
      * Renders the Mandelbrot.
      *
      * @return The rendered Mandelbrot.
@@ -565,79 +619,6 @@ public class Mandelbrot extends Drawing {
             }
             
         });
-    }
-    
-    /**
-     * Sets up components for the Mandelbrot.
-     */
-    @Override
-    public void initComponents() {
-        environment.frame.setTitle("Mandelbrot");
-        
-        progressBar = new JProgressBar(0, environment.screenX * environment.screenY);
-        progressBar.setSize(new Dimension(environment.screenX - 1, BAR_HEIGHT));
-        progressBar.setPreferredSize(new Dimension(environment.screenX, BAR_HEIGHT));
-        progressBar.setBounds(0, environment.screenY - BAR_HEIGHT, progressBar.getWidth(), progressBar.getHeight());
-        progressBar.setVisible(false);
-        environment.frame.getContentPane().add(progressBar, BorderLayout.SOUTH);
-        
-        JMenu qualityOptions = new JMenu("Quality");
-        ActionListener qualityActionListener = e -> {
-            for (SuperSampleType qualityEntry : SuperSampleType.values()) {
-                if (qualityEntry.getQuality().equals(e.getActionCommand())) {
-                    sampleType = qualityEntry;
-                    createBuffer();
-                    
-                    updateImage();
-                }
-            }
-        };
-        for (SuperSampleType qualityEntry : SuperSampleType.values()) {
-            JMenuItem qualityOption = new JMenuItem(qualityEntry.getQuality());
-            qualityOption.addActionListener(qualityActionListener);
-            qualityOptions.add(qualityOption);
-        }
-        
-        JMenu paletteOptions = new JMenu("Palette");
-        ActionListener paletteActionListener = e -> {
-            String[] paletteValues = PALETTES.get(e.getActionCommand()).split(",");
-            for (int i = 0; i < paletteValues.length; i++) {
-                paletteFilters[i] = Integer.valueOf(paletteValues[i], 16);
-            }
-            
-            if (image != null) {
-                image = buffer.makeTexture(palette);
-                environment.run();
-            }
-        };
-        for (Map.Entry<String, String> paletteEntry : PALETTES.entrySet()) {
-            JMenuItem paletteOption = new JMenuItem(paletteEntry.getKey());
-            paletteOption.addActionListener(paletteActionListener);
-            paletteOptions.add(paletteOption);
-        }
-        
-        JMenu pointOptions = new JMenu("Points of Interest");
-        ActionListener pointActionListener = e -> {
-            String[] pointData = POINTS_OF_INTEREST.get(e.getActionCommand()).split(",");
-            
-            size = new BigDecimal(pointData[0].substring(2));
-            centre = new BigVector(new BigDecimal(pointData[1].substring(2)), new BigDecimal(pointData[2].substring(2)));
-            iterationLimit = Integer.valueOf(pointData[3].substring(2));
-            
-            updateImage();
-        };
-        for (Map.Entry<String, String> pointEntry : POINTS_OF_INTEREST.entrySet()) {
-            JMenuItem pointOption = new JMenuItem(pointEntry.getKey());
-            pointOption.addActionListener(pointActionListener);
-            pointOptions.add(pointOption);
-        }
-        
-        menuBar = new JMenuBar();
-        menuBar.add(qualityOptions);
-        menuBar.add(paletteOptions);
-        menuBar.add(pointOptions);
-        menuBar.setVisible(false);
-        environment.frame.setJMenuBar(menuBar);
     }
     
     /**

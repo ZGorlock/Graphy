@@ -6,14 +6,6 @@
 
 package main.scenes;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import camera.Camera;
 import main.Environment;
 import math.vector.UniqueVectorSet;
@@ -23,6 +15,10 @@ import objects.base.Scene;
 import objects.base.polygon.Rectangle;
 import objects.system.Axes;
 import utility.EquationUtility;
+
+import java.awt.*;
+import java.util.List;
+import java.util.*;
 
 /**
  * Defines a Graph scene.
@@ -60,6 +56,7 @@ public class Graph extends Scene {
         environment.setupMainKeyListener();
         
         Graph graph = new Graph(environment);
+        graph.initComponents();
         graph.setupCameras();
         graph.setupControls();
         
@@ -135,8 +132,16 @@ public class Graph extends Scene {
     }
     
     /**
+     * Sets up components for the Graph scene.
+     */
+    @Override
+    public void initComponents() {
+    }
+    
+    /**
      * Sets up cameras for the Graph scene.
      */
+    @Override
     public void setupCameras() {
         Camera camera = new Camera(this, true, true);
         camera.setLocation(Math.PI / 4, 5 * Math.PI / 4, 25);
@@ -145,6 +150,7 @@ public class Graph extends Scene {
     /**
      * Sets up controls for the Graph scene.
      */
+    @Override
     public void setupControls() {
     }
     

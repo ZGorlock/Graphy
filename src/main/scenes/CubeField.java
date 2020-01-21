@@ -6,13 +6,13 @@
 
 package main.scenes;
 
-import java.awt.Color;
-
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Scene;
 import objects.polyhedron.regular.platonic.Hexahedron;
+
+import java.awt.*;
 
 /**
  * Defines a Cube Field scene.
@@ -32,6 +32,7 @@ public class CubeField extends Scene {
         environment.setupMainKeyListener();
         
         CubeField cubeField = new CubeField(environment);
+        cubeField.initComponents();
         cubeField.setupCameras();
         cubeField.setupControls();
         
@@ -66,6 +67,13 @@ public class CubeField extends Scene {
             h.addFrame(Color.BLACK);
             registerComponent(h);
         }
+    }
+    
+    /**
+     * Sets up components for the Cube Field scene.
+     */
+    @Override
+    public void initComponents() {
     }
     
     /**

@@ -6,10 +6,6 @@
 
 package main.scenes;
 
-import java.awt.Color;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
@@ -17,6 +13,10 @@ import objects.base.Scene;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import objects.system.Axes;
 import utility.ColorUtility;
+
+import java.awt.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Defines a Rotation Equivalence Demo scene.
@@ -36,6 +36,7 @@ public class RotationEquivalenceDemo extends Scene {
         environment.setupMainKeyListener();
         
         RotationEquivalenceDemo rotationEquivalenceDemo = new RotationEquivalenceDemo(environment);
+        rotationEquivalenceDemo.initComponents();
         rotationEquivalenceDemo.setupCameras();
         rotationEquivalenceDemo.setupControls();
         
@@ -107,6 +108,13 @@ public class RotationEquivalenceDemo extends Scene {
         registerComponent(cube1);
         registerComponent(cube2);
         registerComponent(new Axes(5));
+    }
+    
+    /**
+     * Sets up components for the Rotation Equivalence Demo scene.
+     */
+    @Override
+    public void initComponents() {
     }
     
     /**

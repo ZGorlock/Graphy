@@ -6,14 +6,6 @@
 
 package main.scenes;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import camera.Camera;
 import main.Environment;
 import math.vector.UniqueVectorSet;
@@ -23,6 +15,10 @@ import objects.base.Scene;
 import objects.base.simple.Edge;
 import objects.system.Axes;
 import utility.EquationUtility;
+
+import java.awt.*;
+import java.util.List;
+import java.util.*;
 
 /**
  * Defines a Graph2D scene.
@@ -55,6 +51,7 @@ public class Graph2D extends Scene {
         environment.setupMainKeyListener();
         
         Graph2D graph2D = new Graph2D(environment);
+        graph2D.initComponents();
         graph2D.setupCameras();
         graph2D.setupControls();
         
@@ -119,6 +116,13 @@ public class Graph2D extends Scene {
         }
         
         registerComponent(plane);
+    }
+    
+    /**
+     * Sets up components for the Graph2D scene.
+     */
+    @Override
+    public void initComponents() {
     }
     
     /**

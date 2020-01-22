@@ -179,7 +179,8 @@ public abstract class BaseObject extends AbstractObject {
                 max = dist;
             }
         }
-        return max;
+        renderDistance = max;
+        return renderDistance;
     }
     
 }

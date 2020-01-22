@@ -77,6 +77,11 @@ public abstract class AbstractObject implements ObjectInterface {
     protected boolean visible = true;
     
     /**
+     * The distance from the Camera to the Object.
+     */
+    protected double renderDistance = 0.0;
+    
+    /**
      * The display mode of the Object.
      */
     protected DisplayMode displayMode = DisplayMode.FACE;
@@ -168,6 +173,10 @@ public abstract class AbstractObject implements ObjectInterface {
      */
     @Override
     public final boolean postPrepare() {
+        if (calculateRenderDistance() > Environment.MAX_RENDER_DISTANCE) {
+            renderDelay.set(Environment.ENABLE_RENDER_BUFFERING ? ((int) (Math.random() * (Environment.fps / 8))) : 1);
+            return !Environment.ENABLE_RENDER_BUFFERING;
+        }
         return true;
     }
     
@@ -981,6 +990,15 @@ public abstract class AbstractObject implements ObjectInterface {
      */
     public boolean isVisible() {
         return visible;
+    }
+    
+    /**
+     * Returns the distance from the Camera to the Object.
+     *
+     * @return The distance from the Camera to the Object.
+     */
+    public double getRenderDistance() {
+        return renderDistance;
     }
     
     /**

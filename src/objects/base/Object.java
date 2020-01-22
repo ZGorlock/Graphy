@@ -165,11 +165,8 @@ public class Object extends AbstractObject {
      */
     @Override
     public double calculateRenderDistance() {
-        double max = 0;
-        for (ObjectInterface component : components) {
-            max = Math.max(max, component.calculateRenderDistance());
-        }
-        return max;
+        renderDistance = 0;
+        return renderDistance;
     }
     
     /**

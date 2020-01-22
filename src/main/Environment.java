@@ -69,6 +69,11 @@ public class Environment {
     public static final boolean ENABLE_RENDER_BUFFERING = true;
     
     /**
+     * The maximum distance to render.
+     */
+    public static final double MAX_RENDER_DISTANCE = 250.0;
+    
+    /**
      * The acceptable rounding error for double precision.
      */
     public static final double OMEGA = 0.0000001;
@@ -186,14 +191,7 @@ public class Environment {
                         return;
                     }
                     
-                    try {
-                        preparedBases.sort((o1, o2) -> {
-                            double d1 = o1.calculateRenderDistance();
-                            double d2 = o2.calculateRenderDistance();
-                            return Double.compare(d2, d1);
-                        });
-                    } catch (IllegalArgumentException ignored) {
-                    }
+                    preparedBases.sort((o1, o2) -> Double.compare(o2.getRenderDistance(), o1.getRenderDistance()));
                     
                     Graphics2D g2 = (Graphics2D) g;
                     if (background != null) {

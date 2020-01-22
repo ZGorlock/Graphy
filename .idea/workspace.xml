@@ -6,21 +6,24 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e22397f-9631-4e96-a2b2-7430a02a411c" name="Default" comment="Abstracted Scene and Drawing start up">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+    <list default="true" id="2e22397f-9631-4e96-a2b2-7430a02a411c" name="Default" comment="Reformatted code">
+      <change afterPath="$PROJECT_DIR$/src/utility/ScreenUtility.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/animations/Animation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/camera/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/camera/Camera.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Environment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Environment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/Environment2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Environment2D.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/drawing/Mandelbrot.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/Mandelbrot.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/drawing/MandelbrotOld.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/MandelbrotOld.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/drawing/pps/Particle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/pps/Particle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/drawing/pps/ParticleState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/pps/ParticleState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/scenes/Clock.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/scenes/Clock.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/math/vector/BigVector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/vector/BigVector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/math/vector/Vector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/math/vector/Vector.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/objects/base/simple/Vertex.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/simple/Vertex.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Icosahedron.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/polyhedron/regular/platonic/Icosahedron.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawing/Spirograph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/Spirograph.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/drawing/pps/PrimordialParticleSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/drawing/pps/PrimordialParticleSystem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/Drawing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/Drawing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/base/Scene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/base/Scene.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/objects/complex/DrawingPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/objects/complex/DrawingPane.java" afterDir="false" />
     </list>
-    <list id="14cdeba6-4c72-487e-bc1d-bb197f7550f1" name="ignore" comment="" />
+    <list id="14cdeba6-4c72-487e-bc1d-bb197f7550f1" name="ignore" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <list id="7030d8f1-87b9-48d8-b837-de6aa9ceb5bf" name="local" comment="" />
     <list id="4aee5fba-e3ad-4a48-8507-937f9c41bf31" name="MapMaker" comment="">
       <change afterPath="$PROJECT_DIR$/resource/mapMaker2D/border.png" afterDir="false" />
@@ -78,6 +81,49 @@
     <option name="ROOT_SYNC" value="DONT_SYNC" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/.idea/workspace.xml">
+      <ranges>
+        <range start1="8" end1="11" start2="8" end2="10" changelist="2e22397f-9631-4e96-a2b2-7430a02a411c" />
+        <range start1="12" end1="12" start2="11" end2="15" changelist="2e22397f-9631-4e96-a2b2-7430a02a411c" />
+        <range start1="14" end1="21" start2="17" end2="25" changelist="2e22397f-9631-4e96-a2b2-7430a02a411c" />
+        <range start1="22" end1="23" start2="26" end2="26" changelist="2e22397f-9631-4e96-a2b2-7430a02a411c" />
+        <range start1="79" end1="79" start2="82" end2="125" changelist="2e22397f-9631-4e96-a2b2-7430a02a411c" />
+        <range start1="117" end1="118" start2="163" end2="164" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="124" end1="126" start2="170" end2="172" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="138" end1="140" start2="184" end2="186" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="144" end1="145" start2="190" end2="191" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="152" end1="154" start2="198" end2="200" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="158" end1="159" start2="204" end2="205" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="166" end1="168" start2="212" end2="214" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="172" end1="173" start2="218" end2="219" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="230" end1="233" start2="276" end2="276" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="234" end1="235" start2="277" end2="281" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="238" end1="239" start2="284" end2="285" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="240" end1="243" start2="286" end2="289" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="440" end1="441" start2="486" end2="501" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="473" end1="474" start2="533" end2="533" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="497" end1="498" start2="556" end2="559" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="505" end1="505" start2="566" end2="571" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="509" end1="510" start2="575" end2="576" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="512" end1="513" start2="578" end2="579" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="521" end1="522" start2="587" end2="588" changelist="2e22397f-9631-4e96-a2b2-7430a02a411c" />
+        <range start1="524" end1="526" start2="590" end2="596" changelist="2e22397f-9631-4e96-a2b2-7430a02a411c" />
+        <range start1="528" end1="530" start2="598" end2="604" changelist="2e22397f-9631-4e96-a2b2-7430a02a411c" />
+        <range start1="532" end1="534" start2="606" end2="612" changelist="2e22397f-9631-4e96-a2b2-7430a02a411c" />
+        <range start1="536" end1="537" start2="614" end2="619" changelist="2e22397f-9631-4e96-a2b2-7430a02a411c" />
+        <range start1="549" end1="550" start2="631" end2="632" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="552" end1="553" start2="634" end2="635" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="557" end1="557" start2="639" end2="647" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="577" end1="578" start2="667" end2="668" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="580" end1="582" start2="670" end2="681" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="584" end1="585" start2="683" end2="684" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="586" end1="587" start2="685" end2="686" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="589" end1="590" start2="688" end2="689" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+        <range start1="599" end1="670" start2="698" end2="698" changelist="14cdeba6-4c72-487e-bc1d-bb197f7550f1" />
+      </ranges>
+    </file>
+  </component>
   <component name="ProjectId" id="1Wg3kM3WKyOGsJYcSWNpjoqe7m9" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="false" id="Update" />
@@ -115,15 +161,15 @@
       <recent name="E:\Coding\JAVA\Graphy\images\a" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Clock">
+  <component name="RunManager" selected="Application.DndMapMaker2D">
     <configuration default="true" type="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Clock" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="main.scenes.Clock" />
+    <configuration name="CubeField" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="main.scenes.CubeField" />
       <module name="Graphy" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
@@ -136,13 +182,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Mandelbrot" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="main.drawing.Mandelbrot" />
+    <configuration name="DndMapMaker2D" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="mapMaker2D.DndMapMaker2D" />
       <module name="Graphy" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="main.drawing.*" />
+          <option name="PATTERN" value="mapMaker2D.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -150,13 +196,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="MandelbrotOld" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="main.drawing.MandelbrotOld" />
+    <configuration name="PerspectiveDice" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="main.scenes.PerspectiveDice" />
       <module name="Graphy" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="main.drawing.*" />
+          <option name="PATTERN" value="main.scenes.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -164,13 +210,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="PrimordialParticleSystem" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="main.drawing.pps.PrimordialParticleSystem" />
+    <configuration name="SphereField" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="main.scenes.SphereField" />
       <module name="Graphy" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="main.drawing.pps.*" />
+          <option name="PATTERN" value="main.scenes.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -228,19 +274,19 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.Mandelbrot" />
-      <item itemvalue="Application.MandelbrotOld" />
-      <item itemvalue="Application.PrimordialParticleSystem" />
       <item itemvalue="Application.Spirograph" />
-      <item itemvalue="Application.Clock" />
+      <item itemvalue="Application.SphereField" />
+      <item itemvalue="Application.CubeField" />
+      <item itemvalue="Application.PerspectiveDice" />
+      <item itemvalue="Application.DndMapMaker2D" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Clock" />
+        <item itemvalue="Application.DndMapMaker2D" />
         <item itemvalue="Application.Spirograph" />
-        <item itemvalue="Application.PrimordialParticleSystem" />
-        <item itemvalue="Application.MandelbrotOld" />
-        <item itemvalue="Application.Mandelbrot" />
+        <item itemvalue="Application.PerspectiveDice" />
+        <item itemvalue="Application.CubeField" />
+        <item itemvalue="Application.SphereField" />
       </list>
     </recent_temporary>
   </component>
@@ -438,7 +484,21 @@
       <option name="project" value="LOCAL" />
       <updated>1579648889168</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Performed code analysis">
+      <created>1579650732051</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1579650732051</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Reformatted code">
+      <created>1579650824049</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1579650824049</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -471,7 +531,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Added other polyhedra objects" />
     <MESSAGE value="Moved scene generation to separate class, added ability to render vertex and face indices of polyhedra" />
     <MESSAGE value="Added CubeFractal and fixed issue with the centers of an Object's parent" />
     <MESSAGE value="Fixed PolyhedraExplosion demo" />
@@ -495,7 +554,9 @@
     <MESSAGE value="Demo Improvements" />
     <MESSAGE value="Objectified Environment" />
     <MESSAGE value="Abstracted Scene and Drawing start up" />
-    <option name="LAST_COMMIT_MESSAGE" value="Abstracted Scene and Drawing start up" />
+    <MESSAGE value="Performed code analysis" />
+    <MESSAGE value="Reformatted code" />
+    <option name="LAST_COMMIT_MESSAGE" value="Reformatted code" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="WindowStateProjectService">
@@ -503,14 +564,19 @@
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="643" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579575171975" />
+    <state x="1343" y="176" width="683" height="742" key="#xdebugger.evaluate" timestamp="1579657305013">
+      <screen x="0" y="0" width="2048" height="1152" />
+    </state>
+    <state x="883" y="185" width="683" height="742" key="#xdebugger.evaluate/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579655900398" />
+    <state x="1343" y="176" key="#xdebugger.evaluate/0.0.2048.1152/2560.0.2048.1112@0.0.2048.1152" timestamp="1579657305013" />
     <state x="725" y="373" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1579649506122">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="725" y="373" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579649506122" />
-    <state x="648" y="77" key="CommitChangelistDialog2" timestamp="1579650731349">
+    <state x="648" y="77" key="CommitChangelistDialog2" timestamp="1579650823525">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="648" y="77" key="CommitChangelistDialog2/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579650731349" />
+    <state x="648" y="77" key="CommitChangelistDialog2/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579650823525" />
     <state x="93" y="93" width="1862" height="926" key="DiffContextDialog" timestamp="1579650810792">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
@@ -519,22 +585,38 @@
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="755" y="249" key="FileChooserDialogImpl/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579644450398" />
-    <state width="1993" height="217" key="GridCell.Tab.0.bottom" timestamp="1579650072345">
+    <state width="1993" height="217" key="GridCell.Tab.0.bottom" timestamp="1579664661852">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1993" height="217" key="GridCell.Tab.0.bottom/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579650072345" />
-    <state width="1993" height="217" key="GridCell.Tab.0.center" timestamp="1579650072345">
+    <state width="1931" height="386" key="GridCell.Tab.0.bottom/0.0.1986.1152/2560.0.2048.1152@0.0.1986.1152" timestamp="1579658410885" />
+    <state width="1993" height="217" key="GridCell.Tab.0.bottom/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579664661852" />
+    <state width="1993" height="386" key="GridCell.Tab.0.bottom/0.0.2048.1152/2560.0.2048.1112@0.0.2048.1152" timestamp="1579657655562" />
+    <state width="1993" height="386" key="GridCell.Tab.0.bottom/0.40.2048.1112/2560.0.2048.1152@0.40.2048.1112" timestamp="1579657901354" />
+    <state width="1931" height="386" key="GridCell.Tab.0.bottom/62.0.1986.1152/2560.0.2048.1152@62.0.1986.1152" timestamp="1579658369144" />
+    <state width="1993" height="217" key="GridCell.Tab.0.center" timestamp="1579664661852">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1993" height="217" key="GridCell.Tab.0.center/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579650072345" />
-    <state width="1993" height="217" key="GridCell.Tab.0.left" timestamp="1579650072345">
+    <state width="1931" height="386" key="GridCell.Tab.0.center/0.0.1986.1152/2560.0.2048.1152@0.0.1986.1152" timestamp="1579658410885" />
+    <state width="1993" height="217" key="GridCell.Tab.0.center/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579664661852" />
+    <state width="1993" height="386" key="GridCell.Tab.0.center/0.0.2048.1152/2560.0.2048.1112@0.0.2048.1152" timestamp="1579657655562" />
+    <state width="1993" height="386" key="GridCell.Tab.0.center/0.40.2048.1112/2560.0.2048.1152@0.40.2048.1112" timestamp="1579657901354" />
+    <state width="1931" height="386" key="GridCell.Tab.0.center/62.0.1986.1152/2560.0.2048.1152@62.0.1986.1152" timestamp="1579658369144" />
+    <state width="1993" height="217" key="GridCell.Tab.0.left" timestamp="1579664661852">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1993" height="217" key="GridCell.Tab.0.left/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579650072345" />
-    <state width="1993" height="217" key="GridCell.Tab.0.right" timestamp="1579650072345">
+    <state width="1931" height="386" key="GridCell.Tab.0.left/0.0.1986.1152/2560.0.2048.1152@0.0.1986.1152" timestamp="1579658410885" />
+    <state width="1993" height="217" key="GridCell.Tab.0.left/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579664661852" />
+    <state width="1993" height="386" key="GridCell.Tab.0.left/0.0.2048.1152/2560.0.2048.1112@0.0.2048.1152" timestamp="1579657655562" />
+    <state width="1993" height="386" key="GridCell.Tab.0.left/0.40.2048.1112/2560.0.2048.1152@0.40.2048.1112" timestamp="1579657901354" />
+    <state width="1931" height="386" key="GridCell.Tab.0.left/62.0.1986.1152/2560.0.2048.1152@62.0.1986.1152" timestamp="1579658369144" />
+    <state width="1993" height="217" key="GridCell.Tab.0.right" timestamp="1579664661852">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state width="1993" height="217" key="GridCell.Tab.0.right/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579650072345" />
+    <state width="1931" height="386" key="GridCell.Tab.0.right/0.0.1986.1152/2560.0.2048.1152@0.0.1986.1152" timestamp="1579658410885" />
+    <state width="1993" height="217" key="GridCell.Tab.0.right/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579664661852" />
+    <state width="1993" height="386" key="GridCell.Tab.0.right/0.0.2048.1152/2560.0.2048.1112@0.0.2048.1152" timestamp="1579657655562" />
+    <state width="1993" height="386" key="GridCell.Tab.0.right/0.40.2048.1112/2560.0.2048.1152@0.40.2048.1112" timestamp="1579657901354" />
+    <state width="1931" height="386" key="GridCell.Tab.0.right/62.0.1986.1152/2560.0.2048.1152@62.0.1986.1152" timestamp="1579658369144" />
     <state x="834" y="195" key="RollbackChangesDialog" timestamp="1579649476086">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
@@ -547,14 +629,22 @@
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
     <state x="868" y="450" key="VCS.ChangelistChooser/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579644075160" />
-    <state x="517" y="219" key="Vcs.Push.Dialog.v2" timestamp="1579650733737">
+    <state x="517" y="219" key="Vcs.Push.Dialog.v2" timestamp="1579650825318">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="517" y="219" key="Vcs.Push.Dialog.v2/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579650733737" />
+    <state x="517" y="219" key="Vcs.Push.Dialog.v2/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579650825318" />
     <state x="2554" y="0" width="1037" height="1158" key="dock-window-1" timestamp="1579644666236">
       <screen x="2560" y="0" width="2048" height="1152" />
     </state>
     <state x="2554" y="0" width="1037" height="1158" key="dock-window-1/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579644666236" />
+    <state x="2560" y="0" width="1572" height="817" key="dock-window-10" timestamp="1579660336030">
+      <screen x="2560" y="0" width="2048" height="1152" />
+    </state>
+    <state x="2560" y="0" width="1572" height="817" key="dock-window-10/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579660336030" />
+    <state x="0" y="0" width="2062" height="1159" key="dock-window-11" timestamp="1579662078521">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="0" y="0" width="2062" height="1159" key="dock-window-11/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579662078521" />
     <state x="55" y="0" width="2007" height="632" key="dock-window-2" timestamp="1579645382369">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
@@ -575,19 +665,28 @@
       <screen x="2560" y="0" width="2048" height="1152" />
     </state>
     <state x="2560" y="87" width="2007" height="1069" key="dock-window-6/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579648550378" />
-    <state x="2464" y="-8" width="1432" height="817" maximized="true" key="dock-window-7" timestamp="1579577112088">
+    <state x="2554" y="0" width="1037" height="1118" key="dock-window-7" timestamp="1579658043495">
       <screen x="2560" y="0" width="2048" height="1152" />
     </state>
-    <state x="2464" y="-8" width="1432" height="817" maximized="true" key="dock-window-7/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579577112088" />
-    <state x="142" y="239" width="740" height="662" key="find.popup" timestamp="1579648374419">
+    <state x="2554" y="0" width="1037" height="1118" key="dock-window-7/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579658043495" />
+    <state x="2554" y="0" width="1037" height="1118" key="dock-window-7/0.0.2048.1152/2560.0.2048.1112@0.0.2048.1152" timestamp="1579657175009" />
+    <state x="2946" y="-13" width="1037" height="1120" maximized="true" key="dock-window-8" timestamp="1579663962936">
+      <screen x="2560" y="0" width="2048" height="1152" />
+    </state>
+    <state x="2946" y="-13" width="1037" height="1120" maximized="true" key="dock-window-8/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579663962936" />
+    <state x="490" y="0" width="1572" height="817" key="dock-window-9" timestamp="1579660336030">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="142" y="239" width="740" height="662" key="find.popup/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579648374419" />
+    <state x="490" y="0" width="1572" height="817" key="dock-window-9/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579660336030" />
+    <state x="142" y="239" width="740" height="662" key="find.popup" timestamp="1579660038222">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="142" y="239" width="740" height="662" key="find.popup/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579660038222" />
     <state x="2702" y="248" width="740" height="662" key="find.popup/0.0.2048.1112/2560.0.2048.1152@2560.0.2048.1152" timestamp="1579563916335" />
-    <state x="90" y="113" width="840" height="999" key="search.everywhere.popup" timestamp="1579649734539">
+    <state x="90" y="113" width="840" height="999" key="search.everywhere.popup" timestamp="1579663438030">
       <screen x="0" y="0" width="2048" height="1112" />
     </state>
-    <state x="90" y="113" width="840" height="999" key="search.everywhere.popup/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579649734539" />
+    <state x="90" y="113" width="840" height="999" key="search.everywhere.popup/0.0.2048.1112/2560.0.2048.1152@0.0.2048.1112" timestamp="1579663438030" />
     <state x="2650" y="117" width="840" height="1034" key="search.everywhere.popup/0.0.2048.1112/2560.0.2048.1152@2560.0.2048.1152" timestamp="1579564337221" />
     <state x="604" y="189" key="vcs.ApplyPatchDifferentiatedDialog" timestamp="1579644452676">
       <screen x="0" y="0" width="2048" height="1112" />
@@ -597,76 +696,5 @@
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
     <option name="FILTER_TARGETS" value="false" />
-  </component>
-  <component name="debuggerHistoryManager">
-    <expressions id="breakpointCondition">
-      <expression>
-        <expression-string>row = 2555</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>row = 1000</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>this.equals(ParticleState.p)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>neighbors.left &gt; 0 &amp;&amp; neighbors.right &gt;0</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-    </expressions>
-    <expressions id="evaluateExpression">
-      <expression>
-        <expression-string>bounds.getP2().getX()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>(value - inputStart) / (inputEnd - inputStart) * (outputEnd - outputStart) + outputStart</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>bounds.getP1().getX()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>environment.frame.getWidth()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>(value.subtract(inputStart)).divide(inputEnd.subtract(inputStart), RoundingMode.HALF_EVEN)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>img.getHeight()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>img.getWidth()</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>turn * neighbors.count</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>((((neighbors.right - neighbors.left) &lt; 0) ? -1 : 1)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-    </expressions>
   </component>
 </project>

@@ -64,7 +64,7 @@ public class Drawing {
      * @return The rendered image.
      */
     public BufferedImage render() {
-        return new BufferedImage((int) environment.drawingSize.getX(), (int) environment.drawingSize.getY(), BufferedImage.TYPE_INT_RGB);
+        return new BufferedImage(Environment2D.drawingX, Environment2D.drawingY, BufferedImage.TYPE_INT_RGB);
     }
     
     /**
@@ -73,6 +73,15 @@ public class Drawing {
      * @param g The graphics output.
      */
     public void overlay(Graphics2D g) {
+    }
+    
+    /**
+     * Determines the name of the Drawing.
+     *
+     * @return The name of the Drawing.
+     */
+    public String getName() {
+        return getClass().getSimpleName().replaceAll("(?<![0-9])([A-Z0-9])", " $1");
     }
     
     

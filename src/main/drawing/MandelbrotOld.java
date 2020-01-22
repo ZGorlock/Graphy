@@ -243,7 +243,7 @@ public class MandelbrotOld extends Drawing {
             return super.render();
         }
         
-        BufferedImage img = new BufferedImage((int) environment.drawingSize.getX(), (int) environment.drawingSize.getY(), BufferedImage.TYPE_INT_RGB);
+        BufferedImage img = new BufferedImage(Environment2D.drawingX, Environment2D.drawingY, BufferedImage.TYPE_INT_RGB);
         
         rendering.set(true);
         System.out.println("Rendering");

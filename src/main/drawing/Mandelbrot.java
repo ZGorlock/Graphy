@@ -11,7 +11,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -43,6 +42,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
+import main.Environment;
 import main.Environment2D;
 import math.vector.BigVector;
 import math.vector.Vector;
@@ -101,7 +101,7 @@ public class Mandelbrot extends Drawing {
     /**
      * The size of the screen to render the Mandelbrot on.
      */
-    public static final Vector SCREEN_SIZE = new Vector(Toolkit.getDefaultToolkit().getScreenSize().width - 32, Toolkit.getDefaultToolkit().getScreenSize().height - 32); //TODO
+    public static final Vector SCREEN_SIZE = new Vector(Environment.MAX_SCREEN_X, Environment.MAX_SCREEN_Y);
     
     /**
      * The number of threads to use while rendering the Mandelbrot.

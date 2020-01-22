@@ -11,6 +11,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagLayout;
 import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,6 +22,7 @@ import javax.swing.WindowConstants;
 
 import math.vector.Vector;
 import objects.base.Drawing;
+import utility.ScreenUtility;
 
 /**
  * The main Environment.
@@ -37,12 +39,12 @@ public class Environment2D {
     /**
      * The maximum x dimension of the Window.
      */
-    public static final int MAX_SCREEN_X = Environment.MAX_SCREEN_X;
+    public static final int MAX_SCREEN_X = ScreenUtility.DISPLAY_WIDTH;
     
     /**
      * The maximum y dimension of the Window.
      */
-    public static final int MAX_SCREEN_Y = Environment.MAX_SCREEN_Y;
+    public static final int MAX_SCREEN_Y = ScreenUtility.DISPLAY_HEIGHT;
     
     
     //Static Fields
@@ -61,6 +63,16 @@ public class Environment2D {
      * The y dimension of the Window.
      */
     public static int screenY = MAX_SCREEN_Y;
+    
+    /**
+     * The x dimension of the Drawing.
+     */
+    public static int drawingX = MAX_SCREEN_X;
+    
+    /**
+     * The y dimension of the Drawing.
+     */
+    public static int drawingY = MAX_SCREEN_Y;
     
     
     //Fields
@@ -86,33 +98,12 @@ public class Environment2D {
     public Drawing drawing = null;
     
     /**
-     * The size of the Drawing to render.
-     */
-    public Vector drawingSize;
-    
-    /**
-     * The offset of the Drawing to render.
-     */
-    public Vector drawingOffset = new Vector(0, 0);
-    
-    /**
      * The background color of the Environment.
      */
     public Color background = null;
     
     
     //Constructors
-    
-    /**
-     * Constructs an Environment2D.
-     *
-     * @param screenX The x dimension of the screen.
-     * @param screenY The y dimension of the screen.
-     */
-    public Environment2D(int screenX, int screenY) {
-        Environment2D.screenX = screenX;
-        Environment2D.screenY = screenY;
-    }
     
     /**
      * The default constructor for an Environment2D.
@@ -132,13 +123,9 @@ public class Environment2D {
         if ((screenX == MAX_SCREEN_X) && (screenY == MAX_SCREEN_Y)) {
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         }
-        frame.getContentPane().setLayout(new BorderLayout());
+        frame.getContentPane().setLayout(new GridBagLayout());
         frame.setFocusable(true);
         frame.setFocusTraversalKeysEnabled(false);
-        
-        if (drawingSize == null) {
-            drawingSize = new Vector(screenX, screenY);
-        }
         
         // panel to display render results
         renderPanel = new JPanel() {
@@ -147,12 +134,12 @@ public class Environment2D {
                 Graphics2D g2 = (Graphics2D) g;
                 if (background != null) {
                     g2.setColor(background);
-                    g2.fillRect(0, 0, screenX, screenY);
+                    g2.fillRect(0, 0, getWidth(), getHeight());
                 }
                 
                 if (drawing != null) {
                     BufferedImage img = drawing.render();
-                    g2.drawImage(img, (int) drawingOffset.getX(), (int) drawingOffset.getY(), null);
+                    g2.drawImage(img, 0, 0, null);
                     drawing.overlay(g2);
                 }
             }
@@ -169,9 +156,16 @@ public class Environment2D {
      * Sizes the window.
      */
     public void sizeWindow() {
-        renderPanel.setSize(screenX, screenY);
-        frame.setSize(new Dimension(screenX + 16, screenY + 39));
-        frame.setPreferredSize(new Dimension(screenX + 16, screenY + 39));
+        renderPanel.setSize(new Dimension(drawingX, drawingY));
+        renderPanel.setPreferredSize(new Dimension(renderPanel.getSize()));
+        frame.setSize(new Dimension(screenX + ScreenUtility.BORDER_WIDTH, screenY + ScreenUtility.BORDER_HEIGHT));
+        frame.setPreferredSize(frame.getSize());
+        
+        if ((screenX == MAX_SCREEN_X) && (screenY == MAX_SCREEN_Y)) {
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        } else {
+            frame.setExtendedState(JFrame.NORMAL);
+        }
     }
     
     /**
@@ -203,7 +197,7 @@ public class Environment2D {
      * @return A random position on the screen.
      */
     public Vector getRandomPosition() {
-        return new Vector(Math.random() * Environment2D.screenX, Math.random() * Environment2D.screenY);
+        return new Vector(Math.random() * Environment2D.drawingX, Math.random() * Environment2D.drawingY);
     }
     
     /**
@@ -212,7 +206,7 @@ public class Environment2D {
      * @return The center position on the screen.
      */
     public Vector getCenterPosition() {
-        return new Vector(Environment2D.screenX, Environment2D.screenY).scale(0.5);
+        return new Vector(Environment2D.drawingX, Environment2D.drawingY).scale(0.5);
     }
     
     
@@ -228,34 +222,28 @@ public class Environment2D {
     }
     
     /**
-     * Sets the dimensions of the Window.
+     * Sets the dimensions of the Window and Drawing.
      *
-     * @param screenX The x dimension of the Window.
-     * @param screenY The y dimension of the Window.
+     * @param screenX The x dimension of the Window and Drawing.
+     * @param screenY The y dimension of the Window and Drawing.
      */
     public void setSize(int screenX, int screenY) {
-        setScreenX(screenX);
-        setScreenY(screenY);
+        Environment2D.screenX = Math.min(screenX, Environment2D.MAX_SCREEN_X);
+        Environment2D.screenY = Math.min(screenY, Environment2D.MAX_SCREEN_Y);
+        Environment2D.drawingX = Environment2D.screenX;
+        Environment2D.drawingY = Environment2D.screenY;
         sizeWindow();
     }
     
     /**
-     * Sets the x dimension of the Window.
+     * Sets the dimensions of the Drawing.
      *
-     * @param screenX The x dimension of the Window.
+     * @param drawingX The x dimension of the Drawing.
+     * @param drawingY The y dimension of the Drawing.
      */
-    public void setScreenX(int screenX) {
-        Environment2D.screenX = screenX;
-        sizeWindow();
-    }
-    
-    /**
-     * Sets the y dimension of the Window.
-     *
-     * @param screenY The y dimension of the Window.
-     */
-    public void setScreenY(int screenY) {
-        Environment2D.screenY = screenY;
+    public void setDrawingSize(int drawingX, int drawingY) {
+        Environment2D.drawingX = Math.min(drawingX, Environment2D.screenX);
+        Environment2D.drawingY = Math.min(drawingY, Environment2D.screenY);
         sizeWindow();
     }
     
@@ -269,23 +257,13 @@ public class Environment2D {
     }
     
     /**
-     * Sets the size of the Drawing to render.
-     *
-     * @param size The size of the Drawing to render.
-     */
-    public void setDrawingSize(Vector size) {
-        this.drawingSize = size;
-        this.drawingOffset.setX((screenX > drawingSize.getX()) ? (screenX - drawingSize.getX()) / 2.0 : 0);
-        this.drawingOffset.setY((screenY > drawingSize.getY()) ? (screenY - drawingSize.getY()) / 2.0 : 0);
-    }
-    
-    /**
      * Sets the background color of the Environment.
      *
      * @param background The background color.
      */
     public void setBackground(Color background) {
         this.background = background;
+        frame.getContentPane().setBackground(background);
     }
     
 }

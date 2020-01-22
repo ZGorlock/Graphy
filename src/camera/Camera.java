@@ -275,8 +275,8 @@ public class Camera {
         cameraMap.put(cameraId, this);
         
         Camera.scene = scene;
-        viewportX = Environment.screenX / 1000.0;
-        viewportY = Environment.screenY / 1000.0;
+        viewportX = Environment.sceneX / 1000.0;
+        viewportY = Environment.sceneY / 1000.0;
         
         offset = new Vector(0, 0, 0);
         
@@ -1041,8 +1041,8 @@ public class Camera {
     public static void scaleVectorsToScreen(List<Vector> vs) {
         Vector viewportDim = getActiveViewportDim();
         Vector scale = new Vector(
-                Environment.screenX / viewportDim.getX(),
-                Environment.screenY / viewportDim.getY(),
+                Environment.sceneX / viewportDim.getX(),
+                Environment.sceneY / viewportDim.getY(),
                 Environment.screenZ
         );
         

@@ -6,12 +6,11 @@
 
 package main;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Toolkit;
+import java.awt.GridBagLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -30,6 +29,7 @@ import objects.base.AbstractObject;
 import objects.base.BaseObject;
 import objects.base.ObjectInterface;
 import objects.base.Scene;
+import utility.ScreenUtility;
 
 /**
  * The main Environment.
@@ -46,12 +46,12 @@ public class Environment {
     /**
      * The maximum x dimension of the Window.
      */
-    public static final int MAX_SCREEN_X = Toolkit.getDefaultToolkit().getScreenSize().width;
+    public static final int MAX_SCREEN_X = ScreenUtility.DISPLAY_WIDTH;
     
     /**
      * The maximum y dimension of the Window.
      */
-    public static final int MAX_SCREEN_Y = Toolkit.getDefaultToolkit().getScreenSize().height;
+    public static final int MAX_SCREEN_Y = ScreenUtility.DISPLAY_HEIGHT;
     
     /**
      * The maximum z dimension of the Window.
@@ -97,6 +97,16 @@ public class Environment {
     public static int screenZ = MAX_SCREEN_Z;
     
     /**
+     * The x dimension of the Scene.
+     */
+    public static int sceneX = MAX_SCREEN_X;
+    
+    /**
+     * The y dimension of the Scene.
+     */
+    public static int sceneY = MAX_SCREEN_Y;
+    
+    /**
      * The coordinates to center the Environment at.
      */
     public static Vector origin = ORIGIN.clone();
@@ -138,17 +148,6 @@ public class Environment {
     //Constructors
     
     /**
-     * Constructs an Environment.
-     *
-     * @param screenX The x dimension of the screen.
-     * @param screenY The y dimension of the screen.
-     */
-    public Environment(int screenX, int screenY) {
-        Environment.screenX = screenX;
-        Environment.screenY = screenY;
-    }
-    
-    /**
      * The default constructor for an Environment.
      */
     public Environment() {
@@ -163,8 +162,7 @@ public class Environment {
     public void setup() {
         frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.getContentPane().setLayout(new BorderLayout());
+        frame.getContentPane().setLayout(new GridBagLayout());
         frame.setFocusable(true);
         frame.setFocusTraversalKeysEnabled(false);
         
@@ -200,7 +198,7 @@ public class Environment {
                     Graphics2D g2 = (Graphics2D) g;
                     if (background != null) {
                         g2.setColor(background);
-                        g2.fillRect(0, 0, screenX, screenY);
+                        g2.fillRect(0, 0, getWidth(), getHeight());
                     }
                     
                     for (BaseObject preparedBase : preparedBases) {
@@ -209,7 +207,7 @@ public class Environment {
                 }
             }
         };
-        frame.getContentPane().add(renderPanel, BorderLayout.CENTER);
+        frame.getContentPane().add(renderPanel);
         
         sizeWindow();
         
@@ -221,9 +219,16 @@ public class Environment {
      * Sizes the window.
      */
     public void sizeWindow() {
-        renderPanel.setSize(screenX, screenY);
-        frame.setSize(new Dimension(screenX + 16, screenY + 39));
-        frame.setPreferredSize(new Dimension(screenX + 16, screenY + 39));
+        renderPanel.setSize(new Dimension(sceneX, sceneY));
+        renderPanel.setPreferredSize(renderPanel.getSize());
+        frame.setSize(new Dimension(screenX + ScreenUtility.BORDER_WIDTH, screenY + ScreenUtility.BORDER_HEIGHT));
+        frame.setPreferredSize(frame.getSize());
+        
+        if ((screenX == MAX_SCREEN_X) && (screenY == MAX_SCREEN_Y)) {
+            frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        } else {
+            frame.setExtendedState(JFrame.NORMAL);
+        }
     }
     
     /**
@@ -322,44 +327,29 @@ public class Environment {
     }
     
     /**
-     * Sets the dimensions of the Window.
+     * Sets the dimensions of the Window and Scene.
      *
-     * @param screenX The x dimension of the Window.
-     * @param screenY The y dimension of the Window.
+     * @param screenX The x dimension of the Window and Scene.
+     * @param screenY The y dimension of the Window and Scene.
      */
     public void setSize(int screenX, int screenY) {
-        setScreenX(screenX);
-        setScreenY(screenY);
+        Environment.screenX = Math.min(screenX, Environment.MAX_SCREEN_X);
+        Environment.screenY = Math.min(screenY, Environment.MAX_SCREEN_Y);
+        Environment.sceneX = Environment.screenX;
+        Environment.sceneY = Environment.screenY;
         sizeWindow();
     }
     
     /**
-     * Sets the x dimension of the Window.
+     * Sets the dimensions of the Scene.
      *
-     * @param screenX The x dimension of the Window.
+     * @param sceneX The x dimension of the Scene.
+     * @param sceneY The y dimension of the Scene.
      */
-    public void setScreenX(int screenX) {
-        Environment.screenX = screenX;
+    public void setSceneSize(int sceneX, int sceneY) {
+        Environment.sceneX = Math.min(sceneX, Environment.screenX);
+        Environment.sceneY = Math.min(sceneY, Environment.screenY);
         sizeWindow();
-    }
-    
-    /**
-     * Sets the y dimension of the Window.
-     *
-     * @param screenY The y dimension of the Window.
-     */
-    public void setScreenY(int screenY) {
-        Environment.screenY = screenY;
-        sizeWindow();
-    }
-    
-    /**
-     * Sets the z dimension of the Window.
-     *
-     * @param screenZ The z dimension of the Window.
-     */
-    public void setScreenZ(int screenZ) {
-        Environment.screenZ = screenZ;
     }
     
     /**
@@ -378,6 +368,7 @@ public class Environment {
      */
     public void setScene(Scene scene) {
         this.scene = scene;
+        frame.setTitle(scene.getName());
     }
     
     /**
@@ -387,6 +378,7 @@ public class Environment {
      */
     public void setBackground(Color background) {
         this.background = background;
+        frame.getContentPane().setBackground(background);
     }
     
 }

@@ -58,6 +58,15 @@ public abstract class Scene extends Object {
     public void setupControls() {
     }
     
+    /**
+     * Determines the name of the Scene.
+     *
+     * @return The name of the Scene.
+     */
+    public String getName() {
+        return getClass().getSimpleName().replaceAll("(?<![0-9])([A-Z0-9])", " $1");
+    }
+    
     
     //Static Methods
     

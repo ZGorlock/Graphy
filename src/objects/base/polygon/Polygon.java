@@ -52,10 +52,6 @@ public class Polygon extends BaseObject {
      */
     @Override
     public List<BaseObject> prepare() {
-        if (!prePrepare()) {
-            return new ArrayList<>();
-        }
-        
         List<BaseObject> preparedBases = new ArrayList<>();
         
         prepared.clear();
@@ -76,10 +72,6 @@ public class Polygon extends BaseObject {
      */
     @Override
     public void render(Graphics2D g2) {
-        if (!preRender(prepared, vertices, numVertices)) {
-            return;
-        }
-        
         g2.setColor(getColor());
         switch (displayMode) {
             case VERTEX:
@@ -119,8 +111,6 @@ public class Polygon extends BaseObject {
                 g2.fillPolygon(face);
                 break;
         }
-        
-        renderFrame(g2);
     }
     
     

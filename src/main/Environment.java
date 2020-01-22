@@ -180,7 +180,7 @@ public class Environment {
                     List<BaseObject> preparedBases = new ArrayList<>();
                     try {
                         for (ObjectInterface object : objects) {
-                            preparedBases.addAll(object.prepare());
+                            preparedBases.addAll(object.doPrepare());
                         }
                     } catch (ConcurrentModificationException ignored) {
                         return;
@@ -188,8 +188,8 @@ public class Environment {
                     
                     try {
                         preparedBases.sort((o1, o2) -> {
-                            double d1 = o1.calculatePreparedDistance();
-                            double d2 = o2.calculatePreparedDistance();
+                            double d1 = o1.calculateRenderDistance();
+                            double d2 = o2.calculateRenderDistance();
                             return Double.compare(d2, d1);
                         });
                     } catch (IllegalArgumentException ignored) {
@@ -202,7 +202,7 @@ public class Environment {
                     }
                     
                     for (BaseObject preparedBase : preparedBases) {
-                        preparedBase.render(g2);
+                        preparedBase.doRender(g2);
                     }
                 }
             }

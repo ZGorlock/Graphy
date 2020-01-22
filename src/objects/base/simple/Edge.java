@@ -76,10 +76,6 @@ public class Edge extends BaseObject {
      */
     @Override
     public List<BaseObject> prepare() {
-        if (!prePrepare()) {
-            return new ArrayList<>();
-        }
-        
         List<BaseObject> preparedBases = new ArrayList<>();
         
         prepared.clear();
@@ -99,10 +95,6 @@ public class Edge extends BaseObject {
      */
     @Override
     public void render(Graphics2D g2) {
-        if (!preRender(prepared, vertices, 2)) {
-            return;
-        }
-        
         g2.setColor(getColor());
         switch (displayMode) {
             case VERTEX:
@@ -114,8 +106,6 @@ public class Edge extends BaseObject {
                 g2.drawLine((int) prepared.get(0).get(0), (int) prepared.get(0).get(1), (int) prepared.get(1).get(0), (int) prepared.get(1).get(1));
                 break;
         }
-        
-        renderFrame(g2);
     }
     
     

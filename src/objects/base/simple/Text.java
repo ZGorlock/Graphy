@@ -85,10 +85,6 @@ public class Text extends BaseObject {
      */
     @Override
     public List<BaseObject> prepare() {
-        if (!prePrepare()) {
-            return new ArrayList<>();
-        }
-        
         List<BaseObject> preparedBases = new ArrayList<>();
         
         prepared.clear();
@@ -107,10 +103,6 @@ public class Text extends BaseObject {
      */
     @Override
     public void render(Graphics2D g2) {
-        if (!preRender(prepared, vertices, 1)) {
-            return;
-        }
-        
         g2.setColor(color);
         g2.drawChars(text, 0, text.length, (int) prepared.get(0).getX(), (int) prepared.get(0).getY());
     }

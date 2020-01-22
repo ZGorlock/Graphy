@@ -143,10 +143,6 @@ public class DrawingPane extends BaseObject {
      */
     @Override
     public void render(Graphics2D g2) {
-        if (!preRender(prepared, vertices, -1)) {
-            return;
-        }
-        
         g2.setColor(getColor());
         switch (displayMode) {
             case VERTEX:
@@ -198,8 +194,6 @@ public class DrawingPane extends BaseObject {
                 
                 break;
         }
-        
-        renderFrame(g2);
     }
     
     /**

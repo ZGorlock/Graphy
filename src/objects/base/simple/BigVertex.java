@@ -82,10 +82,6 @@ public class BigVertex extends Vertex {
      */
     @Override
     public void render(Graphics2D g2) {
-        if (!preRender(prepared, vertices, 1)) {
-            return;
-        }
-        
         g2.setColor(getColor());
         for (int i = -size; i <= size; i++) {
             for (int j = -size; j <= size; j++) {

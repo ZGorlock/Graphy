@@ -83,14 +83,10 @@ public class Object extends AbstractObject {
      */
     @Override
     public List<BaseObject> prepare() {
-        if (!visible) {
-            return new ArrayList<>();
-        }
-        
         List<BaseObject> preparedBases = new ArrayList<>();
         
         for (ObjectInterface component : components) {
-            preparedBases.addAll(component.prepare());
+            preparedBases.addAll(component.doPrepare());
         }
         
         return preparedBases;
@@ -103,12 +99,8 @@ public class Object extends AbstractObject {
      */
     @Override
     public void render(Graphics2D g2) {
-        if (!visible) {
-            return;
-        }
-        
         for (ObjectInterface component : components) {
-            component.render(g2);
+            component.doRender(g2);
         }
     }
     
@@ -164,6 +156,20 @@ public class Object extends AbstractObject {
         
         Matrix3 rotationTransformationMatrix = RotationUtility.getRotationMatrix(offset.getX(), offset.getY(), offset.getZ());
         this.center = RotationUtility.performRotation(this.center, rotationTransformationMatrix, center.justify());
+    }
+    
+    /**
+     * Calculates the distance from the Camera to the Object.
+     *
+     * @return The distance from the Camera to the Object.
+     */
+    @Override
+    public double calculateRenderDistance() {
+        double max = 0;
+        for (ObjectInterface component : components) {
+            max = Math.max(max, component.calculateRenderDistance());
+        }
+        return max;
     }
     
     /**

@@ -47,6 +47,16 @@ public abstract class AbstractObject implements ObjectInterface {
     protected Color color;
     
     /**
+     * The array of Vertices that define the Object.
+     */
+    protected Vector[] vertices = new Vector[0];
+    
+    /**
+     * A list of the Vectors of the Object that have been prepared for rendering.
+     */
+    protected final List<Vector> prepared = new ArrayList<>();
+    
+    /**
      * The frame of the Object.
      */
     protected Frame frame;
@@ -132,7 +142,7 @@ public abstract class AbstractObject implements ObjectInterface {
      * @return Whether or not the Object should continue preparing.
      */
     @Override
-    public boolean prePrepare() {
+    public final boolean prePrepare() {
         if (!Environment.ENABLE_RENDER_BUFFERING || renderDelay.decrementAndGet() <= 0) {
             if (!visible) {
                 renderDelay.set(Environment.ENABLE_RENDER_BUFFERING ? ((int) (Math.random() * (Environment.fps / 8))) : 1);
@@ -152,17 +162,43 @@ public abstract class AbstractObject implements ObjectInterface {
     public abstract List<BaseObject> prepare();
     
     /**
-     * Performs pre-rendering steps on the Object.
+     * Performs post-preparing steps on the Object.
      *
-     * @param prepared     The list of BaseObjects that were prepared.
-     * @param vertices     The list of vertices of the Object.
-     * @param expectedSize The expected size of the list of BaseObjects that were prepared, or -1 if a check should not be performed.
+     * @return Whether or not the Object should continue to rendering.
+     */
+    @Override
+    public final boolean postPrepare() {
+        return true;
+    }
+    
+    /**
+     * Performs the preparation for the Object to be rendered.
+     *
+     * @return The list of BaseObjects that were prepared.
+     */
+    @Override
+   public final List<BaseObject> doPrepare() {
+        if (!prePrepare()) {
+            return new ArrayList<>();
+        }
+    
+        List<BaseObject> preparedBases = prepare();
+        
+        if (!postPrepare()) {
+            return new ArrayList<>();
+        }
+        return preparedBases;
+    }
+    
+    /**
+     * Performs pre-rendering steps on the Object.
+     * 
      * @return Whether or not the Object should continue rendering.
      */
     @Override
-    public boolean preRender(List<Vector> prepared, Vector[] vertices, int expectedSize) {
+    public final boolean preRender() {
         if (!Environment.ENABLE_RENDER_BUFFERING || renderDelay.get() <= 0) {
-            if (!visible || ((expectedSize >= 0) && (prepared.size() != expectedSize)) || Camera.hasVectorBehindScreen(vertices)) {
+            if (!visible || (prepared.size() != vertices.length) || Camera.hasVectorBehindScreen(vertices)) {
                 renderDelay.set(Environment.ENABLE_RENDER_BUFFERING ? ((int) (Math.random() * (Environment.fps / 8))) : 1);
                 return false;
             }
@@ -188,6 +224,46 @@ public abstract class AbstractObject implements ObjectInterface {
      */
     @Override
     public abstract void render(Graphics2D g2);
+    
+    /**
+     * Performs post-rendering steps on the Object.
+     *
+     * @param g2 The 2D Graphics entity.
+     */
+    @Override
+    public final void postRender(Graphics2D g2) {
+        renderFrame(g2);
+    }
+    
+    /**
+     * Draws the frame for the Object.
+     *
+     * @param g2 The 2D Graphics entity.
+     */
+    @Override
+    public void renderFrame(Graphics2D g2) {
+        if (frame == null) {
+            return;
+        }
+        
+        frame.render(g2, prepared);
+    }
+    
+    /**
+     * Performs the rendering for the Object on the screen.
+     *
+     * @param g2 The 2D Graphics entity.
+     */
+    @Override
+    public final void doRender(Graphics2D g2) {
+        if (!preRender()) {
+            return;
+        }
+        
+        render(g2);
+        
+        postRender(g2);
+    }
     
     /**
      * Moves the Object in a certain direction.
@@ -225,6 +301,14 @@ public abstract class AbstractObject implements ObjectInterface {
      */
     @Override
     public abstract void rotateAndTransform(Vector offset, Vector center);
+    
+    /**
+     * Calculates the distance from the Camera to the Object.
+     *
+     * @return The distance from the Camera to the Object.
+     */
+    @Override
+    public abstract double calculateRenderDistance();
     
     /**
      * Adds a constant movement animation to an Object.
@@ -843,6 +927,15 @@ public abstract class AbstractObject implements ObjectInterface {
      */
     public Color getColor() {
         return color;
+    }
+    
+    /**
+     * Returns the list of Vertices that define the Object.
+     *
+     * @return The list of Vertices that define the Object.
+     */
+    public Vector[] getVertices() {
+        return vertices;
     }
     
     /**

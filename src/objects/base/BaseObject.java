@@ -22,19 +22,6 @@ import utility.RotationUtility;
  */
 public abstract class BaseObject extends AbstractObject {
     
-    //Fields
-    
-    /**
-     * The array of Vertices that define the Object.
-     */
-    protected Vector[] vertices;
-    
-    /**
-     * A list of the Vectors of the Object that have been prepared for rendering.
-     */
-    protected final List<Vector> prepared = new ArrayList<>();
-    
-    
     //Constructors
     
     /**
@@ -169,11 +156,12 @@ public abstract class BaseObject extends AbstractObject {
     }
     
     /**
-     * Calculates the distance of the prepared Vectors of the Object from the Camera.
+     * Calculates the distance from the Camera to Object.
      *
-     * @return The distance of the prepared Vectors of the Object from the Camera.
+     * @return The distance from the Camera to the Object.
      */
-    public double calculatePreparedDistance() {
+    @Override
+    public double calculateRenderDistance() {
         if (prepared.isEmpty()) {
             return 0;
         }
@@ -192,31 +180,6 @@ public abstract class BaseObject extends AbstractObject {
             }
         }
         return max;
-    }
-    
-    /**
-     * Draws the frame for the Object.
-     *
-     * @param g2 The 2D Graphics entity.
-     */
-    public void renderFrame(Graphics2D g2) {
-        if (frame == null) {
-            return;
-        }
-        
-        frame.render(g2, prepared);
-    }
-    
-    
-    //Getters
-    
-    /**
-     * Returns the list of Vertices that define the Object.
-     *
-     * @return The list of Vertices that define the Object.
-     */
-    public Vector[] getVertices() {
-        return vertices;
     }
     
 }

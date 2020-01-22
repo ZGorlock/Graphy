@@ -35,14 +35,25 @@ public interface ObjectInterface {
     List<BaseObject> prepare();
     
     /**
-     * Performs pre-rendering steps on the Object.
+     * Performs post-preparing steps on the Object.
      *
-     * @param prepared     The list of BaseObjects that were prepared.
-     * @param vertices     The list of vertices of the Object.
-     * @param expectedSize The expected size of the list of BaseObjects that were prepared, or -1 if a check should not be performed.
+     * @return Whether or not the Object should continue to rendering.
+     */
+    boolean postPrepare();
+    
+    /**
+     * Performs the preparation for the Object to be rendered.
+     *
+     * @return The list of BaseObjects that were prepared.
+     */
+    List<BaseObject> doPrepare();
+    
+    /**
+     * Performs pre-rendering steps on the Object.
+     * 
      * @return Whether or not the Object should continue rendering.
      */
-    boolean preRender(List<Vector> prepared, Vector[] vertices, int expectedSize);
+    boolean preRender();
     
     /**
      * Renders the Object on the screen.
@@ -50,6 +61,27 @@ public interface ObjectInterface {
      * @param g2 The 2D Graphics entity.
      */
     void render(Graphics2D g2);
+    
+    /**
+     * Performs post-rendering steps on the Object.
+     *
+     * @param g2 The 2D Graphics entity.
+     */
+    void postRender(Graphics2D g2);
+    
+    /**
+     * Draws the frame for the Object.
+     *
+     * @param g2 The 2D Graphics entity.
+     */
+    void renderFrame(Graphics2D g2);
+    
+    /**
+     * Performs the rendering for the Object on the screen.
+     *
+     * @param g2 The 2D Graphics entity.
+     */
+    void doRender(Graphics2D g2);
     
     /**
      * Moves the Object in a certain direction.
@@ -79,6 +111,13 @@ public interface ObjectInterface {
      * @param center The center to rotate the Object about.
      */
     void rotateAndTransform(Vector offset, Vector center);
+    
+    /**
+     * Calculates the distance from the Camera to the Object.
+     *
+     * @return The distance from the Camera to the Object.
+     */
+    double calculateRenderDistance();
     
     /**
      * Adds a constant movement animation to an Object.

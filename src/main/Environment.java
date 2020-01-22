@@ -234,7 +234,7 @@ public class Environment {
      */
     public void run() {
         if (fps == 0) {
-            frame.getContentPane().getComponent(0).repaint();
+            renderPanel.repaint();
             
         } else {
             Timer renderTimer = new Timer();
@@ -244,7 +244,7 @@ public class Environment {
                 @Override
                 public void run() {
                     if (rendering.compareAndSet(false, true)) {
-                        frame.getContentPane().getComponent(0).repaint();
+                        renderPanel.repaint();
                         rendering.set(false);
                     }
                 }
@@ -260,7 +260,7 @@ public class Environment {
             return;
         }
         
-        frame.getContentPane().getComponent(0).addKeyListener(new KeyListener() {
+        renderPanel.addKeyListener(new KeyListener() {
             
             @Override
             public void keyTyped(KeyEvent e) {

@@ -613,7 +613,7 @@ public class Camera {
         final Delta delta = new Delta();
         final AtomicInteger button = new AtomicInteger(0);
         
-        scene.environment.frame.getContentPane().getComponent(0).addMouseListener(new MouseListener() {
+        scene.environment.renderPanel.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
             }
@@ -640,7 +640,7 @@ public class Camera {
             }
         });
         
-        scene.environment.frame.getContentPane().getComponent(0).addMouseMotionListener(new MouseMotionListener() {
+        scene.environment.renderPanel.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (cameraId != activeCameraControl) {
@@ -680,7 +680,7 @@ public class Camera {
             }
         });
         
-        scene.environment.frame.getContentPane().getComponent(0).addMouseWheelListener(e -> {
+        scene.environment.renderPanel.addMouseWheelListener(e -> {
             if (cameraId != activeCameraControl) {
                 return;
             }

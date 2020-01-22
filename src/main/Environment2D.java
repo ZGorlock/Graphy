@@ -173,7 +173,7 @@ public class Environment2D {
      */
     public void run() {
         if (fps == 0) {
-            frame.getContentPane().getComponent(0).repaint();
+            renderPanel.repaint();
             
         } else {
             Timer renderTimer = new Timer();
@@ -183,7 +183,7 @@ public class Environment2D {
                 @Override
                 public void run() {
                     if (rendering.compareAndSet(false, true)) {
-                        frame.getContentPane().getComponent(0).repaint();
+                        renderPanel.repaint();
                         rendering.set(false);
                     }
                 }

@@ -158,7 +158,7 @@ public class MandelbrotOld extends Drawing {
      */
     @Override
     public void setupControls() {
-        environment.frame.getContentPane().getComponent(0).addMouseListener(new MouseListener() {
+        environment.renderPanel.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
             }

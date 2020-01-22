@@ -466,7 +466,7 @@ public class Mandelbrot extends Drawing {
      */
     @Override
     public void setupControls() {
-        environment.frame.getContentPane().getComponent(0).addMouseListener(new MouseListener() {
+        environment.renderPanel.addMouseListener(new MouseListener() {
             
             //Fields
             
@@ -580,7 +580,7 @@ public class Mandelbrot extends Drawing {
             
         });
         
-        environment.frame.getContentPane().getComponent(0).addMouseMotionListener(new MouseMotionListener() {
+        environment.renderPanel.addMouseMotionListener(new MouseMotionListener() {
             
             @Override
             public void mouseDragged(MouseEvent e) {

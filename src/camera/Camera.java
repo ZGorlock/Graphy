@@ -780,6 +780,15 @@ public class Camera {
     }
     
     /**
+     * Returns the Camera location.
+     *
+     * @return The Camera location.
+     */
+    public Vector getLocation() {
+        return new Vector(phi, theta, rho);
+    }
+    
+    /**
      * Returns the perspective mode of the Camera.
      *
      * @return The perspective mode of the Camera.

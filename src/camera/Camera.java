@@ -631,13 +631,12 @@ public class Camera {
             
             @Override
             public void mouseEntered(MouseEvent e) {
-                
             }
             
             @Override
             public void mouseExited(MouseEvent e) {
-                
             }
+            
         });
         
         scene.environment.renderPanel.addMouseMotionListener(new MouseMotionListener() {
@@ -670,7 +669,7 @@ public class Camera {
                     delta.x = e.getX();
                     delta.y = e.getY();
                     
-                    Environment.origin = Environment.origin.plus(new Vector(-deltaX, deltaY, 0).scale(rho / 1000));
+                    Environment.origin = Environment.origin.plus(new Vector(deltaX, deltaY, 0).justify().scale(rho / 1000));
                     updateRequired = true;
                 }
             }
@@ -678,6 +677,7 @@ public class Camera {
             @Override
             public void mouseMoved(MouseEvent e) {
             }
+            
         });
         
         scene.environment.renderPanel.addMouseWheelListener(e -> {
@@ -924,6 +924,9 @@ public class Camera {
      */
     public void setPanMode(boolean panMode) {
         this.panMode = panMode;
+        if (panMode) {
+            setLocation(Math.PI, Math.PI / 2, rho);
+        }
     }
     
     /**

@@ -191,12 +191,12 @@ public abstract class AbstractObject implements ObjectInterface {
      * @return The list of BaseObjects that were prepared.
      */
     @Override
-   public final List<BaseObject> doPrepare() {
+    public final List<BaseObject> doPrepare() {
         if (!prePrepare()) {
             rendered.set(false);
             return new ArrayList<>();
         }
-    
+        
         List<BaseObject> preparedBases = prepare();
         
         if (!postPrepare()) {
@@ -208,7 +208,7 @@ public abstract class AbstractObject implements ObjectInterface {
     
     /**
      * Performs pre-rendering steps on the Object.
-     * 
+     *
      * @return Whether or not the Object should continue rendering.
      */
     @Override
@@ -1012,7 +1012,7 @@ public abstract class AbstractObject implements ObjectInterface {
     
     /**
      * Returns whether the Object is rendered or not.
-     * 
+     *
      * @return Whether the Object is rendered or not.
      */
     public boolean isRendered() {

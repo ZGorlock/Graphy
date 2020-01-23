@@ -50,7 +50,7 @@ public interface ObjectInterface {
     
     /**
      * Performs pre-rendering steps on the Object.
-     * 
+     *
      * @return Whether or not the Object should continue rendering.
      */
     boolean preRender();

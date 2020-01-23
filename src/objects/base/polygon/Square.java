@@ -12,7 +12,7 @@ import math.vector.Vector;
 import objects.base.AbstractObject;
 
 /**
- * Defines an Square.
+ * Defines a Square.
  */
 public class Square extends Polygon {
     

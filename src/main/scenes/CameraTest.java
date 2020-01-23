@@ -1,5 +1,5 @@
 /*
- * File:    Test.java
+ * File:    CameraTest.java
  * Package: main.scenes
  * Author:  Zachary Gill
  */
@@ -12,35 +12,36 @@ import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Scene;
-import objects.polyhedron.regular.platonic.Hexahedron;
+import objects.polyhedron.regular.RegularPolyhedron;
+import objects.polyhedron.regular.platonic.Icosahedron;
 import objects.system.Axes;
 
 /**
- * Defines a Test scene.
+ * Defines a Camera Test scene.
  */
-public class Test extends Scene {
+public class CameraTest extends Scene {
     
     //Main Methods
     
     /**
-     * The main method for the Test scene.
+     * The main method for the Camera Test scene.
      *
      * @param args The arguments to the main method.
      * @throws Exception When the Scene class cannot be constructed.
      */
     public static void main(String[] args) throws Exception {
-        runScene(Test.class);
+        runScene(CameraTest.class);
     }
     
     
     //Constructors
     
     /**
-     * Constructor for the Test scene.
+     * Constructor for the Camera Test scene.
      *
-     * @param environment The Environment to render the Test in.
+     * @param environment The Environment to render the Camera Test in.
      */
-    public Test(Environment environment) {
+    public CameraTest(Environment environment) {
         super(environment);
     }
     
@@ -48,34 +49,33 @@ public class Test extends Scene {
     //Methods
     
     /**
-     * Calculates the components that compose the Test.
+     * Calculates the components that compose the Camera Test.
      */
     @Override
     public void calculate() {
-//        RegularPolyhedron i = new Icosahedron(null, Environment.origin, new Color(0, 0, 0, 0), 1);
-//        i.addFrame(java.awt.Color.BLACK);
-//        i.displayVertexIndices();
-//        i.displayFaceIndices();
-//        registerComponent(i);
+        RegularPolyhedron i = new Icosahedron(null, Environment.origin, new Color(0, 0, 255, 128), 1);
+        i.addFrame(java.awt.Color.BLACK);
+        i.displayVertexIndices();
+        i.displayFaceIndices();
+        registerComponent(i);
         
         Axes axes = new Axes(5);
         registerComponent(axes);
         
-        Hexahedron h1 = new Hexahedron(null, new Vector(0, 0, 0), Color.RED, 1);
-//        Hexahedron h2 = new Hexahedron(null, new Vector(5, 2, 3), Color.YELLOW, 1);
-        registerComponent(h1);
-//        registerComponent(h2);
+//        Hexahedron h1 = new Hexahedron(null, new Vector(0, 0, 0), Color.RED, 1);
+//        h1.addFrame(Color.BLACK);
+//        registerComponent(h1);
     }
     
     /**
-     * Sets up components for the Test scene.
+     * Sets up components for the Camera Test scene.
      */
     @Override
     public void initComponents() {
     }
     
     /**
-     * Sets up cameras for the Test scene.
+     * Sets up cameras for the Camera Test scene.
      */
     @Override
     public void setupCameras() {
@@ -88,7 +88,7 @@ public class Test extends Scene {
     }
     
     /**
-     * Sets up controls for the Test scene.
+     * Sets up controls for the Camera Test scene.
      */
     @Override
     public void setupControls() {

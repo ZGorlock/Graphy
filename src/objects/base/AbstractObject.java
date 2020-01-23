@@ -77,6 +77,11 @@ public abstract class AbstractObject implements ObjectInterface {
     protected boolean visible = true;
     
     /**
+     * A flag indicating whether or not the Object is rendered.
+     */
+    protected AtomicBoolean rendered = new AtomicBoolean(true);
+    
+    /**
      * The distance from the Camera to the Object.
      */
     protected double renderDistance = 0.0;
@@ -188,12 +193,14 @@ public abstract class AbstractObject implements ObjectInterface {
     @Override
    public final List<BaseObject> doPrepare() {
         if (!prePrepare()) {
+            rendered.set(false);
             return new ArrayList<>();
         }
     
         List<BaseObject> preparedBases = prepare();
         
         if (!postPrepare()) {
+            rendered.set(false);
             return new ArrayList<>();
         }
         return preparedBases;
@@ -266,12 +273,14 @@ public abstract class AbstractObject implements ObjectInterface {
     @Override
     public final void doRender(Graphics2D g2) {
         if (!preRender()) {
+            rendered.set(false);
             return;
         }
         
         render(g2);
         
         postRender(g2);
+        rendered.set(true);
     }
     
     /**
@@ -948,6 +957,15 @@ public abstract class AbstractObject implements ObjectInterface {
     }
     
     /**
+     * Returns the list of the Vectors of the Object that have been prepared for rendering.
+     *
+     * @return The list of the Vectors of the Object that have been prepared for rendering.
+     */
+    public List<Vector> getPrepared() {
+        return prepared;
+    }
+    
+    /**
      * Returns the angles that define the rotation of the Object.
      *
      * @return The angles that define the rotation of the Object.
@@ -990,6 +1008,15 @@ public abstract class AbstractObject implements ObjectInterface {
      */
     public boolean isVisible() {
         return visible;
+    }
+    
+    /**
+     * Returns whether the Object is rendered or not.
+     * 
+     * @return Whether the Object is rendered or not.
+     */
+    public boolean isRendered() {
+        return rendered.get();
     }
     
     /**

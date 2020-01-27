@@ -49,3 +49,6 @@ Temporary Items
 .apdisk
 *.class
 .idea/vcs.xml
+
+**/*.zip
+**/*.kotlin_module

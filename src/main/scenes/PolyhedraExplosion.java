@@ -114,7 +114,7 @@ public class PolyhedraExplosion extends Scene {
     //Main Method
     
     /**
-     * The main method for the Rubik's Cube scene.
+     * The main method for the Polyhedra Explosion scene.
      *
      * @param args The arguments to the main method.
      * @throws Exception When the Scene class cannot be constructed.

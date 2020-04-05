@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import main.Environment;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import utility.RotationUtility;
@@ -54,8 +55,7 @@ public class Object extends AbstractObject {
      * @param color  The color of the Object.
      */
     public Object(Vector center, Color color) {
-        this.center = center;
-        this.color = color;
+        this(null, center, color);
     }
     
     /**
@@ -64,7 +64,14 @@ public class Object extends AbstractObject {
      * @param color The color of the Object.
      */
     public Object(Color color) {
-        this.color = color;
+        this(Environment.ORIGIN, color);
+    }
+    
+    /**
+     * The constructor for an Object.
+     */
+    public Object() {
+        this(Color.BLACK);
     }
     
     

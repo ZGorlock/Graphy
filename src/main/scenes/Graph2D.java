@@ -9,10 +9,8 @@ package main.scenes;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import camera.Camera;
 import main.Environment;
@@ -32,6 +30,26 @@ public class Graph2D extends Scene {
     //Static Fields
     
     /**
+     * The plane of the graph.
+     */
+    private static Object plane;
+    
+    /**
+     * The axes of the graph.
+     */
+    private static Object axes;
+    
+    /**
+     * The radius of the graph of the function on the screen.
+     */
+    public static double radius = 5;
+    
+    /**
+     * The value by which to scale the function.
+     */
+    public static double scale = 0.25;
+    
+    /**
      * The density of the graph.
      */
     public static double density = 0.01;
@@ -39,7 +57,8 @@ public class Graph2D extends Scene {
     /**
      * The equation to graph
      */
-    private static EquationUtility.MathOperation equation = EquationUtility.parseMath("x + 3");
+//    private static EquationUtility.MathOperation equation = EquationUtility.parseMath("x^3 - 5 * x^2 - 12 * x + 2");
+    private static EquationUtility.MathOperation equation = EquationUtility.parseMath("x^9 - 3 * x^7 + 2");
     
     
     //Main Method
@@ -73,18 +92,18 @@ public class Graph2D extends Scene {
      */
     @Override
     public void calculate() {
-        registerComponent(new Axes(5));
+        if (plane != null) {
+            unregisterComponent(plane);
+        }
+        plane = new Object(Color.BLACK);
         
-        Object plane = new Object(Color.BLACK);
-        
-        Set<Vector> vs = new HashSet<>();
+        List<Vector> vs = new ArrayList<>();
         UniqueVectorSet uniqueVectorSet = new UniqueVectorSet();
-        Map<Vector, Double> vsm = new HashMap<>();
-        for (double x = -10; x <= 10; x += density) {
+        for (double x = -radius / scale; x <= radius / scale; x += density / scale) {
             
             List<Vector> vt = new ArrayList<>();
             vt.add(new Vector(x, 0, 0));
-            vt.add(new Vector(x + density, 0, 0));
+            vt.add(new Vector(x + density / scale, 0, 0));
             
             uniqueVectorSet.alignVectorsToSet(vt);
             
@@ -95,20 +114,32 @@ public class Graph2D extends Scene {
         
         for (Vector v : vs) {
             Map<String, Number> vars = new HashMap<>();
-            vars.put("x", Math.atan(v.getX()));
-            v.setY(equation.evaluate(vars).doubleValue());
+            vars.put("x", v.getX());
+            v.setX(v.getX() * scale);
+            v.setY(equation.evaluate(vars).doubleValue() * scale);
             if (v.getY() != v.getY()) {
                 v.setY(0);
             }
-            if (v.getY() > 20) {
-                v.setY(20);
+            if (v.getY() > radius) {
+                v.setY(radius);
             }
-            if (v.getY() < -20) {
-                v.setY(-20);
+            if (v.getY() < -radius) {
+                v.setY(-radius);
             }
         }
         
         registerComponent(plane);
+        
+        if (axes != null) {
+            unregisterComponent(axes);
+        }
+        axes = new Axes((int) radius,
+                true, true, false,
+                true, true, false,
+                1, 1 / scale,
+                true, true, false,
+                false);
+        registerComponent(axes);
     }
     
     /**
@@ -123,8 +154,8 @@ public class Graph2D extends Scene {
      */
     @Override
     public void setupCameras() {
-        Camera camera = new Camera(this, true, true);
-        camera.setLocation(0, Math.PI / 2, 20);
+        Camera camera = new Camera(this, true, false);
+        camera.setLocation(0, Math.PI / 2, 10);
     }
     
     /**
@@ -132,6 +163,10 @@ public class Graph2D extends Scene {
      */
     @Override
     public void setupControls() {
+        environment.scene.environment.renderPanel.addMouseWheelListener(e -> {
+            scale -= 0.025 * e.getWheelRotation();
+            calculate();
+        });
     }
     
 }

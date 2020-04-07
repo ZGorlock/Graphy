@@ -164,7 +164,7 @@ public class Graph2D extends Scene {
     @Override
     public void setupControls() {
         environment.scene.environment.renderPanel.addMouseWheelListener(e -> {
-            scale -= 0.025 * e.getWheelRotation();
+            scale *= Math.pow(0.8, e.getWheelRotation());
             calculate();
         });
     }

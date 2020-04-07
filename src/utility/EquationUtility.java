@@ -170,7 +170,24 @@ public final class EquationUtility {
     @SuppressWarnings("UnnecessaryContinue")
     private static List<String> parseElements(String equation) throws ParseException {
         if (equation.startsWith("(") && equation.endsWith(")")) {
-            equation = equation.substring(1, equation.length() - 1);
+            int depth = 1;
+            for (int i = 1; i < equation.length(); i++) {
+                char c2 = equation.charAt(i);
+                if (c2 == '(') {
+                    depth++;
+                } else if (c2 == ')') {
+                    depth--;
+                    if (depth == 0) {
+                        if (i == equation.length() - 1) {
+                            equation = equation.substring(1, equation.length() - 1);
+                        }
+                        break;
+                    }
+                }
+                if (i == equation.length() - 1) {
+                    throw new ParseException("Parentheses in equation are not lined up", i);
+                }
+            }
         }
         
         List<String> elements = new ArrayList<>();

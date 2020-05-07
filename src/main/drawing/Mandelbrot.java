@@ -382,6 +382,7 @@ public class Mandelbrot extends Drawing {
      */
     public Mandelbrot(Environment2D environment) {
         super(environment);
+        environment.setSize((int) SCREEN_SIZE.getX(), (int) SCREEN_SIZE.getY());
     }
     
     

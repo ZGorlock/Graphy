@@ -11,7 +11,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridBagLayout;
 import java.awt.image.BufferedImage;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -123,7 +122,7 @@ public class Environment2D {
         if ((screenX == MAX_SCREEN_X) && (screenY == MAX_SCREEN_Y)) {
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         }
-        frame.getContentPane().setLayout(new GridBagLayout());
+        frame.getContentPane().setLayout(new BorderLayout());
         frame.setFocusable(true);
         frame.setFocusTraversalKeysEnabled(false);
         

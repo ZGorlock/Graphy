@@ -1,10 +1,10 @@
 /*
- * File:    DrawingPane.java
- * Package: objects.complex
+ * File:    Pane.java
+ * Package: objects.complex.pane
  * Author:  Zachary Gill
  */
 
-package objects.complex;
+package objects.complex.pane;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -23,14 +23,14 @@ import objects.base.polygon.Rectangle;
 import utility.ColorUtility;
 
 /**
- * Defines a Drawing Pane.
+ * Defines a Pane.
  */
-public class DrawingPane extends BaseObject {
+public abstract class Pane extends BaseObject {
     
     //Constants
     
     /**
-     * The color used to identify the pixels touched by the Drawing Pane.
+     * The color used to identify the pixels touched by the Pane.
      */
     private static final int TOUCH_COLOR = new Color(0, 255, 0).getRGB();
     
@@ -38,22 +38,22 @@ public class DrawingPane extends BaseObject {
     //Fields
     
     /**
-     * The bounds of the Drawing Pane.
+     * The bounds of the Pane.
      */
     public Rectangle bounds;
     
     /**
-     * The image of the Drawing Pane.
+     * The image of the Pane.
      */
     public BufferedImage image;
     
     /**
-     * A flag indicating whether or not to invert the colors of the Drawing Pane.
+     * A flag indicating whether or not to invert the colors of the Pane.
      */
     public boolean invert;
     
     /**
-     * The projective matrix for the Drawing Pane.
+     * The projective matrix for the Pane.
      */
     private Matrix3 projectiveMatrix;
     
@@ -71,19 +71,17 @@ public class DrawingPane extends BaseObject {
     //Constructors
     
     /**
-     * The constructor for a Drawing Pane.
+     * The constructor for a Pane.
      *
-     * @param parent The parent of the Drawing Pane.
-     * @param color  The color of the Drawing Pane.
-     * @param bounds The bounds of the Drawing Pane.
-     * @param image  The image of the Drawing Pane.
-     * @param invert Whether or not to invert the colors of the Drawing Pane.
+     * @param parent The parent of the Pane.
+     * @param color  The color of the Pane.
+     * @param bounds The bounds of the Pane.
+     * @param invert Whether or not to invert the colors of the Pane.
      */
-    public DrawingPane(AbstractObject parent, Color color, Rectangle bounds, BufferedImage image, boolean invert) {
+    public Pane(AbstractObject parent, Color color, Rectangle bounds, boolean invert) {
         super(parent, color, bounds.getCenter(), bounds.getP1(), bounds.getP2(), bounds.getP3(), bounds.getP4());
         
         this.bounds = bounds;
-        this.image = image;
         this.invert = invert;
         this.projectiveMatrix = null;
         
@@ -91,33 +89,21 @@ public class DrawingPane extends BaseObject {
     }
     
     /**
-     * The constructor for a Drawing Pane.
+     * The constructor for a Pane.
      *
-     * @param parent The parent of the Drawing Pane.
-     * @param color  The color of the Drawing Pane.
-     * @param bounds The bounds of the Drawing Pane.
-     * @param image  The image of the Drawing Pane.
+     * @param parent The parent of the Pane.
+     * @param color  The color of the Pane.
+     * @param bounds The bounds of the Pane.
      */
-    public DrawingPane(AbstractObject parent, Color color, Rectangle bounds, BufferedImage image) {
-        this(parent, color, bounds, image, false);
-    }
-    
-    /**
-     * The constructor for a Drawing Pane.
-     *
-     * @param parent The parent of the Drawing Pane.
-     * @param color  The color of the Drawing Pane.
-     * @param bounds The bounds of the plane.
-     */
-    public DrawingPane(AbstractObject parent, Color color, Rectangle bounds) {
-        this(parent, color, bounds, null);
+    public Pane(AbstractObject parent, Color color, Rectangle bounds) {
+        this(parent, color, bounds, false);
     }
     
     
     //Methods
     
     /**
-     * Prepares the Drawing Pane to be rendered.
+     * Prepares the Pane to be rendered.
      *
      * @return The list of BaseObjects that were prepared.
      */
@@ -137,7 +123,7 @@ public class DrawingPane extends BaseObject {
     }
     
     /**
-     * Renders the Drawing Pane on the screen.
+     * Renders the Pane on the screen.
      *
      * @param g2 The 2D Graphics entity.
      */
@@ -289,9 +275,9 @@ public class DrawingPane extends BaseObject {
     //Setters
     
     /**
-     * Sets the image of the Drawing Pane.
+     * Sets the image of the Pane.
      *
-     * @param image The image of the Drawing Pane.
+     * @param image The image of the Pane.
      */
     public synchronized void setImage(BufferedImage image) {
         this.image = image;

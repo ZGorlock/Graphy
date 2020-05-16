@@ -7,10 +7,7 @@
 package main.scenes;
 
 import java.awt.Color;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 import camera.Camera;
 import main.Environment;
@@ -18,13 +15,22 @@ import math.vector.Vector;
 import objects.base.Object;
 import objects.base.Scene;
 import objects.base.polygon.Rectangle;
-import objects.complex.DrawingPane;
+import objects.complex.pane.Pane;
+import objects.complex.pane.PicturePane;
 import objects.system.Axes;
 
 /**
  * Defines a Picture Frame scene.
  */
 public class PictureFrame extends Scene {
+    
+    //Static Fields
+    
+    /**
+     * The picture to display on the Picture Frame.
+     */
+    public static File picture = new File("resource/tree.jpg");
+    
     
     //Main Method
     
@@ -58,16 +64,10 @@ public class PictureFrame extends Scene {
      */
     @Override
     public void calculate() {
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(new File("resource/tree.jpg"));
-        } catch (IOException ignored) {
-        }
-        
         Object drawing = new Object(Color.BLACK);
         Rectangle bounds = new Rectangle(new Vector(-2, 0, 3), new Vector(2, 0, 3), new Vector(2, 0, -3), new Vector(-2, 0, -3));
-        DrawingPane drawingPane = new DrawingPane(null, Color.BLACK, bounds, image);
-        drawing.registerComponent(drawingPane);
+        Pane pane = new PicturePane(null, Color.BLACK, bounds, picture);
+        drawing.registerComponent(pane);
 //        drawing.addRotationAnimation(Math.PI / 2, Math.PI / 2, Math.PI / 2);
         
         registerComponent(drawing);

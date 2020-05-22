@@ -27,6 +27,7 @@ import math.Delta;
 import math.vector.Vector;
 import math.vector.Vector3;
 import objects.base.Scene;
+import objects.base.polygon.Rectangle;
 import utility.SphericalCoordinateUtility;
 
 /**
@@ -224,24 +225,9 @@ public class Camera {
     private Vector p;
     
     /**
-     * The first point that defines the Screen viewport.
+     * The set of Vectors that define the Screen viewport.
      */
-    private Vector s1;
-    
-    /**
-     * The second point that defines the Screen viewport.
-     */
-    private Vector s2;
-    
-    /**
-     * The third point that defines the Screen viewport.
-     */
-    private Vector s3;
-    
-    /**
-     * The fourth point that defines the Screen viewport.
-     */
-    private Vector s4;
+    private Rectangle s;
     
     /**
      * The timer for running Camera calculations.
@@ -278,7 +264,7 @@ public class Camera {
         viewportX = Environment.sceneX / 1000.0;
         viewportY = Environment.sceneY / 1000.0;
         
-        offset = new Vector(0, 0, 0);
+        this.offset = new Vector(0, 0, 0);
         
         calculateCamera();
         
@@ -295,8 +281,8 @@ public class Camera {
             setupStaticKeyListener();
         }
         
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
+        this.timer = new Timer();
+        this.timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 calculateCamera();
@@ -370,24 +356,25 @@ public class Camera {
             
             
             //calculate screen viewport
-            s1 = lx.scale(-viewportX / 2).plus(ly.scale(-viewportY / 2)).plus(m);
-            s2 = lx.scale(viewportX / 2).plus(ly.scale(-viewportY / 2)).plus(m);
-            s3 = lx.scale(viewportX / 2).plus(ly.scale(viewportY / 2)).plus(m);
-            s4 = lx.scale(-viewportX / 2).plus(ly.scale(viewportY / 2)).plus(m);
+            s = new Rectangle(
+                    lx.scale(-viewportX / 2).plus(ly.scale(-viewportY / 2)).plus(m),
+                    lx.scale(viewportX / 2).plus(ly.scale(-viewportY / 2)).plus(m),
+                    lx.scale(viewportX / 2).plus(ly.scale(viewportY / 2)).plus(m),
+                    lx.scale(-viewportX / 2).plus(ly.scale(viewportY / 2)).plus(m));
             
             if (perspective == Perspective.FIRST_PERSON) {
-                Vector tmp = s1.clone();
-                s1 = s3;
-                s3 = tmp;
-                tmp = s2;
-                s2 = s4;
-                s4 = tmp;
+                Vector tmp = s.getP1().clone();
+                s.setP1(s.getP3());
+                s.setP3(tmp);
+                tmp = s.getP2();
+                s.setP2(s.getP4());
+                s.setP4(tmp);
             }
             
-            cameraObject.screen.setP1(s1.justify());
-            cameraObject.screen.setP2(s2.justify());
-            cameraObject.screen.setP3(s3.justify());
-            cameraObject.screen.setP4(s4.justify());
+            cameraObject.screen.setP1(s.getP1().justify());
+            cameraObject.screen.setP2(s.getP2().justify());
+            cameraObject.screen.setP3(s.getP3().justify());
+            cameraObject.screen.setP4(s.getP4().justify());
             
             
             //find scalar equation of screen
@@ -410,10 +397,10 @@ public class Camera {
             
             //verify screen
             if (verifyViewport) {
-                if (Math.abs(viewportX - s1.distance(s2)) > Environment.OMEGA) {
+                if (Math.abs(viewportX - s.getP1().distance(s.getP2())) > Environment.OMEGA) {
                     System.err.println("Camera: " + cameraId + " - Screen viewportX does not match the actual viewport width");
                 }
-                if (Math.abs(viewportY - s1.distance(s3)) > Environment.OMEGA) {
+                if (Math.abs(viewportY - s.getP1().distance(s.getP3())) > Environment.OMEGA) {
                     System.err.println("Camera: " + cameraId + " - Screen viewportY does not match the actual viewport height");
                 }
             }
@@ -455,12 +442,12 @@ public class Camera {
      */
     public Vector collapseVector(Vector v) {
         //perform pre-calculations
-        Vector s1v = v.minus(s1);
-        Vector s4v = v.minus(s4);
-        Vector s1s2 = s2.minus(s1);
-        Vector s1s4 = s4.minus(s1);
-        double w = s1.distance(s2);
-        double h = s1.distance(s4);
+        Vector s1v = v.minus(s.getP1());
+        Vector s4v = v.minus(s.getP4());
+        Vector s1s2 = s.getP2().minus(s.getP1());
+        Vector s1s4 = s.getP4().minus(s.getP1());
+        double w = s.getP1().distance(s.getP2());
+        double h = s.getP1().distance(s.getP4());
         double s1vh = s1v.hypotenuse();
         
         
@@ -470,7 +457,7 @@ public class Camera {
         
         
         //determine true screen coordinates
-        double d = (v.minus(s1)).hypotenuse();
+        double d = (v.minus(s.getP1())).hypotenuse();
         double m = x * d;
         double n = y * d;
         return new Vector(m, n, 0);

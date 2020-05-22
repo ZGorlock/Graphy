@@ -139,7 +139,7 @@ public class Clock extends Scene {
      */
     @Override
     public void setupCameras() {
-        Camera camera = new Camera(this, true, true);
+        Camera camera = new Camera(this, environment.perspective, true, true);
         camera.setLocation(0, Math.PI / 2, 25);
     }
     

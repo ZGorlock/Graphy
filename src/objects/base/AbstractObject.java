@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -166,19 +167,21 @@ public abstract class AbstractObject implements ObjectInterface {
     /**
      * Prepares the Object to be rendered.
      *
+     * @param perspective The perspective to prepare the Object for.
      * @return The list of BaseObjects that were prepared.
      */
     @Override
-    public abstract List<BaseObject> prepare();
+    public abstract List<BaseObject> prepare(UUID perspective);
     
     /**
      * Performs post-preparing steps on the Object.
      *
+     * @param perspective The perspective to post-prepare the Object for.
      * @return Whether or not the Object should continue to rendering.
      */
     @Override
-    public final boolean postPrepare() {
-        if (calculateRenderDistance() > Environment.MAX_RENDER_DISTANCE) {
+    public final boolean postPrepare(UUID perspective) {
+        if (calculateRenderDistance(perspective) > Environment.MAX_RENDER_DISTANCE) {
             renderDelay.set(Environment.ENABLE_RENDER_BUFFERING ? ((int) (Math.random() * (Environment.fps / 8))) : 1);
             return !Environment.ENABLE_RENDER_BUFFERING;
         }
@@ -188,18 +191,19 @@ public abstract class AbstractObject implements ObjectInterface {
     /**
      * Performs the preparation for the Object to be rendered.
      *
+     * @param perspective The perspective to prepare the Object for.
      * @return The list of BaseObjects that were prepared.
      */
     @Override
-    public final List<BaseObject> doPrepare() {
+    public final List<BaseObject> doPrepare(UUID perspective) {
         if (!prePrepare()) {
             rendered.set(false);
             return new ArrayList<>();
         }
         
-        List<BaseObject> preparedBases = prepare();
+        List<BaseObject> preparedBases = prepare(perspective);
         
-        if (!postPrepare()) {
+        if (!postPrepare(perspective)) {
             rendered.set(false);
             return new ArrayList<>();
         }
@@ -209,24 +213,25 @@ public abstract class AbstractObject implements ObjectInterface {
     /**
      * Performs pre-rendering steps on the Object.
      *
+     * @param perspective The perspective to pre-render the Object for.
      * @return Whether or not the Object should continue rendering.
      */
     @Override
-    public final boolean preRender() {
+    public final boolean preRender(UUID perspective) {
         if (!Environment.ENABLE_RENDER_BUFFERING || renderDelay.get() <= 0) {
-            if (!visible || (prepared.size() != vertices.length) || Camera.hasVectorBehindScreen(vertices)) {
+            if (!visible || (prepared.size() != vertices.length) || Camera.hasVectorBehindScreen(perspective, vertices)) {
                 renderDelay.set(Environment.ENABLE_RENDER_BUFFERING ? ((int) (Math.random() * (Environment.fps / 8))) : 1);
                 return false;
             }
             
-            Camera.projectVectorsToCamera(prepared);
-            Camera.collapseVectorsToViewport(prepared);
-            if (!Camera.hasVectorInView(prepared)) {
+            Camera.projectVectorsToCamera(perspective, prepared);
+            Camera.collapseVectorsToViewport(perspective, prepared);
+            if (!Camera.hasVectorInView(perspective, prepared)) {
                 renderDelay.set(Environment.ENABLE_RENDER_BUFFERING ? ((int) (Math.random() * (Environment.fps / 8))) : 1);
                 return false;
             } else {
                 renderDelay.set(1);
-                Camera.scaleVectorsToScreen(prepared);
+                Camera.scaleVectorsToScreen(perspective, prepared);
                 return true;
             }
         }
@@ -236,10 +241,11 @@ public abstract class AbstractObject implements ObjectInterface {
     /**
      * Renders the Object on the screen.
      *
-     * @param g2 The 2D Graphics entity.
+     * @param perspective The perspective to render the Object for.
+     * @param g2          The 2D Graphics entity.
      */
     @Override
-    public abstract void render(Graphics2D g2);
+    public abstract void render(Graphics2D g2, UUID perspective);
     
     /**
      * Performs post-rendering steps on the Object.
@@ -268,16 +274,17 @@ public abstract class AbstractObject implements ObjectInterface {
     /**
      * Performs the rendering for the Object on the screen.
      *
-     * @param g2 The 2D Graphics entity.
+     * @param perspective The perspective to render the Object for.
+     * @param g2          The 2D Graphics entity.
      */
     @Override
-    public final void doRender(Graphics2D g2) {
-        if (!preRender()) {
+    public final void doRender(Graphics2D g2, UUID perspective) {
+        if (!preRender(perspective)) {
             rendered.set(false);
             return;
         }
         
-        render(g2);
+        render(g2, perspective);
         
         postRender(g2);
         rendered.set(true);
@@ -323,10 +330,11 @@ public abstract class AbstractObject implements ObjectInterface {
     /**
      * Calculates the distance from the Camera to the Object.
      *
+     * @param perspective The perspective to use to calculate the distance from the Camera to the Object.
      * @return The distance from the Camera to the Object.
      */
     @Override
-    public abstract double calculateRenderDistance();
+    public abstract double calculateRenderDistance(UUID perspective);
     
     /**
      * Adds a constant movement animation to an Object.

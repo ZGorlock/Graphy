@@ -9,6 +9,7 @@ package objects.complex;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.util.UUID;
 
 import math.vector.Vector;
 import objects.base.AbstractObject;
@@ -79,11 +80,12 @@ public class ImageSquare extends Square {
     /**
      * Renders the Image Square on the screen.
      *
-     * @param g2 The 2D Graphics entity.
+     * @param perspective The perspective to render the Image Square for.
+     * @param g2          The 2D Graphics entity.
      */
     @Override
-    public void render(Graphics2D g2) {
-        super.render(g2);
+    public void render(Graphics2D g2, UUID perspective) {
+        super.render(g2, perspective);
         if (image != null) {
             g2.drawImage(image, (int) prepared.get(0).getX(), (int) prepared.get(0).getY(),
                     Math.abs((int) (prepared.get(1).getX() - prepared.get(0).getX())), Math.abs((int) (prepared.get(3).getY() - prepared.get(0).getY())), null);

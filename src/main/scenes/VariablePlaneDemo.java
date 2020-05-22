@@ -69,7 +69,7 @@ public class VariablePlaneDemo extends Scene {
      */
     @Override
     public void setupCameras() {
-        Camera camera = new Camera(this, true, true);
+        Camera camera = new Camera(this, environment.perspective, true, true);
         camera.setLocation(Math.PI / 4, Math.PI / 4, 5);
     }
     

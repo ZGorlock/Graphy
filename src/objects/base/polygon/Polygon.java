@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import math.vector.Vector;
 import objects.base.AbstractObject;
@@ -48,10 +49,11 @@ public class Polygon extends BaseObject {
     /**
      * Prepares the Polygon to be rendered.
      *
+     * @param perspective The perspective to prepare the Polygon for.
      * @return The list of BaseObjects that were prepared.
      */
     @Override
-    public List<BaseObject> prepare() {
+    public List<BaseObject> prepare(UUID perspective) {
         List<BaseObject> preparedBases = new ArrayList<>();
         
         prepared.clear();
@@ -68,10 +70,11 @@ public class Polygon extends BaseObject {
     /**
      * Renders the Polygon on the screen.
      *
-     * @param g2 The 2D Graphics entity.
+     * @param perspective The perspective to render the Polygon for.
+     * @param g2          The 2D Graphics entity.
      */
     @Override
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2, UUID perspective) {
         g2.setColor(getColor());
         switch (displayMode) {
             case VERTEX:

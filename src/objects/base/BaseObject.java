@@ -9,6 +9,7 @@ package objects.base;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.List;
+import java.util.UUID;
 
 import camera.Camera;
 import main.Environment;
@@ -101,18 +102,20 @@ public abstract class BaseObject extends AbstractObject {
     /**
      * Prepares the Object to be rendered.
      *
+     * @param perspective The perspective to prepare the Object for.
      * @return The list of BaseObjects that were prepared.
      */
     @Override
-    public abstract List<BaseObject> prepare();
+    public abstract List<BaseObject> prepare(UUID perspective);
     
     /**
      * Renders the Object on the screen.
      *
-     * @param g2 The 2D Graphics entity.
+     * @param perspective The perspective to render the Object for.
+     * @param g2          The 2D Graphics entity.
      */
     @Override
-    public abstract void render(Graphics2D g2);
+    public abstract void render(Graphics2D g2, UUID perspective);
     
     /**
      * Moves the Object in a certain direction.
@@ -157,15 +160,16 @@ public abstract class BaseObject extends AbstractObject {
     /**
      * Calculates the distance from the Camera to Object.
      *
+     * @param perspective The perspective to use to calculate the distance from the Camera to the Object.
      * @return The distance from the Camera to the Object.
      */
     @Override
-    public double calculateRenderDistance() {
+    public double calculateRenderDistance(UUID perspective) {
         if (prepared.isEmpty()) {
             return 0;
         }
         
-        Camera cam = Camera.getActiveCameraView();
+        Camera cam = Camera.getActiveCameraView(perspective);
         if (cam == null) {
             return 0;
         }

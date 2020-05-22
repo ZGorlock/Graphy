@@ -14,6 +14,7 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 import main.Environment;
 import math.matrix.Matrix3;
@@ -86,14 +87,15 @@ public class Object extends AbstractObject {
     /**
      * Prepares the Object to be rendered.
      *
+     * @param perspective The perspective to prepare the Object for.
      * @return The list of BaseObjects that were prepared.
      */
     @Override
-    public List<BaseObject> prepare() {
+    public List<BaseObject> prepare(UUID perspective) {
         List<BaseObject> preparedBases = new ArrayList<>();
         
         for (ObjectInterface component : components) {
-            preparedBases.addAll(component.doPrepare());
+            preparedBases.addAll(component.doPrepare(perspective));
         }
         
         return preparedBases;
@@ -102,12 +104,13 @@ public class Object extends AbstractObject {
     /**
      * Renders the Object on the screen.
      *
-     * @param g2 The 2D Graphics entity.
+     * @param perspective The perspective to render the Object for.
+     * @param g2          The 2D Graphics entity.
      */
     @Override
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2, UUID perspective) {
         for (ObjectInterface component : components) {
-            component.doRender(g2);
+            component.doRender(g2, perspective);
         }
     }
     
@@ -171,7 +174,7 @@ public class Object extends AbstractObject {
      * @return The distance from the Camera to the Object.
      */
     @Override
-    public double calculateRenderDistance() {
+    public double calculateRenderDistance(UUID perspective) {
         renderDistance = 0;
         return renderDistance;
     }

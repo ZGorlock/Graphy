@@ -18,6 +18,7 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -135,6 +136,11 @@ public class Environment {
     public Scene scene = null;
     
     /**
+     * The unique perspective id for the Environment.
+     */
+    public final UUID perspective = UUID.randomUUID();
+    
+    /**
      * The list of Objects to be rendered in the Environment.
      */
     public List<ObjectInterface> objects = new ArrayList<>();
@@ -176,7 +182,7 @@ public class Environment {
             
             public void paintComponent(Graphics g) {
                 
-                Camera camera = Camera.getActiveCameraView();
+                Camera camera = Camera.getActiveCameraView(perspective);
                 if (camera == null) {
                     return;
                 }
@@ -185,7 +191,7 @@ public class Environment {
                     List<BaseObject> preparedBases = new ArrayList<>();
                     try {
                         for (ObjectInterface object : objects) {
-                            preparedBases.addAll(object.doPrepare());
+                            preparedBases.addAll(object.doPrepare(perspective));
                         }
                     } catch (ConcurrentModificationException ignored) {
                         return;
@@ -200,7 +206,7 @@ public class Environment {
                     }
                     
                     for (BaseObject preparedBase : preparedBases) {
-                        preparedBase.doRender(g2);
+                        preparedBase.doRender(g2, perspective);
                     }
                 }
             }
@@ -227,6 +233,7 @@ public class Environment {
         } else {
             frame.setExtendedState(JFrame.NORMAL);
         }
+        Camera.setScreenSize(perspective, new Vector(screenX, screenY, screenZ));
     }
     
     /**

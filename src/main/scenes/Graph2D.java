@@ -154,7 +154,7 @@ public class Graph2D extends Scene {
      */
     @Override
     public void setupCameras() {
-        Camera camera = new Camera(this, true, false);
+        Camera camera = new Camera(this, environment.perspective, true, false);
         camera.setLocation(0, Math.PI / 2, 10);
     }
     

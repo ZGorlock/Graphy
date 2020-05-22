@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.UUID;
 
 import main.Environment;
 import math.matrix.Matrix3;
@@ -105,10 +106,11 @@ public abstract class Pane extends BaseObject {
     /**
      * Prepares the Pane to be rendered.
      *
+     * @param perspective The perspective to prepare the Pane for.
      * @return The list of BaseObjects that were prepared.
      */
     @Override
-    public java.util.List<BaseObject> prepare() {
+    public java.util.List<BaseObject> prepare(UUID perspective) {
         List<BaseObject> preparedBases = new ArrayList<>();
         
         prepared.clear();
@@ -125,10 +127,11 @@ public abstract class Pane extends BaseObject {
     /**
      * Renders the Pane on the screen.
      *
-     * @param g2 The 2D Graphics entity.
+     * @param perspective The perspective to render the Pane for.
+     * @param g2          The 2D Graphics entity.
      */
     @Override
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2, UUID perspective) {
         g2.setColor(getColor());
         switch (displayMode) {
             case VERTEX:

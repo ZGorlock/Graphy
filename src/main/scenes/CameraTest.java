@@ -61,7 +61,7 @@ public class CameraTest extends Scene {
         
         Axes axes = new Axes(5);
         registerComponent(axes);
-        
+
 //        Hexahedron h1 = new Hexahedron(null, new Vector(0, 0, 0), Color.RED, 1);
 //        h1.addFrame(Color.BLACK);
 //        registerComponent(h1);
@@ -79,11 +79,11 @@ public class CameraTest extends Scene {
      */
     @Override
     public void setupCameras() {
-        Camera camera = new Camera(this, true, true);
+        Camera camera = new Camera(this, environment.perspective, true, true);
         camera.setLocation(Math.PI / 4, 3 * Math.PI / 4, 5);
         camera.setOffset(new Vector(5, 2, 3));
         
-        Camera camera2 = new Camera(this, true, true);
+        Camera camera2 = new Camera(this, environment.perspective, true, true);
         camera2.setLocation(Math.PI / 4, 3 * Math.PI / 4, 50);
     }
     

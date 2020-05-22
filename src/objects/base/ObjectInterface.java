@@ -9,6 +9,7 @@ package objects.base;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.List;
+import java.util.UUID;
 
 import math.matrix.Matrix3;
 import math.vector.Vector;
@@ -30,37 +31,42 @@ public interface ObjectInterface {
     /**
      * Prepares the Object to be rendered.
      *
+     * @param perspective The perspective to prepare the Object for.
      * @return The list of BaseObjects that were prepared.
      */
-    List<BaseObject> prepare();
+    List<BaseObject> prepare(UUID perspective);
     
     /**
      * Performs post-preparing steps on the Object.
      *
+     * @param perspective The perspective to post-prepare the Object for.
      * @return Whether or not the Object should continue to rendering.
      */
-    boolean postPrepare();
+    boolean postPrepare(UUID perspective);
     
     /**
      * Performs the preparation for the Object to be rendered.
      *
+     * @param perspective The perspective to prepare the Object for.
      * @return The list of BaseObjects that were prepared.
      */
-    List<BaseObject> doPrepare();
+    List<BaseObject> doPrepare(UUID perspective);
     
     /**
      * Performs pre-rendering steps on the Object.
      *
+     * @param perspective The perspective to pre-render the Object for.
      * @return Whether or not the Object should continue rendering.
      */
-    boolean preRender();
+    boolean preRender(UUID perspective);
     
     /**
      * Renders the Object on the screen.
      *
-     * @param g2 The 2D Graphics entity.
+     * @param perspective The perspective to render the Object for.
+     * @param g2          The 2D Graphics entity.
      */
-    void render(Graphics2D g2);
+    void render(Graphics2D g2, UUID perspective);
     
     /**
      * Performs post-rendering steps on the Object.
@@ -79,9 +85,10 @@ public interface ObjectInterface {
     /**
      * Performs the rendering for the Object on the screen.
      *
-     * @param g2 The 2D Graphics entity.
+     * @param perspective The perspective to render the Object for.
+     * @param g2          The 2D Graphics entity.
      */
-    void doRender(Graphics2D g2);
+    void doRender(Graphics2D g2, UUID perspective);
     
     /**
      * Moves the Object in a certain direction.
@@ -115,9 +122,10 @@ public interface ObjectInterface {
     /**
      * Calculates the distance from the Camera to the Object.
      *
+     * @param perspective The perspective to use to calculate the distance from the Camera to the Object.
      * @return The distance from the Camera to the Object.
      */
-    double calculateRenderDistance();
+    double calculateRenderDistance(UUID perspective);
     
     /**
      * Adds a constant movement animation to an Object.

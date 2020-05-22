@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import math.vector.Vector;
 import objects.base.AbstractObject;
@@ -69,10 +70,11 @@ public class Vertex extends BaseObject {
     /**
      * Prepares the Vertex to be rendered.
      *
+     * @param perspective The perspective to prepare the Vertex for.
      * @return The list of BaseObjects that were prepared.
      */
     @Override
-    public List<BaseObject> prepare() {
+    public List<BaseObject> prepare(UUID perspective) {
         List<BaseObject> preparedBases = new ArrayList<>();
         
         prepared.clear();
@@ -87,10 +89,11 @@ public class Vertex extends BaseObject {
     /**
      * Renders the Vertex on the screen.
      *
-     * @param g2 The 2D Graphics entity.
+     * @param perspective The perspective to render the Vertex for.
+     * @param g2          The 2D Graphics entity.
      */
     @Override
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2, UUID perspective) {
         g2.setColor(getColor());
         g2.drawRect((int) prepared.get(0).getX(), (int) prepared.get(0).getY(), 1, 1);
     }

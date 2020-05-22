@@ -82,7 +82,7 @@ public class OrbitDemo extends Scene {
      */
     @Override
     public void setupCameras() {
-        Camera camera = new Camera(this, true, true);
+        Camera camera = new Camera(this, environment.perspective, true, true);
         camera.setLocation(Math.PI / 4, 3 * Math.PI / 4, 10);
 //        camera.setOffset(new Vector3(5, 2, 3));
     }

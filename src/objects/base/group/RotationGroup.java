@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 
 import math.vector.Vector;
 import objects.base.AbstractObject;
@@ -78,22 +79,24 @@ public class RotationGroup extends Object {
     //Methods
     
     /**
-     * Prepares the Object to be rendered.
+     * Prepares the Rotation Group to be rendered.
      *
+     * @param perspective The perspective to prepare the Rotation Group for.
      * @return The list of BaseObjects that were prepared.
      */
     @Override
-    public List<BaseObject> prepare() {
+    public List<BaseObject> prepare(UUID perspective) {
         return new ArrayList<>();
     }
     
     /**
-     * Renders the Object on the screen.
+     * Renders the Rotation Group on the screen.
      *
-     * @param g2 The 2D Graphics entity.
+     * @param perspective The perspective to render the Rotation Group for.
+     * @param g2          The 2D Graphics entity.
      */
     @Override
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2, UUID perspective) {
     }
     
     /**

@@ -8,6 +8,7 @@ package objects.base.simple;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.UUID;
 
 import math.vector.Vector;
 import objects.base.AbstractObject;
@@ -28,12 +29,12 @@ public class BigVertex extends Vertex {
     //Constructor
     
     /**
-     * The constructor for a Vertex.
+     * The constructor for a Big Vertex.
      *
-     * @param parent The parent of the Vertex.
-     * @param color  The color of the Vertex.
-     * @param v      The Vector defining the point of the Vertex.
-     * @param size   The size of the Vertex.
+     * @param parent The parent of the Big Vertex.
+     * @param color  The color of the Big Vertex.
+     * @param v      The Vector defining the point of the Big Vertex.
+     * @param size   The size of the Big Vertex.
      */
     public BigVertex(AbstractObject parent, Color color, Vector v, int size) {
         super(parent, color, v);
@@ -41,32 +42,32 @@ public class BigVertex extends Vertex {
     }
     
     /**
-     * The constructor for a Vertex.
+     * The constructor for a Big Vertex.
      *
-     * @param parent The parent of the Vertex.
-     * @param v      The Vector defining the point of the Vertex.
-     * @param size   The size of the Vertex.
+     * @param parent The parent of the Big Vertex.
+     * @param v      The Vector defining the point of the Big Vertex.
+     * @param size   The size of the Big Vertex.
      */
     public BigVertex(AbstractObject parent, Vector v, int size) {
         this(parent, Color.BLACK, v, size);
     }
     
     /**
-     * The constructor for a Vertex.
+     * The constructor for a Big Vertex.
      *
-     * @param color The color of the Vertex.
-     * @param v     The Vector defining the point of the Vertex.
-     * @param size  The size of the Vertex.
+     * @param color The color of the Big Vertex.
+     * @param v     The Vector defining the point of the Big Vertex.
+     * @param size  The size of the Big Vertex.
      */
     public BigVertex(Color color, Vector v, int size) {
         this(null, color, v, size);
     }
     
     /**
-     * The constructor for a Vertex.
+     * The constructor for a Big Vertex.
      *
-     * @param v    The Vector defining the point of the Vertex.
-     * @param size The size of the Vertex.
+     * @param v    The Vector defining the point of the Big Vertex.
+     * @param size The size of the Big Vertex.
      */
     public BigVertex(Vector v, int size) {
         this(null, Color.BLACK, v, size);
@@ -76,12 +77,13 @@ public class BigVertex extends Vertex {
     //Methods
     
     /**
-     * Renders the Vertex on the screen.
+     * Renders the Big Vertex on the screen.
      *
-     * @param g2 The 2D Graphics entity.
+     * @param perspective The perspective to render the Big Vertex for.
+     * @param g2          The 2D Graphics entity.
      */
     @Override
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2, UUID perspective) {
         g2.setColor(getColor());
         for (int i = -size; i <= size; i++) {
             for (int j = -size; j <= size; j++) {

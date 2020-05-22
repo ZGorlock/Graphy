@@ -10,6 +10,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import math.vector.Vector;
 
@@ -64,10 +65,11 @@ public class Frame extends Object {
     /**
      * Prepares the Object to be rendered.
      *
+     * @param perspective The perspective to render the Object for.
      * @return The list of BaseObjects that were prepared.
      */
     @Override
-    public List<BaseObject> prepare() {
+    public List<BaseObject> prepare(UUID perspective) {
         return new ArrayList<>();
     }
     
@@ -96,10 +98,11 @@ public class Frame extends Object {
     /**
      * Renders the Object on the screen.
      *
-     * @param g2 The 2D Graphics entity.
+     * @param perspective The perspective to render the Object for.
+     * @param g2          The 2D Graphics entity.
      */
     @Override
-    public void render(Graphics2D g2) {
+    public void render(Graphics2D g2, UUID perspective) {
     }
     
 }

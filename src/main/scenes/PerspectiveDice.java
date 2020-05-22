@@ -131,10 +131,10 @@ public class PerspectiveDice extends Scene {
      */
     @Override
     public void setupCameras() {
-        Camera camera = new Camera(this, true, true);
+        Camera camera = new Camera(this, environment.perspective, true, true);
         camera.setLocation(Math.PI / 2, Math.PI / 2, 2);
         camera.setOffset(new Vector(0, 1, 0));
-        camera.setPerspective(Camera.Perspective.FIRST_PERSON);
+        camera.setMode(Camera.Perspective.FIRST_PERSON);
     }
     
     /**

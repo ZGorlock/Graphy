@@ -12,13 +12,16 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -72,54 +75,54 @@ public class Camera {
     //Static Fields
     
     /**
-     * The Scene the camera is viewing.
-     */
-    private static Scene scene;
-    
-    /**
-     * The x dimension of the viewport.
-     */
-    private static double viewportX = Environment.MAX_SCREEN_X / 1000.0;
-    
-    /**
-     * The y dimension of the viewport.
-     */
-    private static double viewportY = Environment.MAX_SCREEN_Y / 1000.0;
-    
-    /**
      * The next Camera id to be used.
      */
     private static int nextCameraId = 0;
     
     /**
-     * The current active Camera for viewing.
+     * The map of Cameras that are registered per perspective.
      */
-    private static int activeCameraView = -1;
+    private static final Map<UUID, Map<Integer, Camera>> cameraMap = new HashMap<>();
     
     /**
-     * The current active Camera for controls.
+     * The map of current active Camera ids for viewing per perspective.
      */
-    private static int activeCameraControl = -1;
+    private static Map<UUID, Integer> activeCameraView = new HashMap<>();
     
     /**
-     * The map of Cameras that are registered in the Environment.
+     * The map of current active Camera ids for controls per perspective.
      */
-    private static final Map<Integer, Camera> cameraMap = new HashMap<>();
+    private static Map<UUID, Integer> activeCameraControl = new HashMap<>();
     
     /**
-     * The active Camera view in the Environment.
+     * The map of active Cameras for viewing per perspective.
      */
-    private static Camera activeView = null;
+    private static Map<UUID, Camera> activeView = new HashMap<>();
     
     /**
-     * The active Camera control in the Environment.
+     * The map of active Cameras for controls per perspective.
      */
-    private static Camera activeControl = null;
+    private static Map<UUID, Camera> activeControl = new HashMap<>();
     
     /**
-     * Whether the static KeyListener has been set up or not.
+     * The map of the Scenes the Camera is viewing per perspective.
      */
-    private static AtomicBoolean hasSetupStaticKeyListener = new AtomicBoolean(false);
+    private static Map<UUID, Scene> scenes = new HashMap<>();
+    
+    /**
+     * The map of the dimensions of the viewport per perspective.
+     */
+    private static Map<UUID, Vector> viewports = new HashMap<>();
+    
+    /**
+     * The map of the dimensions of the screen per perspective.
+     */
+    private static Map<UUID, Vector> screenSizes = new HashMap<>();
+    
+    /**
+     * Whether the static KeyListener has been set up or not per perspective.
+     */
+    private static Map<UUID, AtomicBoolean> hasSetupStaticKeyListener = new HashMap<>();
     
     
     //Fields
@@ -133,6 +136,11 @@ public class Camera {
      * The Camera Object rendered in the Environment.
      */
     private objects.system.Camera cameraObject = new objects.system.Camera();
+    
+    /**
+     * The perspective of the Camera.
+     */
+    private UUID perspective;
     
     /**
      * The current phi location of the Camera in spherical coordinates.
@@ -192,7 +200,7 @@ public class Camera {
     /**
      * The perspective mode of the Camera.
      */
-    private Perspective perspective = Perspective.THIRD_PERSON;
+    private Perspective mode = Perspective.THIRD_PERSON;
     
     /**
      * The angle of view of the Camera.
@@ -254,22 +262,35 @@ public class Camera {
     
     /**
      * The constructor for a Camera.
+     *
+     * @param scene          The scene the Camera is viewing.
+     * @param perspective    The perspective for the Camera.
+     * @param viewport       The dimensions for the viewport for the Camera.
+     * @param screenSize     The dimensions for the screen size for the Camera.
+     * @param cameraControls A flag indicating whether or not to allow controls for the Camera.
+     * @param cameraMovement A flag indicating whether or not to allow movement for the Camera.
      */
-    public Camera(Scene scene, boolean cameraControls, boolean cameraMovement) {
+    public Camera(Scene scene, UUID perspective, Vector viewport, Vector screenSize, boolean cameraControls, boolean cameraMovement) {
         this.cameraId = nextCameraId;
         nextCameraId++;
-        cameraMap.put(cameraId, this);
+        cameraMap.putIfAbsent(perspective, new LinkedHashMap<>());
+        cameraMap.get(perspective).put(cameraId, this);
+        this.perspective = perspective;
         
-        Camera.scene = scene;
-        viewportX = Environment.sceneX / 1000.0;
-        viewportY = Environment.sceneY / 1000.0;
+        scenes.putIfAbsent(perspective, scene);
+        viewports.putIfAbsent(perspective, viewport);
+        screenSizes.putIfAbsent(perspective, screenSize);
         
         this.offset = new Vector(0, 0, 0);
         
-        calculateCamera();
+        calculateCamera(perspective);
         
-        if ((activeCameraView == -1) || (activeCameraControl == -1)) {
-            setActiveCamera(cameraId);
+        activeCameraView.putIfAbsent(perspective, -1);
+        activeCameraControl.putIfAbsent(perspective, -1);
+        activeView.putIfAbsent(perspective, null);
+        activeControl.putIfAbsent(perspective, null);
+        if ((activeCameraView.get(perspective) == -1) || (activeCameraControl.get(perspective) == -1)) {
+            setActiveCamera(perspective, cameraId);
         }
         scene.registerComponent(cameraObject);
         
@@ -277,17 +298,31 @@ public class Camera {
             setupKeyListener();
             setupMouseListener();
         }
+        
+        hasSetupStaticKeyListener.putIfAbsent(perspective, new AtomicBoolean(false));
         if (cameraControls) {
-            setupStaticKeyListener();
+            setupStaticKeyListener(perspective);
         }
         
         this.timer = new Timer();
         this.timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                calculateCamera();
+                calculateCamera(perspective);
             }
         }, 500 / Environment.fps, 1000 / Environment.fps);
+    }
+    
+    /**
+     * The constructor for a Camera.
+     *
+     * @param scene          The scene the Camera is viewing.
+     * @param perspective    The perspective for the Camera.
+     * @param cameraControls A flag indicating whether or not to allow controls for the Camera.
+     * @param cameraMovement A flag indicating whether or not to allow movement for the Camera.
+     */
+    public Camera(Scene scene, UUID perspective, boolean cameraControls, boolean cameraMovement) {
+        this(scene, perspective, new Vector(Environment.sceneX / 1000.0, Environment.sceneY / 1000.0), new Vector(Environment.screenX, Environment.screenY, Environment.screenZ), cameraControls, cameraMovement);
     }
     
     
@@ -295,8 +330,10 @@ public class Camera {
     
     /**
      * Calculates the Camera.
+     *
+     * @param perspective The perspective for the Camera.
      */
-    public void calculateCamera() {
+    public void calculateCamera(UUID perspective) {
         if (!updateRequired) {
             return;
         }
@@ -309,6 +346,7 @@ public class Camera {
             
             //cartesian camera location
             Vector cartesian = SphericalCoordinateUtility.sphericalToCartesian(phi, theta, rho);
+            Vector viewport = getViewport(perspective);
             
             
             //center of screen, m
@@ -325,8 +363,8 @@ public class Camera {
             
             
             //position camera behind screen a distance, h
-            double h = viewportX * Math.tan(Math.toRadians(90 - (angleOfView / 2))) / 2;
-            if (perspective == Perspective.FIRST_PERSON) {
+            double h = viewport.getX() * Math.tan(Math.toRadians(90 - (angleOfView / 2))) / 2;
+            if (mode == Perspective.FIRST_PERSON) {
                 c = m;
                 m = c.minus(n.scale(h));
             } else {
@@ -357,12 +395,12 @@ public class Camera {
             
             //calculate screen viewport
             s = new Rectangle(
-                    lx.scale(-viewportX / 2).plus(ly.scale(-viewportY / 2)).plus(m),
-                    lx.scale(viewportX / 2).plus(ly.scale(-viewportY / 2)).plus(m),
-                    lx.scale(viewportX / 2).plus(ly.scale(viewportY / 2)).plus(m),
-                    lx.scale(-viewportX / 2).plus(ly.scale(viewportY / 2)).plus(m));
+                    lx.scale(-viewport.getX() / 2).plus(ly.scale(-viewport.getY() / 2)).plus(m),
+                    lx.scale(viewport.getX() / 2).plus(ly.scale(-viewport.getY() / 2)).plus(m),
+                    lx.scale(viewport.getX() / 2).plus(ly.scale(viewport.getY() / 2)).plus(m),
+                    lx.scale(-viewport.getX() / 2).plus(ly.scale(viewport.getY() / 2)).plus(m));
             
-            if (perspective == Perspective.FIRST_PERSON) {
+            if (mode == Perspective.FIRST_PERSON) {
                 Vector tmp = s.getP1().clone();
                 s.setP1(s.getP3());
                 s.setP3(tmp);
@@ -384,9 +422,9 @@ public class Camera {
             
             
             //draw local coordinate system normals
-            cameraObject.screenNormal.setPoints(c.justify(), c.plus(n.scale(viewportX * 2 / 3)).justify());
-            cameraObject.screenXNormal.setPoints(c.justify(), c.plus(lx.scale(viewportX * 2 / 3)).justify());
-            cameraObject.screenYNormal.setPoints(c.justify(), c.minus(ly.scale(viewportX * 2 / 3)).justify());
+            cameraObject.screenNormal.setPoints(c.justify(), c.plus(n.scale(viewport.getX() * 2 / 3)).justify());
+            cameraObject.screenXNormal.setPoints(c.justify(), c.plus(lx.scale(viewport.getX() * 2 / 3)).justify());
+            cameraObject.screenYNormal.setPoints(c.justify(), c.minus(ly.scale(viewport.getX() * 2 / 3)).justify());
             
             
             //draw camera enclosure
@@ -397,10 +435,10 @@ public class Camera {
             
             //verify screen
             if (verifyViewport) {
-                if (Math.abs(viewportX - s.getP1().distance(s.getP2())) > Environment.OMEGA) {
+                if (Math.abs(viewport.getX() - s.getP1().distance(s.getP2())) > Environment.OMEGA) {
                     System.err.println("Camera: " + cameraId + " - Screen viewportX does not match the actual viewport width");
                 }
-                if (Math.abs(viewportY - s.getP1().distance(s.getP3())) > Environment.OMEGA) {
+                if (Math.abs(viewport.getY() - s.getP1().distance(s.getP3())) > Environment.OMEGA) {
                     System.err.println("Camera: " + cameraId + " - Screen viewportY does not match the actual viewport height");
                 }
             }
@@ -467,21 +505,21 @@ public class Camera {
      * Sets this Camera as the active camera.
      */
     public void setAsActiveCamera() {
-        setActiveCamera(cameraId);
+        setActiveCamera(perspective, cameraId);
     }
     
     /**
      * Sets this Camera as the active camera for viewing.
      */
     public void setAsActiveViewCamera() {
-        setActiveCameraView(cameraId);
+        setActiveCameraView(perspective, cameraId);
     }
     
     /**
      * Sets this Camera as the active camera for controls.
      */
     public void setAsActiveControlCamera() {
-        setActiveCameraControl(cameraId);
+        setActiveCameraControl(perspective, cameraId);
     }
     
     /**
@@ -491,7 +529,7 @@ public class Camera {
         timer.purge();
         timer.cancel();
         cameraObject.setVisible(false);
-        scene.unregisterComponent(cameraObject);
+        scenes.get(perspective).unregisterComponent(cameraObject);
         cameraMap.remove(cameraId);
     }
     
@@ -501,7 +539,7 @@ public class Camera {
     private void setupKeyListener() {
         final Set<Integer> pressed = new HashSet<>();
         
-        scene.environment.frame.addKeyListener(new KeyListener() {
+        scenes.get(perspective).environment.frame.addKeyListener(new KeyListener() {
             
             @Override
             public void keyTyped(KeyEvent e) {
@@ -509,7 +547,7 @@ public class Camera {
             
             @Override
             public void keyPressed(KeyEvent e) {
-                if (cameraId != activeCameraControl) {
+                if (cameraId != activeCameraControl.get(perspective)) {
                     return;
                 }
                 
@@ -520,7 +558,7 @@ public class Camera {
             
             @Override
             public void keyReleased(KeyEvent e) {
-                if (cameraId != activeCameraControl) {
+                if (cameraId != activeCameraControl.get(perspective)) {
                     return;
                 }
                 
@@ -535,7 +573,7 @@ public class Camera {
         keyListenerThread.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                if (cameraId != activeCameraControl) {
+                if (cameraId != activeCameraControl.get(perspective)) {
                     return;
                 }
                 
@@ -551,16 +589,16 @@ public class Camera {
                     for (Integer key : pressed) {
                         if (!panMode) {
                             if (key == KeyEvent.VK_W) {
-                                phi -= phiSpeed * perspective.getScale();
+                                phi -= phiSpeed * mode.getScale();
                             }
                             if (key == KeyEvent.VK_S) {
-                                phi += phiSpeed * perspective.getScale();
+                                phi += phiSpeed * mode.getScale();
                             }
                             if (key == KeyEvent.VK_A) {
-                                theta -= thetaSpeed * perspective.getScale();
+                                theta -= thetaSpeed * mode.getScale();
                             }
                             if (key == KeyEvent.VK_D) {
-                                theta += thetaSpeed * perspective.getScale();
+                                theta += thetaSpeed * mode.getScale();
                             }
                             if (key == KeyEvent.VK_Q) {
                                 rho -= rhoSpeed;
@@ -600,7 +638,7 @@ public class Camera {
         final Delta delta = new Delta();
         final AtomicInteger button = new AtomicInteger(0);
         
-        scene.environment.renderPanel.addMouseListener(new MouseListener() {
+        scenes.get(perspective).environment.renderPanel.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
             }
@@ -626,10 +664,10 @@ public class Camera {
             
         });
         
-        scene.environment.renderPanel.addMouseMotionListener(new MouseMotionListener() {
+        scenes.get(perspective).environment.renderPanel.addMouseMotionListener(new MouseMotionListener() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (cameraId != activeCameraControl) {
+                if (cameraId != activeCameraControl.get(perspective)) {
                     return;
                 }
                 
@@ -642,8 +680,8 @@ public class Camera {
                     double oldTheta = theta;
                     double oldPhi = phi;
                     
-                    theta -= (thetaSpeed / 4 * deltaX) / (perspective == Perspective.FIRST_PERSON ? 4 : 1);
-                    phi -= (phiSpeed / 4 * deltaY) / (perspective == Perspective.FIRST_PERSON ? 4 : 1);
+                    theta -= (thetaSpeed / 4 * deltaX) / (mode == Perspective.FIRST_PERSON ? 4 : 1);
+                    phi -= (phiSpeed / 4 * deltaY) / (mode == Perspective.FIRST_PERSON ? 4 : 1);
                     bindLocation();
                     
                     if (phi != oldPhi || theta != oldTheta) {
@@ -667,8 +705,8 @@ public class Camera {
             
         });
         
-        scene.environment.renderPanel.addMouseWheelListener(e -> {
-            if (cameraId != activeCameraControl) {
+        scenes.get(perspective).environment.renderPanel.addMouseWheelListener(e -> {
+            if (cameraId != activeCameraControl.get(perspective)) {
                 return;
             }
             
@@ -745,11 +783,11 @@ public class Camera {
             theta = (Math.PI * 2) + theta;
         }
         
-        if (perspective == Perspective.THIRD_PERSON) {
+        if (mode == Perspective.THIRD_PERSON) {
             if (rho < rhoSpeed) {
                 rho = rhoSpeed;
             }
-        } else if (perspective == Perspective.FIRST_PERSON) {
+        } else if (mode == Perspective.FIRST_PERSON) {
             rho = rhoBoundary;
         }
     }
@@ -780,8 +818,8 @@ public class Camera {
      *
      * @return The perspective mode of the Camera.
      */
-    public Perspective getPerspective() {
-        return perspective;
+    public Perspective getMode() {
+        return mode;
     }
     
     /**
@@ -928,14 +966,14 @@ public class Camera {
     /**
      * Sets the perspective mode of the Camera.
      *
-     * @param perspective The perspective mode of the Camera.
+     * @param mode The perspective mode of the Camera.
      */
-    public void setPerspective(Perspective perspective) {
-        this.perspective = perspective;
+    public void setMode(Perspective mode) {
+        this.mode = mode;
         
-        if (perspective == Perspective.THIRD_PERSON) {
+        if (mode == Perspective.THIRD_PERSON) {
             rho = switchRho;
-        } else if (perspective == Perspective.FIRST_PERSON) {
+        } else if (mode == Perspective.FIRST_PERSON) {
             switchRho = rho;
             rho = rhoBoundary;
         }
@@ -959,45 +997,48 @@ public class Camera {
     /**
      * Projects the Vectors to the active Camera view.
      *
-     * @param vs The list of Vectors to project.
+     * @param perspective The perspective to project the Vectors for.
+     * @param vs          The list of Vectors to project.
      */
-    public static void projectVectorsToCamera(List<Vector> vs) {
-        if (activeView == null) {
+    public static void projectVectorsToCamera(UUID perspective, List<Vector> vs) {
+        if (activeView.get(perspective) == null) {
             return;
         }
         
         for (int i = 0; i < vs.size(); i++) {
-            vs.set(i, activeView.projectVector(vs.get(i)));
+            vs.set(i, activeView.get(perspective).projectVector(vs.get(i)));
         }
     }
     
     /**
      * Collapses the Vectors to the viewport.
      *
-     * @param vs The list of Vector to be prepared for rendering.
+     * @param perspective The perspective to collapse the Vectors for.
+     * @param vs          The list of Vector to be prepared for rendering.
      */
-    public static void collapseVectorsToViewport(List<Vector> vs) {
-        if (activeView == null) {
+    public static void collapseVectorsToViewport(UUID perspective, List<Vector> vs) {
+        if (activeView.get(perspective) == null) {
             return;
         }
         
         for (int i = 0; i < vs.size(); i++) {
-            vs.set(i, activeView.collapseVector(vs.get(i)));
+            vs.set(i, activeView.get(perspective).collapseVector(vs.get(i)));
         }
     }
     
     /**
      * Determines if any Vectors are behind the Screen.
      *
-     * @param vs The list of Vectors.
+     * @param perspective The perspective to determine if any Vectors are behind the screen for.
+     * @param vs          The list of Vectors.
      * @return Whether any of the Vectors are behind the the Screen or not.
      */
-    public static boolean hasVectorBehindScreen(Vector[] vs) {
-        if (activeView == null) {
+    public static boolean hasVectorBehindScreen(UUID perspective, Vector[] vs) {
+        if (activeView.get(perspective) == null) {
             return false;
         }
-        Vector cm = activeView.m.justify();
-        Vector cc = activeView.c.justify();
+        Vector cm = activeView.get(perspective).m.justify();
+        Vector cc = activeView.get(perspective).c.justify();
         
         //ensure Vectors are not behind Camera
         boolean behind = false;
@@ -1016,15 +1057,17 @@ public class Camera {
     /**
      * Determines if any Vectors are visible on the Screen.
      *
-     * @param vs The list of Vectors.
+     * @param perspective The perspective to determine if any Vectors are visible on the screen for.
+     * @param vs          The list of Vectors.
      * @return Whether any of the Vectors are visible on the Screen or not.
      */
-    public static boolean hasVectorInView(List<Vector> vs) {
+    public static boolean hasVectorInView(UUID perspective, List<Vector> vs) {
+        Vector viewportDim = getViewport(perspective);
         //ensure Vectors are in field of view
         boolean inView = false;
         for (Vector v : vs) {
-            if ((v.getX() >= 0) && (v.getX() < viewportX) &&
-                    (v.getY() >= 0) && (v.getY() < viewportY)) {
+            if ((v.getX() >= 0) && (v.getX() < viewportDim.getX()) &&
+                    (v.getY() >= 0) && (v.getY() < viewportDim.getY())) {
                 inView = true;
                 break;
             }
@@ -1035,14 +1078,16 @@ public class Camera {
     /**
      * Scales the Vectors to the screen to be drawn.
      *
-     * @param vs The list of Vectors to scale.
+     * @param perspective The perspective to scale the Vectors to the screen for.
+     * @param vs          The list of Vectors to scale.
      */
-    public static void scaleVectorsToScreen(List<Vector> vs) {
-        Vector viewportDim = getActiveViewportDim();
+    public static void scaleVectorsToScreen(UUID perspective, List<Vector> vs) {
+        Vector screenDim = getScreenSize(perspective);
+        Vector viewportDim = getViewport(perspective);
         Vector scale = new Vector(
-                Environment.sceneX / viewportDim.getX(),
-                Environment.sceneY / viewportDim.getY(),
-                Environment.screenZ
+                screenDim.getX() / viewportDim.getX(),
+                screenDim.getY() / viewportDim.getY(),
+                screenDim.getZ()
         );
         
         for (int i = 0; i < vs.size(); i++) {
@@ -1053,81 +1098,135 @@ public class Camera {
     /**
      * Returns the active Camera for viewing.
      *
+     * @param perspective The perspective to get the active Camera view for.
      * @return The active Camera for viewing.
      */
-    public static Camera getActiveCameraView() {
-        return cameraMap.get(activeCameraView);
+    public static Camera getActiveCameraView(UUID perspective) {
+        if (cameraMap.containsKey(perspective) && activeCameraView.containsKey(perspective)) {
+            return cameraMap.get(perspective).get(activeCameraView.get(perspective));
+        }
+        return null;
     }
     
     /**
      * Returns the active Camera for control.
      *
+     * @param perspective The perspective to get the active Camera control for.
      * @return The active Camera for control.
      */
-    public static Camera getActiveCameraControl() {
-        return cameraMap.get(activeCameraControl);
+    public static Camera getActiveCameraControl(UUID perspective) {
+        if (cameraMap.containsKey(perspective) && activeCameraControl.containsKey(perspective)) {
+            return cameraMap.get(perspective).get(activeCameraControl.get(perspective));
+        }
+        return null;
     }
     
     /**
      * Sets the active Camera.
      *
-     * @param cameraId The id of the new active Camera.
+     * @param perspective The perspective to set the active Camera for.
+     * @param cameraId    The id of the new active Camera.
      */
-    public static void setActiveCamera(int cameraId) {
-        setActiveCameraView(cameraId);
-        setActiveCameraControl(cameraId);
+    public static void setActiveCamera(UUID perspective, int cameraId) {
+        setActiveCameraView(perspective, cameraId);
+        setActiveCameraControl(perspective, cameraId);
     }
     
     /**
      * Sets the active Camera for viewing.
      *
-     * @param cameraId The id of the new active Camera for viewing.
+     * @param perspective The perspective to set the active Camera view for.
+     * @param cameraId    The id of the new active Camera for viewing.
      */
-    public static void setActiveCameraView(int cameraId) {
-        if (cameraMap.containsKey(cameraId) && (cameraId != activeCameraView)) {
-            if (activeCameraView >= 0) {
-                cameraMap.get(activeCameraView).cameraObject.show();
-                cameraMap.get(activeCameraView).updateRequired = true;
+    public static void setActiveCameraView(UUID perspective, int cameraId) {
+        if (cameraMap.containsKey(perspective) && cameraMap.get(perspective).containsKey(cameraId) && (cameraId != activeCameraView.get(perspective))) {
+            if (activeCameraView.get(perspective) >= 0) {
+                cameraMap.get(perspective).get(activeCameraView.get(perspective)).cameraObject.show();
+                cameraMap.get(perspective).get(activeCameraView.get(perspective)).updateRequired = true;
             }
-            activeCameraView = cameraId;
-            cameraMap.get(activeCameraView).cameraObject.hide();
-            cameraMap.get(activeCameraView).updateRequired = true;
+            activeCameraView.put(perspective, cameraId);
+            cameraMap.get(perspective).get(activeCameraView.get(perspective)).cameraObject.hide();
+            cameraMap.get(perspective).get(activeCameraView.get(perspective)).updateRequired = true;
             
-            activeView = cameraMap.get(activeCameraView);
+            activeView.put(perspective, cameraMap.get(perspective).get(activeCameraView.get(perspective)));
         }
     }
     
     /**
      * Sets the active Camera for control.
      *
-     * @param cameraId The id of the new active Camera for control.
+     * @param perspective The perspective to set the active Camera control for.
+     * @param cameraId    The id of the new active Camera for control.
      */
-    public static void setActiveCameraControl(int cameraId) {
-        if (cameraMap.containsKey(cameraId) && (cameraId != activeCameraControl)) {
-            activeCameraControl = cameraId;
+    public static void setActiveCameraControl(UUID perspective, int cameraId) {
+        if (cameraMap.containsKey(perspective) && cameraMap.get(perspective).containsKey(cameraId) && (cameraId != activeCameraControl.get(perspective))) {
+            activeCameraControl.put(perspective, cameraId);
             
-            activeControl = cameraMap.get(activeCameraControl);
+            activeControl.put(perspective, cameraMap.get(perspective).get(activeCameraControl));
         }
     }
     
     /**
-     * Returns the viewport dimensions of the active Camera.
+     * Returns the viewport.
      *
-     * @return The viewport dimensions of the active Camera.
+     * @param perspective The perspective to get the viewport for.
+     * @return The viewport.
      */
-    public static Vector getActiveViewportDim() {
-        return new Vector(viewportX, viewportY);
+    public static Vector getViewport(UUID perspective) {
+        if (viewports.containsKey(perspective)) {
+            return viewports.get(perspective);
+        }
+        return new Vector(0, 0);
+    }
+    
+    /**
+     * Returns the screen size.
+     *
+     * @param perspective The perspective to get the screen size for.
+     * @return The screen size.
+     */
+    public static Vector getScreenSize(UUID perspective) {
+        if (screenSizes.containsKey(perspective)) {
+            return screenSizes.get(perspective);
+        }
+        return new Vector(0, 0, 0);
+    }
+    
+    /**
+     * Sets the viewport dimensions for a perspective.
+     *
+     * @param perspective The perspective to set the viewport dimensions for.
+     * @param viewport    The viewport dimensions.
+     */
+    public static void setViewport(UUID perspective, Vector viewport) {
+        if (viewports.containsKey(perspective)) {
+            viewports.put(perspective, viewport);
+        }
+    }
+    
+    /**
+     * Sets the screen dimensions for a perspective.
+     *
+     * @param perspective The perspective to set the screen dimensions for.
+     * @param screenSize  The screen dimensions.
+     */
+    public static void setScreenSize(UUID perspective, Vector screenSize) {
+        if (screenSizes.containsKey(perspective)) {
+            screenSizes.put(perspective, screenSize);
+        }
     }
     
     /**
      * Adds the static KeyListener for the Camera system controls.
+     *
+     * @param perspective The perspective to set the static KeyListener for.
      */
-    private static void setupStaticKeyListener() {
-        if (!hasSetupStaticKeyListener.compareAndSet(false, true)) {
+    private static void setupStaticKeyListener(UUID perspective) {
+        if (!hasSetupStaticKeyListener.get(perspective).compareAndSet(false, true)) {
             return;
         }
         
-        scene.environment.frame.addKeyListener(new KeyListener() {
+        scenes.get(perspective).environment.frame.addKeyListener(new KeyListener() {
             
             @Override
             public void keyTyped(KeyEvent e) {
@@ -1137,43 +1236,53 @@ public class Camera {
             public void keyPressed(KeyEvent e) {
                 int key = e.getKeyCode();
                 
-                if (key == KeyEvent.VK_1 || key == KeyEvent.VK_NUMPAD1) {
-                    setActiveCamera(0);
-                }
-                if (key == KeyEvent.VK_2 || key == KeyEvent.VK_NUMPAD2) {
-                    setActiveCamera(1);
-                }
-                if (key == KeyEvent.VK_3 || key == KeyEvent.VK_NUMPAD3) {
-                    setActiveCamera(2);
-                }
-                if (key == KeyEvent.VK_4 || key == KeyEvent.VK_NUMPAD4) {
-                    setActiveCameraView(0);
-                }
-                if (key == KeyEvent.VK_5 || key == KeyEvent.VK_NUMPAD5) {
-                    setActiveCameraView(1);
-                }
-                if (key == KeyEvent.VK_6 || key == KeyEvent.VK_NUMPAD6) {
-                    setActiveCameraView(2);
-                }
-                if (key == KeyEvent.VK_7 || key == KeyEvent.VK_NUMPAD7) {
-                    setActiveCameraControl(0);
-                }
-                if (key == KeyEvent.VK_8 || key == KeyEvent.VK_NUMPAD8) {
-                    setActiveCameraControl(1);
-                }
-                if (key == KeyEvent.VK_9 || key == KeyEvent.VK_NUMPAD9) {
-                    setActiveCameraControl(2);
+                if ((key >= KeyEvent.VK_1 && key <= KeyEvent.VK_9) || (key >= KeyEvent.VK_NUMPAD1 && key <= KeyEvent.VK_NUMPAD9)) {
+                    List<Camera> cs = Arrays.asList(cameraMap.get(perspective).values().toArray(new Camera[] {}));
+                    
+                    if (cs.size() > 0) {
+                        if (key == KeyEvent.VK_1 || key == KeyEvent.VK_NUMPAD1) {
+                            setActiveCamera(perspective, cs.get(0).cameraId);
+                        }
+                        if (key == KeyEvent.VK_4 || key == KeyEvent.VK_NUMPAD4) {
+                            setActiveCameraView(perspective, cs.get(0).cameraId);
+                        }
+                        if (key == KeyEvent.VK_7 || key == KeyEvent.VK_NUMPAD7) {
+                            setActiveCameraControl(perspective, cs.get(0).cameraId);
+                        }
+                    }
+                    if (cs.size() > 1) {
+                        if (key == KeyEvent.VK_2 || key == KeyEvent.VK_NUMPAD2) {
+                            setActiveCamera(perspective, cs.get(1).cameraId);
+                        }
+                        if (key == KeyEvent.VK_5 || key == KeyEvent.VK_NUMPAD5) {
+                            setActiveCameraView(perspective, cs.get(1).cameraId);
+                        }
+                        if (key == KeyEvent.VK_8 || key == KeyEvent.VK_NUMPAD8) {
+                            setActiveCameraControl(perspective, cs.get(1).cameraId);
+                        }
+                    }
+                    if (cs.size() > 2) {
+                        if (key == KeyEvent.VK_3 || key == KeyEvent.VK_NUMPAD3) {
+                            setActiveCamera(perspective, cs.get(2).cameraId);
+                        }
+                        if (key == KeyEvent.VK_6 || key == KeyEvent.VK_NUMPAD6) {
+                            setActiveCameraView(perspective, cs.get(2).cameraId);
+                        }
+                        if (key == KeyEvent.VK_9 || key == KeyEvent.VK_NUMPAD9) {
+                            setActiveCameraControl(perspective, cs.get(2).cameraId);
+                        }
+                    }
                 }
                 
                 if (key == KeyEvent.VK_E) {
-                    if (activeControl == null) {
+                    if (activeControl.get(perspective) == null) {
                         return;
                     }
                     
-                    if (activeControl.perspective == Perspective.THIRD_PERSON) {
-                        activeControl.setPerspective(Perspective.FIRST_PERSON);
-                    } else if (activeControl.perspective == Perspective.FIRST_PERSON) {
-                        activeControl.setPerspective(Perspective.THIRD_PERSON);
+                    if (activeControl.get(perspective).getMode() == Perspective.THIRD_PERSON) {
+                        activeControl.get(perspective).setMode(Perspective.FIRST_PERSON);
+                    } else if (activeControl.get(perspective).getMode() == Perspective.FIRST_PERSON) {
+                        activeControl.get(perspective).setMode(Perspective.THIRD_PERSON);
                     }
                 }
             }

@@ -194,7 +194,7 @@ public class RubiksCube extends Scene {
      */
     @Override
     public void setupCameras() {
-        Camera camera = new Camera(this, false, false);
+        Camera camera = new Camera(this, environment.perspective, false, false);
         camera.setLocation(5 * Math.PI / 12, 4 * Math.PI / 3, 15);
     }
     

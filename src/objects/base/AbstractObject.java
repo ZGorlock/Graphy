@@ -296,7 +296,7 @@ public abstract class AbstractObject implements ObjectInterface {
      * @param offset The relative offsets to move the Object.
      */
     @Override
-    public void move(Vector offset) {
+    public synchronized void move(Vector offset) {
         center = center.plus(offset);
     }
     
@@ -306,7 +306,7 @@ public abstract class AbstractObject implements ObjectInterface {
      * @param offset The relative offsets to rotate the Object.
      */
     @Override
-    public void rotate(Vector offset) {
+    public synchronized void rotate(Vector offset) {
         setRotation(rotation.plus(offset));
     }
     
@@ -855,7 +855,7 @@ public abstract class AbstractObject implements ObjectInterface {
     /**
      * Updates the rotation matrix for the Object.
      */
-    public void updateRotationMatrix() {
+    public synchronized void updateRotationMatrix() {
         rotationMatrix = RotationUtility.getRotationMatrix(getRotationRoll(), getRotationPitch(), getRotationYaw());
     }
     
@@ -864,7 +864,7 @@ public abstract class AbstractObject implements ObjectInterface {
      *
      * @param vs The list of Vectors to transform.
      */
-    public void performRotationTransformation(List<Vector> vs) {
+    public synchronized void performRotationTransformation(List<Vector> vs) {
         if (rotationMatrix == null) {
             return;
         }
@@ -1116,7 +1116,7 @@ public abstract class AbstractObject implements ObjectInterface {
      * @param rotation The angles that define the rotation of the Object.
      */
     @Override
-    public void setRotationWithoutUpdate(Vector rotation) {
+    public synchronized void setRotationWithoutUpdate(Vector rotation) {
         setRotationRollWithoutUpdate(rotation.getX());
         setRotationPitchWithoutUpdate(rotation.getY());
         setRotationYawWithoutUpdate(rotation.getZ());
@@ -1128,7 +1128,7 @@ public abstract class AbstractObject implements ObjectInterface {
      * @param rotation The angles that define the rotation of the Object.
      */
     @Override
-    public void setRotation(Vector rotation) {
+    public synchronized void setRotation(Vector rotation) {
         setRotationWithoutUpdate(rotation);
         updateRotationMatrix();
     }
@@ -1139,7 +1139,7 @@ public abstract class AbstractObject implements ObjectInterface {
      * @param rotationMatrix The transformation Matrix that defines the rotation of the Object.
      */
     @Override
-    public void setRotationMatrix(Matrix3 rotationMatrix) {
+    public synchronized void setRotationMatrix(Matrix3 rotationMatrix) {
         this.rotationMatrix = rotationMatrix;
     }
     
@@ -1148,7 +1148,7 @@ public abstract class AbstractObject implements ObjectInterface {
      *
      * @param roll The angle that defines the roll rotation of the Object.
      */
-    public void setRotationRollWithoutUpdate(double roll) {
+    public synchronized void setRotationRollWithoutUpdate(double roll) {
         roll %= (Math.PI * 2);
         rotation.set(0, roll);
     }
@@ -1158,7 +1158,7 @@ public abstract class AbstractObject implements ObjectInterface {
      *
      * @param pitch The angle that defines the pitch rotation of the Object.
      */
-    public void setRotationPitchWithoutUpdate(double pitch) {
+    public synchronized void setRotationPitchWithoutUpdate(double pitch) {
         pitch %= (Math.PI * 2);
         rotation.set(1, pitch);
     }
@@ -1168,7 +1168,7 @@ public abstract class AbstractObject implements ObjectInterface {
      *
      * @param yaw The angle that defines the yaw rotation of the Object.
      */
-    public void setRotationYawWithoutUpdate(double yaw) {
+    public synchronized void setRotationYawWithoutUpdate(double yaw) {
         yaw %= (Math.PI * 2);
         rotation.set(2, yaw);
     }
@@ -1178,7 +1178,7 @@ public abstract class AbstractObject implements ObjectInterface {
      *
      * @param roll The angle that defines the roll rotation of the Object.
      */
-    public void setRotationRoll(double roll) {
+    public synchronized void setRotationRoll(double roll) {
         setRotationRollWithoutUpdate(roll);
         updateRotationMatrix();
     }
@@ -1188,7 +1188,7 @@ public abstract class AbstractObject implements ObjectInterface {
      *
      * @param pitch The angle that defines the pitch rotation of the Object.
      */
-    public void setRotationPitch(double pitch) {
+    public synchronized void setRotationPitch(double pitch) {
         setRotationPitchWithoutUpdate(pitch);
         updateRotationMatrix();
     }
@@ -1198,7 +1198,7 @@ public abstract class AbstractObject implements ObjectInterface {
      *
      * @param yaw The angle that defines the yaw rotation of the Object.
      */
-    public void setRotationYaw(double yaw) {
+    public synchronized void setRotationYaw(double yaw) {
         setRotationYawWithoutUpdate(yaw);
         updateRotationMatrix();
     }

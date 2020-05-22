@@ -133,7 +133,7 @@ public class RotationGroup extends Object {
      * @param offset The relative offsets to rotate the Object.
      */
     @Override
-    public void rotateAndTransform(Vector offset) {
+    public synchronized void rotateAndTransform(Vector offset) {
         rotateAndTransform(offset, getCenter());
     }
     

@@ -120,7 +120,7 @@ public class Object extends AbstractObject {
      * @param offset The relative offsets to move the Object.
      */
     @Override
-    public void move(Vector offset) {
+    public synchronized void move(Vector offset) {
         super.move(offset);
         
         for (ObjectInterface component : components) {
@@ -133,7 +133,7 @@ public class Object extends AbstractObject {
      *
      * @param center The new center of the Object.
      */
-    public void reposition(Vector center) {
+    public synchronized void reposition(Vector center) {
         if (this.center.equals(center)) {
             return;
         }
@@ -148,7 +148,7 @@ public class Object extends AbstractObject {
      * @param offset The relative offsets to rotate the Object.
      */
     @Override
-    public void rotateAndTransform(Vector offset) {
+    public synchronized void rotateAndTransform(Vector offset) {
         rotateAndTransform(offset, getRootCenter());
     }
     
@@ -159,7 +159,7 @@ public class Object extends AbstractObject {
      * @param center The center to rotate the Object about.
      */
     @Override
-    public void rotateAndTransform(Vector offset, Vector center) {
+    public synchronized void rotateAndTransform(Vector offset, Vector center) {
         for (ObjectInterface component : components) {
             component.rotateAndTransform(offset, center);
         }
@@ -211,7 +211,7 @@ public class Object extends AbstractObject {
      * Updates the rotation matrix for the Object.
      */
     @Override
-    public void updateRotationMatrix() {
+    public synchronized void updateRotationMatrix() {
         super.updateRotationMatrix();
         
         for (ObjectInterface component : components) {
@@ -428,7 +428,7 @@ public class Object extends AbstractObject {
      *
      * @param rotation The angles that define the rotation of the Object.
      */
-    public void setRotation(Vector rotation) {
+    public synchronized void setRotation(Vector rotation) {
         super.setRotation(rotation);
         
         for (ObjectInterface component : components) {

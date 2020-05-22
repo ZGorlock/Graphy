@@ -123,7 +123,7 @@ public abstract class BaseObject extends AbstractObject {
      * @param offset The relative offsets to move the Object.
      */
     @Override
-    public void move(Vector offset) {
+    public synchronized void move(Vector offset) {
         super.move(offset);
         
         for (int i = 0; i < vertices.length; i++) {
@@ -137,7 +137,7 @@ public abstract class BaseObject extends AbstractObject {
      * @param offset The relative offsets to rotate the Object.
      */
     @Override
-    public void rotateAndTransform(Vector offset) {
+    public synchronized void rotateAndTransform(Vector offset) {
         rotateAndTransform(offset, getRootCenter());
     }
     
@@ -148,7 +148,7 @@ public abstract class BaseObject extends AbstractObject {
      * @param center The center to rotate the Object about.
      */
     @Override
-    public void rotateAndTransform(Vector offset, Vector center) {
+    public synchronized void rotateAndTransform(Vector offset, Vector center) {
         Matrix3 rotationTransformationMatrix = RotationUtility.getRotationMatrix(offset.getX(), offset.getY(), offset.getZ());
         
         for (int i = 0; i < vertices.length; i++) {

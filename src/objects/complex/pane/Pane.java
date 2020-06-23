@@ -18,6 +18,7 @@ import java.util.UUID;
 import main.Environment;
 import math.matrix.Matrix3;
 import math.vector.Vector;
+import math.vector.Vector3;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
 import objects.base.polygon.Rectangle;
@@ -42,6 +43,11 @@ public abstract class Pane extends BaseObject {
      * The bounds of the Pane.
      */
     public Rectangle bounds;
+    
+    /**
+     * The unit normal vector of the Pane.
+     */
+    public Vector normal;
     
     /**
      * The image of the Pane.
@@ -132,6 +138,8 @@ public abstract class Pane extends BaseObject {
      */
     @Override
     public void render(Graphics2D g2, UUID perspective) {
+        normal = new Vector3(bounds.getP2().minus(bounds.getP1())).cross(new Vector3(bounds.getP4().minus(bounds.getP1()))).normalize();
+        
         g2.setColor(getColor());
         switch (displayMode) {
             case VERTEX:

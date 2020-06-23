@@ -1,5 +1,5 @@
 /*
- * File:    PictureFrame.java
+ * File:    MirrorDemo.java
  * Package: main.scenes
  * Author:  Zachary Gill
  */
@@ -7,51 +7,42 @@
 package main.scenes;
 
 import java.awt.Color;
-import java.io.File;
 
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
 import objects.base.Scene;
 import objects.base.polygon.Rectangle;
+import objects.complex.pane.MirrorPane;
 import objects.complex.pane.Pane;
-import objects.complex.pane.PicturePane;
 import objects.system.Axes;
 
 /**
- * Defines a Picture Frame scene.
+ * Defines an Mirror Demo scene.
  */
-public class PictureFrame extends Scene {
-    
-    //Static Fields
-    
-    /**
-     * The picture to display on the Picture Frame.
-     */
-    public static File picture = new File("resource/tree.jpg");
-    
+public class MirrorDemo extends Scene {
     
     //Main Method
     
     /**
-     * The main method for the Picture Frame scene.
+     * The main method for the Mirror Demo scene.
      *
      * @param args The arguments to the main method.
      * @throws Exception When the Scene class cannot be constructed.
      */
     public static void main(String[] args) throws Exception {
-        runScene(PictureFrame.class);
+        runScene(MirrorDemo.class);
     }
     
     
     //Constructors
     
     /**
-     * Constructor for the Picture Frame scene.
+     * Constructor for the Mirror Demo scene.
      *
-     * @param environment The Environment to render the Picture Frame in.
+     * @param environment The Environment to render the Mirror Demo in.
      */
-    public PictureFrame(Environment environment) {
+    public MirrorDemo(Environment environment) {
         super(environment);
     }
     
@@ -59,36 +50,36 @@ public class PictureFrame extends Scene {
     //Methods
     
     /**
-     * Calculates the components that compose the Picture Frame.
+     * Calculates the components that compose the Mirror Demo.
      */
     @Override
     public void calculate() {
         Rectangle bounds = new Rectangle(new Vector(-2, 0, 3), new Vector(2, 0, 3), new Vector(2, 0, -3), new Vector(-2, 0, -3));
-        Pane pictureFrame = new PicturePane(null, Color.BLACK, bounds, picture);
-//        pictureFrame.addRotationAnimation(Math.PI / 2, Math.PI / 2, Math.PI / 2);
+        Pane mirror = new MirrorPane(null, Color.BLACK, bounds, environment.perspective);
+//        mirror.setVisible(false);
         
-        registerComponent(pictureFrame);
+        registerComponent(mirror);
         registerComponent(new Axes(5));
     }
     
     /**
-     * Sets up components for the Picture Frame scene.
+     * Sets up components for the Mirror Demo scene.
      */
     @Override
     public void initComponents() {
     }
     
     /**
-     * Sets up cameras for the Picture Frame scene.
+     * Sets up cameras for the Mirror Demo scene.
      */
     @Override
     public void setupCameras() {
         Camera camera = new Camera(this, environment.perspective, true, true);
-        camera.setLocation(Math.PI / 2, Math.PI / 2, 30);
+        camera.setLocation(Math.PI / 2, Math.PI / 2, 10);
     }
     
     /**
-     * Sets up controls for the Picture Frame scene.
+     * Sets up controls for the Mirror Demo scene.
      */
     @Override
     public void setupControls() {

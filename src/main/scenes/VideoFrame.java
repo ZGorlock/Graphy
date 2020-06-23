@@ -12,7 +12,6 @@ import java.io.File;
 import camera.Camera;
 import main.Environment;
 import math.vector.Vector;
-import objects.base.Object;
 import objects.base.Scene;
 import objects.base.polygon.Rectangle;
 import objects.complex.pane.Pane;
@@ -64,13 +63,11 @@ public class VideoFrame extends Scene {
      */
     @Override
     public void calculate() {
-        Object drawing = new Object(Color.BLACK);
         Rectangle bounds = new Rectangle(new Vector(-3, 0, 2), new Vector(3, 0, 2), new Vector(3, 0, -2), new Vector(-3, 0, -2));
-        Pane pane = new VideoPane(null, Color.BLACK, bounds, frameDirectory, 20, true, true);
-        drawing.registerComponent(pane);
-//        drawing.addRotationAnimation(Math.PI / 2, Math.PI / 2, Math.PI / 2);
+        Pane videoFrame = new VideoPane(null, Color.BLACK, bounds, frameDirectory, 20, true, true);
+//        videoFrame.addRotationAnimation(Math.PI / 2, Math.PI / 2, Math.PI / 2);
         
-        registerComponent(drawing);
+        registerComponent(videoFrame);
         registerComponent(new Axes(5));
     }
     

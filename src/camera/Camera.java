@@ -7,12 +7,15 @@
 package camera;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -29,6 +32,8 @@ import main.Environment;
 import math.Delta;
 import math.vector.Vector;
 import math.vector.Vector3;
+import objects.base.BaseObject;
+import objects.base.ObjectInterface;
 import objects.base.Scene;
 import objects.base.polygon.Rectangle;
 import utility.SphericalCoordinateUtility;
@@ -292,7 +297,9 @@ public class Camera {
         if ((activeCameraView.get(perspective) == -1) || (activeCameraControl.get(perspective) == -1)) {
             setActiveCamera(perspective, cameraId);
         }
-        scene.registerComponent(cameraObject);
+        if (scenes.get(perspective) != null) {
+            scenes.get(perspective).registerComponent(cameraObject);
+        }
         
         if (cameraMovement) {
             setupKeyListener();
@@ -451,6 +458,40 @@ public class Camera {
     }
     
     /**
+     * Renders the Scene through the Camera.
+     *
+     * @param g2 The 2D Graphics entity.
+     */
+    public void render(Graphics2D g2) {
+        synchronized (inUpdate) {
+            Scene scene = scenes.get(perspective);
+            if (scene == null) {
+                return;
+            }
+            
+            List<BaseObject> preparedBases = new ArrayList<>();
+            try {
+                for (ObjectInterface object : scene.getComponents()) {
+                    preparedBases.addAll(object.doPrepare(perspective));
+                }
+            } catch (ConcurrentModificationException ignored) {
+                return;
+            }
+            
+            preparedBases.sort((o1, o2) -> Double.compare(o2.getRenderDistance(), o1.getRenderDistance()));
+            
+            if (scene.environment.background != null) {
+                g2.setColor(scene.environment.background);
+                g2.fillRect(0, 0, scene.environment.frame.getWidth(), scene.environment.frame.getHeight());
+            }
+            
+            for (BaseObject preparedBase : preparedBases) {
+                preparedBase.doRender(g2, perspective);
+            }
+        }
+    }
+    
+    /**
      * Projects a Vector to the viewport of the Camera.
      *
      * @param v The Vector to project.
@@ -529,8 +570,19 @@ public class Camera {
         timer.purge();
         timer.cancel();
         cameraObject.setVisible(false);
-        scenes.get(perspective).unregisterComponent(cameraObject);
+        if (scenes.get(perspective) != null) {
+            scenes.get(perspective).unregisterComponent(cameraObject);
+        }
         cameraMap.remove(cameraId);
+    }
+    
+    /**
+     * Sets the visibility of the Camera.
+     *
+     * @param visible The new visibility of the Camera.
+     */
+    public void setVisible(boolean visible) {
+        cameraObject.setVisible(visible);
     }
     
     /**
@@ -539,35 +591,37 @@ public class Camera {
     private void setupKeyListener() {
         final Set<Integer> pressed = new HashSet<>();
         
-        scenes.get(perspective).environment.frame.addKeyListener(new KeyListener() {
-            
-            @Override
-            public void keyTyped(KeyEvent e) {
-            }
-            
-            @Override
-            public void keyPressed(KeyEvent e) {
-                if (cameraId != activeCameraControl.get(perspective)) {
-                    return;
+        if (scenes.get(perspective) != null) {
+            scenes.get(perspective).environment.frame.addKeyListener(new KeyListener() {
+                
+                @Override
+                public void keyTyped(KeyEvent e) {
                 }
                 
-                synchronized (pressed) {
-                    pressed.add(e.getKeyCode());
-                }
-            }
-            
-            @Override
-            public void keyReleased(KeyEvent e) {
-                if (cameraId != activeCameraControl.get(perspective)) {
-                    return;
+                @Override
+                public void keyPressed(KeyEvent e) {
+                    if (cameraId != activeCameraControl.get(perspective)) {
+                        return;
+                    }
+                    
+                    synchronized (pressed) {
+                        pressed.add(e.getKeyCode());
+                    }
                 }
                 
-                synchronized (pressed) {
-                    pressed.remove(e.getKeyCode());
+                @Override
+                public void keyReleased(KeyEvent e) {
+                    if (cameraId != activeCameraControl.get(perspective)) {
+                        return;
+                    }
+                    
+                    synchronized (pressed) {
+                        pressed.remove(e.getKeyCode());
+                    }
                 }
-            }
-            
-        });
+                
+            });
+        }
         
         Timer keyListenerThread = new Timer();
         keyListenerThread.scheduleAtFixedRate(new TimerTask() {
@@ -637,6 +691,10 @@ public class Camera {
     private void setupMouseListener() {
         final Delta delta = new Delta();
         final AtomicInteger button = new AtomicInteger(0);
+        
+        if (scenes.get(perspective) == null) {
+            return;
+        }
         
         scenes.get(perspective).environment.renderPanel.addMouseListener(new MouseListener() {
             @Override
@@ -860,6 +918,15 @@ public class Camera {
     }
     
     /**
+     * Sets the location of the Camera.
+     *
+     * @param location The location of the Camera in spherical coordinates.
+     */
+    public void setLocation(Vector location) {
+        setLocation(location.getX(), location.getY(), location.getZ());
+    }
+    
+    /**
      * Sets the phi location of the Camera.
      *
      * @param phi The new phi angle of the Camera.
@@ -993,6 +1060,20 @@ public class Camera {
     
     
     //Functions
+    
+    /**
+     * Renders the Scene with the active Camera for that Scene.
+     *
+     * @param perspective The perspective to render the Scene for.
+     * @param g2          The 2D Graphics entity.
+     */
+    public static void doRender(UUID perspective, Graphics2D g2) {
+        if (activeView.get(perspective) == null) {
+            return;
+        }
+        
+        activeView.get(perspective).render(g2);
+    }
     
     /**
      * Projects the Vectors to the active Camera view.
@@ -1223,6 +1304,10 @@ public class Camera {
      */
     private static void setupStaticKeyListener(UUID perspective) {
         if (!hasSetupStaticKeyListener.get(perspective).compareAndSet(false, true)) {
+            return;
+        }
+        
+        if (scenes.get(perspective) == null) {
             return;
         }
         

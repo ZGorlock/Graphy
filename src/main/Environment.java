@@ -14,7 +14,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -27,7 +26,6 @@ import javax.swing.WindowConstants;
 import camera.Camera;
 import math.vector.Vector;
 import objects.base.AbstractObject;
-import objects.base.BaseObject;
 import objects.base.ObjectInterface;
 import objects.base.Scene;
 import utility.ScreenUtility;
@@ -181,35 +179,9 @@ public class Environment {
         renderPanel = new JPanel() {
             
             public void paintComponent(Graphics g) {
-                
-                Camera camera = Camera.getActiveCameraView(perspective);
-                if (camera == null) {
-                    return;
-                }
-                
-                synchronized (camera.inUpdate) {
-                    List<BaseObject> preparedBases = new ArrayList<>();
-                    try {
-                        for (ObjectInterface object : objects) {
-                            preparedBases.addAll(object.doPrepare(perspective));
-                        }
-                    } catch (ConcurrentModificationException ignored) {
-                        return;
-                    }
-                    
-                    preparedBases.sort((o1, o2) -> Double.compare(o2.getRenderDistance(), o1.getRenderDistance()));
-                    
-                    Graphics2D g2 = (Graphics2D) g;
-                    if (background != null) {
-                        g2.setColor(background);
-                        g2.fillRect(0, 0, getWidth(), getHeight());
-                    }
-                    
-                    for (BaseObject preparedBase : preparedBases) {
-                        preparedBase.doRender(g2, perspective);
-                    }
-                }
+                Camera.doRender(perspective, (Graphics2D) g);
             }
+            
         };
         frame.getContentPane().add(renderPanel);
         

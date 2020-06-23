@@ -221,7 +221,7 @@ public interface ObjectInterface {
     /**
      * Sets the center point of the Object.
      *
-     * @param center The nwe center point of the Object.
+     * @param center The new center point of the Object.
      */
     void setCenter(Vector center);
     

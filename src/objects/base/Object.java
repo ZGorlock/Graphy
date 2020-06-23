@@ -398,7 +398,7 @@ public class Object extends AbstractObject {
     /**
      * Sets the center point of the Object.
      *
-     * @param center The nwe center point of the Object.
+     * @param center The new center point of the Object.
      */
     @Override
     public void setCenter(Vector center) {

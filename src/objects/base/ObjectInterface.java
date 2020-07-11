@@ -24,9 +24,10 @@ public interface ObjectInterface {
     /**
      * Performs pre-preparing steps on the Object.
      *
+     * @param perspective The perspective to pre-prepare the Object for.
      * @return Whether or not the Object should continue preparing.
      */
-    boolean prePrepare();
+    boolean prePrepare(UUID perspective);
     
     /**
      * Prepares the Object to be rendered.
@@ -71,16 +72,18 @@ public interface ObjectInterface {
     /**
      * Performs post-rendering steps on the Object.
      *
-     * @param g2 The 2D Graphics entity.
+     * @param perspective The perspective to post-render the Object for.
+     * @param g2          The 2D Graphics entity.
      */
-    void postRender(Graphics2D g2);
+    void postRender(Graphics2D g2, UUID perspective);
     
     /**
      * Draws the frame for the Object.
      *
-     * @param g2 The 2D Graphics entity.
+     * @param perspective The perspective to render the frame for.
+     * @param g2          The 2D Graphics entity.
      */
-    void renderFrame(Graphics2D g2);
+    void renderFrame(Graphics2D g2, UUID perspective);
     
     /**
      * Performs the rendering for the Object on the screen.

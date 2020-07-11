@@ -87,8 +87,8 @@ public class ImageSquare extends Square {
     public void render(Graphics2D g2, UUID perspective) {
         super.render(g2, perspective);
         if (image != null) {
-            g2.drawImage(image, (int) prepared.get(0).getX(), (int) prepared.get(0).getY(),
-                    Math.abs((int) (prepared.get(1).getX() - prepared.get(0).getX())), Math.abs((int) (prepared.get(3).getY() - prepared.get(0).getY())), null);
+            g2.drawImage(image, (int) prepared.get(perspective).get(0).getX(), (int) prepared.get(perspective).get(0).getY(),
+                    Math.abs((int) (prepared.get(perspective).get(1).getX() - prepared.get(perspective).get(0).getX())), Math.abs((int) (prepared.get(perspective).get(3).getY() - prepared.get(perspective).get(0).getY())), null);
         }
     }
     

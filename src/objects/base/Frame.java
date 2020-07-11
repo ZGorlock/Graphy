@@ -77,19 +77,20 @@ public class Frame extends Object {
      * Renders the Object on the screen.
      *
      * @param g2 The 2D Graphics entity.
+     * @param vs The list of vectors of the Object that owns the frame.
      */
-    public void render(Graphics2D g2, List<Vector> prepared) {
+    public void render(Graphics2D g2, List<Vector> vs) {
         if (!visible || base.displayMode == DisplayMode.VERTEX) {
             return;
         }
         
         g2.setColor(color);
         
-        if (prepared.size() > 1) {
-            for (int i = 1; i < prepared.size(); i++) {
-                g2.drawLine((int) prepared.get(i - 1).getX(), (int) prepared.get(i - 1).getY(), (int) prepared.get(i).getX(), (int) prepared.get(i).getY());
-                if (i == prepared.size() - 1 && i > 1) {
-                    g2.drawLine((int) prepared.get(i).getX(), (int) prepared.get(i).getY(), (int) prepared.get(0).getX(), (int) prepared.get(0).getY());
+        if (vs.size() > 1) {
+            for (int i = 1; i < vs.size(); i++) {
+                g2.drawLine((int) vs.get(i - 1).getX(), (int) vs.get(i - 1).getY(), (int) vs.get(i).getX(), (int) vs.get(i).getY());
+                if (i == vs.size() - 1 && i > 1) {
+                    g2.drawLine((int) vs.get(i).getX(), (int) vs.get(i).getY(), (int) vs.get(0).getX(), (int) vs.get(0).getY());
                 }
             }
         }

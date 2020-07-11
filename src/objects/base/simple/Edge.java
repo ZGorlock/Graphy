@@ -80,11 +80,11 @@ public class Edge extends BaseObject {
     public List<BaseObject> prepare(UUID perspective) {
         List<BaseObject> preparedBases = new ArrayList<>();
         
-        prepared.clear();
-        prepared.add(vertices[0].clone().justify());
-        prepared.add(vertices[1].clone().justify());
+        prepared.get(perspective).clear();
+        prepared.get(perspective).add(vertices[0].clone().justify());
+        prepared.get(perspective).add(vertices[1].clone().justify());
         
-        performRotationTransformation(prepared);
+        performRotationTransformation(prepared.get(perspective));
         
         preparedBases.add(this);
         return preparedBases;
@@ -101,12 +101,12 @@ public class Edge extends BaseObject {
         g2.setColor(getColor());
         switch (displayMode) {
             case VERTEX:
-                g2.drawRect((int) prepared.get(0).getX(), (int) prepared.get(0).getY(), 0, 1);
-                g2.drawRect((int) prepared.get(1).getX(), (int) prepared.get(1).getY(), 0, 1);
+                g2.drawRect((int) prepared.get(perspective).get(0).getX(), (int) prepared.get(perspective).get(0).getY(), 0, 1);
+                g2.drawRect((int) prepared.get(perspective).get(1).getX(), (int) prepared.get(perspective).get(1).getY(), 0, 1);
                 break;
             case EDGE:
             case FACE:
-                g2.drawLine((int) prepared.get(0).get(0), (int) prepared.get(0).get(1), (int) prepared.get(1).get(0), (int) prepared.get(1).get(1));
+                g2.drawLine((int) prepared.get(perspective).get(0).get(0), (int) prepared.get(perspective).get(0).get(1), (int) prepared.get(perspective).get(1).get(0), (int) prepared.get(perspective).get(1).get(1));
                 break;
         }
     }

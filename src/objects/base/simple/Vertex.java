@@ -77,10 +77,10 @@ public class Vertex extends BaseObject {
     public List<BaseObject> prepare(UUID perspective) {
         List<BaseObject> preparedBases = new ArrayList<>();
         
-        prepared.clear();
-        prepared.add(vertices[0].clone().justify());
+        prepared.get(perspective).clear();
+        prepared.get(perspective).add(vertices[0].clone().justify());
         
-        performRotationTransformation(prepared);
+        performRotationTransformation(prepared.get(perspective));
         
         preparedBases.add(this);
         return preparedBases;
@@ -95,7 +95,7 @@ public class Vertex extends BaseObject {
     @Override
     public void render(Graphics2D g2, UUID perspective) {
         g2.setColor(getColor());
-        g2.drawRect((int) prepared.get(0).getX(), (int) prepared.get(0).getY(), 1, 1);
+        g2.drawRect((int) prepared.get(perspective).get(0).getX(), (int) prepared.get(perspective).get(0).getY(), 1, 1);
     }
     
     /**

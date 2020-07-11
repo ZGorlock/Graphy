@@ -87,7 +87,7 @@ public class BigVertex extends Vertex {
         g2.setColor(getColor());
         for (int i = -size; i <= size; i++) {
             for (int j = -size; j <= size; j++) {
-                g2.drawRect((int) prepared.get(0).getX() + i, (int) prepared.get(0).getY() + j, 1, 1);
+                g2.drawRect((int) prepared.get(perspective).get(0).getX() + i, (int) prepared.get(perspective).get(0).getY() + j, 1, 1);
             }
         }
     }

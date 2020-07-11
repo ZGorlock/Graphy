@@ -12,8 +12,10 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import main.Environment;
 import math.matrix.Matrix3;
@@ -22,6 +24,7 @@ import math.vector.Vector3;
 import objects.base.AbstractObject;
 import objects.base.BaseObject;
 import objects.base.polygon.Rectangle;
+import utility.BoundUtility;
 import utility.ColorUtility;
 
 /**
@@ -65,9 +68,9 @@ public abstract class Pane extends BaseObject {
     private Matrix3 projectiveMatrix;
     
     /**
-     * The prepared vectors from the last rendering.
+     * The prepared vectors from the last rendering, per perspective.
      */
-    private List<Vector> lastPrepared;
+    private Map<UUID, List<Vector>> lastPrepared = new ConcurrentHashMap<>();
     
     /**
      * The image dimensions from the last rendering.
@@ -119,12 +122,12 @@ public abstract class Pane extends BaseObject {
     public java.util.List<BaseObject> prepare(UUID perspective) {
         List<BaseObject> preparedBases = new ArrayList<>();
         
-        prepared.clear();
+        prepared.get(perspective).clear();
         for (Vector vertex : vertices) {
-            prepared.add(vertex.clone().justify());
+            prepared.get(perspective).add(vertex.clone().justify());
         }
         
-        performRotationTransformation(prepared);
+        performRotationTransformation(prepared.get(perspective));
         
         preparedBases.add(this);
         return preparedBases;
@@ -138,21 +141,20 @@ public abstract class Pane extends BaseObject {
      */
     @Override
     public void render(Graphics2D g2, UUID perspective) {
-        normal = new Vector3(bounds.getP2().minus(bounds.getP1())).cross(new Vector3(bounds.getP4().minus(bounds.getP1()))).normalize();
-        
+        calculateNormal();
         g2.setColor(getColor());
         switch (displayMode) {
             case VERTEX:
-                for (Vector v : prepared) {
+                for (Vector v : prepared.get(perspective)) {
                     g2.drawRect((int) v.getX(), (int) v.getY(), 1, 1);
                 }
                 break;
             
             case EDGE:
                 for (int i = 1; i < 4; i++) {
-                    g2.drawLine((int) prepared.get(i - 1).getX(), (int) prepared.get(i - 1).getY(), (int) prepared.get(i).getX(), (int) prepared.get(i).getY());
+                    g2.drawLine((int) prepared.get(perspective).get(i - 1).getX(), (int) prepared.get(perspective).get(i - 1).getY(), (int) prepared.get(perspective).get(i).getX(), (int) prepared.get(perspective).get(i).getY());
                 }
-                g2.drawLine((int) prepared.get(3).getX(), (int) prepared.get(3).getY(), (int) prepared.get(0).getX(), (int) prepared.get(0).getY());
+                g2.drawLine((int) prepared.get(perspective).get(3).getX(), (int) prepared.get(perspective).get(3).getY(), (int) prepared.get(perspective).get(0).getX(), (int) prepared.get(perspective).get(0).getY());
                 break;
             
             case FACE:
@@ -164,8 +166,8 @@ public abstract class Pane extends BaseObject {
                 int[] xPoints = new int[4];
                 int[] yPoints = new int[4];
                 for (int i = 0; i < 4; i++) {
-                    xPoints[i] = (int) prepared.get(i).getX();
-                    yPoints[i] = (int) prepared.get(i).getY();
+                    xPoints[i] = (int) prepared.get(perspective).get(i).getX();
+                    yPoints[i] = (int) prepared.get(perspective).get(i).getY();
                 }
                 java.awt.Polygon face = new java.awt.Polygon(
                         xPoints,
@@ -177,40 +179,51 @@ public abstract class Pane extends BaseObject {
                 
                 g2Tmp.setColor(new Color(TOUCH_COLOR));
                 for (int i = 1; i < 4; i++) {
-                    g2Tmp.drawLine((int) prepared.get(i - 1).getX(), (int) prepared.get(i - 1).getY(), (int) prepared.get(i).getX(), (int) prepared.get(i).getY());
+                    g2Tmp.drawLine((int) prepared.get(perspective).get(i - 1).getX(), (int) prepared.get(perspective).get(i - 1).getY(), (int) prepared.get(perspective).get(i).getX(), (int) prepared.get(perspective).get(i).getY());
                 }
-                g2Tmp.drawLine((int) prepared.get(3).getX(), (int) prepared.get(3).getY(), (int) prepared.get(0).getX(), (int) prepared.get(0).getY());
+                g2Tmp.drawLine((int) prepared.get(perspective).get(3).getX(), (int) prepared.get(perspective).get(3).getY(), (int) prepared.get(perspective).get(0).getX(), (int) prepared.get(perspective).get(0).getY());
                 
-                draw(g2, imgTmp);
+                draw(g2, perspective, imgTmp);
                 
                 g2.setColor(getColor());
                 for (int i = 1; i < 4; i++) {
-                    g2.drawLine((int) prepared.get(i - 1).getX(), (int) prepared.get(i - 1).getY(), (int) prepared.get(i).getX(), (int) prepared.get(i).getY());
+                    g2.drawLine((int) prepared.get(perspective).get(i - 1).getX(), (int) prepared.get(perspective).get(i - 1).getY(), (int) prepared.get(perspective).get(i).getX(), (int) prepared.get(perspective).get(i).getY());
                 }
-                g2.drawLine((int) prepared.get(3).getX(), (int) prepared.get(3).getY(), (int) prepared.get(0).getX(), (int) prepared.get(0).getY());
+                g2.drawLine((int) prepared.get(perspective).get(3).getX(), (int) prepared.get(perspective).get(3).getY(), (int) prepared.get(perspective).get(0).getX(), (int) prepared.get(perspective).get(0).getY());
                 
                 break;
         }
     }
     
     /**
+     * Calculates the unit normal vector of the Pane.
+     *
+     * @return The unit normal vector of the Pane.
+     */
+    public Vector calculateNormal() {
+        normal = new Vector3(bounds.getP2().minus(bounds.getP1())).cross(new Vector3(bounds.getP4().minus(bounds.getP1()))).normalize();
+        return normal;
+    }
+    
+    /**
      * Draws the drawing to the pane.
      *
-     * @param g2     The 2D Graphics entity.
-     * @param imgTmp The temporary image used to render the pane.
+     * @param g2          The 2D Graphics entity.
+     * @param perspective The perspective from which to draw the drawing to the pane.
+     * @param imgTmp      The temporary image used to render the pane.
      */
-    private synchronized void draw(Graphics2D g2, BufferedImage imgTmp) {
+    private synchronized void draw(Graphics2D g2, UUID perspective, BufferedImage imgTmp) {
         if (image == null) {
             return;
         }
         
         boolean needsUpdate = false;
-        if ((lastImageDimensions == null) || (lastPrepared == null) ||
+        if ((lastImageDimensions == null) || !lastPrepared.containsKey(perspective) ||
                 (lastImageDimensions.getX() != (image.getWidth() - 1)) || (lastImageDimensions.getY() != (image.getHeight() - 1))) {
             needsUpdate = true;
         } else {
             for (int i = 0; i < 4; i++) {
-                if ((prepared.get(i).getX() != lastPrepared.get(i).getX()) || (prepared.get(i).getY() != lastPrepared.get(i).getY())) {
+                if ((prepared.get(perspective).get(i).getX() != lastPrepared.get(perspective).get(i).getX()) || (prepared.get(perspective).get(i).getY() != lastPrepared.get(perspective).get(i).getY())) {
                     needsUpdate = true;
                     break;
                 }
@@ -219,17 +232,17 @@ public abstract class Pane extends BaseObject {
         
         Matrix3 projectiveMatrix = this.projectiveMatrix;
         if (needsUpdate || (projectiveMatrix == null)) {
-            lastPrepared = new ArrayList<>();
-            for (Vector v : prepared) {
-                lastPrepared.add(v.clone());
+            lastPrepared.put(perspective, new ArrayList<>());
+            for (Vector v : prepared.get(perspective)) {
+                lastPrepared.get(perspective).add(v.clone());
             }
             lastImageDimensions = new Vector(image.getWidth() - 1, image.getHeight() - 1);
             
             Matrix3 projectiveMatrixSrc = new Matrix3(new double[] {
-                    prepared.get(0).getX(), prepared.get(1).getX(), prepared.get(3).getX(),
-                    prepared.get(0).getY(), prepared.get(1).getY(), prepared.get(3).getY(),
+                    prepared.get(perspective).get(0).getX(), prepared.get(perspective).get(1).getX(), prepared.get(perspective).get(3).getX(),
+                    prepared.get(perspective).get(0).getY(), prepared.get(perspective).get(1).getY(), prepared.get(perspective).get(3).getY(),
                     1.0, 1.0, 1.0});
-            Vector solutionSrc = new Vector(prepared.get(2).getX(), prepared.get(2).getY(), 1.0);
+            Vector solutionSrc = new Vector(prepared.get(perspective).get(2).getX(), prepared.get(perspective).get(2).getY(), 1.0);
             
             Vector coordinateSystemSrc = projectiveMatrixSrc.solveSystem(solutionSrc);
             Matrix3 coordinateMatrixSrc = new Matrix3(new double[] {
@@ -254,7 +267,7 @@ public abstract class Pane extends BaseObject {
         }
         
         Stack<Point> stack = new Stack<>();
-        stack.push(new Point(((int) prepared.get(0).getX() + (int) prepared.get(2).getX()) / 2, ((int) prepared.get(0).getY() + (int) prepared.get(2).getY()) / 2));
+        stack.push(new Point(((int) prepared.get(perspective).get(0).getX() + (int) prepared.get(perspective).get(2).getX()) / 2, ((int) prepared.get(perspective).get(0).getY() + (int) prepared.get(perspective).get(2).getY()) / 2));
         
         int width = imgTmp.getWidth() - 1;
         int height = imgTmp.getHeight() - 1;
@@ -269,8 +282,8 @@ public abstract class Pane extends BaseObject {
             }
             imgTmp.setRGB(x, y, TOUCH_COLOR);
             Vector homogeneousSourcePoint = projectiveMatrix.multiply(new Vector(x, y, 1.0));
-            int gX = (int) (homogeneousSourcePoint.getX() / homogeneousSourcePoint.getZ());
-            int gY = (int) (homogeneousSourcePoint.getY() / homogeneousSourcePoint.getZ());
+            int gX = BoundUtility.truncateNum(homogeneousSourcePoint.getX() / homogeneousSourcePoint.getZ(), 0, image.getWidth() - 1).intValue();
+            int gY = BoundUtility.truncateNum(homogeneousSourcePoint.getY() / homogeneousSourcePoint.getZ(), 0, image.getHeight() - 1).intValue();
             Color gC = new Color(image.getRGB(gX, gY));
             g2.setColor(invert ? ColorUtility.invertColor(gC) : gC);
             g2.drawRect(x, y, 1, 1);

@@ -89,10 +89,10 @@ public class Text extends BaseObject {
     public List<BaseObject> prepare(UUID perspective) {
         List<BaseObject> preparedBases = new ArrayList<>();
         
-        prepared.clear();
-        prepared.add(vertices[0].clone().justify());
+        prepared.get(perspective).clear();
+        prepared.get(perspective).add(vertices[0].clone().justify());
         
-        performRotationTransformation(prepared);
+        performRotationTransformation(prepared.get(perspective));
         
         preparedBases.add(this);
         return preparedBases;
@@ -107,7 +107,7 @@ public class Text extends BaseObject {
     @Override
     public void render(Graphics2D g2, UUID perspective) {
         g2.setColor(color);
-        g2.drawChars(text, 0, text.length, (int) prepared.get(0).getX(), (int) prepared.get(0).getY());
+        g2.drawChars(text, 0, text.length, (int) prepared.get(perspective).get(0).getX(), (int) prepared.get(perspective).get(0).getY());
     }
     
     

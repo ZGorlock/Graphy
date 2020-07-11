@@ -56,12 +56,12 @@ public class Polygon extends BaseObject {
     public List<BaseObject> prepare(UUID perspective) {
         List<BaseObject> preparedBases = new ArrayList<>();
         
-        prepared.clear();
+        prepared.get(perspective).clear();
         for (Vector vertex : vertices) {
-            prepared.add(vertex.clone().justify());
+            prepared.get(perspective).add(vertex.clone().justify());
         }
         
-        performRotationTransformation(prepared);
+        performRotationTransformation(prepared.get(perspective));
         
         preparedBases.add(this);
         return preparedBases;
@@ -78,7 +78,7 @@ public class Polygon extends BaseObject {
         g2.setColor(getColor());
         switch (displayMode) {
             case VERTEX:
-                for (Vector v : prepared) {
+                for (Vector v : prepared.get(perspective)) {
                     g2.drawRect((int) v.getX(), (int) v.getY(), 1, 1);
                 }
                 break;
@@ -89,9 +89,9 @@ public class Polygon extends BaseObject {
                 }
                 
                 for (int i = 1; i < numVertices; i++) {
-                    g2.drawLine((int) prepared.get(i - 1).getX(), (int) prepared.get(i - 1).getY(), (int) prepared.get(i).getX(), (int) prepared.get(i).getY());
+                    g2.drawLine((int) prepared.get(perspective).get(i - 1).getX(), (int) prepared.get(perspective).get(i - 1).getY(), (int) prepared.get(perspective).get(i).getX(), (int) prepared.get(perspective).get(i).getY());
                 }
-                g2.drawLine((int) prepared.get(numVertices - 1).getX(), (int) prepared.get(numVertices - 1).getY(), (int) prepared.get(0).getX(), (int) prepared.get(0).getY());
+                g2.drawLine((int) prepared.get(perspective).get(numVertices - 1).getX(), (int) prepared.get(perspective).get(numVertices - 1).getY(), (int) prepared.get(perspective).get(0).getX(), (int) prepared.get(perspective).get(0).getY());
                 break;
             
             case FACE:
@@ -102,8 +102,8 @@ public class Polygon extends BaseObject {
                 int[] xPoints = new int[numVertices];
                 int[] yPoints = new int[numVertices];
                 for (int i = 0; i < numVertices; i++) {
-                    xPoints[i] = (int) prepared.get(i).getX();
-                    yPoints[i] = (int) prepared.get(i).getY();
+                    xPoints[i] = (int) prepared.get(perspective).get(i).getX();
+                    yPoints[i] = (int) prepared.get(perspective).get(i).getY();
                 }
                 
                 java.awt.Polygon face = new java.awt.Polygon(

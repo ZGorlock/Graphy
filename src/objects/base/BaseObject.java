@@ -165,7 +165,7 @@ public abstract class BaseObject extends AbstractObject {
      */
     @Override
     public double calculateRenderDistance(UUID perspective) {
-        if (prepared.isEmpty()) {
+        if (prepared.get(perspective).isEmpty()) {
             return 0;
         }
         
@@ -176,7 +176,7 @@ public abstract class BaseObject extends AbstractObject {
         
         Vector pos = cam.getCameraPosition();
         double max = 0;
-        for (Vector prepare : prepared) {
+        for (Vector prepare : prepared.get(perspective)) {
             double dist = prepare.distance(pos);
             if (dist > max) {
                 max = dist;

@@ -6,6 +6,8 @@
 
 package math.vector;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -538,27 +540,73 @@ public class Vector {
      * @throws ArithmeticException When the Vectors are not all of the same dimension.
      */
     public static Vector averageVector(Vector... vs) throws ArithmeticException {
+        return averageVector(Arrays.asList(vs));
+    }
+    
+    /**
+     * Calculates the average of a list of Vectors.
+     *
+     * @param vs The list of Vectors.
+     * @return The average of the Vectors.
+     *
+     * @throws ArithmeticException When the Vectors are not all of the same dimension.
+     */
+    public static Vector averageVector(List<Vector> vs) throws ArithmeticException {
         int dim = 0;
         for (Vector v : vs) {
             if (dim == 0) {
                 dim = v.getDimension();
             } else if (v.getDimension() != dim) {
-                throw new ArithmeticException("The vectors: " + vs[0].toString() + " and " + v.toString() + " are of different dimensions.");
+                throw new ArithmeticException("The vectors: " + vs.get(0).toString() + " and " + v.toString() + " are of different dimensions.");
             }
         }
         if (dim == 0) {
             return new Vector(0, 0, 0);
         }
         
-        double[] newComponents = new double[vs[0].getDimension()];
-        for (int c = 0; c < vs[0].components.length; c++) {
+        double[] newComponents = new double[vs.get(0).getDimension()];
+        for (int c = 0; c < vs.get(0).components.length; c++) {
             double component = 0;
             for (Vector v : vs) {
                 component += v.components[c];
             }
-            newComponents[c] = component / vs.length;
+            newComponents[c] = component / vs.size();
         }
         return new Vector(newComponents);
+    }
+    
+    /**
+     * Calculates the minimum and maximum values from a list of Vectors.
+     *
+     * @param vs The list of Vectors.
+     * @return A list of Vectors with length equal to the number of dimensions of the Vectors in the list; with the first Vector in the list containing the minimum and maximum of the x coordinates, second Vector containing such for y, etc.
+     *
+     * @throws ArithmeticException When the Vectors are not all of the same dimension.
+     */
+    public static List<Vector> calculateMinMax(List<Vector> vs) throws ArithmeticException {
+        int dim = 0;
+        for (Vector v : vs) {
+            if (dim == 0) {
+                dim = v.getDimension();
+            } else if (v.getDimension() != dim) {
+                throw new ArithmeticException("The vectors: " + vs.get(0).toString() + " and " + v.toString() + " are of different dimensions.");
+            }
+        }
+        if (dim == 0) {
+            return new ArrayList<>();
+        }
+        
+        List<Vector> minMax = new ArrayList<>();
+        for (int d = 0; d < dim; d++) {
+            double min = Double.MAX_VALUE;
+            double max = Double.MIN_VALUE;
+            for (Vector v : vs) {
+                min = Math.min(v.get(d), min);
+                max = Math.max(v.get(d), max);
+            }
+            minMax.add(new Vector(min, max));
+        }
+        return minMax;
     }
     
 }

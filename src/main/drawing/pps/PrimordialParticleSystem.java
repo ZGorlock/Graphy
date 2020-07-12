@@ -88,8 +88,10 @@ public class PrimordialParticleSystem extends Drawing {
         BufferedImage img = new BufferedImage(Environment2D.drawingX, Environment2D.drawingY, BufferedImage.TYPE_INT_RGB);
         
         if (particles != null) {
+            Graphics2D g2 = img.createGraphics();
             particles.step();
-            particles.render((Graphics2D) img.getGraphics());
+            particles.render(g2);
+            g2.dispose();
         }
         
         return img;

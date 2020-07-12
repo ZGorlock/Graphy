@@ -122,7 +122,7 @@ public class Spirograph extends Drawing {
     @Override
     public BufferedImage render() {
         BufferedImage img = new BufferedImage(Environment2D.drawingX, Environment2D.drawingY, BufferedImage.TYPE_INT_RGB);
-        Graphics2D graphics = (Graphics2D) img.getGraphics();
+        Graphics2D graphics = img.createGraphics();
         
         double slice = 2 * Math.PI / pointCount;
         Vector c = environment.getCenterPosition();
@@ -144,6 +144,7 @@ public class Spirograph extends Drawing {
         
         multiplier += multiplierStep;
         
+        graphics.dispose();
         return img;
     }
     

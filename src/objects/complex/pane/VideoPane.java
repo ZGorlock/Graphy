@@ -9,15 +9,14 @@ package objects.complex.pane;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.imageio.ImageIO;
 
 import objects.base.AbstractObject;
 import objects.base.polygon.Rectangle;
+import utility.ImageUtility;
 
 /**
  * Defines a Video Pane.
@@ -82,10 +81,9 @@ public class VideoPane extends Pane {
      * @param fps                 The frames per second to run the Video Pane at.
      * @param loop                Whether or not to loop the Video Pane.
      * @param reverseOnCompletion Whether or not to reverse the Video Pane on completion.
-     * @param invert              Whether or not to invert the colors of the Video Pane.
      */
-    public VideoPane(AbstractObject parent, Color color, Rectangle bounds, File frameDirectory, int fps, boolean loop, boolean reverseOnCompletion, boolean invert) {
-        super(parent, color, bounds, invert);
+    public VideoPane(AbstractObject parent, Color color, Rectangle bounds, File frameDirectory, int fps, boolean loop, boolean reverseOnCompletion) {
+        super(parent, color, bounds);
         
         this.frameDirectory = frameDirectory;
         this.fps = fps;
@@ -94,21 +92,6 @@ public class VideoPane extends Pane {
         
         loadFrames();
         startVideo();
-    }
-    
-    /**
-     * The constructor for a Video Pane.
-     *
-     * @param parent              The parent of the Video Pane.
-     * @param color               The color of the Video Pane.
-     * @param bounds              The bounds of the Video Pane.
-     * @param frameDirectory      The directory containing the frames for the Video Pane.
-     * @param fps                 The frames per second to run the Video Pane at.
-     * @param loop                Whether or not to loop the Video Pane.
-     * @param reverseOnCompletion Whether or not to reverse the Video Pane on completion.
-     */
-    public VideoPane(AbstractObject parent, Color color, Rectangle bounds, File frameDirectory, int fps, boolean loop, boolean reverseOnCompletion) {
-        this(parent, color, bounds, frameDirectory, fps, loop, reverseOnCompletion, false);
     }
     
     /**
@@ -163,11 +146,9 @@ public class VideoPane extends Pane {
         }
         
         for (File frameEntry : frameList) {
-            BufferedImage image;
-            try {
-                image = ImageIO.read(frameEntry);
+            BufferedImage image = ImageUtility.loadImage(frameEntry);
+            if (image != null) {
                 frames.add(image);
-            } catch (IOException ignored) {
             }
         }
     }

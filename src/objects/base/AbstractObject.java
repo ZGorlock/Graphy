@@ -230,7 +230,7 @@ public abstract class AbstractObject implements ObjectInterface {
     @Override
     public final boolean preRender(UUID perspective) {
         if (!Environment.ENABLE_RENDER_BUFFERING || renderDelay.get(perspective).get() <= 0) {
-            if (!visible || (prepared.get(perspective).size() != vertices.length) || Camera.hasVectorBehindScreen(perspective, vertices)) {
+            if (!visible || (prepared.get(perspective).size() < vertices.length) || Camera.hasVectorBehindScreen(perspective, vertices)) {
                 renderDelay.get(perspective).set(Environment.ENABLE_RENDER_BUFFERING ? ((int) (Math.random() * (Environment.fps / 8))) : 1);
                 return false;
             }

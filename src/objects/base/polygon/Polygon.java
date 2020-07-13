@@ -55,13 +55,14 @@ public class Polygon extends BaseObject {
     @Override
     public List<BaseObject> prepare(UUID perspective) {
         List<BaseObject> preparedBases = new ArrayList<>();
+        List<Vector> perspectivePrepared = prepared.get(perspective);
         
-        prepared.get(perspective).clear();
+        perspectivePrepared.clear();
         for (Vector vertex : vertices) {
-            prepared.get(perspective).add(vertex.clone().justify());
+            perspectivePrepared.add(vertex.clone().justify());
         }
         
-        performRotationTransformation(prepared.get(perspective));
+        performRotationTransformation(perspectivePrepared);
         
         preparedBases.add(this);
         return preparedBases;

@@ -73,13 +73,28 @@ public abstract class Pane extends BaseObject {
     @Override
     public java.util.List<BaseObject> prepare(UUID perspective) {
         List<BaseObject> preparedBases = new ArrayList<>();
+        List<Vector> perspectivePrepared = prepared.get(perspective);
         
-        prepared.get(perspective).clear();
+        perspectivePrepared.clear();
         for (Vector vertex : vertices) {
-            prepared.get(perspective).add(vertex.clone().justify());
+            perspectivePrepared.add(vertex.clone().justify());
         }
         
-        performRotationTransformation(prepared.get(perspective));
+        perspectivePrepared.add(Vector.averageVector(perspectivePrepared));
+        perspectivePrepared.add(perspectivePrepared.get(0).midpoint(perspectivePrepared.get(1)));
+        perspectivePrepared.add(perspectivePrepared.get(1).midpoint(perspectivePrepared.get(2)));
+        perspectivePrepared.add(perspectivePrepared.get(2).midpoint(perspectivePrepared.get(3)));
+        perspectivePrepared.add(perspectivePrepared.get(3).midpoint(perspectivePrepared.get(0)));
+        perspectivePrepared.add(perspectivePrepared.get(4).midpoint(perspectivePrepared.get(0)));
+        perspectivePrepared.add(perspectivePrepared.get(4).midpoint(perspectivePrepared.get(1)));
+        perspectivePrepared.add(perspectivePrepared.get(4).midpoint(perspectivePrepared.get(2)));
+        perspectivePrepared.add(perspectivePrepared.get(4).midpoint(perspectivePrepared.get(3)));
+        perspectivePrepared.add(perspectivePrepared.get(4).midpoint(perspectivePrepared.get(5)));
+        perspectivePrepared.add(perspectivePrepared.get(4).midpoint(perspectivePrepared.get(6)));
+        perspectivePrepared.add(perspectivePrepared.get(4).midpoint(perspectivePrepared.get(7)));
+        perspectivePrepared.add(perspectivePrepared.get(4).midpoint(perspectivePrepared.get(8)));
+        
+        performRotationTransformation(perspectivePrepared);
         
         preparedBases.add(this);
         return preparedBases;

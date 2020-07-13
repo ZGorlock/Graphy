@@ -158,10 +158,10 @@ public abstract class BaseObject extends AbstractObject {
     }
     
     /**
-     * Calculates the distance from the Camera to Object.
+     * Calculates the distance from the Object to Camera.
      *
-     * @param perspective The perspective to use to calculate the distance from the Camera to the Object.
-     * @return The distance from the Camera to the Object.
+     * @param perspective The perspective to use to calculate the distance from the Object to the Camera.
+     * @return The distance from the Object to the Camera.
      */
     @Override
     public double calculateRenderDistance(UUID perspective) {
@@ -169,12 +169,12 @@ public abstract class BaseObject extends AbstractObject {
             return 0;
         }
         
-        Camera cam = Camera.getActiveCameraView(perspective);
-        if (cam == null) {
+        Camera camera = Camera.getActiveCameraView(perspective);
+        if (camera == null) {
             return 0;
         }
         
-        Vector pos = cam.getCameraPosition();
+        Vector pos = camera.getCameraPosition();
         double max = 0;
         for (Vector prepare : prepared.get(perspective)) {
             double dist = prepare.distance(pos);

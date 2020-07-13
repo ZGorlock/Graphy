@@ -76,11 +76,12 @@ public class Vertex extends BaseObject {
     @Override
     public List<BaseObject> prepare(UUID perspective) {
         List<BaseObject> preparedBases = new ArrayList<>();
+        List<Vector> perspectivePrepared = prepared.get(perspective);
         
-        prepared.get(perspective).clear();
-        prepared.get(perspective).add(vertices[0].clone().justify());
+        perspectivePrepared.clear();
+        perspectivePrepared.add(vertices[0].clone().justify());
         
-        performRotationTransformation(prepared.get(perspective));
+        performRotationTransformation(perspectivePrepared);
         
         preparedBases.add(this);
         return preparedBases;

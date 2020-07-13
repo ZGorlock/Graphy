@@ -11,6 +11,7 @@ import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -75,7 +76,7 @@ public class MirrorPane extends Pane {
      */
     @Override
     public void render(Graphics2D g2, UUID perspective) {
-        if (getDisplayMode() == DisplayMode.FACE) {
+        if (getDisplayMode() != null) {
             super.render(g2, perspective);
         }
     }
@@ -104,7 +105,7 @@ public class MirrorPane extends Pane {
      */
     @Override
     protected void draw(Graphics2D g2, UUID perspective) {
-        setDisplayMode(DisplayMode.VERTEX);
+        setDisplayMode(null);
         renderMirror(g2, perspective);
         setDisplayMode(DisplayMode.FACE);
     }
@@ -136,7 +137,7 @@ public class MirrorPane extends Pane {
         }
         camera.fitToObject(this);
         prepare(this.perspective);
-        List<Vector> bounds = getPrepared(this.perspective);
+        List<Vector> bounds = new ArrayList<>(getPrepared(this.perspective).subList(0, 4));
         Camera.projectVectorsToCamera(this.perspective, bounds);
         Camera.collapseVectorsToViewport(this.perspective, bounds);
         Camera.scaleVectorsToScreen(this.perspective, bounds);
@@ -157,7 +158,7 @@ public class MirrorPane extends Pane {
             prePrepare(this.parentPerspective);
         }
         prepare(this.parentPerspective);
-        List<Vector> parentBounds = getPrepared(this.parentPerspective);
+        List<Vector> parentBounds = new ArrayList<>(getPrepared(this.parentPerspective).subList(0, 4));
         Camera.projectVectorsToCamera(this.parentPerspective, parentBounds);
         Camera.collapseVectorsToViewport(this.parentPerspective, parentBounds);
         Camera.scaleVectorsToScreen(this.parentPerspective, parentBounds);

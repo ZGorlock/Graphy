@@ -15,6 +15,7 @@ import objects.base.Scene;
 import objects.base.polygon.Rectangle;
 import objects.complex.pane.MirrorPane;
 import objects.complex.pane.Pane;
+import objects.polyhedron.regular.platonic.Hexahedron;
 import objects.system.Axes;
 
 /**
@@ -54,11 +55,16 @@ public class MirrorDemo extends Scene {
      */
     @Override
     public void calculate() {
-        Rectangle bounds = new Rectangle(new Vector(-2, 0, 3), new Vector(2, 0, 3), new Vector(2, 0, -3), new Vector(-2, 0, -3));
+        Rectangle bounds = new Rectangle(new Vector(-20, 0, 30), new Vector(20, 0, 30), new Vector(20, 0, -30), new Vector(-20, 0, -30));
         Pane mirror = new MirrorPane(null, Color.BLACK, bounds, environment.perspective);
-//        mirror.setVisible(false);
-        
         registerComponent(mirror);
+        
+        for (int i = 0; i < 300; i++) {
+            Hexahedron h = new Hexahedron(new Vector(Math.random() * 200 - 100, Math.random() * 200 - 100, Math.random() * 200 - 100), Color.BLUE, Math.random() * 3);
+            h.addFrame(Color.BLACK);
+            registerComponent(h);
+        }
+        
         registerComponent(new Axes(5));
     }
     
@@ -75,7 +81,7 @@ public class MirrorDemo extends Scene {
     @Override
     public void setupCameras() {
         Camera camera = new Camera(this, environment.perspective, true, true);
-        camera.setLocation(Math.PI / 2, Math.PI / 2, 10);
+        camera.setLocation(Math.PI / 2, Math.PI / 4, 100);
     }
     
     /**

@@ -937,6 +937,16 @@ public abstract class AbstractObject implements ObjectInterface {
         this.frame = frame;
     }
     
+    /**
+     * Returns whether or not the Object is prepared for a perspective.
+     *
+     * @param perspective The perspective.
+     * @return Whether or not the Object is prepared for the perspective.
+     */
+    public boolean preparedForPerspective(UUID perspective) {
+        return perspectives.contains(perspective);
+    }
+    
     
     //Getters
     

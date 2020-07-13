@@ -243,6 +243,11 @@ public class Camera {
     private Rectangle s;
     
     /**
+     * The normal Vector of a plane in which the direction of the Vector indicates the side of the plane in which to render Objects, or null.
+     */
+    private Vector normalLimit;
+    
+    /**
      * The timer for running Camera calculations.
      */
     private Timer timer;
@@ -476,6 +481,10 @@ public class Camera {
                 }
             } catch (ConcurrentModificationException ignored) {
                 return;
+            }
+            
+            if (normalLimit != null) {
+                preparedBases.removeIf(e -> normalLimit.dot(e.getCenter()) < 0);
             }
             
             preparedBases.sort((o1, o2) -> Double.compare(o2.getRenderDistance(), o1.getRenderDistance()));
@@ -850,6 +859,45 @@ public class Camera {
         }
     }
     
+    /**
+     * Fits the Camera to a particular Object.
+     *
+     * @param o The Object.
+     */
+    public void fitToObject(BaseObject o) {
+        o.prepare(perspective);
+        List<Vector> bounds = o.getPrepared(perspective);
+        projectVectorsToCamera(perspective, bounds);
+        collapseVectorsToViewport(perspective, bounds);
+        
+        if (!hasAllVectorsInView(perspective, bounds)) {
+            do {
+                setAngleOfView(getAngleOfView() / 0.99);
+                setScreenSize(perspective, getScreenSize(perspective).scale(1 / 0.99));
+                calculateCamera(perspective);
+                o.prepare(perspective);
+                bounds = o.getPrepared(perspective);
+                projectVectorsToCamera(perspective, bounds);
+                collapseVectorsToViewport(perspective, bounds);
+            } while (!hasAllVectorsInView(perspective, bounds));
+            
+        } else {
+            do {
+                setAngleOfView(getAngleOfView() * 0.99);
+                setScreenSize(perspective, getScreenSize(perspective).scale(0.99));
+                calculateCamera(perspective);
+                o.prepare(perspective);
+                bounds = o.getPrepared(perspective);
+                projectVectorsToCamera(perspective, bounds);
+                collapseVectorsToViewport(perspective, bounds);
+            } while (hasAllVectorsInView(perspective, bounds));
+            
+            setAngleOfView(getAngleOfView() / 0.99);
+            setScreenSize(perspective, getScreenSize(perspective).scale(1 / 0.99));
+            calculateCamera(perspective);
+        }
+    }
+    
     
     //Getters
     
@@ -1058,6 +1106,17 @@ public class Camera {
         updateRequired = true;
     }
     
+    /**
+     * Sets the normal limit of the Camera.
+     *
+     * @param normalLimit The normal limit of the Camera.
+     */
+    public void setNormalLimit(Vector normalLimit) {
+        this.normalLimit = normalLimit;
+        
+        updateRequired = true;
+    }
+    
     
     //Functions
     
@@ -1157,6 +1216,27 @@ public class Camera {
     }
     
     /**
+     * Determines if all Vectors are visible on the Screen.
+     *
+     * @param perspective The perspective to determine if any Vectors are visible on the screen for.
+     * @param vs          The list of Vectors.
+     * @return Whether all of the Vectors are visible on the Screen or not.
+     */
+    public static boolean hasAllVectorsInView(UUID perspective, List<Vector> vs) {
+        Vector viewportDim = getViewport(perspective);
+        //ensure Vectors are in field of view
+        boolean inView = true;
+        for (Vector v : vs) {
+            if (!((v.getX() >= 0) && (v.getX() < viewportDim.getX()) &&
+                    (v.getY() >= 0) && (v.getY() < viewportDim.getY()))) {
+                inView = false;
+                break;
+            }
+        }
+        return inView;
+    }
+    
+    /**
      * Scales the Vectors to the screen to be drawn.
      *
      * @param perspective The perspective to scale the Vectors to the screen for.
@@ -1248,7 +1328,20 @@ public class Camera {
     }
     
     /**
-     * Returns the viewport.
+     * Returns the Scene for a perspective.
+     *
+     * @param perspective The perspective to get the Scene for.
+     * @return The Scene.
+     */
+    public static Scene getScene(UUID perspective) {
+        if (scenes.containsKey(perspective)) {
+            return scenes.get(perspective);
+        }
+        return null;
+    }
+    
+    /**
+     * Returns the viewport for a perspective.
      *
      * @param perspective The perspective to get the viewport for.
      * @return The viewport.
@@ -1261,7 +1354,7 @@ public class Camera {
     }
     
     /**
-     * Returns the screen size.
+     * Returns the screen size for a perspective.
      *
      * @param perspective The perspective to get the screen size for.
      * @return The screen size.
@@ -1274,6 +1367,18 @@ public class Camera {
     }
     
     /**
+     * Sets the Scene for a perspective.
+     *
+     * @param perspective The perspective to set the Scene for.
+     * @param scene       The Scene.
+     */
+    public static void setScene(UUID perspective, Scene scene) {
+        if (scenes.containsKey(perspective)) {
+            scenes.put(perspective, scene);
+        }
+    }
+    
+    /**
      * Sets the viewport dimensions for a perspective.
      *
      * @param perspective The perspective to set the viewport dimensions for.
@@ -1282,6 +1387,10 @@ public class Camera {
     public static void setViewport(UUID perspective, Vector viewport) {
         if (viewports.containsKey(perspective)) {
             viewports.put(perspective, viewport);
+            Camera perspectiveView = getActiveCameraView(perspective);
+            if (perspectiveView != null) {
+                perspectiveView.updateRequired = true;
+            }
         }
     }
     
@@ -1294,6 +1403,10 @@ public class Camera {
     public static void setScreenSize(UUID perspective, Vector screenSize) {
         if (screenSizes.containsKey(perspective)) {
             screenSizes.put(perspective, screenSize);
+            Camera perspectiveView = getActiveCameraView(perspective);
+            if (perspectiveView != null) {
+                perspectiveView.updateRequired = true;
+            }
         }
     }
     

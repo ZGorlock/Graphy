@@ -239,7 +239,7 @@ public class Environment {
             return;
         }
         
-        renderPanel.addKeyListener(new KeyListener() {
+        frame.addKeyListener(new KeyListener() {
             
             @Override
             public void keyTyped(KeyEvent e) {

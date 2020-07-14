@@ -75,7 +75,7 @@ public class PrimordialParticleSystem extends Drawing {
      */
     @Override
     public void run() {
-        particles = new ParticleState(this, 0.0011, 0, 4.0, 0.67, Math.toRadians(180), Math.toRadians(17), 7.0);
+        particles = new ParticleState(this, 0.0011, 0, 4.0, 0.67, Math.toRadians(180), Math.toRadians(17), 10.0);
     }
     
     /**

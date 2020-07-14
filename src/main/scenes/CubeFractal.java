@@ -26,7 +26,7 @@ public class CubeFractal extends Scene {
      * @throws Exception When the Scene class cannot be constructed.
      */
     public static void main(String[] args) throws Exception {
-        runScene(CubeField.class);
+        runScene(CubeFractal.class);
     }
     
     

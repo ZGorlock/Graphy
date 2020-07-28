@@ -6,6 +6,7 @@
 
 package main;
 
+import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -15,7 +16,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import math.vector.Vector;
@@ -105,9 +105,9 @@ public abstract class EnvironmentBase {
     public JFrame frame;
     
     /**
-     * The Panel to render the Environment in.
+     * The Canvas to render the Environment in.
      */
-    public JPanel renderPanel;
+    public Canvas renderPanel;
     
     /**
      * The Layout Manager to use for the Window.
@@ -138,9 +138,27 @@ public abstract class EnvironmentBase {
         frame.setFocusTraversalKeysEnabled(false);
         
         // panel to display render results
-        renderPanel = new JPanel() {
-            public void paintComponent(Graphics g) {
-                render((Graphics2D) g);
+        renderPanel = new Canvas() {
+            
+            @Override
+            public void update(Graphics g) {
+                paint(g);
+            }
+            
+            @Override
+            public void paint(Graphics g) {
+                do {
+                    Graphics2D g2 = null;
+                    try {
+                        g2 = (Graphics2D) getBufferStrategy().getDrawGraphics();
+                        render(g2);
+                    } finally {
+                        if (g2 != null) {
+                            g2.dispose();
+                        }
+                    }
+                    getBufferStrategy().show();
+                } while (getBufferStrategy().contentsLost());
             }
         };
         frame.getContentPane().add(renderPanel);
@@ -149,6 +167,9 @@ public abstract class EnvironmentBase {
         
         frame.pack();
         frame.setVisible(true);
+        
+        renderPanel.setIgnoreRepaint(true);
+        renderPanel.createBufferStrategy(2);
     }
     
     /**

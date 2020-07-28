@@ -61,10 +61,23 @@ public class Drawing {
     /**
      * Renders the Drawing.
      *
-     * @return The rendered image.
+     * @param g The graphics output.
      */
-    public BufferedImage render() {
-        return new BufferedImage(Environment2D.drawingX, Environment2D.drawingY, BufferedImage.TYPE_INT_RGB);
+    public void render(Graphics2D g) {
+        environment.colorBackground(g);
+        
+        BufferedImage img = draw();
+        g.drawImage(img, 0, 0, null);
+        overlay(g);
+    }
+    
+    /**
+     * Draws the Drawing.
+     *
+     * @return The image.
+     */
+    public BufferedImage draw() {
+        return new BufferedImage(Environment2D.width, Environment2D.height, BufferedImage.TYPE_INT_RGB);
     }
     
     /**
@@ -105,6 +118,18 @@ public class Drawing {
         drawing.run();
         
         environment.run();
+    }
+    
+    /**
+     * Renders a Drawing.
+     *
+     * @param drawing The Drawing.
+     * @param g2      The 2D Graphics entity.
+     */
+    public static void doRender(Drawing drawing, Graphics2D g2) {
+        if (drawing != null) {
+            drawing.render(g2);
+        }
     }
     
 }

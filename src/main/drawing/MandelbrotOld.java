@@ -238,12 +238,12 @@ public class MandelbrotOld extends Drawing {
      * @return The rendered Mandelbrot.
      */
     @Override
-    public BufferedImage render() {
+    public BufferedImage draw() {
         if (rendering == null) {
-            return super.render();
+            return super.draw();
         }
         
-        BufferedImage img = new BufferedImage(Environment2D.drawingX, Environment2D.drawingY, BufferedImage.TYPE_INT_RGB);
+        BufferedImage img = new BufferedImage(Environment2D.width, Environment2D.height, BufferedImage.TYPE_INT_RGB);
         
         rendering.set(true);
         System.out.println("Rendering");

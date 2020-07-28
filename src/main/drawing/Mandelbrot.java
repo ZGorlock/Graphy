@@ -663,7 +663,7 @@ public class Mandelbrot extends Drawing {
      * @return The rendered Mandelbrot.
      */
     @Override
-    public BufferedImage render() {
+    public BufferedImage draw() {
         return image;
     }
     

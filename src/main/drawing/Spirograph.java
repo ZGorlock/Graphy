@@ -120,8 +120,8 @@ public class Spirograph extends Drawing {
      * @return The rendered Spirograph.
      */
     @Override
-    public BufferedImage render() {
-        BufferedImage img = new BufferedImage(Environment2D.drawingX, Environment2D.drawingY, BufferedImage.TYPE_INT_RGB);
+    public BufferedImage draw() {
+        BufferedImage img = new BufferedImage(Environment2D.width, Environment2D.height, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = img.createGraphics();
         
         double slice = 2 * Math.PI / pointCount;

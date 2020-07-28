@@ -334,7 +334,7 @@ public class Camera {
      * @param cameraMovement A flag indicating whether or not to allow movement for the Camera.
      */
     public Camera(Scene scene, UUID perspective, boolean cameraControls, boolean cameraMovement) {
-        this(scene, perspective, new Vector(Environment.sceneX / 1000.0, Environment.sceneY / 1000.0), new Vector(Environment.screenX, Environment.screenY, Environment.screenZ), cameraControls, cameraMovement);
+        this(scene, perspective, new Vector(Environment.width / 1000.0, Environment.height / 1000.0), new Vector(Environment.screenX, Environment.screenY, Environment.screenZ), cameraControls, cameraMovement);
     }
     
     
@@ -489,10 +489,7 @@ public class Camera {
             
             preparedBases.sort((o1, o2) -> Double.compare(o2.getRenderDistance(), o1.getRenderDistance()));
             
-            if (scene.environment.background != null) {
-                g2.setColor(scene.environment.background);
-                g2.fillRect(0, 0, scene.environment.frame.getWidth(), scene.environment.frame.getHeight());
-            }
+            scene.environment.colorBackground(g2);
             
             for (BaseObject preparedBase : preparedBases) {
                 preparedBase.doRender(g2, perspective);

@@ -110,6 +110,7 @@ public class Drawing {
         Environment2D environment = new Environment2D();
         environment.setFps(0);
         environment.setup();
+        environment.setupMainKeyListener();
         
         Constructor<? extends Drawing> constructor = drawingClass.getDeclaredConstructor(Environment2D.class);
         Drawing drawing = constructor.newInstance(environment);

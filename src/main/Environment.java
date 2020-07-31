@@ -93,7 +93,8 @@ public class Environment extends EnvironmentBase {
      * Adds the KeyListener for the main Environment controls.
      */
     @Override
-    public void addMainKeyListener() {
+    protected void addMainKeyListener() {
+        super.addMainKeyListener();
         
         frame.addKeyListener(new KeyListener() {
             

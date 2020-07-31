@@ -35,7 +35,7 @@ public class PolyhedraExplosion extends Scene {
     /**
      * The number of each polyhedra species to put in the scene.
      */
-    public static final int speciesCount = 100;
+    public static final int speciesCount = 50;
     
     /**
      * The radius of the enclosing sphere of each polyhedron.

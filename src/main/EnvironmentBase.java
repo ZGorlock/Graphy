@@ -12,12 +12,15 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.LayoutManager2;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
+import camera.CaptureHandler;
 import math.vector.Vector;
 import utility.ScreenUtility;
 
@@ -34,14 +37,24 @@ public abstract class EnvironmentBase {
     public static final int MAX_FPS = 120;
     
     /**
+     * The display width of the screen.
+     */
+    private static final int DISPLAY_WIDTH = ScreenUtility.DISPLAY_WIDTH;
+    
+    /**
+     * The display height of the screen.
+     */
+    private static final int DISPLAY_HEIGHT = ScreenUtility.DISPLAY_HEIGHT;
+    
+    /**
      * The maximum x dimension of the Window.
      */
-    public static final int MAX_SCREEN_X = ScreenUtility.DISPLAY_WIDTH;
+    public static final int MAX_SCREEN_X = DISPLAY_WIDTH - ((DISPLAY_WIDTH % 2 == 0) ? 0 : 1);
     
     /**
      * The maximum y dimension of the Window.
      */
-    public static final int MAX_SCREEN_Y = ScreenUtility.DISPLAY_HEIGHT;
+    public static final int MAX_SCREEN_Y = DISPLAY_HEIGHT - ((DISPLAY_HEIGHT % 2 == 0) ? 0 : 1);
     
     /**
      * The maximum z dimension of the Window.
@@ -120,6 +133,11 @@ public abstract class EnvironmentBase {
     public Color background;
     
     /**
+     * The capture handler for the Environment.
+     */
+    protected CaptureHandler captureHandler;
+    
+    /**
      * Whether the main KeyListener has been set up or not.
      */
     protected AtomicBoolean hasSetupMainKeyListener = new AtomicBoolean(false);
@@ -151,7 +169,7 @@ public abstract class EnvironmentBase {
                     Graphics2D g2 = null;
                     try {
                         g2 = (Graphics2D) getBufferStrategy().getDrawGraphics();
-                        render(g2);
+                        print(g2);
                     } finally {
                         if (g2 != null) {
                             g2.dispose();
@@ -160,16 +178,25 @@ public abstract class EnvironmentBase {
                     getBufferStrategy().show();
                 } while (getBufferStrategy().contentsLost());
             }
+            
+            @Override
+            public void print(Graphics g) {
+                render((Graphics2D) g);
+            }
+            
         };
         frame.getContentPane().add(renderPanel);
         
-        sizeWindow();
+        setSize(screenX, screenY, width, height);
         
         frame.pack();
         frame.setVisible(true);
         
         renderPanel.setIgnoreRepaint(true);
         renderPanel.createBufferStrategy(2);
+        renderPanel.setFocusable(false);
+        
+        captureHandler = new CaptureHandler(this);
     }
     
     /**
@@ -225,8 +252,10 @@ public abstract class EnvironmentBase {
      */
     public void colorBackground(Graphics2D g2) {
         if (background != null) {
+            Color cacheColor = g2.getColor();
             g2.setColor(background);
             g2.fillRect(0, 0, renderPanel.getWidth(), renderPanel.getHeight());
+            g2.setColor(cacheColor);
         }
     }
     
@@ -244,6 +273,32 @@ public abstract class EnvironmentBase {
      * Adds the KeyListener for the main Environment controls.
      */
     protected void addMainKeyListener() {
+        frame.addKeyListener(new KeyListener() {
+            
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+            
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int key = e.getKeyCode();
+                
+                if (key == KeyEvent.VK_C) {
+                    captureHandler.captureListener(e.isControlDown());
+                }
+                if (key == KeyEvent.VK_V) {
+                    captureHandler.recordingListener();
+                }
+                if (key == KeyEvent.VK_B) {
+                    captureHandler.openCaptureDir();
+                }
+            }
+            
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+            
+        });
     }
     
     
@@ -261,27 +316,45 @@ public abstract class EnvironmentBase {
     /**
      * Sets the dimensions of the Window and the Render Panel.
      *
+     * @param screenX The width of the Window.
+     * @param screenY The height of the Window.
+     * @param width   The width of the Render Panel.
+     * @param height  The height of the Render Panel.
+     */
+    public void setSize(int screenX, int screenY, int width, int height) {
+        if (screenX > 0 && screenY > 0) {
+            screenX -= (((screenX % 2) == 0) ? 0 : 1);
+            screenY -= (((screenY % 2) == 0) ? 0 : 1);
+            EnvironmentBase.screenX = Math.min(screenX, EnvironmentBase.MAX_SCREEN_X);
+            EnvironmentBase.screenY = Math.min(screenY, EnvironmentBase.MAX_SCREEN_Y);
+        }
+        if (width > 0 && height > 0) {
+            width -= (((width % 2) == 0) ? 0 : 1);
+            height -= (((height % 2) == 0) ? 0 : 1);
+            Environment.width = Math.min(width, Environment.screenX);
+            Environment.height = Math.min(height, Environment.screenY);
+        }
+        sizeWindow();
+    }
+    
+    /**
+     * Sets the dimensions of the Window and the Render Panel.
+     *
      * @param width  The width of the Window and the Render Panel.
      * @param height The height of the Window and the Render Panel.
      */
     public void setSize(int width, int height) {
-        EnvironmentBase.screenX = Math.min(width, EnvironmentBase.MAX_SCREEN_X);
-        EnvironmentBase.screenY = Math.min(height, EnvironmentBase.MAX_SCREEN_Y);
-        EnvironmentBase.width = EnvironmentBase.screenX;
-        EnvironmentBase.height = EnvironmentBase.screenY;
-        sizeWindow();
+        setSize(width, height, width, height);
     }
     
     /**
      * Sets the dimensions of the Window.
      *
-     * @param width  The width of the Window.
-     * @param height The height of the Window.
+     * @param screenX The width of the Window.
+     * @param screenY The height of the Window.
      */
-    public void setWindowSize(int width, int height) {
-        EnvironmentBase.screenX = Math.min(width, EnvironmentBase.MAX_SCREEN_X);
-        EnvironmentBase.screenY = Math.min(height, EnvironmentBase.MAX_SCREEN_Y);
-        sizeWindow();
+    public void setWindowSize(int screenX, int screenY) {
+        setSize(-1, -1, screenX, screenY);
     }
     
     /**
@@ -291,9 +364,7 @@ public abstract class EnvironmentBase {
      * @param height The height of the Render Panel.
      */
     public void setRenderSize(int width, int height) {
-        Environment.width = Math.min(width, Environment.screenX);
-        Environment.height = Math.min(height, Environment.screenY);
-        sizeWindow();
+        setSize(width, height, -1, -1);
     }
     
     /**

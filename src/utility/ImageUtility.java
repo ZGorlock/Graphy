@@ -11,10 +11,17 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Shape;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -184,6 +191,61 @@ public class ImageUtility {
             return image;
         } catch (Exception ignored) {
             return null;
+        }
+    }
+    
+    /**
+     * Saves an image to a file.
+     *
+     * @param image The image.
+     * @param file  The output file.
+     */
+    public static void saveImage(BufferedImage image, File file) {
+        try {
+            if (file.mkdirs()) {
+                ImageIO.write(image, "jpg", file);
+            }
+        } catch (Exception ignored) {
+        }
+    }
+    
+    /**
+     * Copies an image to the clipboard.
+     *
+     * @param image The image.
+     */
+    public static void copyImageToClipboard(final BufferedImage image) {
+        Transferable transferableImage = new Transferable() {
+            
+            @Override
+            public DataFlavor[] getTransferDataFlavors() {
+                DataFlavor[] flavors = new DataFlavor[1];
+                flavors[0] = DataFlavor.imageFlavor;
+                return flavors;
+            }
+            
+            @Override
+            public boolean isDataFlavorSupported(DataFlavor flavor) {
+                DataFlavor[] flavors = getTransferDataFlavors();
+                return Arrays.stream(flavors).anyMatch(flavor::equals);
+            }
+            
+            @Override
+            public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+                if (flavor.equals(DataFlavor.imageFlavor)) {
+                    return image;
+                } else {
+                    throw new UnsupportedFlavorException(flavor);
+                }
+            }
+            
+        };
+        
+        try {
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(transferableImage, (clipboard1, contents) -> {
+            });
+        } catch (Exception ignored) {
         }
     }
     

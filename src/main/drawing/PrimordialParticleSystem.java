@@ -172,7 +172,7 @@ public class PrimordialParticleSystem extends Drawing {
             this.pps = pps;
             this.reactiveRadius = reactiveRadius * size;
             
-            int particleCount = (int) (Environment2D.screenX * Environment2D.screenY * populationDensity) - centerCount;
+            int particleCount = (int) (Environment2D.screenWidth * Environment2D.screenHeight * populationDensity) - centerCount;
             
             for (int i = 0; i < particleCount; i++) {
                 particles.add(new Particle(this, pps.environment.getRandomPosition(), getRandomOrientation(), size, speed, alpha, beta));
@@ -412,8 +412,8 @@ public class PrimordialParticleSystem extends Drawing {
             velocity = heading.scale(speed);
             
             position = position.plus(velocity);
-            position.setX(position.getX() % Environment2D.screenX);
-            position.setY(position.getY() % Environment2D.screenY);
+            position.setX(position.getX() % Environment2D.screenWidth);
+            position.setY(position.getY() % Environment2D.screenHeight);
         }
         
         /**

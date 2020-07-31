@@ -86,7 +86,7 @@ public class Environment extends EnvironmentBase {
     @Override
     protected void sizeWindow() {
         super.sizeWindow();
-        Camera.setScreenSize(perspective, new Vector(width, height, screenZ));
+        Camera.setScreenSize(perspective, new Vector(width, height, screenDepth));
     }
     
     /**

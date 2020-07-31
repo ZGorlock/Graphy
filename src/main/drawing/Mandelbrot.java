@@ -101,7 +101,7 @@ public class Mandelbrot extends Drawing {
     /**
      * The size of the screen to render the Mandelbrot on.
      */
-    public static final Vector SCREEN_SIZE = new Vector(Environment.MAX_SCREEN_X, Environment.MAX_SCREEN_Y);
+    public static final Vector SCREEN_SIZE = new Vector(Environment.MAX_SCREEN_WIDTH, Environment.MAX_SCREEN_HEIGHT);
     
     /**
      * The number of threads to use while rendering the Mandelbrot.
@@ -395,10 +395,10 @@ public class Mandelbrot extends Drawing {
     public void initComponents() {
         environment.frame.setTitle("Mandelbrot");
         
-        progressBar = new JProgressBar(0, Environment2D.screenX * Environment2D.screenY);
-        progressBar.setSize(new Dimension(Environment2D.screenX - 1, BAR_HEIGHT));
-        progressBar.setPreferredSize(new Dimension(Environment2D.screenX, BAR_HEIGHT));
-        progressBar.setBounds(0, Environment2D.screenY - BAR_HEIGHT, progressBar.getWidth(), progressBar.getHeight());
+        progressBar = new JProgressBar(0, Environment2D.screenWidth * Environment2D.screenHeight);
+        progressBar.setSize(new Dimension(Environment2D.screenWidth - 1, BAR_HEIGHT));
+        progressBar.setPreferredSize(new Dimension(Environment2D.screenWidth, BAR_HEIGHT));
+        progressBar.setBounds(0, Environment2D.screenHeight - BAR_HEIGHT, progressBar.getWidth(), progressBar.getHeight());
         progressBar.setVisible(false);
         environment.frame.getContentPane().add(progressBar, BorderLayout.SOUTH);
         
@@ -504,8 +504,8 @@ public class Mandelbrot extends Drawing {
                 
                 if (e.getClickCount() == 2) {
                     Vector mul = new Vector(
-                            ((double) x / Environment2D.screenY) - ((Environment2D.screenX / 2.0) / Environment2D.screenY),
-                            ((Environment2D.screenY / 2.0) - y) / Environment2D.screenY);
+                            ((double) x / Environment2D.screenHeight) - ((Environment2D.screenWidth / 2.0) / Environment2D.screenHeight),
+                            ((Environment2D.screenHeight / 2.0) - y) / Environment2D.screenHeight);
                     offset = new BigVector(mul).scale(size);
                     leftSizeScale = BigDecimal.valueOf(0.2);
                     rightSizeScale = BigDecimal.valueOf(5);
@@ -515,15 +515,15 @@ public class Mandelbrot extends Drawing {
                     if ((mouseDraggedSize > 0) && !SwingUtilities.isRightMouseButton(e)) {
                         int s = mouseDraggedSize / 2;
                         if (((x - mouseSelected.getX()) <= s) && ((mouseSelected.getX() - x) <= s)) {
-                            s = (mouseDraggedSize * Environment2D.screenY) / Environment2D.screenX / 2;
+                            s = (mouseDraggedSize * Environment2D.screenHeight) / Environment2D.screenWidth / 2;
                             if (((y - mouseSelected.getY()) < s) && ((mouseSelected.getY() - y) < s)) {
                                 
                                 Vector mul = new Vector(
-                                        (mouseSelected.getX() / Environment2D.screenY) - (Environment2D.screenX * 0.5 / Environment2D.screenY),
-                                        (0.5 * Environment2D.screenY - mouseSelected.getY()) / Environment2D.screenY);
+                                        (mouseSelected.getX() / Environment2D.screenHeight) - (Environment2D.screenWidth * 0.5 / Environment2D.screenHeight),
+                                        (0.5 * Environment2D.screenHeight - mouseSelected.getY()) / Environment2D.screenHeight);
                                 offset = new BigVector(mul).scale(size);
-                                leftSizeScale = BigDecimal.valueOf(mouseDraggedSize / (double) Environment2D.screenX);
-                                rightSizeScale = BigDecimal.valueOf(Environment2D.screenX / (double) mouseDraggedSize);
+                                leftSizeScale = BigDecimal.valueOf(mouseDraggedSize / (double) Environment2D.screenWidth);
+                                rightSizeScale = BigDecimal.valueOf(Environment2D.screenWidth / (double) mouseDraggedSize);
                                 doScaling = true;
                             }
                         }
@@ -589,7 +589,7 @@ public class Mandelbrot extends Drawing {
                 int y = e.getY();
                 
                 mouseDraggedSize = 2 * Math.abs(x - (int) mousePressed.getX());
-                int ds2 = (Math.abs(y - (int) mousePressed.getY()) * 2 * Environment2D.screenX) / Environment2D.screenY;
+                int ds2 = (Math.abs(y - (int) mousePressed.getY()) * 2 * Environment2D.screenWidth) / Environment2D.screenHeight;
                 mouseDraggedSize = Math.max(mouseDraggedSize, ds2);
                 environment.run();
                 mouseSelected = mousePressed.clone();
@@ -677,7 +677,7 @@ public class Mandelbrot extends Drawing {
         g.setColor(Color.GRAY);
         if (mouseDraggedSize > 0) {
             int width = mouseDraggedSize;
-            int height = (mouseDraggedSize * Environment2D.screenY) / Environment2D.screenX;
+            int height = (mouseDraggedSize * Environment2D.screenHeight) / Environment2D.screenWidth;
             g.draw3DRect((int) mousePressed.getX() - width / 2, (int) mousePressed.getY() - height / 2, width, height, true);
         }
         
@@ -692,7 +692,7 @@ public class Mandelbrot extends Drawing {
             };
             g.setFont(new Font("Console", Font.PLAIN, FONT_SIZE));
             
-            int y = Environment2D.screenY - (FONT_SIZE * (data.length + 2));
+            int y = Environment2D.screenHeight - (FONT_SIZE * (data.length + 2));
             for (String d : data) {
                 g.drawString(d, FONT_SIZE, y += FONT_SIZE);
             }

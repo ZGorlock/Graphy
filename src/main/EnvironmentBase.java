@@ -47,19 +47,19 @@ public abstract class EnvironmentBase {
     private static final int DISPLAY_HEIGHT = ScreenUtility.DISPLAY_HEIGHT;
     
     /**
-     * The maximum x dimension of the Window.
+     * The maximum width of the Window.
      */
-    public static final int MAX_SCREEN_X = DISPLAY_WIDTH - ((DISPLAY_WIDTH % 2 == 0) ? 0 : 1);
+    public static final int MAX_SCREEN_WIDTH = DISPLAY_WIDTH - ((DISPLAY_WIDTH % 2 == 0) ? 0 : 1);
     
     /**
-     * The maximum y dimension of the Window.
+     * The maximum height of the Window.
      */
-    public static final int MAX_SCREEN_Y = DISPLAY_HEIGHT - ((DISPLAY_HEIGHT % 2 == 0) ? 0 : 1);
+    public static final int MAX_SCREEN_HEIGHT = DISPLAY_HEIGHT - ((DISPLAY_HEIGHT % 2 == 0) ? 0 : 1);
     
     /**
-     * The maximum z dimension of the Window.
+     * The maximum depth of the Window.
      */
-    public static final int MAX_SCREEN_Z = 720;
+    public static final int MAX_SCREEN_DEPTH = 720;
     
     /**
      * The origin of the Environment.
@@ -80,29 +80,29 @@ public abstract class EnvironmentBase {
     public static int fps = MAX_FPS;
     
     /**
-     * The x dimension of the Window.
+     * The width of the Window.
      */
-    public static int screenX = MAX_SCREEN_X;
+    public static int screenWidth = MAX_SCREEN_WIDTH;
     
     /**
-     * The y dimension of the Window.
+     * The height of the Window.
      */
-    public static int screenY = MAX_SCREEN_Y;
+    public static int screenHeight = MAX_SCREEN_HEIGHT;
     
     /**
-     * The z dimension of the Window.
+     * The depth of the Window.
      */
-    public static int screenZ = MAX_SCREEN_Z;
+    public static int screenDepth = MAX_SCREEN_DEPTH;
     
     /**
-     * The x dimension of the Render Panel.
+     * The width of the Render Panel.
      */
-    public static int width = MAX_SCREEN_X;
+    public static int width = MAX_SCREEN_WIDTH;
     
     /**
-     * The y dimension of the Render Panel.
+     * The height of the Render Panel.
      */
-    public static int height = MAX_SCREEN_Y;
+    public static int height = MAX_SCREEN_HEIGHT;
     
     /**
      * The coordinates to center the Environment at.
@@ -187,7 +187,7 @@ public abstract class EnvironmentBase {
         };
         frame.getContentPane().add(renderPanel);
         
-        setSize(screenX, screenY, width, height);
+        setSize(screenWidth, screenHeight, width, height);
         
         frame.pack();
         frame.setVisible(true);
@@ -235,10 +235,10 @@ public abstract class EnvironmentBase {
     protected void sizeWindow() {
         renderPanel.setSize(new Dimension(width, height));
         renderPanel.setPreferredSize(new Dimension(renderPanel.getSize()));
-        frame.setSize(new Dimension(screenX + ScreenUtility.BORDER_WIDTH, screenY + ScreenUtility.BORDER_HEIGHT));
+        frame.setSize(new Dimension(screenWidth + ScreenUtility.BORDER_WIDTH, screenHeight + ScreenUtility.BORDER_HEIGHT));
         frame.setPreferredSize(frame.getSize());
         
-        if ((screenX == MAX_SCREEN_X) && (screenY == MAX_SCREEN_Y)) {
+        if ((screenWidth == MAX_SCREEN_WIDTH) && (screenHeight == MAX_SCREEN_HEIGHT)) {
             frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         } else {
             frame.setExtendedState(JFrame.NORMAL);
@@ -310,29 +310,29 @@ public abstract class EnvironmentBase {
      * @param fps The number of frames to render per second.
      */
     public void setFps(int fps) {
-        Environment2D.fps = fps;
+        EnvironmentBase.fps = Math.min(fps, MAX_FPS);
     }
     
     /**
      * Sets the dimensions of the Window and the Render Panel.
      *
-     * @param screenX The width of the Window.
-     * @param screenY The height of the Window.
-     * @param width   The width of the Render Panel.
-     * @param height  The height of the Render Panel.
+     * @param screenWidth  The width of the Window.
+     * @param screenHeight The height of the Window.
+     * @param width        The width of the Render Panel.
+     * @param height       The height of the Render Panel.
      */
-    public void setSize(int screenX, int screenY, int width, int height) {
-        if (screenX > 0 && screenY > 0) {
-            screenX -= (((screenX % 2) == 0) ? 0 : 1);
-            screenY -= (((screenY % 2) == 0) ? 0 : 1);
-            EnvironmentBase.screenX = Math.min(screenX, EnvironmentBase.MAX_SCREEN_X);
-            EnvironmentBase.screenY = Math.min(screenY, EnvironmentBase.MAX_SCREEN_Y);
+    public void setSize(int screenWidth, int screenHeight, int width, int height) {
+        if (screenWidth > 0 && screenHeight > 0) {
+            screenWidth -= (((screenWidth % 2) == 0) ? 0 : 1);
+            screenHeight -= (((screenHeight % 2) == 0) ? 0 : 1);
+            EnvironmentBase.screenWidth = Math.min(screenWidth, EnvironmentBase.MAX_SCREEN_WIDTH);
+            EnvironmentBase.screenHeight = Math.min(screenHeight, EnvironmentBase.MAX_SCREEN_HEIGHT);
         }
         if (width > 0 && height > 0) {
             width -= (((width % 2) == 0) ? 0 : 1);
             height -= (((height % 2) == 0) ? 0 : 1);
-            Environment.width = Math.min(width, Environment.screenX);
-            Environment.height = Math.min(height, Environment.screenY);
+            Environment.width = Math.min(width, Environment.screenWidth);
+            Environment.height = Math.min(height, Environment.screenHeight);
         }
         sizeWindow();
     }
@@ -350,11 +350,11 @@ public abstract class EnvironmentBase {
     /**
      * Sets the dimensions of the Window.
      *
-     * @param screenX The width of the Window.
-     * @param screenY The height of the Window.
+     * @param screenWidth  The width of the Window.
+     * @param screenHeight The height of the Window.
      */
-    public void setWindowSize(int screenX, int screenY) {
-        setSize(-1, -1, screenX, screenY);
+    public void setWindowSize(int screenWidth, int screenHeight) {
+        setSize(-1, -1, screenWidth, screenHeight);
     }
     
     /**

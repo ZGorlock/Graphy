@@ -334,7 +334,7 @@ public class Camera {
      * @param cameraMovement A flag indicating whether or not to allow movement for the Camera.
      */
     public Camera(Scene scene, UUID perspective, boolean cameraControls, boolean cameraMovement) {
-        this(scene, perspective, new Vector(Environment.width / 1000.0, Environment.height / 1000.0), new Vector(Environment.screenX, Environment.screenY, Environment.screenZ), cameraControls, cameraMovement);
+        this(scene, perspective, new Vector(Environment.width / 1000.0, Environment.height / 1000.0), new Vector(Environment.screenWidth, Environment.screenHeight, Environment.screenDepth), cameraControls, cameraMovement);
     }
     
     

@@ -204,9 +204,9 @@ public class MandelbrotOld extends Drawing {
      */
     @Override
     public void run() {
-        this.dimension = Math.max(Environment2D.screenX, Environment2D.screenY);
-        this.offset.setX((dimension > Environment2D.screenX) ? (Environment2D.screenX - dimension) / 2.0 : 0);
-        this.offset.setY((dimension > Environment2D.screenY) ? (Environment2D.screenY - dimension) / 2.0 : 0);
+        this.dimension = Math.max(Environment2D.screenWidth, Environment2D.screenHeight);
+        this.offset.setX((dimension > Environment2D.screenWidth) ? (Environment2D.screenWidth - dimension) / 2.0 : 0);
+        this.offset.setY((dimension > Environment2D.screenHeight) ? (Environment2D.screenHeight - dimension) / 2.0 : 0);
         
         if (slowZoomEnabled) {
             zoomEnabled = false;
@@ -250,13 +250,13 @@ public class MandelbrotOld extends Drawing {
         
         for (int row = 0; row < dimension; row++) {
             int trueRow = row + (int) offset.getY();
-            if ((trueRow < 0) || (trueRow >= Environment2D.screenY)) {
+            if ((trueRow < 0) || (trueRow >= Environment2D.screenHeight)) {
                 continue;
             }
             
             for (int col = 0; col < dimension; col++) {
                 int trueCol = col + (int) offset.getX();
-                if ((trueCol < 0) || (trueCol >= Environment2D.screenX)) {
+                if ((trueCol < 0) || (trueCol >= Environment2D.screenWidth)) {
                     continue;
                 }
                 
@@ -363,8 +363,8 @@ public class MandelbrotOld extends Drawing {
      */
     public Vector clickToMandelbrot(Vector point) {
         return new Vector(
-                mapValue(point.getX(), 0, Environment2D.screenX, bounds.getP1().getX(), bounds.getP2().getX()),
-                mapValue(point.getY(), 0, Environment2D.screenY, bounds.getP1().getY(), bounds.getP4().getY())
+                mapValue(point.getX(), 0, Environment2D.screenWidth, bounds.getP1().getX(), bounds.getP2().getX()),
+                mapValue(point.getY(), 0, Environment2D.screenHeight, bounds.getP1().getY(), bounds.getP4().getY())
         );
     }
     

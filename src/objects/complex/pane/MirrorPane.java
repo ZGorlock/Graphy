@@ -170,7 +170,7 @@ public class MirrorPane extends Pane {
         
         Shape saveClip = g2.getClip();
         g2.setClip(parentView);
-        ImageUtility.transformImage(reflection, bounds, g2, Environment.screenX, Environment.screenY, parentBounds);
+        ImageUtility.transformImage(reflection, bounds, g2, Environment.screenWidth, Environment.screenHeight, parentBounds);
         g2.setClip(saveClip);
     }
     

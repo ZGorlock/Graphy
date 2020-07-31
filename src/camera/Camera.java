@@ -13,7 +13,6 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
@@ -27,13 +26,13 @@ import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import main.Environment;
 import math.Delta;
 import math.vector.Vector;
 import math.vector.Vector3;
 import objects.base.BaseObject;
-import objects.base.ObjectInterface;
 import objects.base.Scene;
 import objects.base.polygon.Rectangle;
 import utility.SphericalCoordinateUtility;
@@ -474,11 +473,9 @@ public class Camera {
                 return;
             }
             
-            List<BaseObject> preparedBases = new ArrayList<>();
+            List<BaseObject> preparedBases;
             try {
-                for (ObjectInterface object : scene.getComponents()) {
-                    preparedBases.addAll(object.doPrepare(perspective));
-                }
+                preparedBases = scene.getComponents().parallelStream().flatMap(object -> object.doPrepare(perspective).stream()).collect(Collectors.toList());
             } catch (ConcurrentModificationException ignored) {
                 return;
             }
@@ -491,9 +488,7 @@ public class Camera {
             
             scene.environment.colorBackground(g2);
             
-            for (BaseObject preparedBase : preparedBases) {
-                preparedBase.doRender(g2, perspective);
-            }
+            preparedBases.parallelStream().forEachOrdered(preparedBase -> preparedBase.doRender(g2, perspective));
         }
     }
     

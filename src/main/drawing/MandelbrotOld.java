@@ -123,7 +123,7 @@ public class MandelbrotOld extends Drawing {
      * The main method of of the program.
      *
      * @param args Arguments to the main method.
-     * @throws Exception When the Drawing class cannot be constructed.
+     * @throws Exception When the Drawing cannot be created.
      */
     public static void main(String[] args) throws Exception {
         runDrawing(MandelbrotOld.class);

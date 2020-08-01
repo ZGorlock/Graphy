@@ -9,6 +9,7 @@ package objects.base;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
+import javax.management.InstanceAlreadyExistsException;
 
 import main.Environment2D;
 
@@ -104,9 +105,10 @@ public class Drawing {
      * Runs a Drawing.
      *
      * @param drawingClass The class of Drawing to run.
-     * @throws Exception When the Drawing class cannot be constructed.
+     * @throws InstanceAlreadyExistsException When an Environment is already defined.
+     * @throws Exception                      When the Drawing class cannot be constructed.
      */
-    protected static void runDrawing(Class<? extends Drawing> drawingClass) throws Exception {
+    protected static void runDrawing(Class<? extends Drawing> drawingClass) throws InstanceAlreadyExistsException, Exception {
         Environment2D environment = new Environment2D();
         environment.setFps(0);
         environment.setup();

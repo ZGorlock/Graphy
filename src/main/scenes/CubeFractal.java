@@ -23,7 +23,7 @@ public class CubeFractal extends Scene {
      * The main method for the Cube Fractal scene.
      *
      * @param args The arguments to the main method.
-     * @throws Exception When the Scene class cannot be constructed.
+     * @throws Exception When the Scene cannot be created.
      */
     public static void main(String[] args) throws Exception {
         runScene(CubeFractal.class);

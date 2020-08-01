@@ -19,7 +19,7 @@ public class DirtyPolyhedraExplosion extends PolyhedraExplosion {
      * The main method for the Dirty Polyhedra Explosion scene.
      *
      * @param args The arguments to the main method.
-     * @throws Exception When the Scene class cannot be constructed.
+     * @throws Exception When the Scene cannot be created.
      */
     public static void main(String[] args) throws Exception {
         runScene(DirtyPolyhedraExplosion.class);

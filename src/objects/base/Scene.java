@@ -8,6 +8,7 @@ package objects.base;
 
 import java.awt.Color;
 import java.lang.reflect.Constructor;
+import javax.management.InstanceAlreadyExistsException;
 
 import main.Environment;
 
@@ -74,9 +75,10 @@ public abstract class Scene extends Object {
      * Runs a Scene.
      *
      * @param sceneClass The class of Scene to run.
-     * @throws Exception When the Scene class cannot be constructed.
+     * @throws InstanceAlreadyExistsException When an Environment is already defined.
+     * @throws Exception                      When the Scene class cannot be constructed.
      */
-    protected static void runScene(Class<? extends Scene> sceneClass) throws Exception {
+    protected static void runScene(Class<? extends Scene> sceneClass) throws InstanceAlreadyExistsException, Exception {
         Environment environment = new Environment();
         environment.setup();
         environment.setupMainKeyListener();

@@ -75,6 +75,11 @@ public abstract class EnvironmentBase {
     //Static Fields
     
     /**
+     * A flag indicating whether or not an Environment has been instanced yet or not.
+     */
+    protected static AtomicBoolean instanced = new AtomicBoolean(false);
+    
+    /**
      * The number of frames to render per second.
      */
     public static int fps = MAX_FPS;

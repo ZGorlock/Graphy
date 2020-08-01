@@ -8,6 +8,7 @@ package main;
 
 import java.awt.BorderLayout;
 import java.awt.Graphics2D;
+import javax.management.InstanceAlreadyExistsException;
 
 import math.vector.Vector;
 import objects.base.Drawing;
@@ -30,8 +31,14 @@ public class Environment2D extends EnvironmentBase {
     
     /**
      * The default constructor for an Environment2D.
+     *
+     * @throws InstanceAlreadyExistsException When an Environment is already defined.
      */
-    public Environment2D() {
+    public Environment2D() throws InstanceAlreadyExistsException {
+        if (!instanced.compareAndSet(false, true)) {
+            throw new InstanceAlreadyExistsException("Environment is already defined");
+        }
+        
         background = null;
         layout = new BorderLayout();
     }

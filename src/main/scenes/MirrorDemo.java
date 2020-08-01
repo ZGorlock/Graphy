@@ -29,7 +29,7 @@ public class MirrorDemo extends Scene {
      * The main method for the Mirror Demo scene.
      *
      * @param args The arguments to the main method.
-     * @throws Exception When the Scene class cannot be constructed.
+     * @throws Exception When the Scene cannot be created.
      */
     public static void main(String[] args) throws Exception {
         runScene(MirrorDemo.class);

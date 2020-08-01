@@ -14,6 +14,7 @@ import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.management.InstanceAlreadyExistsException;
 
 import camera.Camera;
 import math.vector.Vector;
@@ -74,8 +75,14 @@ public class Environment extends EnvironmentBase {
     
     /**
      * The default constructor for an Environment.
+     *
+     * @throws InstanceAlreadyExistsException When an Environment is already defined.
      */
-    public Environment() {
+    public Environment() throws InstanceAlreadyExistsException {
+        if (!instanced.compareAndSet(false, true)) {
+            throw new InstanceAlreadyExistsException("Environment is already defined");
+        }
+        
         background = Color.WHITE;
         layout = new GridBagLayout();
     }

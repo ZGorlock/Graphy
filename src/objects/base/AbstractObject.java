@@ -165,9 +165,9 @@ public abstract class AbstractObject implements ObjectInterface {
         if (!perspectives.contains(perspective)) {
             initializePerspective(perspective);
         }
-        if (!Environment.ENABLE_RENDER_BUFFERING || renderDelay.get(perspective).decrementAndGet() <= 0) {
+        if (!Environment.enableRenderBuffering || renderDelay.get(perspective).decrementAndGet() <= 0) {
             if (!visible) {
-                renderDelay.get(perspective).set(Environment.ENABLE_RENDER_BUFFERING ? ((int) (Math.random() * (Environment.fps / 8))) : 1);
+                renderDelay.get(perspective).set(Environment.enableRenderBuffering ? ((int) (Math.random() * (Environment.fps / 8))) : 1);
                 return false;
             }
             return true;
@@ -192,9 +192,9 @@ public abstract class AbstractObject implements ObjectInterface {
      */
     @Override
     public final boolean postPrepare(UUID perspective) {
-        if (calculateRenderDistance(perspective) > Environment.MAX_RENDER_DISTANCE) {
-            renderDelay.get(perspective).set(Environment.ENABLE_RENDER_BUFFERING ? ((int) (Math.random() * (Environment.fps / 8))) : 1);
-            return !Environment.ENABLE_RENDER_BUFFERING;
+        if (calculateRenderDistance(perspective) > Environment.maxRenderDistance) {
+            renderDelay.get(perspective).set(Environment.enableRenderBuffering ? ((int) (Math.random() * (Environment.fps / 8))) : 1);
+            return !Environment.enableRenderBuffering;
         }
         return true;
     }
@@ -229,16 +229,16 @@ public abstract class AbstractObject implements ObjectInterface {
      */
     @Override
     public final boolean preRender(UUID perspective) {
-        if (!Environment.ENABLE_RENDER_BUFFERING || renderDelay.get(perspective).get() <= 0) {
+        if (!Environment.enableRenderBuffering || renderDelay.get(perspective).get() <= 0) {
             if (!visible || (prepared.get(perspective).size() < vertices.length) || Camera.hasVectorBehindScreen(perspective, vertices)) {
-                renderDelay.get(perspective).set(Environment.ENABLE_RENDER_BUFFERING ? ((int) (Math.random() * (Environment.fps / 8))) : 1);
+                renderDelay.get(perspective).set(Environment.enableRenderBuffering ? ((int) (Math.random() * (Environment.fps / 8))) : 1);
                 return false;
             }
             
             Camera.projectVectorsToCamera(perspective, prepared.get(perspective));
             Camera.collapseVectorsToViewport(perspective, prepared.get(perspective));
             if (!Camera.hasVectorInView(perspective, prepared.get(perspective))) {
-                renderDelay.get(perspective).set(Environment.ENABLE_RENDER_BUFFERING ? ((int) (Math.random() * (Environment.fps / 8))) : 1);
+                renderDelay.get(perspective).set(Environment.enableRenderBuffering ? ((int) (Math.random() * (Environment.fps / 8))) : 1);
                 return false;
             } else {
                 renderDelay.get(perspective).set(1);

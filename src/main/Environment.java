@@ -29,14 +29,27 @@ public class Environment extends EnvironmentBase {
     //Constants
     
     /**
+     * The default value of the flag indicating whether or not render buffering should be utilized.
+     */
+    public static final boolean DEFAULT_ENABLE_RENDER_BUFFERING = true;
+    
+    /**
+     * The default value of the maximum distance to render.
+     */
+    public static final double DEFAULT_MAX_RENDER_DISTANCE = 250.0;
+    
+    
+    //Static Fields
+    
+    /**
      * A flag indicating whether or not render buffering should be utilized.
      */
-    public static final boolean ENABLE_RENDER_BUFFERING = true;
+    public static boolean enableRenderBuffering = DEFAULT_ENABLE_RENDER_BUFFERING;
     
     /**
      * The maximum distance to render.
      */
-    public static final double MAX_RENDER_DISTANCE = 250.0;
+    public static double maxRenderDistance = DEFAULT_MAX_RENDER_DISTANCE;
     
     
     //Fields

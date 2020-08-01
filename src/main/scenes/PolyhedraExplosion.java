@@ -35,7 +35,7 @@ public class PolyhedraExplosion extends Scene {
     /**
      * The number of each polyhedra species to put in the scene.
      */
-    public static final int speciesCount = 50;
+    public static final int speciesCount = 150;
     
     /**
      * The radius of the enclosing sphere of each polyhedron.
@@ -133,6 +133,8 @@ public class PolyhedraExplosion extends Scene {
      */
     public PolyhedraExplosion(Environment environment) {
         super(environment);
+        
+        Environment.enableRenderBuffering = false;
     }
     
     

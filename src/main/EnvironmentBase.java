@@ -558,7 +558,7 @@ public abstract class EnvironmentBase {
     }
     
     
-    //Static Methods
+    //Functions
     
     /**
      * Returns the Environment time in milliseconds.

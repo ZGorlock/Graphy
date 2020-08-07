@@ -69,7 +69,7 @@ public abstract class Scene extends Object {
     }
     
     
-    //Static Methods
+    //Functions
     
     /**
      * Runs a Scene.

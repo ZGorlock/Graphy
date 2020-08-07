@@ -99,7 +99,7 @@ public class Drawing {
     }
     
     
-    //Static Methods
+    //Functions
     
     /**
      * Runs a Drawing.

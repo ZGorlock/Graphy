@@ -395,13 +395,13 @@ public class Mandelbrot extends Drawing {
     @Override
     public void initComponents() {
         environment.frame.setTitle("Mandelbrot");
+        
         environment.setBackground(Color.BLACK);
         
         progressBar = new JProgressBar(0, Environment2D.screenWidth * Environment2D.screenHeight);
         progressBar.setSize(new Dimension(Environment2D.screenWidth - 1, BAR_HEIGHT));
         progressBar.setPreferredSize(new Dimension(Environment2D.screenWidth, BAR_HEIGHT));
         progressBar.setBounds(0, Environment2D.screenHeight - BAR_HEIGHT, progressBar.getWidth(), progressBar.getHeight());
-        progressBar.setVisible(false);
         environment.frame.getContentPane().add(progressBar, BorderLayout.SOUTH);
         
         createBuffer();
@@ -460,8 +460,9 @@ public class Mandelbrot extends Drawing {
         menuBar.add(qualityOptions);
         menuBar.add(paletteOptions);
         menuBar.add(pointOptions);
-        menuBar.setVisible(false);
+        
         environment.frame.setJMenuBar(menuBar);
+        environment.frame.pack();
     }
     
     /**
@@ -694,7 +695,7 @@ public class Mandelbrot extends Drawing {
             };
             g.setFont(new Font("Console", Font.PLAIN, FONT_SIZE));
             
-            int y = Environment2D.screenHeight - (FONT_SIZE * (data.length + 2));
+            int y = Environment2D.screenHeight - (FONT_SIZE * (data.length + 4));
             for (String d : data) {
                 g.drawString(d, FONT_SIZE, y += FONT_SIZE);
             }
@@ -783,7 +784,6 @@ public class Mandelbrot extends Drawing {
     private void updateImage() {
         progressBar.setValue(0);
         progressBar.setMaximum(1024);
-        progressBar.setVisible(true);
         
         long startTime = System.currentTimeMillis();
         
@@ -856,7 +856,8 @@ public class Mandelbrot extends Drawing {
                 spinner.shutdown();
                 
                 image = buffer.makeTexture(palette);
-                progressBar.setVisible(false);
+                progressBar.setMaximum(buffer.width * buffer.height);
+                progressBar.setValue(progressBar.getMaximum());
                 calculationTime = (double) (System.currentTimeMillis() - startTime) / 1000 + " s";
                 
                 environment.run();

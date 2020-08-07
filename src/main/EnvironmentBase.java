@@ -18,13 +18,17 @@ import java.awt.LayoutManager2;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 import java.util.Map;
+import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import camera.CaptureHandler;
@@ -131,6 +135,11 @@ public abstract class EnvironmentBase {
      */
     private static final Map<UUID, Task> tasks = new ConcurrentHashMap<>();
     
+    /**
+     * A flag indicating whether or not to record the entire session.
+     */
+    private static final boolean recordSession = true;
+    
     
     //Fields
     
@@ -150,6 +159,11 @@ public abstract class EnvironmentBase {
     public LayoutManager2 layout;
     
     /**
+     * The buffer populated for captures and recordings.
+     */
+    public final Queue<BufferedImage> buffer = new LinkedBlockingQueue<>();
+    
+    /**
      * The background color of the Environment.
      */
     public Color background;
@@ -160,9 +174,14 @@ public abstract class EnvironmentBase {
     protected CaptureHandler captureHandler;
     
     /**
-     * Whether the main KeyListener has been set up or not.
+     * A flag indicating whether or not the main KeyListener has been set up.
      */
     protected AtomicBoolean hasSetupMainKeyListener = new AtomicBoolean(false);
+    
+    /**
+     * A flag indicating whether or not the Environment is currently rendering.
+     */
+    protected final AtomicBoolean rendering = new AtomicBoolean(false);
     
     
     //Methods
@@ -176,6 +195,8 @@ public abstract class EnvironmentBase {
         frame.getContentPane().setLayout(layout);
         frame.setFocusable(true);
         frame.setFocusTraversalKeysEnabled(false);
+        
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown, "ShutdownHook"));
         
         // panel to display render results
         renderPanel = new Canvas() {
@@ -195,14 +216,29 @@ public abstract class EnvironmentBase {
                 do {
                     do {
                         Graphics2D g2 = null;
+                        Graphics2D g2b = null;
                         try {
                             g2 = (Graphics2D) bufferStrategy.getDrawGraphics();
                             g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
-                            print(g2);
+                            if (captureHandler.needsBuffer()) {
+                                BufferedImage bufferImage = new BufferedImage(renderPanel.getWidth(), renderPanel.getHeight(), BufferedImage.TYPE_INT_RGB);
+                                g2b = bufferImage.createGraphics();
+                                print(g2b);
+                                g2b.dispose();
+                                g2b = null;
+                                buffer.add(bufferImage);
+                                g2.drawImage(bufferImage, 0, 0, null);
+                            } else {
+                                buffer.clear();
+                                print(g2);
+                            }
                         } catch (Exception ignored) {
                         } finally {
                             if (g2 != null) {
                                 g2.dispose();
+                            }
+                            if (g2b != null) {
+                                g2b.dispose();
                             }
                         }
                     } while (bufferStrategy.contentsRestored());
@@ -242,15 +278,32 @@ public abstract class EnvironmentBase {
             renderPanel.repaint();
             
         } else {
-            final AtomicBoolean rendering = new AtomicBoolean(false);
             Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
                 if (rendering.compareAndSet(false, true)) {
-                    renderPanel.repaint();
-                    runTasks();
+                    try {
+                        if (captureHandler.needsBuffer()) {
+                            SwingUtilities.invokeAndWait(() -> renderPanel.repaint());
+                        } else {
+                            renderPanel.repaint();
+                        }
+                        runTasks();
+                    } catch (Exception ignored) {
+                    }
                     rendering.set(false);
                 }
             }, 0, 1000 / fps, TimeUnit.MILLISECONDS);
+            
+            if (recordSession) {
+                captureHandler.recordingListener();
+            }
         }
+    }
+    
+    /**
+     * Shuts down the Environment.
+     */
+    public final void shutdown() {
+        captureHandler.shutdown();
     }
     
     /**
@@ -326,7 +379,9 @@ public abstract class EnvironmentBase {
                     captureHandler.captureListener(e.isControlDown());
                 }
                 if (key == KeyEvent.VK_V) {
-                    captureHandler.recordingListener();
+                    if (!recordSession) {
+                        captureHandler.recordingListener();
+                    }
                 }
                 if (key == KeyEvent.VK_B) {
                     captureHandler.openCaptureDir();

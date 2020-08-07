@@ -7,7 +7,6 @@
 package camera;
 
 import java.awt.Desktop;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.charset.Charset;
@@ -78,12 +77,12 @@ public class CaptureHandler {
     /**
      * A flag indicating whether or not a capture should be taken.
      */
-    private AtomicBoolean capture = new AtomicBoolean(false);
+    public final AtomicBoolean capture = new AtomicBoolean(false);
     
     /**
      * A flag indicating whether or not, if a capture should be taken, the capture should be copied to the clipboard.
      */
-    private AtomicBoolean copyCapture = new AtomicBoolean(false);
+    private final AtomicBoolean copyCapture = new AtomicBoolean(false);
     
     /**
      * The Task that takes the capture.
@@ -93,7 +92,7 @@ public class CaptureHandler {
     /**
      * A flag indicating whether or not a recording is in progress.
      */
-    private AtomicBoolean recording = new AtomicBoolean(false);
+    public final AtomicBoolean recording = new AtomicBoolean(false);
     
     /**
      * The temporary directory to store frames during a recording.
@@ -103,7 +102,7 @@ public class CaptureHandler {
     /**
      * The current frame count during a recording.
      */
-    private AtomicInteger recordingFrame = new AtomicInteger(0);
+    private final AtomicInteger recordingFrame = new AtomicInteger(0);
     
     /**
      * The Task that takes the recording.
@@ -161,6 +160,15 @@ public class CaptureHandler {
     }
     
     /**
+     * Shuts down the Capture Handler.
+     */
+    public void shutdown() {
+        if (recording.get()) {
+            finalizeRecording(true);
+        }
+    }
+    
+    /**
      * Initializes a capture.
      */
     private synchronized void initializeCapture() {
@@ -168,10 +176,7 @@ public class CaptureHandler {
             return;
         }
         
-        captureTask = Environment.addTask(() -> {
-            handleCapture();
-            finalizeCapture();
-        });
+        captureTask = Environment.addTask(this::handleCapture);
     }
     
     /**
@@ -213,8 +218,10 @@ public class CaptureHandler {
     
     /**
      * Finalizes a recording.
+     *
+     * @param wait A flag indicating whether or not to wait for the recording to finish encoding.
      */
-    private synchronized void finalizeRecording() {
+    private synchronized void finalizeRecording(boolean wait) {
         if (!recording.get() || (recordingTask == null) || (recordingDir == null) || !recordingDir.exists() || !recordingDir.isDirectory()) {
             return;
         }
@@ -223,8 +230,20 @@ public class CaptureHandler {
         recordingTask = null;
         
         Environment.fps = Environment.fps * 2;
-        Thread encodeRecording = new Thread(this::encodeRecording);
-        encodeRecording.start();
+        
+        if (wait) {
+            encodeRecording();
+        } else {
+            Thread encodeRecording = new Thread(this::encodeRecording);
+            encodeRecording.start();
+        }
+    }
+    
+    /**
+     * Finalizes a recording.
+     */
+    private synchronized void finalizeRecording() {
+        finalizeRecording(false);
     }
     
     /**
@@ -232,10 +251,13 @@ public class CaptureHandler {
      */
     private synchronized void handleCapture() {
         if (capture.get()) {
-            BufferedImage screenshot = screenshot();
-            ImageUtility.saveImage(screenshot, new File(CAPTURE_DIR, getCaptureName(false) + ".jpg"));
-            if (copyCapture.get()) {
-                ImageUtility.copyImageToClipboard(screenshot);
+            BufferedImage screenshot = screenshot(recording.get());
+            if (screenshot != null) {
+                ImageUtility.saveImage(screenshot, new File(CAPTURE_DIR, getCaptureName(false) + ".jpg"));
+                if (copyCapture.get()) {
+                    ImageUtility.copyImageToClipboard(screenshot);
+                }
+                finalizeCapture();
             }
         }
     }
@@ -245,29 +267,44 @@ public class CaptureHandler {
      */
     private synchronized void handleRecording() {
         if (recording.get()) {
-            BufferedImage screenshot = screenshot();
-            String frameName = String.format("%08d", recordingFrame.incrementAndGet());
-            ImageUtility.saveImage(screenshot, new File(recordingDir, recordingDir.getName() + "~" + frameName + ".jpg"));
+            BufferedImage screenshot;
+            do {
+                screenshot = screenshot(capture.get());
+                if (screenshot != null) {
+                    String frameName = String.format("%08d", recordingFrame.incrementAndGet());
+                    ImageUtility.saveImage(screenshot, new File(recordingDir, recordingDir.getName() + "~" + frameName + ".jpg"));
+                }
+            } while (!capture.get() && (screenshot != null));
         }
     }
     
     /**
-     * Takes a screenshot of the Render Panel.
+     * Returns whether or not the Capture Handler needs a buffer from the Environment.
      *
+     * @return Whether or not the Capture Handler needs a buffer from the Environment.
+     */
+    public boolean needsBuffer() {
+        return (captureTask != null) || (recordingTask != null);
+    }
+    
+    /**
+     * Retrieves a screenshot of the Render Panel.
+     *
+     * @param leaveBuffer A flag indicating whether or not to leave the buffer.
      * @return The screenshot.
      */
-    private synchronized BufferedImage screenshot() {
-        BufferedImage screenshot = new BufferedImage(environment.renderPanel.getWidth(), environment.renderPanel.getHeight(), BufferedImage.TYPE_INT_RGB);
-        Graphics2D screenshotGraphics = screenshot.createGraphics();
-        environment.renderPanel.print(screenshotGraphics);
-        screenshotGraphics.dispose();
-        return screenshot;
+    private synchronized BufferedImage screenshot(boolean leaveBuffer) {
+        if (leaveBuffer) {
+            return environment.buffer.peek();
+        } else {
+            return environment.buffer.poll();
+        }
     }
     
     /**
      * Encodes the recording.
      */
-    private synchronized void encodeRecording() {
+    private void encodeRecording() {
         File recordingVideo = new File(CAPTURE_DIR, recordingDir.getName() + ".mp4");
         File concatDemuxer = new File(recordingDir, "concatDemuxer.txt");
         
@@ -280,7 +317,7 @@ public class CaptureHandler {
         String input;
         switch (frameRateMode) {
             case ENVIRONMENT_FPS:
-                frameRate = "-framerate " + Environment.fps;
+                frameRate = "-framerate " + (Environment.fps / 2);
                 input = "-i \"" + recordingDir.getAbsolutePath() + "/" + recordingDir.getName() + "~%08d.jpg\"";
                 break;
             

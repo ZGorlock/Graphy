@@ -80,6 +80,7 @@ public abstract class Scene extends Object {
      */
     protected static void runScene(Class<? extends Scene> sceneClass) throws InstanceAlreadyExistsException, Exception {
         Environment environment = new Environment();
+        environment.setDoubleBuffering(true);
         environment.setup();
         environment.setupMainKeyListener();
         

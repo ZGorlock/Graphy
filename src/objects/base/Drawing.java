@@ -110,6 +110,8 @@ public class Drawing {
      */
     protected static void runDrawing(Class<? extends Drawing> drawingClass) throws InstanceAlreadyExistsException, Exception {
         Environment2D environment = new Environment2D();
+        environment.setFps(0);
+        environment.setDoubleBuffering(false);
         environment.setup();
         environment.setupMainKeyListener();
         

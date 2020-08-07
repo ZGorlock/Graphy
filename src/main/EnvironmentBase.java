@@ -138,7 +138,7 @@ public abstract class EnvironmentBase {
     /**
      * A flag indicating whether or not to record the entire session.
      */
-    private static final boolean recordSession = true;
+    private static final boolean recordSession = false;
     
     
     //Fields
@@ -157,6 +157,11 @@ public abstract class EnvironmentBase {
      * The Layout Manager to use for the Window.
      */
     public LayoutManager2 layout;
+    
+    /**
+     * A flag indicating whether or not to use double buffering.
+     */
+    private boolean doubleBuffering;
     
     /**
      * The buffer populated for captures and recordings.
@@ -201,15 +206,44 @@ public abstract class EnvironmentBase {
         // panel to display render results
         renderPanel = new Canvas() {
             
+            /**
+             * Updates the Canvas.
+             *
+             * @param g The Graphics.
+             */
             @Override
             public void update(Graphics g) {
                 paint(g);
             }
             
+            /**
+             * Paints the Canvas.
+             *
+             * @param g The Graphics.
+             */
             @Override
             public void paint(Graphics g) {
+                if (doubleBuffering) {
+                    paintWithDoubleBuffer(g);
+                } else {
+                    paintWithoutDoubleBuffer(g);
+                }
+            }
+            
+            /**
+             * Paints the Canvas with double buffering.
+             *
+             * @param g The Graphics.
+             */
+            public void paintWithDoubleBuffer(Graphics g) {
                 BufferStrategy bufferStrategy = getBufferStrategy();
                 if (bufferStrategy == null) {
+                    try {
+                        BufferCapabilities capabilities = new BufferCapabilities(new ImageCapabilities(true), new ImageCapabilities(true), BufferCapabilities.FlipContents.COPIED);
+                        renderPanel.createBufferStrategy(2, capabilities);
+                    } catch (Exception ignored) {
+                        renderPanel.createBufferStrategy(2);
+                    }
                     return;
                 }
                 
@@ -246,26 +280,54 @@ public abstract class EnvironmentBase {
                 } while (bufferStrategy.contentsLost());
             }
             
+            /**
+             * Paints the Canvas without double buffering.
+             *
+             * @param g The Graphics.
+             */
+            public void paintWithoutDoubleBuffer(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g;
+                Graphics2D g2b = null;
+                try {
+                    if (captureHandler.needsBuffer()) {
+                        BufferedImage bufferImage = new BufferedImage(renderPanel.getWidth(), renderPanel.getHeight(), BufferedImage.TYPE_INT_RGB);
+                        g2b = bufferImage.createGraphics();
+                        print(g2b);
+                        g2b.dispose();
+                        g2b = null;
+                        buffer.add(bufferImage);
+                        g2.drawImage(bufferImage, 0, 0, null);
+                    } else {
+                        buffer.clear();
+                        print(g2);
+                    }
+                } catch (Exception ignored) {
+                } finally {
+                    if (g2b != null) {
+                        g2b.dispose();
+                    }
+                }
+            }
+            
+            /**
+             * Prints the Environment to the Canvas.
+             *
+             * @param g The Graphics.
+             */
             @Override
             public void print(Graphics g) {
                 render((Graphics2D) g);
             }
             
         };
+        renderPanel.setBackground(Color.BLACK);
+        renderPanel.setFocusable(false);
         frame.getContentPane().add(renderPanel);
         
         setSize(screenWidth, screenHeight, width, height);
         
         frame.pack();
         frame.setVisible(true);
-        
-        renderPanel.setFocusable(false);
-        try {
-            BufferCapabilities capabilities = new BufferCapabilities(new ImageCapabilities(true), new ImageCapabilities(true), BufferCapabilities.FlipContents.COPIED);
-            renderPanel.createBufferStrategy(2, capabilities);
-        } catch (Exception ignored) {
-            renderPanel.createBufferStrategy(2);
-        }
         
         captureHandler = new CaptureHandler(this);
     }
@@ -379,7 +441,7 @@ public abstract class EnvironmentBase {
                     captureHandler.captureListener(e.isControlDown());
                 }
                 if (key == KeyEvent.VK_V) {
-                    if (!recordSession) {
+                    if (!recordSession && (fps > 0)) {
                         captureHandler.recordingListener();
                     }
                 }
@@ -478,6 +540,15 @@ public abstract class EnvironmentBase {
     public void setBackground(Color background) {
         this.background = background;
         frame.getContentPane().setBackground(background);
+    }
+    
+    /**
+     * Sets the flag indicating whether or not to use double buffering.
+     *
+     * @param doubleBuffering Whether to use double buffering or not.
+     */
+    public void setDoubleBuffering(boolean doubleBuffering) {
+        this.doubleBuffering = doubleBuffering;
     }
     
     

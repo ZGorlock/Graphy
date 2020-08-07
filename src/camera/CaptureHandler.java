@@ -203,7 +203,7 @@ public class CaptureHandler {
         }
         
         recordingDir = null;
-        recordingDir = new File(CAPTURE_DIR, getCaptureName(true));
+        recordingDir = new File(CAPTURE_DIR, getCaptureName(environment, true));
         if (!recordingDir.mkdirs()) {
             recordingDir = null;
             return;
@@ -253,7 +253,7 @@ public class CaptureHandler {
         if (capture.get()) {
             BufferedImage screenshot = screenshot(recording.get());
             if (screenshot != null) {
-                ImageUtility.saveImage(screenshot, new File(CAPTURE_DIR, getCaptureName(false) + ".jpg"));
+                ImageUtility.saveImage(screenshot, new File(CAPTURE_DIR, getCaptureName(environment, false) + ".jpg"));
                 if (copyCapture.get()) {
                     ImageUtility.copyImageToClipboard(screenshot);
                 }
@@ -305,30 +305,86 @@ public class CaptureHandler {
      * Encodes the recording.
      */
     private void encodeRecording() {
-        File recordingVideo = new File(CAPTURE_DIR, recordingDir.getName() + ".mp4");
-        File concatDemuxer = new File(recordingDir, "concatDemuxer.txt");
+        encodeFrames(recordingDir, frameRateMode);
         
-        File[] frames = recordingDir.listFiles();
+        recordingDir = null;
+        
+        recordingFrame.set(0);
+        recording.set(false);
+    }
+    
+    
+    //Functions
+    
+    /**
+     * Returns the name for a capture or recording.
+     *
+     * @param environment The Environment.
+     * @param recording   A flag indicating whether or not this is a recording.
+     * @return The name for the capture or recording.
+     */
+    public static String getCaptureName(EnvironmentBase environment, boolean recording) {
+        String name;
+        name = environment.frame.getTitle().trim().replaceAll("\\s+", "_");
+        if (name.isEmpty()) {
+            name = recording ? "recording" : "capture";
+        }
+        name += "~" + System.currentTimeMillis();
+        return name;
+    }
+    
+    /**
+     * Encodes a video from a folder of frames.
+     *
+     * @param frameDir  The folder of frames.
+     * @param frameRate The frame rate for the encoding.
+     */
+    public static void encodeFrames(File frameDir, int frameRate) {
+        encodeFrames(frameDir, FrameRateMode.CUSTOM_FPS, frameRate);
+    }
+    
+    /**
+     * Encodes a video from a folder of frames.
+     *
+     * @param frameDir      The folder of frames.
+     * @param frameRateMode The frame rate mode for the encoding.
+     */
+    public static void encodeFrames(File frameDir, FrameRateMode frameRateMode) {
+        encodeFrames(frameDir, frameRateMode, -1);
+    }
+    
+    /**
+     * Encodes a video from a folder of frames.
+     *
+     * @param frameDir      The folder of frames.
+     * @param frameRateMode The frame rate mode for the encoding.
+     * @param frameRate     The frame rate for the encoding.
+     */
+    private static void encodeFrames(File frameDir, FrameRateMode frameRateMode, int frameRate) {
+        File recordingVideo = new File(CAPTURE_DIR, frameDir.getName() + ".mp4");
+        File concatDemuxer = new File(frameDir, "concatDemuxer.txt");
+        
+        File[] frames = frameDir.listFiles();
         if (frames == null) {
             return;
         }
         
-        String frameRate;
-        String input;
+        String cmdFrameRate;
+        String cmdInput;
         switch (frameRateMode) {
             case ENVIRONMENT_FPS:
-                frameRate = "-framerate " + (Environment.fps / 2);
-                input = "-i \"" + recordingDir.getAbsolutePath() + "/" + recordingDir.getName() + "~%08d.jpg\"";
+                cmdFrameRate = "-framerate " + (Environment.fps / 2);
+                cmdInput = "-i \"" + frameDir.getAbsolutePath() + "/" + frameDir.getName() + "~%08d.jpg\"";
                 break;
             
             case CUSTOM_FPS:
-                frameRate = "-framerate " + customFps;
-                input = "-i \"" + recordingDir.getAbsolutePath() + "/" + recordingDir.getName() + "~%08d.jpg\"";
+                cmdFrameRate = "-framerate " + ((frameRate > 0) ? frameRate : customFps);
+                cmdInput = "-i \"" + frameDir.getAbsolutePath() + "/" + frameDir.getName() + "~%08d.jpg\"";
                 break;
             
             case TIME_BASED:
-                frameRate = "-f concat -safe 0";
-                input = "-i \"" + concatDemuxer.getAbsolutePath() + "\" -vsync vfr";
+                cmdFrameRate = "-f concat -safe 0";
+                cmdInput = "-i \"" + concatDemuxer.getAbsolutePath() + "\" -vsync vfr";
                 
                 List<String> concatDemuxerLines = new ArrayList<>();
                 String frameName = "";
@@ -362,7 +418,7 @@ public class CaptureHandler {
                 return;
         }
         
-        String cmd = "ffmpeg " + frameRate + " " + input + " \"" + recordingVideo.getAbsolutePath() + "\"";
+        String cmd = "ffmpeg " + cmdFrameRate + " " + cmdInput + " \"" + recordingVideo.getAbsolutePath() + "\"";
         String log = CmdLineUtility.executeCmd(cmd, true);
         
         try {
@@ -374,29 +430,9 @@ public class CaptureHandler {
             if (frameRateMode == FrameRateMode.TIME_BASED) {
                 Files.delete(concatDemuxer.toPath());
             }
-            Files.delete(recordingDir.toPath());
+            Files.delete(frameDir.toPath());
         } catch (Exception ignored) {
         }
-        recordingDir = null;
-        
-        recordingFrame.set(0);
-        recording.set(false);
-    }
-    
-    /**
-     * Returns the name for a capture or recording.
-     *
-     * @param recording A flag indicating whether or not this is a recording.
-     * @return The name for the capture or recording.
-     */
-    private String getCaptureName(boolean recording) {
-        String title;
-        title = environment.frame.getTitle().trim().replaceAll("\\s+", "_");
-        if (title.isEmpty()) {
-            title = recording ? "recording" : "capture";
-        }
-        title += "~" + System.currentTimeMillis();
-        return title;
     }
     
 }

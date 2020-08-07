@@ -136,6 +136,11 @@ public abstract class EnvironmentBase {
     private static final Map<UUID, Task> tasks = new ConcurrentHashMap<>();
     
     /**
+     * A list of Tasks to be run during the shutdown of the Environment.
+     */
+    private static final Map<UUID, Task> shutdownTasks = new ConcurrentHashMap<>();
+    
+    /**
      * A flag indicating whether or not to record the entire session.
      */
     private static final boolean recordSession = false;
@@ -366,6 +371,7 @@ public abstract class EnvironmentBase {
      */
     public final void shutdown() {
         captureHandler.shutdown();
+        shutdownTasks.values().stream().filter(e -> e.active.get()).forEach(e -> e.action.run());
     }
     
     /**
@@ -617,6 +623,19 @@ public abstract class EnvironmentBase {
         if (task != null) {
             task.active.set(true);
         }
+    }
+    
+    /**
+     * Adds a shutdown Task to the Environment.
+     *
+     * @param action The action of the Task.
+     * @return The id of the Task that was added.
+     */
+    public static UUID registerShutdownTask(Runnable action) {
+        Task task = new Task();
+        task.action = action;
+        shutdownTasks.put(task.id, task);
+        return task.id;
     }
     
     

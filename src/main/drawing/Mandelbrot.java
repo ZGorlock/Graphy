@@ -36,19 +36,21 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.imageio.ImageIO;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
+import camera.CaptureHandler;
 import main.Environment;
 import main.Environment2D;
+import main.EnvironmentBase;
 import math.vector.BigVector;
 import math.vector.Vector;
 import math.vector.Vector2;
 import objects.base.Drawing;
+import utility.ImageUtility;
 
 /**
  * A Mandelbrot drawing.
@@ -346,9 +348,14 @@ public class Mandelbrot extends Drawing {
     private double zoomFactor = 0.95;
     
     /**
-     * Whether or not to capture the frames of the Mandelbrot to images.
+     * Whether or not to record the the Mandelbrot.
      */
-    private boolean saveFrames = false;
+    private boolean record = true;
+    
+    /**
+     * The directory to store the frames in during recording.
+     */
+    private File recordDir;
     
     /**
      * The index of the current captured frame.
@@ -384,6 +391,7 @@ public class Mandelbrot extends Drawing {
     public Mandelbrot(Environment2D environment) {
         super(environment);
         environment.setSize((int) SCREEN_SIZE.getX(), (int) SCREEN_SIZE.getY());
+        EnvironmentBase.registerShutdownTask(this::shutdown);
     }
     
     
@@ -658,6 +666,25 @@ public class Mandelbrot extends Drawing {
     public void run() {
         initSlowZoom();
         updateImage();
+    }
+    
+    /**
+     * Shuts down the Mandelbrot.
+     */
+    public void shutdown() {
+        if (record) {
+            try {
+                String frameName = String.format("%08d", --frameIndex);
+                String frameNameCopy1 = String.format("%08d", ++frameIndex);
+                String frameNameCopy2 = String.format("%08d", ++frameIndex);
+                String frameNameCopy3 = String.format("%08d", ++frameIndex);
+                Files.copy(new File(recordDir, recordDir.getName() + "~" + frameName + ".jpg").toPath(), new File(recordDir, recordDir.getName() + "~" + frameNameCopy1 + ".jpg").toPath());
+                Files.copy(new File(recordDir, recordDir.getName() + "~" + frameName + ".jpg").toPath(), new File(recordDir, recordDir.getName() + "~" + frameNameCopy2 + ".jpg").toPath());
+                Files.copy(new File(recordDir, recordDir.getName() + "~" + frameName + ".jpg").toPath(), new File(recordDir, recordDir.getName() + "~" + frameNameCopy3 + ".jpg").toPath());
+            } catch (IOException ignore) {
+            }
+            CaptureHandler.encodeFrames(recordDir, slowZoom ? 20 : 1);
+        }
     }
     
     /**
@@ -1265,24 +1292,12 @@ public class Mandelbrot extends Drawing {
                 return null;
             }
             
-            if (saveFrames) {
-                File imgDir = new File("images");
-                if (!imgDir.exists()) {
-                    //noinspection ResultOfMethodCallIgnored
-                    imgDir.mkdir();
+            if (record) {
+                if (recordDir == null) {
+                    recordDir = new File(CaptureHandler.CAPTURE_DIR, CaptureHandler.getCaptureName(environment, true));
                 }
-                StringBuilder imgName = new StringBuilder(String.valueOf(frameIndex++));
-                while (imgName.length() < 6) {
-                    imgName.insert(0, "0");
-                }
-                imgName.insert(0, "Mandelbrot_");
-                imgName.append(".jpg");
-                File imgOut = new File(imgDir, imgName.toString());
-                try {
-                    ImageIO.write(image, "jpg", imgOut);
-                } catch (IOException e) {
-                    System.out.println("Failed to save image: " + imgOut.getAbsolutePath());
-                }
+                String frameName = String.format("%08d", frameIndex++);
+                ImageUtility.saveImage(image, new File(recordDir, recordDir.getName() + "~" + frameName + ".jpg"));
             }
             
             return image;

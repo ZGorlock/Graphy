@@ -10,9 +10,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import math.vector.Vector;
 import objects.base.AbstractObject;
@@ -111,20 +112,15 @@ public class RotationGroup extends Object {
         addRotationTransformation(rollRotation, pitchRotation, yawRotation, period);
         
         RotationGroup thisGroup = this;
-        Timer completionTimer = new Timer();
-        TimerTask checkRotationComplete = new TimerTask() {
-            @Override
-            public void run() {
-                if (!inRotationTransformation()) {
-                    if (parent != null) {
-                        parent.unregisterComponent(thisGroup);
-                    }
-                    completionTimer.purge();
-                    completionTimer.cancel();
+        ScheduledExecutorService checkRotationComplete = Executors.newSingleThreadScheduledExecutor();
+        checkRotationComplete.scheduleAtFixedRate(() -> {
+            if (!inRotationTransformation()) {
+                if (parent != null) {
+                    parent.unregisterComponent(thisGroup);
                 }
+                checkRotationComplete.shutdownNow();
             }
-        };
-        completionTimer.scheduleAtFixedRate(checkRotationComplete, 0, 10);
+        }, 0, 10, TimeUnit.MILLISECONDS);
     }
     
     /**

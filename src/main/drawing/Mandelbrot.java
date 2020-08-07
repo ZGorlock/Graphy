@@ -31,9 +31,10 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.TreeMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import javax.imageio.ImageIO;
 import javax.swing.JMenu;
@@ -394,6 +395,7 @@ public class Mandelbrot extends Drawing {
     @Override
     public void initComponents() {
         environment.frame.setTitle("Mandelbrot");
+        environment.setBackground(Color.BLACK);
         
         progressBar = new JProgressBar(0, Environment2D.screenWidth * Environment2D.screenHeight);
         progressBar.setSize(new Dimension(Environment2D.screenWidth - 1, BAR_HEIGHT));
@@ -467,7 +469,7 @@ public class Mandelbrot extends Drawing {
      */
     @Override
     public void setupControls() {
-        environment.frame.addMouseListener(new MouseListener() {
+        environment.renderPanel.addMouseListener(new MouseListener() {
             
             //Fields
             
@@ -581,7 +583,7 @@ public class Mandelbrot extends Drawing {
             
         });
         
-        environment.frame.addMouseMotionListener(new MouseMotionListener() {
+        environment.renderPanel.addMouseMotionListener(new MouseMotionListener() {
             
             @Override
             public void mouseDragged(MouseEvent e) {
@@ -737,45 +739,41 @@ public class Mandelbrot extends Drawing {
      */
     private void updateSlowZoom() {
         if (slowZoom) {
-            Timer reRender = new Timer();
-            reRender.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    size = size
-                            .multiply(BigDecimal.valueOf(zoomFactor))
-                            .setScale(6 - size.precision() + size.scale(), RoundingMode.HALF_UP)
-                            .stripTrailingZeros();
-                    if (frameIndex < (100 * zoomFactor)) {
-                        iterationLimit = 1024;
-                    }
-                    
-                    if (zoomUseFile) {
-                        try {
-                            if (!zoomFile.exists()) {
-                                //noinspection ResultOfMethodCallIgnored
-                                zoomFile.createNewFile();
-                            }
-                            
-                            List<String> zoomData = new ArrayList<>();
-                            zoomData.add(centre.getX().toPlainString());
-                            zoomData.add(centre.getY().toPlainString());
-                            zoomData.add(size.toPlainString());
-                            zoomData.add(String.valueOf(zoomFactor));
-                            zoomData.add(String.valueOf(iterationLimit));
-                            zoomData.add(String.valueOf(frameIndex));
-                            
-                            FileWriter writer = new FileWriter(zoomFile);
-                            for (String data : zoomData) {
-                                writer.write(data + "\r\n");
-                            }
-                            writer.close();
-                            
-                        } catch (Exception ignored) {
-                        }
-                    }
-                    updateImage();
+            Executors.newSingleThreadScheduledExecutor().schedule(() -> {
+                size = size
+                        .multiply(BigDecimal.valueOf(zoomFactor))
+                        .setScale(6 - size.precision() + size.scale(), RoundingMode.HALF_UP)
+                        .stripTrailingZeros();
+                if (frameIndex < (100 * zoomFactor)) {
+                    iterationLimit = 1024;
                 }
-            }, 250);
+                
+                if (zoomUseFile) {
+                    try {
+                        if (!zoomFile.exists()) {
+                            //noinspection ResultOfMethodCallIgnored
+                            zoomFile.createNewFile();
+                        }
+                        
+                        List<String> zoomData = new ArrayList<>();
+                        zoomData.add(centre.getX().toPlainString());
+                        zoomData.add(centre.getY().toPlainString());
+                        zoomData.add(size.toPlainString());
+                        zoomData.add(String.valueOf(zoomFactor));
+                        zoomData.add(String.valueOf(iterationLimit));
+                        zoomData.add(String.valueOf(frameIndex));
+                        
+                        FileWriter writer = new FileWriter(zoomFile);
+                        for (String data : zoomData) {
+                            writer.write(data + "\r\n");
+                        }
+                        writer.close();
+                        
+                    } catch (Exception ignored) {
+                    }
+                }
+                updateImage();
+            }, 250, TimeUnit.MILLISECONDS);
         }
     }
     
@@ -852,25 +850,22 @@ public class Mandelbrot extends Drawing {
         };
         calculationThread.start();
         
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if (threadCount.get() == 0) {
-                    image = buffer.makeTexture(palette);
-                    timer.purge();
-                    timer.cancel();
-                    progressBar.setVisible(false);
-                    calculationTime = (double) (System.currentTimeMillis() - startTime) / 1000 + " s";
-                    
-                    environment.run();
-                    updateSlowZoom();
-                } else {
-                    progressBar.setMaximum(buffer.width * buffer.height);
-                    progressBar.setValue(progress.get());
-                }
+        ScheduledExecutorService spinner = Executors.newSingleThreadScheduledExecutor();
+        spinner.scheduleAtFixedRate(() -> {
+            if (threadCount.get() == 0) {
+                spinner.shutdown();
+                
+                image = buffer.makeTexture(palette);
+                progressBar.setVisible(false);
+                calculationTime = (double) (System.currentTimeMillis() - startTime) / 1000 + " s";
+                
+                environment.run();
+                updateSlowZoom();
+            } else {
+                progressBar.setMaximum(buffer.width * buffer.height);
+                progressBar.setValue(progress.get());
             }
-        }, 100, 15);
+        }, 100, 15, TimeUnit.MILLISECONDS);
     }
     
     /**

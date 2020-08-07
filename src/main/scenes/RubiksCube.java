@@ -14,8 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import camera.Camera;
@@ -562,50 +562,45 @@ public class RubiksCube extends Scene {
      */
     private void shuffle(int count) {
         if (inAutoMovement.compareAndSet(false, true)) {
-            Timer shuffleTimer = new Timer();
-            TimerTask shuffleTask = new TimerTask() {
-                @Override
-                public void run() {
-                    for (int i = 0; i < count; i++) {
-                        int move = (int) (Math.random() * 6);
-                        int dir = (int) (Math.random() * 2);
-                        if (dir == 0) {
-                            dir = COUNTERCLOCKWISE;
-                        }
-                        
-                        switch (move) {
-                            case 0:
-                                front(dir);
-                                moves.push("F" + (dir == CLOCKWISE ? "'" : ""));
-                                break;
-                            case 1:
-                                back(dir);
-                                moves.push("B" + (dir == CLOCKWISE ? "'" : ""));
-                                break;
-                            case 2:
-                                left(dir);
-                                moves.push("L" + (dir == CLOCKWISE ? "'" : ""));
-                                break;
-                            case 3:
-                                right(dir);
-                                moves.push("R" + (dir == CLOCKWISE ? "'" : ""));
-                                break;
-                            case 4:
-                                up(dir);
-                                moves.push("U" + (dir == CLOCKWISE ? "'" : ""));
-                                break;
-                            case 5:
-                                down(dir);
-                                moves.push("D" + (dir == CLOCKWISE ? "'" : ""));
-                                break;
-                        }
-                        
-                        waitForAnimation();
+            Executors.newSingleThreadScheduledExecutor().schedule(() -> {
+                for (int i = 0; i < count; i++) {
+                    int move = (int) (Math.random() * 6);
+                    int dir = (int) (Math.random() * 2);
+                    if (dir == 0) {
+                        dir = COUNTERCLOCKWISE;
                     }
-                    inAutoMovement.set(false);
+                    
+                    switch (move) {
+                        case 0:
+                            front(dir);
+                            moves.push("F" + (dir == CLOCKWISE ? "'" : ""));
+                            break;
+                        case 1:
+                            back(dir);
+                            moves.push("B" + (dir == CLOCKWISE ? "'" : ""));
+                            break;
+                        case 2:
+                            left(dir);
+                            moves.push("L" + (dir == CLOCKWISE ? "'" : ""));
+                            break;
+                        case 3:
+                            right(dir);
+                            moves.push("R" + (dir == CLOCKWISE ? "'" : ""));
+                            break;
+                        case 4:
+                            up(dir);
+                            moves.push("U" + (dir == CLOCKWISE ? "'" : ""));
+                            break;
+                        case 5:
+                            down(dir);
+                            moves.push("D" + (dir == CLOCKWISE ? "'" : ""));
+                            break;
+                    }
+                    
+                    waitForAnimation();
                 }
-            };
-            shuffleTimer.schedule(shuffleTask, 0);
+                inAutoMovement.set(false);
+            }, 0, TimeUnit.MILLISECONDS);
         }
     }
     
@@ -633,57 +628,50 @@ public class RubiksCube extends Scene {
      */
     private void solve() {
         if (inAutoMovement.compareAndSet(false, true)) {
-            Timer solveTimer = new Timer();
-            TimerTask solveTask = new TimerTask() {
-                @Override
-                public void run() {
-                    while (!moves.empty()) {
-                        String move = moves.pop();
-                        
-                        int dir = move.endsWith("'") ? COUNTERCLOCKWISE : CLOCKWISE;
-                        move = move.endsWith("'") ? move.substring(0, 1) : move;
-                        
-                        switch (move) {
-                            case "F":
-                                front(dir);
-                                break;
-                            case "B":
-                                back(dir);
-                                break;
-                            case "L":
-                                left(dir);
-                                break;
-                            case "R":
-                                right(dir);
-                                break;
-                            case "U":
-                                up(dir);
-                                break;
-                            case "D":
-                                down(dir);
-                                break;
-                            case "XD":
-                                flipDown();
-                                break;
-                            case "XU":
-                                flipUp();
-                                break;
-                            case "XR":
-                                flipRight();
-                                break;
-                            case "XL":
-                                flipLeft();
-                                break;
-                        }
-                        
-                        waitForAnimation();
+            Executors.newSingleThreadScheduledExecutor().schedule(() -> {
+                while (!moves.empty()) {
+                    String move = moves.pop();
+                    
+                    int dir = move.endsWith("'") ? COUNTERCLOCKWISE : CLOCKWISE;
+                    move = move.endsWith("'") ? move.substring(0, 1) : move;
+                    
+                    switch (move) {
+                        case "F":
+                            front(dir);
+                            break;
+                        case "B":
+                            back(dir);
+                            break;
+                        case "L":
+                            left(dir);
+                            break;
+                        case "R":
+                            right(dir);
+                            break;
+                        case "U":
+                            up(dir);
+                            break;
+                        case "D":
+                            down(dir);
+                            break;
+                        case "XD":
+                            flipDown();
+                            break;
+                        case "XU":
+                            flipUp();
+                            break;
+                        case "XR":
+                            flipRight();
+                            break;
+                        case "XL":
+                            flipLeft();
+                            break;
                     }
-                    inAutoMovement.set(false);
+                    
+                    waitForAnimation();
                 }
-            };
-            solveTimer.schedule(solveTask, 0);
-            
-            inAutoMovement.set(false);
+                inAutoMovement.set(false);
+            }, 0, TimeUnit.MILLISECONDS);
         }
     }
     

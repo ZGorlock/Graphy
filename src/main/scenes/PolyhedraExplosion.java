@@ -7,10 +7,13 @@
 package main.scenes;
 
 import java.awt.Color;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import camera.Camera;
 import main.Environment;
@@ -18,6 +21,7 @@ import objects.base.AbstractObject;
 import objects.base.Frame;
 import objects.base.Scene;
 import objects.polyhedron.regular.MetatronsCube;
+import objects.polyhedron.regular.RegularPolyhedron;
 import objects.polyhedron.regular.platonic.Dodecahedron;
 import objects.polyhedron.regular.platonic.Hexahedron;
 import objects.polyhedron.regular.platonic.Icosahedron;
@@ -149,131 +153,36 @@ public class PolyhedraExplosion extends Scene {
         metatronsCube.addFrame(Color.BLACK);
         registerComponent(metatronsCube);
         
-        AtomicBoolean cameraInMotion = new AtomicBoolean(false);
-        final AtomicInteger[] loop = {new AtomicInteger(1)};
-        for (int i = 0; i < hexahedronCount; i++) {
-            Color c = (hexahedronColor == null) ? ColorUtility.getRandomColor(alpha) : hexahedronColor;
-            Hexahedron hexahedron = new Hexahedron(center, c, radius);
-            registerComponent(hexahedron);
-            Frame frame = new Frame(hexahedron);
-            Timer waiter = new Timer();
-            waiter.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    hexahedron.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
-                    hexahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
-                    hexahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-                    hexahedron.setFrameColor(new Color(0, 0, 0, 0));
-                    hexahedron.addProcess(new Runnable() {
-                        private int count = 0;
-                        
-                        @Override
-                        public void run() {
-                            count++;
-                            
-                            if (count == 9) {
-                                if (cameraInMotion.compareAndSet(false, true)) {
-                                    if ((loop[0].compareAndSet(0, 1)) || (loop[0].compareAndSet(1, 2))) {
-                                        Camera.getActiveCameraView(environment.perspective).addFluidTransition(-Math.PI / 4, -Math.PI / 2, 0, 10000);
-                                    } else if ((loop[0].compareAndSet(2, 3)) || (loop[0].compareAndSet(3, 0))) {
-                                        Camera.getActiveCameraView(environment.perspective).addFluidTransition(Math.PI / 4, -Math.PI / 2, 0, 10000);
-                                    }
-                                }
-                            } else if (count == 20) {
-                                hexahedron.animationTimers.get(1).purge();
-                                hexahedron.animationTimers.get(1).cancel();
-                                hexahedron.animationTimers.remove(1);
-                                
-                                double[] values = hexahedron.movementAnimations.get(0);
-                                hexahedron.movementAnimations.remove(0);
-                                
-                                hexahedron.addMovementAnimation(values[0] * -20, values[1] * -20, values[2] * -20);
-                                
-                            } else if (count == 21) {
-                                hexahedron.animationTimers.get(1).purge();
-                                hexahedron.animationTimers.get(1).cancel();
-                                hexahedron.animationTimers.remove(1);
-                                
-                                hexahedron.movementAnimations.remove(0);
-                                
-                                hexahedron.reposition(center);
-                                hexahedron.registerFrame(frame);
-                                if (hexahedron.getDisplayMode() == AbstractObject.DisplayMode.EDGE) {
-                                    hexahedron.setDisplayMode(AbstractObject.DisplayMode.FACE);
-                                    hexahedron.setFrameColor(Color.BLACK);
-                                    hexahedron.registerFrame(frame);
-                                } else {
-                                    hexahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-                                    hexahedron.setFrameColor(new Color(0, 0, 0, 0));
-                                }
-                                hexahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
-                                
-                                cameraInMotion.set(false);
-                                count = 0;
-                            }
-                        }
-                    }, 1000);
-                }
-            }, 0);
-            hexahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-        }
+        final List<RegularPolyhedron> species = new ArrayList<>();
         
         for (int i = 0; i < tetrahedronCount; i++) {
             Color c = (tetrahedronColor == null) ? ColorUtility.getRandomColor(alpha) : tetrahedronColor;
             Tetrahedron tetrahedron = new Tetrahedron(center, c, radius);
             registerComponent(tetrahedron);
             Frame frame = new Frame(tetrahedron);
-            Timer waiter = new Timer();
-            waiter.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    tetrahedron.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
-                    tetrahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
-                    tetrahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-                    tetrahedron.setFrameColor(new Color(0, 0, 0, 0));
-                    tetrahedron.addProcess(new Runnable() {
-                        private int count = 0;
-                        
-                        @Override
-                        public void run() {
-                            count++;
-                            
-                            if (count == 20) {
-                                tetrahedron.animationTimers.get(1).purge();
-                                tetrahedron.animationTimers.get(1).cancel();
-                                tetrahedron.animationTimers.remove(1);
-                                
-                                double[] values = tetrahedron.movementAnimations.get(0);
-                                tetrahedron.movementAnimations.remove(0);
-                                
-                                tetrahedron.addMovementAnimation(values[0] * -20, values[1] * -20, values[2] * -20);
-                                
-                            } else if (count == 21) {
-                                tetrahedron.animationTimers.get(1).purge();
-                                tetrahedron.animationTimers.get(1).cancel();
-                                tetrahedron.animationTimers.remove(1);
-                                
-                                tetrahedron.movementAnimations.remove(0);
-                                
-                                tetrahedron.reposition(center);
-                                tetrahedron.registerFrame(frame);
-                                if (tetrahedron.getDisplayMode() == AbstractObject.DisplayMode.EDGE) {
-                                    tetrahedron.setDisplayMode(AbstractObject.DisplayMode.FACE);
-                                    tetrahedron.setFrameColor(Color.BLACK);
-                                    tetrahedron.registerFrame(frame);
-                                } else {
-                                    tetrahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-                                    tetrahedron.setFrameColor(new Color(0, 0, 0, 0));
-                                }
-                                tetrahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
-                                
-                                count = 0;
-                            }
-                        }
-                    }, 1000);
-                }
-            }, 0);
+            
+            tetrahedron.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
+            tetrahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
             tetrahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+            tetrahedron.registerFrame(frame);
+            tetrahedron.setFrameColor(new Color(0, 0, 0, 0));
+            tetrahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+            species.add(tetrahedron);
+        }
+        
+        for (int i = 0; i < hexahedronCount; i++) {
+            Color c = (hexahedronColor == null) ? ColorUtility.getRandomColor(alpha) : hexahedronColor;
+            Hexahedron hexahedron = new Hexahedron(center, c, radius);
+            registerComponent(hexahedron);
+            Frame frame = new Frame(hexahedron);
+            
+            hexahedron.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
+            hexahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
+            hexahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+            hexahedron.registerFrame(frame);
+            hexahedron.setFrameColor(new Color(0, 0, 0, 0));
+            hexahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+            species.add(hexahedron);
         }
         
         for (int i = 0; i < octahedronCount; i++) {
@@ -281,57 +190,14 @@ public class PolyhedraExplosion extends Scene {
             Octahedron octahedron = new Octahedron(center, c, radius);
             registerComponent(octahedron);
             Frame frame = new Frame(octahedron);
-            Timer waiter = new Timer();
-            waiter.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    octahedron.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
-                    octahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
-                    octahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-                    octahedron.setFrameColor(new Color(0, 0, 0, 0));
-                    octahedron.addProcess(new Runnable() {
-                        private int count = 0;
-                        
-                        @Override
-                        public void run() {
-                            count++;
-                            
-                            if (count == 20) {
-                                octahedron.animationTimers.get(1).purge();
-                                octahedron.animationTimers.get(1).cancel();
-                                octahedron.animationTimers.remove(1);
-                                
-                                double[] values = octahedron.movementAnimations.get(0);
-                                octahedron.movementAnimations.remove(0);
-                                
-                                octahedron.addMovementAnimation(values[0] * -20, values[1] * -20, values[2] * -20);
-                                
-                            } else if (count == 21) {
-                                octahedron.animationTimers.get(1).purge();
-                                octahedron.animationTimers.get(1).cancel();
-                                octahedron.animationTimers.remove(1);
-                                
-                                octahedron.movementAnimations.remove(0);
-                                
-                                octahedron.reposition(center);
-                                octahedron.registerFrame(frame);
-                                if (octahedron.getDisplayMode() == AbstractObject.DisplayMode.EDGE) {
-                                    octahedron.setDisplayMode(AbstractObject.DisplayMode.FACE);
-                                    octahedron.setFrameColor(Color.BLACK);
-                                    octahedron.registerFrame(frame);
-                                } else {
-                                    octahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-                                    octahedron.setFrameColor(new Color(0, 0, 0, 0));
-                                }
-                                octahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
-                                
-                                count = 0;
-                            }
-                        }
-                    }, 1000);
-                }
-            }, 0);
+            
+            octahedron.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
+            octahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
             octahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+            octahedron.registerFrame(frame);
+            octahedron.setFrameColor(new Color(0, 0, 0, 0));
+            octahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+            species.add(octahedron);
         }
         
         for (int i = 0; i < dodecahedronCount; i++) {
@@ -339,57 +205,14 @@ public class PolyhedraExplosion extends Scene {
             Dodecahedron dodecahedron = new Dodecahedron(center, c, radius);
             registerComponent(dodecahedron);
             Frame frame = new Frame(dodecahedron);
-            Timer waiter = new Timer();
-            waiter.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    dodecahedron.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
-                    dodecahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
-                    dodecahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-                    dodecahedron.setFrameColor(new Color(0, 0, 0, 0));
-                    dodecahedron.addProcess(new Runnable() {
-                        private int count = 0;
-                        
-                        @Override
-                        public void run() {
-                            count++;
-                            
-                            if (count == 20) {
-                                dodecahedron.animationTimers.get(1).purge();
-                                dodecahedron.animationTimers.get(1).cancel();
-                                dodecahedron.animationTimers.remove(1);
-                                
-                                double[] values = dodecahedron.movementAnimations.get(0);
-                                dodecahedron.movementAnimations.remove(0);
-                                
-                                dodecahedron.addMovementAnimation(values[0] * -20, values[1] * -20, values[2] * -20);
-                                
-                            } else if (count == 21) {
-                                dodecahedron.animationTimers.get(1).purge();
-                                dodecahedron.animationTimers.get(1).cancel();
-                                dodecahedron.animationTimers.remove(1);
-                                
-                                dodecahedron.movementAnimations.remove(0);
-                                
-                                dodecahedron.reposition(center);
-                                dodecahedron.registerFrame(frame);
-                                if (dodecahedron.getDisplayMode() == AbstractObject.DisplayMode.EDGE) {
-                                    dodecahedron.setDisplayMode(AbstractObject.DisplayMode.FACE);
-                                    dodecahedron.setFrameColor(Color.BLACK);
-                                    dodecahedron.registerFrame(frame);
-                                } else {
-                                    dodecahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-                                    dodecahedron.setFrameColor(new Color(0, 0, 0, 0));
-                                }
-                                dodecahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
-                                
-                                count = 0;
-                            }
-                        }
-                    }, 1000);
-                }
-            }, 0);
+            
+            dodecahedron.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
+            dodecahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
             dodecahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+            dodecahedron.registerFrame(frame);
+            dodecahedron.setFrameColor(new Color(0, 0, 0, 0));
+            dodecahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+            species.add(dodecahedron);
         }
         
         for (int i = 0; i < icosahedronCount; i++) {
@@ -397,58 +220,79 @@ public class PolyhedraExplosion extends Scene {
             Icosahedron icosahedron = new Icosahedron(center, c, radius);
             registerComponent(icosahedron);
             Frame frame = new Frame(icosahedron);
-            Timer waiter = new Timer();
-            waiter.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    icosahedron.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
-                    icosahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
-                    icosahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-                    icosahedron.setFrameColor(new Color(0, 0, 0, 0));
-                    icosahedron.addProcess(new Runnable() {
-                        private int count = 0;
-                        
-                        @Override
-                        public void run() {
-                            count++;
-                            
-                            if (count == 20) {
-                                icosahedron.animationTimers.get(1).purge();
-                                icosahedron.animationTimers.get(1).cancel();
-                                icosahedron.animationTimers.remove(1);
-                                
-                                double[] values = icosahedron.movementAnimations.get(0);
-                                icosahedron.movementAnimations.remove(0);
-                                
-                                icosahedron.addMovementAnimation(values[0] * -20, values[1] * -20, values[2] * -20);
-                                
-                            } else if (count == 21) {
-                                icosahedron.animationTimers.get(1).purge();
-                                icosahedron.animationTimers.get(1).cancel();
-                                icosahedron.animationTimers.remove(1);
-                                
-                                icosahedron.movementAnimations.remove(0);
-                                
-                                icosahedron.reposition(center);
-                                icosahedron.registerFrame(frame);
-                                if (icosahedron.getDisplayMode() == AbstractObject.DisplayMode.EDGE) {
-                                    icosahedron.setDisplayMode(AbstractObject.DisplayMode.FACE);
-                                    icosahedron.setFrameColor(Color.BLACK);
-                                    icosahedron.registerFrame(frame);
-                                } else {
-                                    icosahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-                                    icosahedron.setFrameColor(new Color(0, 0, 0, 0));
-                                }
-                                icosahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
-                                
-                                count = 0;
-                            }
-                        }
-                    }, 1000);
-                }
-            }, 0);
+            
+            icosahedron.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
+            icosahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
             icosahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+            icosahedron.registerFrame(frame);
+            icosahedron.setFrameColor(new Color(0, 0, 0, 0));
+            icosahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+            species.add(icosahedron);
         }
+        
+        final AtomicLong timeOffset = new AtomicLong(Environment.currentTimeMillis());
+        final AtomicInteger stage = new AtomicInteger(0);
+        final AtomicInteger cameraStage = new AtomicInteger(1);
+        final AtomicBoolean processing = new AtomicBoolean(false);
+        
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+            if (processing.compareAndSet(false, true)) {
+                long currentTime = Environment.currentTimeMillis() - timeOffset.get();
+                
+                switch (stage.get()) {
+                    case 0:
+                        if (currentTime > 9000) {
+                            Camera camera = Camera.getActiveCameraView(environment.perspective);
+                            if (camera != null) {
+                                if ((cameraStage.compareAndSet(0, 1)) || (cameraStage.compareAndSet(1, 2))) {
+                                    camera.addFluidTransition(-Math.PI / 4, -Math.PI / 2, 0, 10000);
+                                } else if ((cameraStage.compareAndSet(2, 3)) || (cameraStage.compareAndSet(3, 0))) {
+                                    camera.addFluidTransition(Math.PI / 4, -Math.PI / 2, 0, 10000);
+                                }
+                            }
+                            stage.set(1);
+                        }
+                        break;
+                    
+                    case 1:
+                        if (currentTime > 20000) {
+                            for (RegularPolyhedron speciesEntry : species) {
+                                Environment.removeTask(speciesEntry.animationTasks.get(1));
+                                speciesEntry.animationTasks.remove(1);
+                                
+                                double[] values = speciesEntry.movementAnimations.get(0);
+                                speciesEntry.movementAnimations.remove(0);
+                                
+                                speciesEntry.addMovementAnimation(values[0] * -20, values[1] * -20, values[2] * -20);
+                            }
+                            stage.set(2);
+                        }
+                    
+                    case 2:
+                        if (currentTime > 21000) {
+                            for (RegularPolyhedron speciesEntry : species) {
+                                Environment.removeTask(speciesEntry.animationTasks.get(1));
+                                speciesEntry.animationTasks.remove(1);
+                                
+                                speciesEntry.movementAnimations.remove(0);
+                                
+                                speciesEntry.reposition(center);
+                                if (speciesEntry.getDisplayMode() == AbstractObject.DisplayMode.EDGE) {
+                                    speciesEntry.setDisplayMode(AbstractObject.DisplayMode.FACE);
+                                    speciesEntry.addFrame(Color.BLACK);
+                                } else {
+                                    speciesEntry.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+                                    speciesEntry.addFrame(new Color(0, 0, 0, 0));
+                                }
+                                speciesEntry.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
+                            }
+                            timeOffset.addAndGet(currentTime);
+                            stage.set(0);
+                        }
+                }
+                processing.set(false);
+            }
+        }, 0, 10, TimeUnit.MILLISECONDS);
     }
     
     /**

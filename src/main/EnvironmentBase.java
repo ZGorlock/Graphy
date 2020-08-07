@@ -6,16 +6,23 @@
 
 package main;
 
+import java.awt.AlphaComposite;
+import java.awt.BufferCapabilities;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.ImageCapabilities;
 import java.awt.LayoutManager2;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.awt.image.BufferStrategy;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
@@ -34,7 +41,7 @@ public abstract class EnvironmentBase {
     /**
      * The maximum number of frames to render per second.
      */
-    public static final int MAX_FPS = 120;
+    public static final int MAX_FPS = 60;
     
     /**
      * The display width of the screen.
@@ -114,6 +121,16 @@ public abstract class EnvironmentBase {
      */
     public static Vector origin = ORIGIN.clone();
     
+    /**
+     * The Environment time in milliseconds.
+     */
+    private static long time = 0;
+    
+    /**
+     * A list of Tasks to be run after each frame of the Environment.
+     */
+    private static final Map<UUID, Task> tasks = new ConcurrentHashMap<>();
+    
     
     //Fields
     
@@ -170,18 +187,27 @@ public abstract class EnvironmentBase {
             
             @Override
             public void paint(Graphics g) {
+                BufferStrategy bufferStrategy = getBufferStrategy();
+                if (bufferStrategy == null) {
+                    return;
+                }
+                
                 do {
-                    Graphics2D g2 = null;
-                    try {
-                        g2 = (Graphics2D) getBufferStrategy().getDrawGraphics();
-                        print(g2);
-                    } finally {
-                        if (g2 != null) {
-                            g2.dispose();
+                    do {
+                        Graphics2D g2 = null;
+                        try {
+                            g2 = (Graphics2D) bufferStrategy.getDrawGraphics();
+                            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
+                            print(g2);
+                        } catch (Exception ignored) {
+                        } finally {
+                            if (g2 != null) {
+                                g2.dispose();
+                            }
                         }
-                    }
-                    getBufferStrategy().show();
-                } while (getBufferStrategy().contentsLost());
+                    } while (bufferStrategy.contentsRestored());
+                    bufferStrategy.show();
+                } while (bufferStrategy.contentsLost());
             }
             
             @Override
@@ -197,9 +223,13 @@ public abstract class EnvironmentBase {
         frame.pack();
         frame.setVisible(true);
         
-        renderPanel.setIgnoreRepaint(true);
-        renderPanel.createBufferStrategy(2);
         renderPanel.setFocusable(false);
+        try {
+            BufferCapabilities capabilities = new BufferCapabilities(new ImageCapabilities(true), new ImageCapabilities(true), BufferCapabilities.FlipContents.COPIED);
+            renderPanel.createBufferStrategy(2, capabilities);
+        } catch (Exception ignored) {
+            renderPanel.createBufferStrategy(2);
+        }
         
         captureHandler = new CaptureHandler(this);
     }
@@ -212,19 +242,23 @@ public abstract class EnvironmentBase {
             renderPanel.repaint();
             
         } else {
-            Timer renderTimer = new Timer();
-            renderTimer.scheduleAtFixedRate(new TimerTask() {
-                private AtomicBoolean rendering = new AtomicBoolean(false);
-                
-                @Override
-                public void run() {
-                    if (rendering.compareAndSet(false, true)) {
-                        renderPanel.repaint();
-                        rendering.set(false);
-                    }
+            final AtomicBoolean rendering = new AtomicBoolean(false);
+            Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+                if (rendering.compareAndSet(false, true)) {
+                    renderPanel.repaint();
+                    runTasks();
+                    rendering.set(false);
                 }
-            }, 0, 1000 / fps);
+            }, 0, 1000 / fps, TimeUnit.MILLISECONDS);
         }
+    }
+    
+    /**
+     * Runs the Tasks in the Environment.
+     */
+    private void runTasks() {
+        time += (1000 / fps);
+        tasks.values().stream().filter(e -> e.active.get()).forEach(e -> e.action.run());
     }
     
     /**
@@ -389,6 +423,111 @@ public abstract class EnvironmentBase {
     public void setBackground(Color background) {
         this.background = background;
         frame.getContentPane().setBackground(background);
+    }
+    
+    
+    //Static Methods
+    
+    /**
+     * Returns the Environment time in milliseconds.
+     *
+     * @return The Environment time in milliseconds.
+     */
+    public static long currentTimeMillis() {
+        return time;
+    }
+    
+    /**
+     * Adds a Task to the Environment.
+     *
+     * @param task The Task.
+     * @return The id of the Task that was added.
+     */
+    public static UUID addTask(Task task) {
+        tasks.put(task.id, task);
+        return task.id;
+    }
+    
+    /**
+     * Adds a Task to the Environment.
+     *
+     * @param action The action of the Task.
+     * @return The id of the Task that was added.
+     */
+    public static UUID addTask(Runnable action) {
+        Task task = new Task();
+        task.action = action;
+        return addTask(task);
+    }
+    
+    /**
+     * Removes a Task from the Environment.
+     *
+     * @param id The id of the Task to remove.
+     */
+    public static void removeTask(UUID id) {
+        tasks.remove(id);
+    }
+    
+    /**
+     * Pauses a Task in the Environment.
+     *
+     * @param id The id of the Task to pause.
+     */
+    public static void pauseTask(UUID id) {
+        Task task = tasks.get(id);
+        if (task != null) {
+            task.active.set(false);
+        }
+    }
+    
+    /**
+     * Resumes a Task in the Environment.
+     *
+     * @param id The id the Task to resume.
+     */
+    public static void resumeTask(UUID id) {
+        Task task = tasks.get(id);
+        if (task != null) {
+            task.active.set(true);
+        }
+    }
+    
+    
+    //Inner Classes
+    
+    /**
+     * Defines a task to be run after each frame of the Environment.
+     */
+    public static class Task {
+        
+        //Fields
+        
+        /**
+         * The id of the Task.
+         */
+        public final UUID id;
+        
+        /**
+         * The action of the Task.
+         */
+        public Runnable action;
+        
+        /**
+         * A flag indicating whether the Task is active or not.
+         */
+        public AtomicBoolean active = new AtomicBoolean(true);
+        
+        
+        //Constructors
+        
+        /**
+         * The constructor for a Task.
+         */
+        public Task() {
+            id = UUID.randomUUID();
+        }
+        
     }
     
 }

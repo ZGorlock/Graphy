@@ -9,8 +9,6 @@ package main.scenes;
 import java.awt.Color;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import camera.Camera;
 import main.Environment;
@@ -104,27 +102,17 @@ public class Clock extends Scene {
         minuteMark.addOrbitAnimation(c, 3600000);
         secondMark.addOrbitAnimation(c, 60000);
         
-        Timer updateTime = new Timer();
-        updateTime.scheduleAtFixedRate(new TimerTask() {
-            
-            //Methods
-            
-            /**
-             * Updates the time string.
-             */
-            @Override
-            public void run() {
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(new Date());
-                int nowHour = cal.get(Calendar.HOUR_OF_DAY);
-                int nowMinute = cal.get(Calendar.MINUTE);
-                int nowSecond = cal.get(Calendar.SECOND);
-                time.setText(
-                        (((nowHour % 12) < 10) ? "0" : "") + (nowHour % 12) + ':' +
-                                ((nowMinute < 10) ? "0" : "") + nowMinute + ':' +
-                                ((nowSecond < 10) ? "0" : "") + nowSecond);
-            }
-        }, 0, 1000 / Environment.fps);
+        Environment.addTask(() -> {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+            int currentMinute = calendar.get(Calendar.MINUTE);
+            int currentSecond = calendar.get(Calendar.SECOND);
+            time.setText(
+                    (((currentHour % 12) < 10) ? "0" : "") + (currentHour % 12) + ':' +
+                            ((currentMinute < 10) ? "0" : "") + currentMinute + ':' +
+                            ((currentSecond < 10) ? "0" : "") + currentSecond);
+        });
     }
     
     /**

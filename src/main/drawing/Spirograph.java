@@ -87,7 +87,8 @@ public class Spirograph extends Drawing {
      */
     @Override
     public void initComponents() {
-        environment.setFps(120);
+        environment.frame.setTitle("Spirograph");
+        
         environment.setSize(1250, 1250);
         environment.setBackground(Color.BLACK);
     }

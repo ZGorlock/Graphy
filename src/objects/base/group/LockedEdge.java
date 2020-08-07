@@ -7,8 +7,6 @@
 package objects.base.group;
 
 import java.awt.Color;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import main.Environment;
 import objects.base.AbstractObject;
@@ -32,20 +30,10 @@ public class LockedEdge extends Edge {
     public LockedEdge(AbstractObject parent, Color color, AbstractObject o1, AbstractObject o2) {
         super(parent, color, o1.getCenter(), o2.getCenter());
         
-        Timer locker = new Timer();
-        locker.scheduleAtFixedRate(new TimerTask() {
-            
-            //Methods
-            
-            /**
-             * Keeps the vertices of the Edge locked.
-             */
-            @Override
-            public void run() {
-                setV1(o1.getCenter());
-                setV2(o2.getCenter());
-            }
-        }, 0, 1000 / Environment.fps);
+        Environment.addTask(() -> {
+            setV1(o1.getCenter());
+            setV2(o2.getCenter());
+        });
     }
     
 }

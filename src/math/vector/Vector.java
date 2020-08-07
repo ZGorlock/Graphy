@@ -532,6 +532,24 @@ public class Vector {
     //Functions
     
     /**
+     * Copies the values from one Vector to another.
+     *
+     * @param source The vector to copy the values from.
+     * @param dest   The vector to copy the values to.
+     * @throws ArithmeticException When the Vectors are not all of the same dimension.
+     */
+    public static void copyVector(Vector source, Vector dest) throws ArithmeticException {
+        int dim = source.getDimension();
+        if (dest.getDimension() != dim) {
+            throw new ArithmeticException("The vectors: " + source.toString() + " and " + dest + " are of different dimensions.");
+        }
+        
+        for (int i = 0; i < dim; i++) {
+            dest.set(i, source.get(i));
+        }
+    }
+    
+    /**
      * Calculates the average of a set of Vectors.
      *
      * @param vs The set of Vectors.

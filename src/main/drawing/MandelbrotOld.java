@@ -13,8 +13,8 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
@@ -159,6 +159,7 @@ public class MandelbrotOld extends Drawing {
     @Override
     public void setupControls() {
         environment.frame.addMouseListener(new MouseListener() {
+            
             @Override
             public void mouseClicked(MouseEvent e) {
             }
@@ -220,15 +221,11 @@ public class MandelbrotOld extends Drawing {
         populateColors();
         
         if (slowZoomEnabled) {
-            Timer slowZoom = new Timer();
-            slowZoom.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    if (rendering.compareAndSet(false, true)) {
-                        zoom(null, SLOW_ZOOM_STEP);
-                    }
+            Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+                if (rendering.compareAndSet(false, true)) {
+                    zoom(null, SLOW_ZOOM_STEP);
                 }
-            }, 0, 50);
+            }, 0, 50, TimeUnit.MILLISECONDS);
         }
     }
     

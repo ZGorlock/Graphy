@@ -14,8 +14,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
@@ -44,6 +43,31 @@ public class CaptureHandler {
     private static final Pattern FRAME_NAME_PATTERN = Pattern.compile("[^~]+~(?<timestamp>[0-9]+)~[0-9]+\\.jpg");
     
     
+    //Enums
+    
+    /**
+     * An enumeration of frame rate modes for recordings.
+     */
+    public enum FrameRateMode {
+        ENVIRONMENT_FPS,
+        CUSTOM_FPS,
+        TIME_BASED
+    }
+    
+    
+    //Static Fields
+    
+    /**
+     * The frame rate mode to use when recording.
+     */
+    private static FrameRateMode frameRateMode = FrameRateMode.ENVIRONMENT_FPS;
+    
+    /**
+     * The custom frame rate to use when the frame rate mode is set to CUSTOM_FPS.
+     */
+    private static double customFps = 29.97;
+    
+    
     //Fields
     
     /**
@@ -62,9 +86,9 @@ public class CaptureHandler {
     private AtomicBoolean copyCapture = new AtomicBoolean(false);
     
     /**
-     * The thread that takes the capture.
+     * The Task that takes the capture.
      */
-    private Timer captureThread = null;
+    private UUID captureTask = null;
     
     /**
      * A flag indicating whether or not a recording is in progress.
@@ -82,9 +106,9 @@ public class CaptureHandler {
     private AtomicInteger recordingFrame = new AtomicInteger(0);
     
     /**
-     * The thread that takes the recording.
+     * The Task that takes the recording.
      */
-    private Timer recordingThread = null;
+    private UUID recordingTask = null;
     
     
     //Constructors
@@ -144,23 +168,22 @@ public class CaptureHandler {
             return;
         }
         
-        captureThread = new Timer();
-        captureThread.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                handleCapture();
-                finalizeCapture();
-            }
-        }, 0);
+        captureTask = Environment.addTask(() -> {
+            handleCapture();
+            finalizeCapture();
+        });
     }
     
     /**
      * Finalizes a capture.
      */
     private synchronized void finalizeCapture() {
-        captureThread.cancel();
-        captureThread.purge();
-        captureThread = null;
+        if (!capture.get() || (captureTask == null)) {
+            return;
+        }
+        
+        Environment.removeTask(captureTask);
+        captureTask = null;
         
         capture.set(false);
         copyCapture.set(false);
@@ -184,27 +207,22 @@ public class CaptureHandler {
         recordingFrame.set(0);
         recording.set(true);
         
-        recordingThread = new Timer();
-        recordingThread.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                handleRecording();
-            }
-        }, 0, 1000 / Environment.fps);
+        Environment.fps = Environment.fps / 2;
+        recordingTask = Environment.addTask(this::handleRecording);
     }
     
     /**
      * Finalizes a recording.
      */
     private synchronized void finalizeRecording() {
-        if (!recording.get() || (recordingThread == null) || (recordingDir == null) || !recordingDir.exists() || !recordingDir.isDirectory()) {
+        if (!recording.get() || (recordingTask == null) || (recordingDir == null) || !recordingDir.exists() || !recordingDir.isDirectory()) {
             return;
         }
         
-        recordingThread.cancel();
-        recordingThread.purge();
-        recordingThread = null;
+        Environment.removeTask(recordingTask);
+        recordingTask = null;
         
+        Environment.fps = Environment.fps * 2;
         Thread encodeRecording = new Thread(this::encodeRecording);
         encodeRecording.start();
     }
@@ -229,7 +247,7 @@ public class CaptureHandler {
         if (recording.get()) {
             BufferedImage screenshot = screenshot();
             String frameName = String.format("%08d", recordingFrame.incrementAndGet());
-            ImageUtility.saveImage(screenshot, new File(recordingDir, getCaptureName(true) + "~" + frameName + ".jpg"));
+            ImageUtility.saveImage(screenshot, new File(recordingDir, recordingDir.getName() + "~" + frameName + ".jpg"));
         }
     }
     
@@ -251,41 +269,63 @@ public class CaptureHandler {
      */
     private synchronized void encodeRecording() {
         File recordingVideo = new File(CAPTURE_DIR, recordingDir.getName() + ".mp4");
+        File concatDemuxer = new File(recordingDir, "concatDemuxer.txt");
         
         File[] frames = recordingDir.listFiles();
         if (frames == null) {
             return;
         }
         
-        File concatDemuxer = new File(recordingDir, "concatDemuxer.txt");
-        List<String> concatDemuxerLines = new ArrayList<>();
-        String frameName = "";
-        long lastTimestamp = 0;
-        double totalDuration = 0.0;
-        for (File frame : frames) {
-            Matcher frameNameMatcher = FRAME_NAME_PATTERN.matcher(frame.getName());
-            if (frameNameMatcher.matches()) {
-                long timestamp = Long.parseLong(frameNameMatcher.group("timestamp"));
-                if (lastTimestamp > 0) {
-                    double duration = (timestamp - lastTimestamp) / 1000.0;
-                    concatDemuxerLines.add("duration " + duration);
-                    totalDuration += duration;
-                }
-                lastTimestamp = timestamp;
+        String frameRate;
+        String input;
+        switch (frameRateMode) {
+            case ENVIRONMENT_FPS:
+                frameRate = "-framerate " + Environment.fps;
+                input = "-i \"" + recordingDir.getAbsolutePath() + "/" + recordingDir.getName() + "~%08d.jpg\"";
+                break;
+            
+            case CUSTOM_FPS:
+                frameRate = "-framerate " + customFps;
+                input = "-i \"" + recordingDir.getAbsolutePath() + "/" + recordingDir.getName() + "~%08d.jpg\"";
+                break;
+            
+            case TIME_BASED:
+                frameRate = "-f concat -safe 0";
+                input = "-i \"" + concatDemuxer.getAbsolutePath() + "\" -vsync vfr";
                 
-                frameName = frame.getAbsolutePath();
+                List<String> concatDemuxerLines = new ArrayList<>();
+                String frameName = "";
+                long lastTimestamp = 0;
+                double totalDuration = 0.0;
+                for (File frame : frames) {
+                    Matcher frameNameMatcher = FRAME_NAME_PATTERN.matcher(frame.getName());
+                    if (frameNameMatcher.matches()) {
+                        long timestamp = Long.parseLong(frameNameMatcher.group("timestamp"));
+                        if (lastTimestamp > 0) {
+                            double duration = (timestamp - lastTimestamp) / 1000.0;
+                            concatDemuxerLines.add("duration " + duration);
+                            totalDuration += duration;
+                        }
+                        lastTimestamp = timestamp;
+                        
+                        frameName = frame.getAbsolutePath();
+                        concatDemuxerLines.add("file '" + frameName + "'");
+                    }
+                }
+                concatDemuxerLines.add("duration " + (totalDuration / frames.length));
                 concatDemuxerLines.add("file '" + frameName + "'");
-            }
-        }
-        concatDemuxerLines.add("duration " + (totalDuration / frames.length));
-        concatDemuxerLines.add("file '" + frameName + "'");
-        try {
-            Files.write(concatDemuxer.toPath(), concatDemuxerLines, Charset.defaultCharset());
-        } catch (Exception ignored) {
-            return;
+                try {
+                    Files.write(concatDemuxer.toPath(), concatDemuxerLines, Charset.defaultCharset());
+                } catch (Exception ignored) {
+                    return;
+                }
+                break;
+            
+            default:
+                return;
         }
         
-        String cmd = "ffmpeg -f concat -safe 0 -i \"" + concatDemuxer.getAbsolutePath() + "\" -vsync vfr \"" + recordingVideo.getAbsolutePath() + "\"";
+        String cmd = "ffmpeg " + frameRate + " " + input + " \"" + recordingVideo.getAbsolutePath() + "\"";
         String log = CmdLineUtility.executeCmd(cmd, true);
         
         try {
@@ -294,7 +334,9 @@ public class CaptureHandler {
                     Files.delete(frame.toPath());
                 }
             }
-            Files.delete(concatDemuxer.toPath());
+            if (frameRateMode == FrameRateMode.TIME_BASED) {
+                Files.delete(concatDemuxer.toPath());
+            }
             Files.delete(recordingDir.toPath());
         } catch (Exception ignored) {
         }

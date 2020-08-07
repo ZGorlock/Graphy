@@ -13,9 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 
+import main.Environment;
 import math.vector.UniqueVectorSet;
 import math.vector.Vector;
 import objects.base.AbstractObject;
@@ -154,26 +153,22 @@ public class VariablePlane extends Object {
             }
         }
         
-        Timer t = new Timer();
-        t.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                for (Vector v : vs) {
-                    if (vsm.containsKey(v)) {
-                        double m = vsm.get(v);
-                        v.setZ(v.getZ() + m);
-                        
-                        if (Math.abs(v.getZ() - vsmi.get(v)) >= variabilityRange) {
-                            m = -m;
-                            vsm.replace(v, m);
-                        }
-                    } else {
-                        vsmi.put(v, v.getZ());
-                        vsm.put(v, (Math.random() - .5) / 100 * speed);
+        Environment.addTask(() -> {
+            for (Vector v : vs) {
+                if (vsm.containsKey(v)) {
+                    double m = vsm.get(v);
+                    v.setZ(v.getZ() + m);
+                    
+                    if (Math.abs(v.getZ() - vsmi.get(v)) >= variabilityRange) {
+                        m = -m;
+                        vsm.replace(v, m);
                     }
+                } else {
+                    vsmi.put(v, v.getZ());
+                    vsm.put(v, (Math.random() - .5) / 400 * speed);
                 }
             }
-        }, 0, 50);
+        });
         
         setVisible(visible);
     }

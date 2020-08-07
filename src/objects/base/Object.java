@@ -12,9 +12,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 import main.Environment;
 import math.matrix.Matrix3;
@@ -262,16 +263,20 @@ public class Object extends AbstractObject {
      * Adds a process to the Object that runs periodically.
      *
      * @param process The process to execute.
-     * @param delay   The delay between executions.
+     * @param delay   The delay before the first execution.
+     * @param period  The delay between executions.
      */
-    public void addProcess(Runnable process, long delay) {
-        Timer processTimer = new Timer();
-        processTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
+    public void addProcess(Runnable process, long delay, long period) {
+        final AtomicLong timeOffset = new AtomicLong(0);
+        final AtomicLong nextRun = new AtomicLong(delay);
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+            long currentTime = Environment.currentTimeMillis() - timeOffset.get();
+            if (currentTime >= nextRun.get()) {
                 process.run();
+                timeOffset.addAndGet(currentTime);
+                nextRun.addAndGet(period);
             }
-        }, delay, delay);
+        }, 0, 10, TimeUnit.MILLISECONDS);
     }
     
     /**

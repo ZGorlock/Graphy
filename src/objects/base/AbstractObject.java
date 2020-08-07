@@ -11,15 +11,15 @@ import java.awt.Graphics2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import camera.Camera;
 import main.Environment;
+import main.EnvironmentBase;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import math.vector.Vector3;
@@ -110,9 +110,9 @@ public abstract class AbstractObject implements ObjectInterface {
     protected Map<UUID, AtomicInteger> renderDelay = new ConcurrentHashMap<>();
     
     /**
-     * The animations timers of the Object.
+     * The animations Tasks of the Object.
      */
-    public final List<Timer> animationTimers = new ArrayList<>();
+    public final List<UUID> animationTasks = new ArrayList<>();
     
     /**
      * The set of movement animations for the Object.
@@ -370,44 +370,25 @@ public abstract class AbstractObject implements ObjectInterface {
      */
     @Override
     public void addMovementAnimation(double xSpeed, double ySpeed, double zSpeed) {
-        Timer animationTimer = new Timer();
-        animationTimers.add(animationTimer);
-        movementAnimations.add(new double[] {xSpeed, ySpeed, zSpeed});
-        animationTimer.scheduleAtFixedRate(new TimerTask() {
-            
-            //Fields
-            
-            /**
-             * The movement speed vector.
-             */
-            private Vector speedVector = new Vector(xSpeed, ySpeed, zSpeed);
-            
-            /**
-             * The last time that the animation ran.
-             */
-            private long lastTime = 0;
-            
-            
-            //Methods
-            
-            /**
-             * Performs the movement animation.
-             */
-            @Override
-            public void run() {
-                if (lastTime == 0) {
-                    lastTime = System.currentTimeMillis();
-                    return;
-                }
-                
-                long currentTime = System.currentTimeMillis();
-                long timeElapsed = currentTime - lastTime;
-                lastTime = currentTime;
-                
-                double scale = (double) timeElapsed / 1000;
-                move(speedVector.scale(scale));
+        final Vector speedVector = new Vector(xSpeed, ySpeed, zSpeed);
+        final AtomicLong lastTime = new AtomicLong(0);
+        
+        UUID task = Environment.addTask(() -> {
+            if (lastTime.get() == 0) {
+                lastTime.set(Environment.currentTimeMillis());
+                return;
             }
-        }, 0, 1000 / Environment.fps);
+            
+            long currentTime = Environment.currentTimeMillis();
+            long timeElapsed = currentTime - lastTime.get();
+            lastTime.set(currentTime);
+            
+            double scale = (double) timeElapsed / 1000;
+            move(speedVector.scale(scale));
+        });
+        
+        animationTasks.add(task);
+        movementAnimations.add(new double[] {xSpeed, ySpeed, zSpeed});
     }
     
     /**
@@ -421,62 +402,37 @@ public abstract class AbstractObject implements ObjectInterface {
     @Override
     public void addMovementTransformation(double xMovement, double yMovement, double zMovement, long period) {
         inMovementTransformation.set(true);
-        Timer transformationTimer = new Timer();
-        transformationTimer.scheduleAtFixedRate(new TimerTask() {
-            
-            //Fields
-            
-            /**
-             * The movement vector.
-             */
-            private Vector movementVector = new Vector(xMovement, yMovement, zMovement);
-            
-            /**
-             * The total movement so far.
-             */
-            private Vector totalMovement = new Vector(0, 0, 0);
-            
-            /**
-             * The total amount of time elapsed.
-             */
-            private long timeCount = 0;
-            
-            /**
-             * The last time the transformation ran.
-             */
-            private long lastTime = 0;
-            
-            
-            //Methods
-            
-            /**
-             * Performs the movement transformation.
-             */
-            @Override
-            public void run() {
-                if (lastTime == 0) {
-                    lastTime = System.currentTimeMillis();
-                    return;
-                }
-                
-                long currentTime = System.currentTimeMillis();
-                long timeElapsed = currentTime - lastTime;
-                lastTime = currentTime;
-                timeCount += timeElapsed;
-                
-                if (timeCount >= period) {
-                    move(movementVector.minus(totalMovement));
-                    transformationTimer.purge();
-                    transformationTimer.cancel();
-                    inMovementTransformation.set(false);
-                } else {
-                    double scale = (double) timeElapsed / period;
-                    Vector movementFrame = movementVector.scale(scale);
-                    move(movementFrame);
-                    totalMovement = totalMovement.plus(movementFrame);
-                }
+        
+        final Vector movementVector = new Vector(xMovement, yMovement, zMovement);
+        Vector totalMovement = new Vector(0, 0, 0);
+        final AtomicLong lastTime = new AtomicLong(0);
+        final AtomicLong totalTime = new AtomicLong(0);
+        
+        EnvironmentBase.Task task = new EnvironmentBase.Task();
+        task.action = () -> {
+            if (lastTime.get() == 0) {
+                lastTime.set(Environment.currentTimeMillis());
+                return;
             }
-        }, 0, 1000 / Environment.fps);
+            
+            long currentTime = Environment.currentTimeMillis();
+            long timeElapsed = currentTime - lastTime.get();
+            lastTime.set(currentTime);
+            totalTime.addAndGet(timeElapsed);
+            
+            if (totalTime.get() >= period) {
+                move(movementVector.minus(totalMovement));
+                Environment.removeTask(task.id);
+                inMovementTransformation.set(false);
+            } else {
+                double scale = (double) timeElapsed / period;
+                Vector movementFrame = movementVector.scale(scale);
+                move(movementFrame);
+                Vector.copyVector(totalMovement.plus(movementFrame), totalMovement);
+            }
+        };
+        
+        Environment.addTask(task);
     }
     
     /**
@@ -488,43 +444,24 @@ public abstract class AbstractObject implements ObjectInterface {
      */
     @Override
     public void addRotationAnimation(double rollSpeed, double pitchSpeed, double yawSpeed) {
-        Timer animationTimer = new Timer();
-        animationTimers.add(animationTimer);
-        animationTimer.scheduleAtFixedRate(new TimerTask() {
-            
-            //Fields
-            
-            /**
-             * The rotation speed vector.
-             */
-            private Vector speedVector = new Vector(rollSpeed, pitchSpeed, yawSpeed);
-            
-            /**
-             * The last time the animation ran.
-             */
-            private long lastTime = 0;
-            
-            
-            //Methods
-            
-            /**
-             * Performs the rotation animation.
-             */
-            @Override
-            public void run() {
-                if (lastTime == 0) {
-                    lastTime = System.currentTimeMillis();
-                    return;
-                }
-                
-                long currentTime = System.currentTimeMillis();
-                long timeElapsed = currentTime - lastTime;
-                lastTime = currentTime;
-                
-                double scale = (double) timeElapsed / 1000;
-                rotate(speedVector.scale(scale));
+        final Vector speedVector = new Vector(rollSpeed, pitchSpeed, yawSpeed);
+        final AtomicLong lastTime = new AtomicLong(0);
+        
+        UUID task = Environment.addTask(() -> {
+            if (lastTime.get() == 0) {
+                lastTime.set(Environment.currentTimeMillis());
+                return;
             }
-        }, 0, 1000 / Environment.fps);
+            
+            long currentTime = Environment.currentTimeMillis();
+            long timeElapsed = currentTime - lastTime.get();
+            lastTime.set(currentTime);
+            
+            double scale = (double) timeElapsed / 1000;
+            rotate(speedVector.scale(scale));
+        });
+        
+        animationTasks.add(task);
     }
     
     /**
@@ -538,62 +475,37 @@ public abstract class AbstractObject implements ObjectInterface {
     @Override
     public void addRotationTransformation(double rollRotation, double pitchRotation, double yawRotation, long period) {
         inRotationTransformation.set(true);
-        Timer transformationTimer = new Timer();
-        transformationTimer.scheduleAtFixedRate(new TimerTask() {
-            
-            //Fields
-            
-            /**
-             * The rotation vector.
-             */
-            private Vector rotationVector = new Vector(rollRotation, pitchRotation, yawRotation);
-            
-            /**
-             * The total rotation so far.
-             */
-            private Vector totalRotation = new Vector(0, 0, 0);
-            
-            /**
-             * The total time elapsed.
-             */
-            private long timeCount = 0;
-            
-            /**
-             * The last time the transformation ran.
-             */
-            private long lastTime = 0;
-            
-            
-            //Methods
-            
-            /**
-             * Performs the rotation transformation.
-             */
-            @Override
-            public void run() {
-                if (lastTime == 0) {
-                    lastTime = System.currentTimeMillis();
-                    return;
-                }
-                
-                long currentTime = System.currentTimeMillis();
-                long timeElapsed = currentTime - lastTime;
-                lastTime = currentTime;
-                timeCount += timeElapsed;
-                
-                if (timeCount >= period) {
-                    rotateAndTransform(rotationVector.minus(totalRotation));
-                    transformationTimer.purge();
-                    transformationTimer.cancel();
-                    inRotationTransformation.set(false);
-                } else {
-                    double scale = (double) timeElapsed / period;
-                    Vector rotationFrame = rotationVector.scale(scale);
-                    rotateAndTransform(rotationFrame);
-                    totalRotation = totalRotation.plus(rotationFrame);
-                }
+        
+        final Vector rotationVector = new Vector(rollRotation, pitchRotation, yawRotation);
+        final Vector totalRotation = new Vector(0, 0, 0);
+        final AtomicLong lastTime = new AtomicLong(0);
+        final AtomicLong totalTime = new AtomicLong(0);
+        
+        EnvironmentBase.Task task = new EnvironmentBase.Task();
+        task.action = () -> {
+            if (lastTime.get() == 0) {
+                lastTime.set(Environment.currentTimeMillis());
+                return;
             }
-        }, 0, 1000 / Environment.fps);
+            
+            long currentTime = Environment.currentTimeMillis();
+            long timeElapsed = currentTime - lastTime.get();
+            lastTime.set(currentTime);
+            totalTime.addAndGet(timeElapsed);
+            
+            if (totalTime.get() >= period) {
+                rotateAndTransform(rotationVector.minus(totalRotation));
+                Environment.removeTask(task.id);
+                inRotationTransformation.set(false);
+            } else {
+                double scale = (double) timeElapsed / period;
+                Vector rotationFrame = rotationVector.scale(scale);
+                rotateAndTransform(rotationFrame);
+                Vector.copyVector(totalRotation.plus(rotationFrame), totalRotation);
+            }
+        };
+        
+        Environment.addTask(task);
     }
     
     /**
@@ -604,36 +516,21 @@ public abstract class AbstractObject implements ObjectInterface {
      */
     @Override
     public void addColorAnimation(long period, long offset) {
-        Timer animationTimer = new Timer();
-        animationTimers.add(animationTimer);
-        animationTimer.scheduleAtFixedRate(new TimerTask() {
-            
-            //Fields
-            
-            /**
-             * The first time the animation ran.
-             */
-            private long firstTime = 0;
-            
-            
-            //Methods
-            
-            /**
-             * Performs the color animation.
-             */
-            @Override
-            public void run() {
-                if (firstTime == 0) {
-                    firstTime = System.currentTimeMillis() - offset;
-                }
-                
-                long timeElapsed = System.currentTimeMillis() - firstTime;
-                timeElapsed %= period;
-                
-                float hue = (float) timeElapsed / period;
-                setColor(ColorUtility.getColorByHue(hue));
+        final AtomicLong firstTime = new AtomicLong(0);
+        
+        UUID task = Environment.addTask(() -> {
+            if (firstTime.get() == 0) {
+                firstTime.set(Environment.currentTimeMillis() - offset);
             }
-        }, 0, 1000 / Environment.fps);
+            
+            long timeElapsed = Environment.currentTimeMillis() - firstTime.get();
+            timeElapsed %= period;
+            
+            float hue = (float) timeElapsed / period;
+            setColor(ColorUtility.getColorByHue(hue));
+        });
+        
+        animationTasks.add(task);
     }
     
     /**
@@ -664,87 +561,52 @@ public abstract class AbstractObject implements ObjectInterface {
      * @param clockwise   Whether the orbit around the Object should be clockwise or counterclockwise.
      */
     public void addOrbitAnimation(Object object, double orbitPeriod, boolean clockwise) {
-        Timer animationTimer = new Timer();
-        animationTimers.add(animationTimer);
-        AbstractObject o = this;
-        animationTimer.scheduleAtFixedRate(new TimerTask() {
+        final AbstractObject o = this;
+        final Vector lastObjectCenter = object.center.clone();
+        final Vector normal = Environment.ORIGIN;
+        final AtomicInteger wise = new AtomicInteger(-1);
+        final AtomicLong lastTime = new AtomicLong(0);
+        final AtomicLong originalRho = new AtomicLong(0);
+        final AtomicLong circumference = new AtomicLong(0);
+        
+        UUID task = Environment.addTask(() -> {
+            Vector currentObjectCenter = object.center.clone();
+            Vector objectMovement = currentObjectCenter.minus(lastObjectCenter);
+            Vector.copyVector(currentObjectCenter, lastObjectCenter);
             
-            //Fields
-            
-            /**
-             * The last object center for tracking relative movement.
-             */
-            private Vector lastObjectCenter = object.center.clone();
-            
-            /**
-             * The normal vector of the plane of motion around the object.
-             */
-            private Vector normal = Environment.ORIGIN;
-            
-            /**
-             * The direction of motion.
-             */
-            private int wise = -1;
-            
-            /**
-             * The original distance from the object.
-             */
-            private double originalRho = 0;
-            
-            /**
-             * The length of the path of motion around the object.
-             */
-            private double circumference = 0;
-            
-            /**
-             * The last time the animation ran.
-             */
-            private long lastTime = 0;
-            
-            
-            //Methods
-            
-            /**
-             * Performs the orbit animation.
-             */
-            @Override
-            public void run() {
-                Vector currentObjectCenter = object.center.clone();
-                Vector objectMovement = currentObjectCenter.minus(lastObjectCenter);
-                lastObjectCenter = currentObjectCenter;
+            if (lastTime.get() == 0) {
+                Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(center.minus(lastObjectCenter));
+                Vector direction = center.minus(lastObjectCenter).normalize();
+                Vector perpendicular = SphericalCoordinateUtility.sphericalToCartesian(Math.PI / 2, sphericalLocation.getY() + (Math.PI / 2), sphericalLocation.getZ()).minus(lastObjectCenter).normalize();
                 
-                if (lastTime == 0) {
-                    Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(center.minus(lastObjectCenter));
-                    Vector direction = center.minus(lastObjectCenter).normalize();
-                    Vector perpendicular = SphericalCoordinateUtility.sphericalToCartesian(Math.PI / 2, sphericalLocation.getY() + (Math.PI / 2), sphericalLocation.getZ()).minus(lastObjectCenter).normalize();
-                    
-                    normal = new Vector3(direction).cross(perpendicular).normalize();
-                    wise = (clockwise ? 1 : -1) * (((direction.getX() == 0) && (direction.getY() == 0) && (direction.getZ() > 0)) ? 1 : -1);
-                    originalRho = sphericalLocation.getZ();
-                    circumference = (Math.PI * 2 * sphericalLocation.getZ());
-                    
-                    lastTime = System.currentTimeMillis();
-                    return;
-                }
+                Vector.copyVector(new Vector3(direction).cross(perpendicular).normalize(), normal);
+                wise.set((clockwise ? 1 : -1) * (((direction.getX() == 0) && (direction.getY() == 0) && (direction.getZ() > 0)) ? 1 : -1));
+                originalRho.set(Double.doubleToLongBits(sphericalLocation.getZ()));
+                circumference.set(Double.doubleToLongBits(Math.PI * 2 * sphericalLocation.getZ()));
                 
-                long currentTime = System.currentTimeMillis();
-                long timeElapsed = currentTime - lastTime;
-                lastTime = currentTime;
-                
-                Vector gravity = lastObjectCenter.minus(center).normalize();
-                Vector movement = new Vector3(gravity).cross(normal).normalize().scale(wise);
-                
-                double scale = ((double) timeElapsed / orbitPeriod) * circumference;
-                
-                Vector translation = movement.scale(scale).plus(objectMovement);
-                Vector newLocation = center.plus(translation);
-                Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(newLocation.minus(lastObjectCenter));
-                Vector adjustedLocation = SphericalCoordinateUtility.sphericalToCartesian(sphericalLocation.getX(), sphericalLocation.getY(), originalRho).plus(lastObjectCenter);
-                Vector adjustment = adjustedLocation.minus(newLocation);
-                
-                move(translation.plus(adjustment));
+                lastTime.set(Environment.currentTimeMillis());
+                return;
             }
-        }, 0, 1000 / Environment.fps);
+            
+            long currentTime = Environment.currentTimeMillis();
+            long timeElapsed = currentTime - lastTime.get();
+            lastTime.set(currentTime);
+            
+            Vector gravity = lastObjectCenter.minus(center).normalize();
+            Vector movement = new Vector3(gravity).cross(normal).normalize().scale(wise.get());
+            
+            double scale = ((double) timeElapsed / orbitPeriod) * Double.longBitsToDouble(circumference.get());
+            
+            Vector translation = movement.scale(scale).plus(objectMovement);
+            Vector newLocation = center.plus(translation);
+            Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(newLocation.minus(lastObjectCenter));
+            Vector adjustedLocation = SphericalCoordinateUtility.sphericalToCartesian(sphericalLocation.getX(), sphericalLocation.getY(), Double.longBitsToDouble(originalRho.get())).plus(lastObjectCenter);
+            Vector adjustment = adjustedLocation.minus(newLocation);
+            
+            move(translation.plus(adjustment));
+        });
+        
+        animationTasks.add(task);
     }
     
     /**
@@ -779,102 +641,65 @@ public abstract class AbstractObject implements ObjectInterface {
      */
     public void addOrbitTransformation(Object object, double orbits, double period, boolean clockwise) {
         inOrbitTransformation.set(true);
-        double orbitPeriod = period / orbits;
-        Timer transformationTimer = new Timer();
-        transformationTimer.scheduleAtFixedRate(new TimerTask() {
+        
+        final double orbitPeriod = period / orbits;
+        final Vector lastObjectCenter = object.center.clone();
+        final Vector normal = Environment.ORIGIN;
+        final AtomicInteger wise = new AtomicInteger(-1);
+        final AtomicLong lastTime = new AtomicLong(0);
+        final AtomicLong totalTime = new AtomicLong(0);
+        final AtomicLong originalRho = new AtomicLong(0);
+        final AtomicLong circumference = new AtomicLong(0);
+        
+        EnvironmentBase.Task task = new EnvironmentBase.Task();
+        task.action = () -> {
+            Vector currentObjectCenter = object.center.clone();
+            Vector objectMovement = currentObjectCenter.minus(lastObjectCenter);
+            Vector.copyVector(currentObjectCenter, lastObjectCenter);
             
-            //Fields
-            
-            /**
-             * The last object center for tracking relative movement.
-             */
-            private Vector lastObjectCenter = object.center.clone();
-            
-            /**
-             * The normal vector of the plane of motion around the object.
-             */
-            private Vector normal = Environment.ORIGIN;
-            
-            /**
-             * The direction of motion.
-             */
-            private int wise = -1;
-            
-            /**
-             * The original distance from the object.
-             */
-            private double originalRho = 0;
-            
-            /**
-             * The length of the path of motion around the object.
-             */
-            private double circumference = 0;
-            
-            /**
-             * The total time elapsed.
-             */
-            private long timeCount = 0;
-            
-            /**
-             * The last time the animation ran.
-             */
-            private long lastTime = 0;
-            
-            
-            //Methods
-            
-            /**
-             * Performs the orbit transformation.
-             */
-            @Override
-            public void run() {
-                Vector currentObjectCenter = object.center.clone();
-                Vector objectMovement = currentObjectCenter.minus(lastObjectCenter);
-                lastObjectCenter = currentObjectCenter;
+            if (lastTime.get() == 0) {
+                Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(center.minus(lastObjectCenter));
+                Vector direction = center.minus(lastObjectCenter).normalize();
+                Vector perpendicular = SphericalCoordinateUtility.sphericalToCartesian(Math.PI / 2, sphericalLocation.getY() + (Math.PI / 2), sphericalLocation.getZ()).minus(lastObjectCenter).normalize();
                 
-                if (lastTime == 0) {
-                    Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(center.minus(lastObjectCenter));
-                    Vector direction = center.minus(lastObjectCenter).normalize();
-                    Vector perpendicular = SphericalCoordinateUtility.sphericalToCartesian(Math.PI / 2, sphericalLocation.getY() + (Math.PI / 2), sphericalLocation.getZ()).minus(lastObjectCenter).normalize();
-                    
-                    normal = new Vector3(direction).cross(perpendicular).normalize();
-                    wise = (clockwise ? 1 : -1) * (((direction.getX() == 0) && (direction.getY() == 0) && (direction.getZ() > 0)) ? 1 : -1);
-                    originalRho = sphericalLocation.getZ();
-                    circumference = (Math.PI * 2 * sphericalLocation.getZ());
-                    
-                    lastTime = System.currentTimeMillis();
-                    return;
-                }
+                Vector.copyVector(new Vector3(direction).cross(perpendicular).normalize(), normal);
+                wise.set((clockwise ? 1 : -1) * (((direction.getX() == 0) && (direction.getY() == 0) && (direction.getZ() > 0)) ? 1 : -1));
+                originalRho.set(Double.doubleToLongBits(sphericalLocation.getZ()));
+                circumference.set(Double.doubleToLongBits(Math.PI * 2 * sphericalLocation.getZ()));
                 
-                long currentTime = System.currentTimeMillis();
-                long timeElapsed = currentTime - lastTime;
-                lastTime = currentTime;
-                timeCount += timeElapsed;
-                
-                if (timeCount > period) {
-                    timeElapsed -= (timeCount - period);
-                }
-                
-                Vector gravity = lastObjectCenter.minus(center).normalize();
-                Vector movement = new Vector3(gravity).cross(normal).normalize().scale(wise);
-                
-                double scale = ((double) timeElapsed / orbitPeriod) * circumference;
-                
-                Vector translation = movement.scale(scale).plus(objectMovement);
-                Vector newLocation = center.plus(translation);
-                Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(newLocation.minus(lastObjectCenter));
-                Vector adjustedLocation = SphericalCoordinateUtility.sphericalToCartesian(sphericalLocation.getX(), sphericalLocation.getY(), originalRho).plus(lastObjectCenter);
-                Vector adjustment = adjustedLocation.minus(newLocation);
-                
-                move(translation.plus(adjustment));
-                
-                if (timeCount >= period) {
-                    transformationTimer.purge();
-                    transformationTimer.cancel();
-                    inOrbitTransformation.set(false);
-                }
+                lastTime.set(Environment.currentTimeMillis());
+                return;
             }
-        }, 0, 1000 / Environment.fps);
+            
+            long currentTime = Environment.currentTimeMillis();
+            long timeElapsed = currentTime - lastTime.get();
+            lastTime.set(currentTime);
+            totalTime.addAndGet(timeElapsed);
+            
+            if (totalTime.get() > period) {
+                timeElapsed -= (totalTime.get() - period);
+            }
+            
+            Vector gravity = lastObjectCenter.minus(center).normalize();
+            Vector movement = new Vector3(gravity).cross(normal).normalize().scale(wise.get());
+            
+            double scale = ((double) timeElapsed / orbitPeriod) * Double.longBitsToDouble(circumference.get());
+            
+            Vector translation = movement.scale(scale).plus(objectMovement);
+            Vector newLocation = center.plus(translation);
+            Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(newLocation.minus(lastObjectCenter));
+            Vector adjustedLocation = SphericalCoordinateUtility.sphericalToCartesian(sphericalLocation.getX(), sphericalLocation.getY(), Double.longBitsToDouble(originalRho.get())).plus(lastObjectCenter);
+            Vector adjustment = adjustedLocation.minus(newLocation);
+            
+            move(translation.plus(adjustment));
+            
+            if (totalTime.get() >= period) {
+                Environment.removeTask(task.id);
+                inOrbitTransformation.set(false);
+            }
+        };
+        
+        Environment.addTask(task);
     }
     
     /**

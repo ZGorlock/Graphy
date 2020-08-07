@@ -62,7 +62,6 @@ public class PrimordialParticleSystem extends Drawing {
      */
     @Override
     public void initComponents() {
-        environment.setFps(120);
         environment.setSize(1000, 1000);
         environment.setBackground(Color.BLACK);
     }

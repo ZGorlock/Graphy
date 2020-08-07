@@ -85,6 +85,7 @@ public abstract class Scene extends Object {
         
         Constructor<? extends Scene> constructor = sceneClass.getDeclaredConstructor(Environment.class);
         Scene scene = constructor.newInstance(environment);
+        environment.frame.setTitle(sceneClass.getSimpleName());
         scene.initComponents();
         scene.setupCameras();
         scene.setupControls();

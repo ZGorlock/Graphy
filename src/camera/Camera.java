@@ -21,14 +21,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import main.Environment;
+import main.EnvironmentBase;
 import math.Delta;
 import math.vector.Vector;
 import math.vector.Vector3;
@@ -247,9 +249,9 @@ public class Camera {
     private Vector normalLimit;
     
     /**
-     * The timer for running Camera calculations.
+     * The Task for running Camera calculations.
      */
-    private Timer timer;
+    private UUID task;
     
     /**
      * Whether an update is required or not.
@@ -315,13 +317,7 @@ public class Camera {
             setupStaticKeyListener(perspective);
         }
         
-        this.timer = new Timer();
-        this.timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                calculateCamera(perspective);
-            }
-        }, 500 / Environment.fps, 1000 / Environment.fps);
+        task = Environment.addTask(() -> calculateCamera(perspective));
     }
     
     /**
@@ -568,8 +564,7 @@ public class Camera {
      * Removes the Camera.
      */
     public void removeCamera() {
-        timer.purge();
-        timer.cancel();
+        Environment.removeTask(task);
         cameraObject.setVisible(false);
         if (scenes.get(perspective) != null) {
             scenes.get(perspective).unregisterComponent(cameraObject);
@@ -624,66 +619,62 @@ public class Camera {
             });
         }
         
-        Timer keyListenerThread = new Timer();
-        keyListenerThread.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if (cameraId != activeCameraControl.get(perspective)) {
-                    return;
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+            if (cameraId != activeCameraControl.get(perspective)) {
+                return;
+            }
+            
+            synchronized (pressed) {
+                double oldPhi = phi;
+                double oldTheta = theta;
+                double oldRho = rho;
+                Vector oldOrigin = Environment.origin.clone();
+                
+                Vector headingMovement = heading.scale(movementSpeed);
+                Vector perpendicularMovement = new Vector3(0, 0, 1).cross(heading).scale(movementSpeed);
+                
+                for (Integer key : pressed) {
+                    if (!panMode) {
+                        if (key == KeyEvent.VK_W) {
+                            phi -= phiSpeed * mode.getScale();
+                        }
+                        if (key == KeyEvent.VK_S) {
+                            phi += phiSpeed * mode.getScale();
+                        }
+                        if (key == KeyEvent.VK_A) {
+                            theta -= thetaSpeed * mode.getScale();
+                        }
+                        if (key == KeyEvent.VK_D) {
+                            theta += thetaSpeed * mode.getScale();
+                        }
+                        if (key == KeyEvent.VK_Q) {
+                            rho -= rhoSpeed;
+                        }
+                        if (key == KeyEvent.VK_Z) {
+                            rho += rhoSpeed;
+                        }
+                    }
+                    
+                    if (key == KeyEvent.VK_LEFT) {
+                        Environment.origin = Environment.origin.plus(perpendicularMovement);
+                    }
+                    if (key == KeyEvent.VK_RIGHT) {
+                        Environment.origin = Environment.origin.plus(perpendicularMovement.scale(-1));
+                    }
+                    if (key == KeyEvent.VK_UP) {
+                        Environment.origin = Environment.origin.plus(headingMovement);
+                    }
+                    if (key == KeyEvent.VK_DOWN) {
+                        Environment.origin = Environment.origin.plus(headingMovement.scale(-1));
+                    }
                 }
                 
-                synchronized (pressed) {
-                    double oldPhi = phi;
-                    double oldTheta = theta;
-                    double oldRho = rho;
-                    Vector oldOrigin = Environment.origin.clone();
-                    
-                    Vector headingMovement = heading.scale(movementSpeed);
-                    Vector perpendicularMovement = new Vector3(0, 0, 1).cross(heading).scale(movementSpeed);
-                    
-                    for (Integer key : pressed) {
-                        if (!panMode) {
-                            if (key == KeyEvent.VK_W) {
-                                phi -= phiSpeed * mode.getScale();
-                            }
-                            if (key == KeyEvent.VK_S) {
-                                phi += phiSpeed * mode.getScale();
-                            }
-                            if (key == KeyEvent.VK_A) {
-                                theta -= thetaSpeed * mode.getScale();
-                            }
-                            if (key == KeyEvent.VK_D) {
-                                theta += thetaSpeed * mode.getScale();
-                            }
-                            if (key == KeyEvent.VK_Q) {
-                                rho -= rhoSpeed;
-                            }
-                            if (key == KeyEvent.VK_Z) {
-                                rho += rhoSpeed;
-                            }
-                        }
-                        
-                        if (key == KeyEvent.VK_LEFT) {
-                            Environment.origin = Environment.origin.plus(perpendicularMovement);
-                        }
-                        if (key == KeyEvent.VK_RIGHT) {
-                            Environment.origin = Environment.origin.plus(perpendicularMovement.scale(-1));
-                        }
-                        if (key == KeyEvent.VK_UP) {
-                            Environment.origin = Environment.origin.plus(headingMovement);
-                        }
-                        if (key == KeyEvent.VK_DOWN) {
-                            Environment.origin = Environment.origin.plus(headingMovement.scale(-1));
-                        }
-                    }
-                    
-                    if (phi != oldPhi || theta != oldTheta || rho != oldRho || !Environment.origin.equals(oldOrigin)) {
-                        bindLocation();
-                        updateRequired = true;
-                    }
+                if (phi != oldPhi || theta != oldTheta || rho != oldRho || !Environment.origin.equals(oldOrigin)) {
+                    bindLocation();
+                    updateRequired = true;
                 }
             }
-        }, 0, 20);
+        }, 0, 20, TimeUnit.MILLISECONDS);
     }
     
     /**
@@ -698,6 +689,7 @@ public class Camera {
         }
         
         scenes.get(perspective).environment.renderPanel.addMouseListener(new MouseListener() {
+            
             @Override
             public void mouseClicked(MouseEvent e) {
             }
@@ -724,6 +716,7 @@ public class Camera {
         });
         
         scenes.get(perspective).environment.renderPanel.addMouseMotionListener(new MouseMotionListener() {
+            
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (cameraId != activeCameraControl.get(perspective)) {
@@ -789,41 +782,36 @@ public class Camera {
      * @param period        The period over which to perform the movement in milliseconds.
      */
     public void addFluidTransition(double phiMovement, double thetaMovement, double rhoMovement, long period) {
-        Timer transitionTimer = new Timer();
-        transitionTimer.scheduleAtFixedRate(new TimerTask() {
-            private Vector movementVector = new Vector(phiMovement, thetaMovement, rhoMovement);
-            
-            private Vector totalMovement = new Vector(0, 0, 0);
-            
-            private long timeCount = 0;
-            
-            private long lastTime;
-            
-            @Override
-            public void run() {
-                if (lastTime == 0) {
-                    lastTime = System.currentTimeMillis();
-                    return;
-                }
-                
-                long currentTime = System.currentTimeMillis();
-                long timeElapsed = currentTime - lastTime;
-                lastTime = currentTime;
-                timeCount += timeElapsed;
-                
-                if (timeCount >= period) {
-                    moveCamera(movementVector.minus(totalMovement));
-                    transitionTimer.purge();
-                    transitionTimer.cancel();
-                } else {
-                    double scale = (double) timeElapsed / period;
-                    Vector movementFrame = movementVector.scale(scale);
-                    moveCamera(movementFrame);
-                    totalMovement = totalMovement.plus(movementFrame);
-                }
-                
+        final Vector movementVector = new Vector(phiMovement, thetaMovement, rhoMovement);
+        final Vector totalMovement = new Vector(0, 0, 0);
+        final AtomicLong lastTime = new AtomicLong(0);
+        final AtomicLong totalTime = new AtomicLong(0);
+        
+        EnvironmentBase.Task task = new EnvironmentBase.Task();
+        task.action = () -> {
+            if (lastTime.get() == 0) {
+                lastTime.set(Environment.currentTimeMillis());
+                return;
             }
-        }, 0, (long) (1000.0 / Environment.fps / 2));
+            
+            long currentTime = Environment.currentTimeMillis();
+            long timeElapsed = currentTime - lastTime.get();
+            lastTime.set(currentTime);
+            totalTime.addAndGet(timeElapsed);
+            
+            if (totalTime.get() >= period) {
+                moveCamera(movementVector.minus(totalMovement));
+                Environment.removeTask(task.id);
+            } else {
+                double scale = (double) timeElapsed / period;
+                Vector movementFrame = movementVector.scale(scale);
+                moveCamera(movementFrame);
+                Vector.copyVector(totalMovement.plus(movementFrame), totalMovement);
+            }
+            
+        };
+        
+        Environment.addTask(task);
     }
     
     /**

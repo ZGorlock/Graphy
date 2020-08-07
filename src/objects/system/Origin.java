@@ -7,8 +7,6 @@
 package objects.system;
 
 import java.awt.Color;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import main.Environment;
 import objects.base.Object;
@@ -30,13 +28,7 @@ public class Origin extends Object {
         Hexahedron origin = new Hexahedron(Environment.ORIGIN, Color.RED, 0.25);
         components.add(origin);
         
-        Timer updateOrigin = new Timer();
-        updateOrigin.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                origin.reposition(Environment.ORIGIN);
-            }
-        }, 0, 1000 / Environment.fps);
+        Environment.addTask(() -> origin.reposition(Environment.ORIGIN));
     }
     
     

@@ -7,11 +7,10 @@
 package main.scenes;
 
 import java.awt.Color;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import camera.Camera;
 import main.Environment;
+import main.EnvironmentBase;
 import math.vector.Vector;
 import objects.base.Scene;
 import objects.polyhedron.regular.platonic.Hexahedron;
@@ -59,32 +58,23 @@ public class RotationEquivalenceDemo extends Scene {
         Hexahedron cube2 = new Hexahedron(Environment.ORIGIN.plus(new Vector(0, -4, 0)), Color.BLUE, 2);
         
         cube1.addRotationTransformation(Math.PI, 0, 0, 2500);
-        Timer t = new Timer();
-        t.scheduleAtFixedRate(new TimerTask() {
-            boolean done = false;
-            
-            @Override
-            public void run() {
-                if (!done && !cube1.inRotationTransformation.get()) {
-                    done = true;
-                    cube2.addRotationTransformation(0, Math.PI, 0, 2500);
-                    
-                    Timer t2 = new Timer();
-                    t2.scheduleAtFixedRate(new TimerTask() {
-                        @Override
-                        public void run() {
-                            if (!cube2.inRotationTransformation.get()) {
-                                cube2.addRotationTransformation(0, 0, Math.PI, 2500);
-                                t2.purge();
-                                t2.cancel();
-                                t.purge();
-                                t.cancel();
-                            }
-                        }
-                    }, 0, 20);
-                }
+        
+        EnvironmentBase.Task task = new EnvironmentBase.Task();
+        task.action = () -> {
+            if (!cube1.inRotationTransformation.get()) {
+                cube2.addRotationTransformation(0, Math.PI, 0, 2500);
+                Environment.removeTask(task.id);
+                EnvironmentBase.Task task2 = new EnvironmentBase.Task();
+                task2.action = () -> {
+                    if (!cube2.inRotationTransformation.get()) {
+                        cube2.addRotationTransformation(0, 0, Math.PI, 2500);
+                        Environment.removeTask(task2.id);
+                    }
+                };
+                Environment.addTask(task2);
             }
-        }, 0, 20);
+        };
+        Environment.addTask(task);
         
         for (int f = 1; f < 6; f++) {
             Color c = ColorUtility.getRandomColor();

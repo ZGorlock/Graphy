@@ -11,9 +11,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
+import main.Environment;
 import objects.base.AbstractObject;
 import objects.base.polygon.Rectangle;
 import utility.ImageUtility;
@@ -157,31 +158,34 @@ public class VideoPane extends Pane {
      * Starts the video for the Video Pane.
      */
     private void startVideo() {
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            int index = -1;
+        final AtomicInteger index = new AtomicInteger(-1);
+        final AtomicInteger step = new AtomicInteger(1);
+        final AtomicLong lastTime = new AtomicLong(0);
+        
+        Environment.addTask(() -> {
+            long currentTime = Environment.currentTimeMillis();
+            long elapsedTime = currentTime - lastTime.get();
+            if (elapsedTime < (1000 / fps)) {
+                return;
+            }
+            lastTime.set(currentTime);
             
-            int step = 1;
-            
-            @Override
-            public void run() {
-                index += step;
-                if (index < 0 || index > (frames.size() - 1)) {
-                    return;
-                }
-                setImage(frames.get(index));
-                if (index == (frames.size() - 1)) {
-                    if (reverseOnCompletion) {
-                        step = -1;
-                    } else if (loop) {
-                        index = 0;
-                    }
-                }
-                if ((index == 0) && (step == -1) && loop) {
-                    step = 1;
+            index.addAndGet(step.get());
+            if (index.get() < 0 || index.get() > (frames.size() - 1)) {
+                return;
+            }
+            setImage(frames.get(index.get()));
+            if (index.get() == (frames.size() - 1)) {
+                if (reverseOnCompletion) {
+                    step.set(-1);
+                } else if (loop) {
+                    index.set(0);
                 }
             }
-        }, 0, 1000 / fps);
+            if ((index.get() == 0) && (step.get() == -1) && loop) {
+                step.set(1);
+            }
+        });
     }
     
 }

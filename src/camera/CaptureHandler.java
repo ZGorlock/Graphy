@@ -12,6 +12,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -39,7 +40,7 @@ public class CaptureHandler {
     /**
      * The regex pattern for a frame name in a recording.
      */
-    private static final Pattern FRAME_NAME_PATTERN = Pattern.compile("[^~]+~(?<timestamp>[0-9]+)~[0-9]+\\.jpg");
+    private static final Pattern FRAME_NAME_PATTERN = Pattern.compile("(?<title>[^~]+)~(?<timestamp>[0-9]+)~(?<index>[0-9]+)\\.jpg");
     
     
     //Enums
@@ -364,9 +365,30 @@ public class CaptureHandler {
         File recordingVideo = new File(CAPTURE_DIR, frameDir.getName() + ".mp4");
         File concatDemuxer = new File(frameDir, "concatDemuxer.txt");
         
-        File[] frames = frameDir.listFiles();
-        if (frames == null) {
+        File[] frameList = frameDir.listFiles();
+        if (frameList == null) {
             return;
+        }
+        List<File> frames = new ArrayList<>(Arrays.asList(frameList));
+        
+        if (frameRateMode != FrameRateMode.TIME_BASED) {
+            File lastFrame = frames.get(frames.size() - 1);
+            Matcher lastFrameMatcher = FRAME_NAME_PATTERN.matcher(lastFrame.getName());
+            if (lastFrameMatcher.matches()) {
+                try {
+                    int lastFrameIndex = Integer.parseInt(lastFrameMatcher.group("index"));
+                    for (int copy = 0; copy < 3; copy++) {
+                        File copyFrame = new File(frameDir, frameDir.getName() + "~" + String.format("%08d", ++lastFrameIndex) + ".jpg");
+                        Files.copy(lastFrame.toPath(), copyFrame.toPath());
+                        try {
+                            frames.add(copyFrame);
+                        } catch (Exception e) {
+                            Files.delete(copyFrame.toPath());
+                        }
+                    }
+                } catch (Exception ignored) {
+                }
+            }
         }
         
         String cmdFrameRate;
@@ -405,7 +427,7 @@ public class CaptureHandler {
                         concatDemuxerLines.add("file '" + frameName + "'");
                     }
                 }
-                concatDemuxerLines.add("duration " + (totalDuration / frames.length));
+                concatDemuxerLines.add("duration " + (totalDuration / frames.size()));
                 concatDemuxerLines.add("file '" + frameName + "'");
                 try {
                     Files.write(concatDemuxer.toPath(), concatDemuxerLines, Charset.defaultCharset());

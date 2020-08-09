@@ -20,7 +20,6 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
@@ -673,16 +672,6 @@ public class Mandelbrot extends Drawing {
      */
     public void shutdown() {
         if (record) {
-            try {
-                String frameName = String.format("%08d", --frameIndex);
-                String frameNameCopy1 = String.format("%08d", ++frameIndex);
-                String frameNameCopy2 = String.format("%08d", ++frameIndex);
-                String frameNameCopy3 = String.format("%08d", ++frameIndex);
-                Files.copy(new File(recordDir, recordDir.getName() + "~" + frameName + ".jpg").toPath(), new File(recordDir, recordDir.getName() + "~" + frameNameCopy1 + ".jpg").toPath());
-                Files.copy(new File(recordDir, recordDir.getName() + "~" + frameName + ".jpg").toPath(), new File(recordDir, recordDir.getName() + "~" + frameNameCopy2 + ".jpg").toPath());
-                Files.copy(new File(recordDir, recordDir.getName() + "~" + frameName + ".jpg").toPath(), new File(recordDir, recordDir.getName() + "~" + frameNameCopy3 + ".jpg").toPath());
-            } catch (IOException ignore) {
-            }
             CaptureHandler.encodeFrames(recordDir, slowZoom ? 20 : 1);
         }
     }

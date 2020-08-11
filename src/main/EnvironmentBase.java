@@ -25,6 +25,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JFrame;
@@ -91,6 +92,11 @@ public abstract class EnvironmentBase {
     protected static AtomicBoolean instanced = new AtomicBoolean(false);
     
     /**
+     * The instance of the Environment.
+     */
+    private static EnvironmentBase instance;
+    
+    /**
      * The number of frames to render per second.
      */
     public static int fps = MAX_FPS;
@@ -143,7 +149,7 @@ public abstract class EnvironmentBase {
     /**
      * A flag indicating whether or not to record the entire session.
      */
-    private static final boolean recordSession = false;
+    private static final boolean recordSession = true;
     
     
     //Fields
@@ -179,6 +185,16 @@ public abstract class EnvironmentBase {
     public Color background;
     
     /**
+     * The executor running the Environment.
+     */
+    private ScheduledExecutorService thread;
+    
+    /**
+     * A flag indicating whether or not the Environment is currently rendering.
+     */
+    protected final AtomicBoolean rendering = new AtomicBoolean(false);
+    
+    /**
      * The capture handler for the Environment.
      */
     protected CaptureHandler captureHandler;
@@ -188,11 +204,6 @@ public abstract class EnvironmentBase {
      */
     protected AtomicBoolean hasSetupMainKeyListener = new AtomicBoolean(false);
     
-    /**
-     * A flag indicating whether or not the Environment is currently rendering.
-     */
-    protected final AtomicBoolean rendering = new AtomicBoolean(false);
-    
     
     //Methods
     
@@ -200,6 +211,11 @@ public abstract class EnvironmentBase {
      * Sets up the Environment.
      */
     public final void setup() {
+        if (instance != null) {
+            return;
+        }
+        instance = this;
+        
         frame = new JFrame();
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(layout);
@@ -335,34 +351,41 @@ public abstract class EnvironmentBase {
         frame.setVisible(true);
         
         captureHandler = new CaptureHandler(this);
+        if (recordSession) {
+            captureHandler.recordingListener();
+        }
     }
     
     /**
      * Runs the Environment.
      */
     public final void run() {
-        if (fps == 0) {
+        if (fps < 0) {
             renderPanel.repaint();
             
         } else {
-            Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
-                if (rendering.compareAndSet(false, true)) {
-                    try {
-                        if (captureHandler.needsBuffer()) {
-                            SwingUtilities.invokeAndWait(() -> renderPanel.repaint());
-                        } else {
-                            renderPanel.repaint();
-                        }
-                        runTasks();
-                    } catch (Exception ignored) {
-                    }
-                    rendering.set(false);
-                }
-            }, 0, 1000 / fps, TimeUnit.MILLISECONDS);
-            
-            if (recordSession) {
-                captureHandler.recordingListener();
+            if (thread == null) {
+                thread = Executors.newSingleThreadScheduledExecutor();
+                thread.scheduleAtFixedRate(this::render, 0, 1000 / fps, TimeUnit.MILLISECONDS);
             }
+        }
+    }
+    
+    /**
+     * Renders the Environment.
+     */
+    private void render() {
+        if (rendering.compareAndSet(false, true)) {
+            try {
+                if (captureHandler.needsBuffer()) {
+                    SwingUtilities.invokeAndWait(() -> renderPanel.repaint());
+                } else {
+                    renderPanel.repaint();
+                }
+                runTasks();
+            } catch (Exception ignored) {
+            }
+            rendering.set(false);
         }
     }
     
@@ -471,8 +494,15 @@ public abstract class EnvironmentBase {
      *
      * @param fps The number of frames to render per second.
      */
-    public void setFps(int fps) {
+    public static void setFps(int fps) {
         EnvironmentBase.fps = Math.min(fps, MAX_FPS);
+        
+        if (instance.thread != null) {
+            instance.thread.shutdownNow();
+            instance.thread = null;
+        }
+        instance.rendering.set(false);
+        instance.run();
     }
     
     /**

@@ -213,7 +213,7 @@ public class CaptureHandler {
         recordingFrame.set(0);
         recording.set(true);
         
-        Environment.fps = Environment.fps / 2;
+        Environment.setFps(Environment.fps / 2);
         recordingTask = Environment.addTask(this::handleRecording);
     }
     
@@ -230,7 +230,7 @@ public class CaptureHandler {
         Environment.removeTask(recordingTask);
         recordingTask = null;
         
-        Environment.fps = Environment.fps * 2;
+        Environment.setFps(Environment.fps * 2);
         
         if (wait) {
             encodeRecording();

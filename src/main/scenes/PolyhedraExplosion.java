@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.IntStream;
 
 import camera.Camera;
 import main.Environment;
@@ -34,85 +35,90 @@ import utility.ColorUtility;
  */
 public class PolyhedraExplosion extends Scene {
     
-    //Static Fields
+    //Constants
     
     /**
-     * The number of each polyhedra species to put in the scene.
+     * The number of each polyhedron species to put in the scene.
      */
-    public static final int speciesCount = 150;
+    public static final int SPECIES_COUNT = 150;
     
     /**
      * The radius of the enclosing sphere of each polyhedron.
      */
-    public static final double speciesRadius = 0.1;
+    public static final double SPECIES_RADIUS = 0.1;
     
     /**
      * The alpha of the colors of each polyhedron.
      */
-    public static final int speciesAlpha = 255;
+    public static final int SPECIES_ALPHA = 255;
     
     
     //Fields
     
     /**
-     * The number of tetrahedron species to include in the scene.
+     * The list of polyhedra in the scene.
      */
-    private int tetrahedronCount = speciesCount;
+    private final List<RegularPolyhedron> polyhedra = new ArrayList<>();
     
     /**
-     * The number of hexahedron species to include in the scene.
+     * The number of tetrahedron to include in the scene.
      */
-    private int hexahedronCount = speciesCount;
+    private int tetrahedronCount = SPECIES_COUNT;
     
     /**
-     * The number of octahedron species to include in the scene.
+     * The number of hexahedron to include in the scene.
      */
-    private int octahedronCount = speciesCount;
+    private int hexahedronCount = SPECIES_COUNT;
     
     /**
-     * The number of dodecahedron species to include in the scene.
+     * The number of octahedron to include in the scene.
      */
-    private int dodecahedronCount = speciesCount;
+    private int octahedronCount = SPECIES_COUNT;
     
     /**
-     * The number of icosahedron species to include in the scene.
+     * The number of dodecahedron to include in the scene.
      */
-    private int icosahedronCount = speciesCount;
+    private int dodecahedronCount = SPECIES_COUNT;
     
     /**
-     * The color of the tetrahedron species, null for random colors.
+     * The number of icosahedron to include in the scene.
+     */
+    private int icosahedronCount = SPECIES_COUNT;
+    
+    /**
+     * The color of the tetrahedron, null for random colors.
      */
     private Color tetrahedronColor;
     
     /**
-     * The color of the hexahedron species, null for random colors.
+     * The color of the hexahedron, null for random colors.
      */
     private Color hexahedronColor;
     
     /**
-     * The color of the octahedron species, null for random colors.
+     * The color of the octahedron, null for random colors.
      */
     private Color octahedronColor;
     
     /**
-     * The color of the dodecahedron species, null for random colors.
+     * The color of the dodecahedron, null for random colors.
      */
     private Color dodecahedronColor;
     
     /**
-     * The color of the icosahedron species, null for random colors.
+     * The color of the icosahedron, null for random colors.
      */
     private Color icosahedronColor;
     
     /**
      * The radius of the enclosing sphere of each polyhedron.
      */
-    private double radius = speciesRadius;
+    private double radius = SPECIES_RADIUS;
     
     /**
      * The alpha of the colors of each polyhedron.
      */
-    private int alpha = speciesAlpha;
+    private int alpha = SPECIES_ALPHA;
     
     
     //Main Method
@@ -153,83 +159,29 @@ public class PolyhedraExplosion extends Scene {
         metatronsCube.addFrame(Color.BLACK);
         registerComponent(metatronsCube);
         
-        final List<RegularPolyhedron> species = new ArrayList<>();
+        IntStream.range(0, tetrahedronCount).boxed().forEach(e -> polyhedra.add(new Tetrahedron(center, ((tetrahedronColor == null) ? ColorUtility.getRandomColor(alpha) : tetrahedronColor), radius)));
+        IntStream.range(0, hexahedronCount).boxed().forEach(e -> polyhedra.add(new Hexahedron(center, ((hexahedronColor == null) ? ColorUtility.getRandomColor(alpha) : hexahedronColor), radius)));
+        IntStream.range(0, octahedronCount).boxed().forEach(e -> polyhedra.add(new Octahedron(center, ((octahedronColor == null) ? ColorUtility.getRandomColor(alpha) : octahedronColor), radius)));
+        IntStream.range(0, dodecahedronCount).boxed().forEach(e -> polyhedra.add(new Dodecahedron(center, ((dodecahedronColor == null) ? ColorUtility.getRandomColor(alpha) : dodecahedronColor), radius)));
+        IntStream.range(0, icosahedronCount).boxed().forEach(e -> polyhedra.add(new Icosahedron(center, ((icosahedronColor == null) ? ColorUtility.getRandomColor(alpha) : icosahedronColor), radius)));
         
-        for (int i = 0; i < tetrahedronCount; i++) {
-            Color c = (tetrahedronColor == null) ? ColorUtility.getRandomColor(alpha) : tetrahedronColor;
-            Tetrahedron tetrahedron = new Tetrahedron(center, c, radius);
-            registerComponent(tetrahedron);
-            Frame frame = new Frame(tetrahedron);
-            
-            tetrahedron.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
-            tetrahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
-            tetrahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-            tetrahedron.registerFrame(frame);
-            tetrahedron.setFrameColor(new Color(0, 0, 0, 0));
-            tetrahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-            species.add(tetrahedron);
+        for (RegularPolyhedron polyhedron : polyhedra) {
+            registerComponent(polyhedron);
+            polyhedron.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
+            polyhedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
+            polyhedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+            polyhedron.registerFrame(new Frame(polyhedron));
+            polyhedron.setFrameColor(new Color(0, 0, 0, 0));
+            polyhedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
         }
         
-        for (int i = 0; i < hexahedronCount; i++) {
-            Color c = (hexahedronColor == null) ? ColorUtility.getRandomColor(alpha) : hexahedronColor;
-            Hexahedron hexahedron = new Hexahedron(center, c, radius);
-            registerComponent(hexahedron);
-            Frame frame = new Frame(hexahedron);
-            
-            hexahedron.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
-            hexahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
-            hexahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-            hexahedron.registerFrame(frame);
-            hexahedron.setFrameColor(new Color(0, 0, 0, 0));
-            hexahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-            species.add(hexahedron);
-        }
-        
-        for (int i = 0; i < octahedronCount; i++) {
-            Color c = (octahedronColor == null) ? ColorUtility.getRandomColor(alpha) : octahedronColor;
-            Octahedron octahedron = new Octahedron(center, c, radius);
-            registerComponent(octahedron);
-            Frame frame = new Frame(octahedron);
-            
-            octahedron.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
-            octahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
-            octahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-            octahedron.registerFrame(frame);
-            octahedron.setFrameColor(new Color(0, 0, 0, 0));
-            octahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-            species.add(octahedron);
-        }
-        
-        for (int i = 0; i < dodecahedronCount; i++) {
-            Color c = (dodecahedronColor == null) ? ColorUtility.getRandomColor(alpha) : dodecahedronColor;
-            Dodecahedron dodecahedron = new Dodecahedron(center, c, radius);
-            registerComponent(dodecahedron);
-            Frame frame = new Frame(dodecahedron);
-            
-            dodecahedron.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
-            dodecahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
-            dodecahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-            dodecahedron.registerFrame(frame);
-            dodecahedron.setFrameColor(new Color(0, 0, 0, 0));
-            dodecahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-            species.add(dodecahedron);
-        }
-        
-        for (int i = 0; i < icosahedronCount; i++) {
-            Color c = (icosahedronColor == null) ? ColorUtility.getRandomColor(alpha) : icosahedronColor;
-            Icosahedron icosahedron = new Icosahedron(center, c, radius);
-            registerComponent(icosahedron);
-            Frame frame = new Frame(icosahedron);
-            
-            icosahedron.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
-            icosahedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
-            icosahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-            icosahedron.registerFrame(frame);
-            icosahedron.setFrameColor(new Color(0, 0, 0, 0));
-            icosahedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-            species.add(icosahedron);
-        }
-        
+        animate();
+    }
+    
+    /**
+     * Animates the Polyhedra Explosion scene.
+     */
+    private void animate() {
         final AtomicLong timeOffset = new AtomicLong(Environment.currentTimeMillis());
         final AtomicInteger stage = new AtomicInteger(0);
         final AtomicInteger cameraStage = new AtomicInteger(1);
@@ -256,35 +208,35 @@ public class PolyhedraExplosion extends Scene {
                     
                     case 1:
                         if (currentTime > 20000) {
-                            for (RegularPolyhedron speciesEntry : species) {
-                                Environment.removeTask(speciesEntry.animationTasks.get(1));
-                                speciesEntry.animationTasks.remove(1);
+                            for (RegularPolyhedron polyhedron : polyhedra) {
+                                Environment.removeTask(polyhedron.animationTasks.get(1));
+                                polyhedron.animationTasks.remove(1);
                                 
-                                double[] values = speciesEntry.movementAnimations.get(0);
-                                speciesEntry.movementAnimations.remove(0);
+                                double[] values = polyhedron.movementAnimations.get(0);
+                                polyhedron.movementAnimations.remove(0);
                                 
-                                speciesEntry.addMovementAnimation(values[0] * -20, values[1] * -20, values[2] * -20);
+                                polyhedron.addMovementAnimation(values[0] * -20, values[1] * -20, values[2] * -20);
                             }
                             stage.set(2);
                         }
                     
                     case 2:
                         if (currentTime > 21000) {
-                            for (RegularPolyhedron speciesEntry : species) {
-                                Environment.removeTask(speciesEntry.animationTasks.get(1));
-                                speciesEntry.animationTasks.remove(1);
+                            for (RegularPolyhedron polyhedron : polyhedra) {
+                                Environment.removeTask(polyhedron.animationTasks.get(1));
+                                polyhedron.animationTasks.remove(1);
                                 
-                                speciesEntry.movementAnimations.remove(0);
+                                polyhedron.movementAnimations.remove(0);
                                 
-                                speciesEntry.reposition(center);
-                                if (speciesEntry.getDisplayMode() == AbstractObject.DisplayMode.EDGE) {
-                                    speciesEntry.setDisplayMode(AbstractObject.DisplayMode.FACE);
-                                    speciesEntry.addFrame(Color.BLACK);
+                                polyhedron.reposition(center);
+                                if (polyhedron.getDisplayMode() == AbstractObject.DisplayMode.EDGE) {
+                                    polyhedron.setDisplayMode(AbstractObject.DisplayMode.FACE);
+                                    polyhedron.addFrame(Color.BLACK);
                                 } else {
-                                    speciesEntry.setDisplayMode(AbstractObject.DisplayMode.EDGE);
-                                    speciesEntry.addFrame(new Color(0, 0, 0, 0));
+                                    polyhedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
+                                    polyhedron.addFrame(new Color(0, 0, 0, 0));
                                 }
-                                speciesEntry.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
+                                polyhedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
                             }
                             timeOffset.addAndGet(currentTime);
                             stage.set(0);

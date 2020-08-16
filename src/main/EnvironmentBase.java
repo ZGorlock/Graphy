@@ -149,7 +149,7 @@ public abstract class EnvironmentBase {
     /**
      * A flag indicating whether or not to record the entire session.
      */
-    private static final boolean recordSession = true;
+    private static final boolean recordSession = false;
     
     
     //Fields

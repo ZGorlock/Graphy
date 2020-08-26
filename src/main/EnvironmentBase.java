@@ -360,7 +360,7 @@ public abstract class EnvironmentBase {
      * Runs the Environment.
      */
     public final void run() {
-        if (fps < 0) {
+        if (fps <= 0) {
             renderPanel.repaint();
             
         } else {
@@ -497,12 +497,14 @@ public abstract class EnvironmentBase {
     public static void setFps(int fps) {
         EnvironmentBase.fps = Math.min(fps, MAX_FPS);
         
-        if (instance.thread != null) {
-            instance.thread.shutdownNow();
-            instance.thread = null;
+        if (instance != null) {
+            if (instance.thread != null) {
+                instance.thread.shutdownNow();
+                instance.thread = null;
+            }
+            instance.rendering.set(false);
+            instance.run();
         }
-        instance.rendering.set(false);
-        instance.run();
     }
     
     /**

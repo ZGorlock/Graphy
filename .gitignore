@@ -52,3 +52,5 @@ Temporary Items
 
 **/*.zip
 **/*.kotlin_module
+
+/capture

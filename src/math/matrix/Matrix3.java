@@ -1,3 +1,9 @@
+/*
+ * File:    Matrix3.java
+ * Package: math.matrix
+ * Author:  Zachary Gill
+ */
+
 package math.matrix;
 
 import math.vector.Vector;

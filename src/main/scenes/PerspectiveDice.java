@@ -67,8 +67,8 @@ public class PerspectiveDice extends Scene {
         registerComponent(floorFrame);
         
         List<Vector> diceLocations = new ArrayList<>();
-        for (double theta = 0; theta - (Math.PI * 2) < Environment.OMEGA; theta += Math.PI * 2 / 5) {
-            diceLocations.add(SphericalCoordinateUtility.sphericalToCartesian(Math.PI / 2, theta, 5));
+        for (double theta = 0; theta - (Math.PI * 8 / 5) < Environment.OMEGA; theta += Math.PI * 2 / 5) {
+            diceLocations.add(SphericalCoordinateUtility.sphericalToCartesian(5, theta, Math.PI / 2).plus(Environment.ORIGIN));
         }
         
         Tetrahedron d4 = new Tetrahedron(diceLocations.get(0), Color.BLACK, 1);
@@ -78,11 +78,11 @@ public class PerspectiveDice extends Scene {
         Icosahedron d20 = new Icosahedron(diceLocations.get(4), Color.BLACK, 1);
         Sphere dx = new Sphere(Environment.ORIGIN, Color.BLACK, .25, Math.PI / 32);
         
-        d4.addRotationAnimation(2, 0, 0);
-        d6.addRotationAnimation(-2, 0, 0);
-        d8.addRotationAnimation(2, 0, 0);
-        d12.addRotationAnimation(-2, 0, 0);
-        d20.addRotationAnimation(2, 0, 0);
+        d4.addRotationAnimation(0, 0, 2);
+        d6.addRotationAnimation(0, 0, -2);
+        d8.addRotationAnimation(0, 0, 2);
+        d12.addRotationAnimation(0, 0, -2);
+        d20.addRotationAnimation(0, 0, 2);
         
         registerComponent(d4);
         registerComponent(d6);
@@ -132,7 +132,7 @@ public class PerspectiveDice extends Scene {
     @Override
     public void setupCameras() {
         Camera camera = new Camera(this, environment.perspective, true, true);
-        camera.setLocation(Math.PI / 2, Math.PI / 2, 2);
+        camera.setLocation(2, Math.PI / 2, Math.PI / 2);
         camera.setOffset(new Vector(0, 1, 0));
         camera.setMode(Camera.Perspective.FIRST_PERSON);
     }

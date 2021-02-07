@@ -195,7 +195,7 @@ public class RubiksCube extends Scene {
     @Override
     public void setupCameras() {
         Camera camera = new Camera(this, environment.perspective, false, false);
-        camera.setLocation(5 * Math.PI / 12, 4 * Math.PI / 3, 15);
+        camera.setLocation(15, 4 * Math.PI / 3, 5 * Math.PI / 12);
     }
     
     /**
@@ -463,7 +463,7 @@ public class RubiksCube extends Scene {
      * @param dir The direction to turn the face.
      */
     private void front(int dir) {
-        rotateFace(FRONT, dir, new Vector(0, 0, -Math.PI / 2));
+        rotateFace(FRONT, dir, new Vector(0, Math.PI / 2, 0));
     }
     
     /**
@@ -472,7 +472,7 @@ public class RubiksCube extends Scene {
      * @param dir The direction to turn the face.
      */
     private void back(int dir) {
-        rotateFace(BACK, dir, new Vector(0, 0, Math.PI / 2));
+        rotateFace(BACK, dir, new Vector(0, -Math.PI / 2, 0));
     }
     
     /**
@@ -481,7 +481,7 @@ public class RubiksCube extends Scene {
      * @param dir The direction to turn the face.
      */
     private void left(int dir) {
-        rotateFace(LEFT, dir, new Vector(0, Math.PI / 2, 0));
+        rotateFace(LEFT, dir, new Vector(Math.PI / 2, 0, 0));
     }
     
     /**
@@ -490,7 +490,7 @@ public class RubiksCube extends Scene {
      * @param dir The direction to turn the face.
      */
     private void right(int dir) {
-        rotateFace(RIGHT, dir, new Vector(0, -Math.PI / 2, 0));
+        rotateFace(RIGHT, dir, new Vector(-Math.PI / 2, 0, 0));
     }
     
     /**
@@ -499,7 +499,7 @@ public class RubiksCube extends Scene {
      * @param dir The direction to turn the face.
      */
     private void up(int dir) {
-        rotateFace(TOP, dir, new Vector(-Math.PI / 2, 0, 0));
+        rotateFace(TOP, dir, new Vector(0, 0, Math.PI / 2));
     }
     
     /**
@@ -508,39 +508,17 @@ public class RubiksCube extends Scene {
      * @param dir The direction to turn the face.
      */
     private void down(int dir) {
-        rotateFace(BOTTOM, dir, new Vector(Math.PI / 2, 0, 0));
-    }
-    
-    /**
-     * Flips the cube left.
-     */
-    private void flipLeft() {
-        addRotationTransformation(-Math.PI / 2, 0, 0, ROTATE_SPEED);
-        matrix = new int[][] {matrix[RIGHT], matrix[TOP], matrix[BACK], matrix[BOTTOM], matrix[FRONT], matrix[LEFT]};
-        matrix = adjust(matrix, TOP, CLOCKWISE);
-        matrix = adjust(matrix, BOTTOM, COUNTERCLOCKWISE);
-        printCube();
-    }
-    
-    /**
-     * Flips the cube right.
-     */
-    private void flipRight() {
-        addRotationTransformation(Math.PI / 2, 0, 0, ROTATE_SPEED);
-        matrix = new int[][] {matrix[LEFT], matrix[TOP], matrix[FRONT], matrix[BOTTOM], matrix[BACK], matrix[RIGHT]};
-        matrix = adjust(matrix, TOP, COUNTERCLOCKWISE);
-        matrix = adjust(matrix, BOTTOM, CLOCKWISE);
-        printCube();
+        rotateFace(BOTTOM, dir, new Vector(0, 0, -Math.PI / 2));
     }
     
     /**
      * Flips the cube up.
      */
     private void flipUp() {
-        addRotationTransformation(0, -Math.PI / 2, 0, ROTATE_SPEED);
-        matrix = new int[][] {matrix[BOTTOM], matrix[FRONT], matrix[RIGHT], matrix[BACK], matrix[LEFT], matrix[TOP]};
-        matrix = adjust(matrix, LEFT, COUNTERCLOCKWISE);
-        matrix = adjust(matrix, RIGHT, CLOCKWISE);
+        addRotationTransformation(Math.PI / 2, 0, 0, ROTATE_SPEED);
+        matrix = new int[][] {matrix[TOP], matrix[BACK], matrix[RIGHT], matrix[FRONT], matrix[LEFT], matrix[BOTTOM]};
+        matrix = adjust(matrix, LEFT, CLOCKWISE);
+        matrix = adjust(matrix, RIGHT, COUNTERCLOCKWISE);
         printCube();
     }
     
@@ -548,10 +526,32 @@ public class RubiksCube extends Scene {
      * Flips the cube down.
      */
     private void flipDown() {
-        addRotationTransformation(0, Math.PI / 2, 0, ROTATE_SPEED);
-        matrix = new int[][] {matrix[TOP], matrix[BACK], matrix[RIGHT], matrix[FRONT], matrix[LEFT], matrix[BOTTOM]};
-        matrix = adjust(matrix, LEFT, CLOCKWISE);
-        matrix = adjust(matrix, RIGHT, COUNTERCLOCKWISE);
+        addRotationTransformation(-Math.PI / 2, 0, 0, ROTATE_SPEED);
+        matrix = new int[][] {matrix[BOTTOM], matrix[FRONT], matrix[RIGHT], matrix[BACK], matrix[LEFT], matrix[TOP]};
+        matrix = adjust(matrix, LEFT, COUNTERCLOCKWISE);
+        matrix = adjust(matrix, RIGHT, CLOCKWISE);
+        printCube();
+    }
+    
+    /**
+     * Flips the cube left.
+     */
+    private void flipLeft() {
+        addRotationTransformation(0, 0, -Math.PI / 2, ROTATE_SPEED);
+        matrix = new int[][] {matrix[LEFT], matrix[TOP], matrix[FRONT], matrix[BOTTOM], matrix[BACK], matrix[RIGHT]};
+        matrix = adjust(matrix, TOP, COUNTERCLOCKWISE);
+        matrix = adjust(matrix, BOTTOM, CLOCKWISE);
+        printCube();
+    }
+    
+    /**
+     * Flips the cube right.
+     */
+    private void flipRight() {
+        addRotationTransformation(0, 0, Math.PI / 2, ROTATE_SPEED);
+        matrix = new int[][] {matrix[RIGHT], matrix[TOP], matrix[BACK], matrix[BOTTOM], matrix[FRONT], matrix[LEFT]};
+        matrix = adjust(matrix, TOP, CLOCKWISE);
+        matrix = adjust(matrix, BOTTOM, COUNTERCLOCKWISE);
         printCube();
     }
     

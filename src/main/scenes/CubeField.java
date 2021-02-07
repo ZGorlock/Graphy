@@ -71,7 +71,7 @@ public class CubeField extends Scene {
     @Override
     public void setupCameras() {
         Camera camera = new Camera(this, environment.perspective, true, true);
-        camera.setLocation(Math.PI / 2, 0, 4);
+        camera.setLocation(4, 0, Math.PI / 2);
         camera.setMode(Camera.Perspective.FIRST_PERSON);
     }
     

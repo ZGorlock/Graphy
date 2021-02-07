@@ -68,7 +68,7 @@ public class CubeFractal extends Scene {
     @Override
     public void setupCameras() {
         Camera camera = new Camera(this, environment.perspective, true, true);
-        camera.setLocation(Math.PI / 2, 0, 1);
+        camera.setLocation(1, 0, Math.PI / 2);
     }
     
     /**

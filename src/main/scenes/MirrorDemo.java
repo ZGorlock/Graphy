@@ -81,7 +81,7 @@ public class MirrorDemo extends Scene {
     @Override
     public void setupCameras() {
         Camera camera = new Camera(this, environment.perspective, true, true);
-        camera.setLocation(Math.PI / 2, Math.PI / 4, 100);
+        camera.setLocation(100, Math.PI / 4, Math.PI / 2);
     }
     
     /**

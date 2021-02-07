@@ -78,7 +78,7 @@ public class AnimatedCube extends Scene {
     @Override
     public void setupCameras() {
         Camera camera = new Camera(this, environment.perspective, true, true);
-        camera.setLocation(Math.PI / 2, 0, 8);
+        camera.setLocation(8, 0, Math.PI / 2);
     }
     
     /**

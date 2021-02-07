@@ -68,7 +68,7 @@ public class SphereField extends Scene {
             } else {
                 sphere = new Sphere(null, new Vector(Math.random() * 20 - 10, Math.random() * 20 - 10, Math.random() * 20 - 10), Color.BLACK, Color.RED, (int) (Math.random() * 5) + 1, Math.PI / (4 * ((int) (Math.random() * 4) + 1)));
 //                sphere.addRotationAnimation(Math.PI / (4 * ((int) (Math.random() * 8) + 1)), Math.PI / (4 * ((int) (Math.random() * 8) + 1)), Math.PI / (4 * ((int) (Math.random() * 8) + 1)));
-                sphere.addRotationAnimation(Math.PI / 16, 0, 0);
+                sphere.addRotationAnimation(0, 0, Math.PI / 16);
                 Frame f = sphere.addFrame(Color.BLACK);
                 f.addColorAnimation(5000, (int) (Math.random() * 5000));
             }
@@ -89,7 +89,7 @@ public class SphereField extends Scene {
     @Override
     public void setupCameras() {
         Camera camera = new Camera(this, environment.perspective, true, true);
-        camera.setLocation(Math.PI / 2, 0, 30);
+        camera.setLocation(30, 0, Math.PI / 2);
     }
     
     /**

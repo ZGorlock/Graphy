@@ -127,7 +127,7 @@ public class Sphere extends Object {
         for (double phi = 0; Math.PI - phi > -Environment.OMEGA; phi += step / 2) {
             vertices.add(new ArrayList<>());
             for (double theta = 0; Math.PI * 2 - theta > -Environment.OMEGA; theta += step) {
-                Vector cartesian = SphericalCoordinateUtility.sphericalToCartesian(phi, theta + (offset ? step / 2 : 0), radius);
+                Vector cartesian = SphericalCoordinateUtility.sphericalToCartesian(radius, theta + (offset ? step / 2 : 0), phi);
                 vertices.get(layer).add(cartesian.plus(center));
             }
             offset = !offset;

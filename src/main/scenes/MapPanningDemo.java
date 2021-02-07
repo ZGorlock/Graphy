@@ -86,7 +86,7 @@ public class MapPanningDemo extends Scene {
     @Override
     public void setupCameras() {
         Camera camera = new Camera(this, environment.perspective, false, true);
-        camera.setLocation(0, Math.PI / 2, 10);
+        camera.setLocation(10, Math.PI / 2, 0);
         camera.setPanMode(true);
     }
     

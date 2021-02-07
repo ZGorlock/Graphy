@@ -84,7 +84,7 @@ public class PictureFrame extends Scene {
     @Override
     public void setupCameras() {
         Camera camera = new Camera(this, environment.perspective, true, true);
-        camera.setLocation(Math.PI / 2, Math.PI / 2, 30);
+        camera.setLocation(30, Math.PI / 2, Math.PI / 2);
     }
     
     /**

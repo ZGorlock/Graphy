@@ -199,9 +199,9 @@ public class PolyhedraExplosion extends Scene {
                             Camera camera = Camera.getActiveCameraView(environment.perspective);
                             if (camera != null) {
                                 if ((cameraStage.compareAndSet(0, 1)) || (cameraStage.compareAndSet(1, 2))) {
-                                    camera.addFluidTransition(-Math.PI / 4, -Math.PI / 2, 0, 10000);
+                                    camera.addFluidTransition(0, -Math.PI / 2, -Math.PI / 4, 10000);
                                 } else if ((cameraStage.compareAndSet(2, 3)) || (cameraStage.compareAndSet(3, 0))) {
-                                    camera.addFluidTransition(Math.PI / 4, -Math.PI / 2, 0, 10000);
+                                    camera.addFluidTransition(0, -Math.PI / 2, Math.PI / 4, 10000);
                                 }
                             }
                             stage.set(1);
@@ -262,7 +262,7 @@ public class PolyhedraExplosion extends Scene {
     @Override
     public void setupCameras() {
         Camera camera = new Camera(this, environment.perspective, true, true);
-        camera.setLocation(Math.PI / 2, 0, 5);
+        camera.setLocation(5, 0, Math.PI / 2);
     }
     
     /**

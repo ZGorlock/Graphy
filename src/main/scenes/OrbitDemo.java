@@ -65,8 +65,8 @@ public class OrbitDemo extends Scene {
         registerComponent(h3);
 
 //        h1.addMovementAnimation(.1, .1, .1);
-        h3.addOrbitAnimation(h2, 2500);
         h2.addOrbitAnimation(h1, 10000);
+        h3.addOrbitAnimation(h2, 2500);
 //        h2.addOrbitTransformation(h1, .5, 2000);
     }
     
@@ -83,7 +83,7 @@ public class OrbitDemo extends Scene {
     @Override
     public void setupCameras() {
         Camera camera = new Camera(this, environment.perspective, true, true);
-        camera.setLocation(Math.PI / 4, 3 * Math.PI / 4, 10);
+        camera.setLocation(15, 3 * Math.PI / 4, 3 * Math.PI / 8);
 //        camera.setOffset(new Vector3(5, 2, 3));
     }
     

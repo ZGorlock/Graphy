@@ -613,12 +613,12 @@ public abstract class AbstractObject implements ObjectInterface {
             if (lastTime.get() == 0) {
                 Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(center.minus(lastObjectCenter));
                 Vector direction = center.minus(lastObjectCenter).normalize();
-                Vector perpendicular = SphericalCoordinateUtility.sphericalToCartesian(Math.PI / 2, sphericalLocation.getY() + (Math.PI / 2), sphericalLocation.getZ()).minus(lastObjectCenter).normalize();
+                Vector perpendicular = SphericalCoordinateUtility.sphericalToCartesian(sphericalLocation.getX(), sphericalLocation.getY() + (Math.PI / 2), Math.PI / 2).minus(lastObjectCenter).normalize();
                 
                 Vector.copyVector(new Vector3(direction).cross(perpendicular).normalize(), normal);
                 wise.set((clockwise ? 1 : -1) * (((direction.getX() == 0) && (direction.getY() == 0) && (direction.getZ() > 0)) ? 1 : -1));
-                originalRho.set(Double.doubleToLongBits(sphericalLocation.getZ()));
-                circumference.set(Double.doubleToLongBits(Math.PI * 2 * sphericalLocation.getZ()));
+                originalRho.set(Double.doubleToLongBits(sphericalLocation.getX()));
+                circumference.set(Double.doubleToLongBits(Math.PI * 2 * sphericalLocation.getX()));
                 
                 lastTime.set(Environment.currentTimeMillis());
                 return;
@@ -636,7 +636,7 @@ public abstract class AbstractObject implements ObjectInterface {
             Vector translation = movement.scale(scale).plus(objectMovement);
             Vector newLocation = center.plus(translation);
             Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(newLocation.minus(lastObjectCenter));
-            Vector adjustedLocation = SphericalCoordinateUtility.sphericalToCartesian(sphericalLocation.getX(), sphericalLocation.getY(), Double.longBitsToDouble(originalRho.get())).plus(lastObjectCenter);
+            Vector adjustedLocation = SphericalCoordinateUtility.sphericalToCartesian(Double.longBitsToDouble(originalRho.get()), sphericalLocation.getY(), sphericalLocation.getZ()).plus(lastObjectCenter);
             Vector adjustment = adjustedLocation.minus(newLocation);
             
             move(translation.plus(adjustment));
@@ -703,12 +703,12 @@ public abstract class AbstractObject implements ObjectInterface {
             if (lastTime.get() == 0) {
                 Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(center.minus(lastObjectCenter));
                 Vector direction = center.minus(lastObjectCenter).normalize();
-                Vector perpendicular = SphericalCoordinateUtility.sphericalToCartesian(Math.PI / 2, sphericalLocation.getY() + (Math.PI / 2), sphericalLocation.getZ()).minus(lastObjectCenter).normalize();
+                Vector perpendicular = SphericalCoordinateUtility.sphericalToCartesian(sphericalLocation.getX(), sphericalLocation.getY() + (Math.PI / 2), Math.PI / 2).minus(lastObjectCenter).normalize();
                 
                 Vector.copyVector(new Vector3(direction).cross(perpendicular).normalize(), normal);
                 wise.set((clockwise ? 1 : -1) * (((direction.getX() == 0) && (direction.getY() == 0) && (direction.getZ() > 0)) ? 1 : -1));
-                originalRho.set(Double.doubleToLongBits(sphericalLocation.getZ()));
-                circumference.set(Double.doubleToLongBits(Math.PI * 2 * sphericalLocation.getZ()));
+                originalRho.set(Double.doubleToLongBits(sphericalLocation.getX()));
+                circumference.set(Double.doubleToLongBits(Math.PI * 2 * sphericalLocation.getX()));
                 
                 lastTime.set(Environment.currentTimeMillis());
                 return;
@@ -731,7 +731,7 @@ public abstract class AbstractObject implements ObjectInterface {
             Vector translation = movement.scale(scale).plus(objectMovement);
             Vector newLocation = center.plus(translation);
             Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(newLocation.minus(lastObjectCenter));
-            Vector adjustedLocation = SphericalCoordinateUtility.sphericalToCartesian(sphericalLocation.getX(), sphericalLocation.getY(), Double.longBitsToDouble(originalRho.get())).plus(lastObjectCenter);
+            Vector adjustedLocation = SphericalCoordinateUtility.sphericalToCartesian(Double.longBitsToDouble(originalRho.get()), sphericalLocation.getY(), sphericalLocation.getZ()).plus(lastObjectCenter);
             Vector adjustment = adjustedLocation.minus(newLocation);
             
             move(translation.plus(adjustment));

@@ -136,7 +136,7 @@ public class Graph extends Scene {
     @Override
     public void setupCameras() {
         Camera camera = new Camera(this, environment.perspective, true, true);
-        camera.setLocation(Math.PI / 4, 5 * Math.PI / 4, 25);
+        camera.setLocation(25, 5 * Math.PI / 4, Math.PI / 4);
     }
     
     /**

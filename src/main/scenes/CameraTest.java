@@ -80,11 +80,11 @@ public class CameraTest extends Scene {
     @Override
     public void setupCameras() {
         Camera camera = new Camera(this, environment.perspective, true, true);
-        camera.setLocation(Math.PI / 4, 3 * Math.PI / 4, 5);
-        camera.setOffset(new Vector(5, 2, 3));
+        camera.setLocation(5, 3 * Math.PI / 4, Math.PI / 4);
+        camera.setOffset(new Vector(3, 2, 5));
         
         Camera camera2 = new Camera(this, environment.perspective, true, true);
-        camera2.setLocation(Math.PI / 4, 3 * Math.PI / 4, 50);
+        camera2.setLocation(50, 3 * Math.PI / 4, Math.PI / 4);
     }
     
     /**

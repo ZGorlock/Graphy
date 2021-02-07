@@ -27,19 +27,19 @@ public final class RotationUtility {
      */
     public static Matrix3 getRotationMatrix(double roll, double pitch, double yaw) {
         Matrix3 rollRotation = new Matrix3(new double[] {
-                Math.cos(roll), Math.sin(roll), 0,
-                -Math.sin(roll), Math.cos(roll), 0,
-                0, 0, 1
+                1, 0, 0,
+                0, Math.cos(roll), -Math.sin(roll),
+                0, Math.sin(roll), Math.cos(roll)
         });
         Matrix3 pitchRotation = new Matrix3(new double[] {
-                1, 0, 0,
-                0, Math.cos(pitch), -Math.sin(pitch),
-                0, Math.sin(pitch), Math.cos(pitch)
+                Math.cos(pitch), 0, Math.sin(pitch),
+                0, 1, 0,
+                -Math.sin(pitch), 0, Math.cos(pitch)
         });
         Matrix3 yawRotation = new Matrix3(new double[] {
-                Math.cos(yaw), 0, -Math.sin(yaw),
-                0, 1, 0,
-                Math.sin(yaw), 0, Math.cos(yaw)
+                Math.cos(yaw), -Math.sin(yaw), 0,
+                Math.sin(yaw), Math.cos(yaw), 0,
+                0, 0, 1
         });
         return rollRotation.multiply(pitchRotation).multiply(yawRotation);
     }

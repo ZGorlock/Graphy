@@ -352,7 +352,7 @@ public class Camera {
             
             
             //cartesian camera location
-            Vector cartesian = SphericalCoordinateUtility.sphericalToCartesian(phi, theta, rho);
+            Vector cartesian = SphericalCoordinateUtility.sphericalToCartesian(rho, theta, phi);
             Vector viewport = getViewport(perspective);
             
             
@@ -776,13 +776,13 @@ public class Camera {
     /**
      * Adds a fluid movement transition for the Camera over a period of time.
      *
+     * @param rhoMovement   The rho distance to move over the period.
+     * @param thetaMovement The theta angle to move over the period.
      * @param phiMovement   The phi angle to move over the period.
-     * @param thetaMovement The phi angle to move over the period.
-     * @param rhoMovement   The phi angle to move over the period.
      * @param period        The period over which to perform the movement in milliseconds.
      */
-    public void addFluidTransition(double phiMovement, double thetaMovement, double rhoMovement, long period) {
-        final Vector movementVector = new Vector(phiMovement, thetaMovement, rhoMovement);
+    public void addFluidTransition(double rhoMovement, double thetaMovement, double phiMovement, long period) {
+        final Vector movementVector = new Vector(rhoMovement, thetaMovement, phiMovement);
         final Vector totalMovement = new Vector(0, 0, 0);
         final AtomicLong lastTime = new AtomicLong(0);
         final AtomicLong totalTime = new AtomicLong(0);
@@ -896,7 +896,7 @@ public class Camera {
      * @return The Camera location.
      */
     public Vector getLocation() {
-        return new Vector(phi, theta, rho);
+        return new Vector(rho, theta, phi);
     }
     
     /**
@@ -932,14 +932,14 @@ public class Camera {
     /**
      * Sets the location of the Camera.
      *
-     * @param phi   The new phi angle of the Camera.
-     * @param theta The new theta angle of the Camera.
      * @param rho   The new rho distance of the Camera.
+     * @param theta The new theta angle of the Camera.
+     * @param phi   The new phi angle of the Camera.
      */
-    public void setLocation(double phi, double theta, double rho) {
-        this.phi = phi;
-        this.theta = theta;
+    public void setLocation(double rho, double theta, double phi) {
         this.rho = rho;
+        this.theta = theta;
+        this.phi = phi;
         
         bindLocation();
         updateRequired = true;
@@ -996,7 +996,7 @@ public class Camera {
      * @param offset The relative offsets to move the Camera.
      */
     public void moveCamera(Vector offset) {
-        setLocation(phi + offset.getX(), theta + offset.getY(), rho + offset.getZ());
+        setLocation(rho + offset.getX(), theta + offset.getY(), phi + offset.getZ());
     }
     
     /**
@@ -1054,7 +1054,7 @@ public class Camera {
     public void setPanMode(boolean panMode) {
         this.panMode = panMode;
         if (panMode) {
-            setLocation(Math.PI, Math.PI / 2, rho);
+            setLocation(rho, Math.PI / 2, Math.PI);
         }
     }
     

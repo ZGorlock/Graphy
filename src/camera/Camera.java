@@ -1303,7 +1303,7 @@ public class Camera {
         if (cameraMap.containsKey(perspective) && cameraMap.get(perspective).containsKey(cameraId) && (cameraId != activeCameraControl.get(perspective))) {
             activeCameraControl.put(perspective, cameraId);
             
-            activeControl.put(perspective, cameraMap.get(perspective).get(activeCameraControl));
+            activeControl.put(perspective, cameraMap.get(perspective).get(activeCameraControl.get(perspective)));
         }
     }
     

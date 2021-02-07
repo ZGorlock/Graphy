@@ -9,6 +9,7 @@ package objects.base;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -19,7 +20,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import camera.Camera;
 import main.Environment;
-import main.EnvironmentBase;
 import math.matrix.Matrix3;
 import math.vector.Vector;
 import math.vector.Vector3;
@@ -110,9 +110,14 @@ public abstract class AbstractObject implements ObjectInterface {
     protected Map<UUID, AtomicInteger> renderDelay = new ConcurrentHashMap<>();
     
     /**
-     * The animations Tasks of the Object.
+     * The animations tasks of the Object.
      */
-    public final List<UUID> animationTasks = new ArrayList<>();
+    public final Map<UUID, Runnable> animationTasks = new HashMap<>();
+    
+    /**
+     * The id of the task to perform the animation tasks on of the Object.
+     */
+    public UUID animationTask = null;
     
     /**
      * The set of movement animations for the Object.
@@ -123,6 +128,11 @@ public abstract class AbstractObject implements ObjectInterface {
      * The set of rotation animations for the Object.
      */
     public final List<double[]> rotationAnimations = new ArrayList<>();
+    
+    /**
+     * The set of orbit animations for the Object.
+     */
+    public final List<double[]> orbitAnimations = new ArrayList<>();
     
     /**
      * A flag indicating whether the Object is currently undergoing a movement transformation or not.
@@ -138,6 +148,11 @@ public abstract class AbstractObject implements ObjectInterface {
      * A flag indicating whether the Object is currently undergoing an orbit transformation or not.
      */
     public final AtomicBoolean inOrbitTransformation = new AtomicBoolean(false);
+    
+    /**
+     * A map of metadata stored on the Object.
+     */
+    public final Map<String, java.lang.Object> metadata = new HashMap<>();
     
     
     //Enums
@@ -259,6 +274,14 @@ public abstract class AbstractObject implements ObjectInterface {
     public abstract void render(Graphics2D g2, UUID perspective);
     
     /**
+     * Runs the animation tasks of the Object.
+     */
+    @Override
+    public final void runAnimationTasks() {
+        animationTasks.values().forEach(Runnable::run);
+    }
+    
+    /**
      * Performs post-rendering steps on the Object.
      *
      * @param perspective The perspective to post-render the Object for.
@@ -367,13 +390,15 @@ public abstract class AbstractObject implements ObjectInterface {
      * @param xSpeed The speed of the x movement in units per second.
      * @param ySpeed The speed of the y movement in units per second.
      * @param zSpeed The speed of the z movement in units per second.
+     * @return The id of the animation task.
      */
     @Override
-    public void addMovementAnimation(double xSpeed, double ySpeed, double zSpeed) {
+    public UUID addMovementAnimation(double xSpeed, double ySpeed, double zSpeed) {
         final Vector speedVector = new Vector(xSpeed, ySpeed, zSpeed);
         final AtomicLong lastTime = new AtomicLong(0);
         
-        UUID task = Environment.addTask(() -> {
+        final UUID taskId = UUID.randomUUID();
+        Runnable task = () -> {
             if (lastTime.get() == 0) {
                 lastTime.set(Environment.currentTimeMillis());
                 return;
@@ -385,10 +410,14 @@ public abstract class AbstractObject implements ObjectInterface {
             
             double scale = (double) timeElapsed / 1000;
             move(speedVector.scale(scale));
-        });
+        };
         
-        animationTasks.add(task);
+        animationTasks.put(taskId, task);
+        if (animationTask == null) {
+            animationTask = Environment.addTask(this::runAnimationTasks);
+        }
         movementAnimations.add(new double[] {xSpeed, ySpeed, zSpeed});
+        return taskId;
     }
     
     /**
@@ -398,9 +427,10 @@ public abstract class AbstractObject implements ObjectInterface {
      * @param yMovement The total y movement in radians.
      * @param zMovement The total z movement in radians.
      * @param period    The period over which to perform the transition in milliseconds.
+     * @return The id of the animation task.
      */
     @Override
-    public void addMovementTransformation(double xMovement, double yMovement, double zMovement, long period) {
+    public UUID addMovementTransformation(double xMovement, double yMovement, double zMovement, long period) {
         inMovementTransformation.set(true);
         
         final Vector movementVector = new Vector(xMovement, yMovement, zMovement);
@@ -408,8 +438,8 @@ public abstract class AbstractObject implements ObjectInterface {
         final AtomicLong lastTime = new AtomicLong(0);
         final AtomicLong totalTime = new AtomicLong(0);
         
-        EnvironmentBase.Task task = new EnvironmentBase.Task();
-        task.action = () -> {
+        final UUID taskId = UUID.randomUUID();
+        Runnable task = () -> {
             if (lastTime.get() == 0) {
                 lastTime.set(Environment.currentTimeMillis());
                 return;
@@ -422,7 +452,7 @@ public abstract class AbstractObject implements ObjectInterface {
             
             if (totalTime.get() >= period) {
                 move(movementVector.minus(totalMovement));
-                Environment.removeTask(task.id);
+                animationTasks.remove(taskId);
                 inMovementTransformation.set(false);
             } else {
                 double scale = (double) timeElapsed / period;
@@ -432,7 +462,12 @@ public abstract class AbstractObject implements ObjectInterface {
             }
         };
         
+        animationTasks.put(taskId, task);
+        if (animationTask == null) {
+            animationTask = Environment.addTask(this::runAnimationTasks);
+        }
         Environment.addTask(task);
+        return taskId;
     }
     
     /**
@@ -441,13 +476,15 @@ public abstract class AbstractObject implements ObjectInterface {
      * @param rollSpeed  The speed of the roll rotation in radians per second.
      * @param pitchSpeed The speed of the pitch rotation in radians per second.
      * @param yawSpeed   The speed of the yaw rotation in radians per second.
+     * @return The id of the animation task.
      */
     @Override
-    public void addRotationAnimation(double rollSpeed, double pitchSpeed, double yawSpeed) {
+    public UUID addRotationAnimation(double rollSpeed, double pitchSpeed, double yawSpeed) {
         final Vector speedVector = new Vector(rollSpeed, pitchSpeed, yawSpeed);
         final AtomicLong lastTime = new AtomicLong(0);
         
-        UUID task = Environment.addTask(() -> {
+        final UUID taskId = UUID.randomUUID();
+        Runnable task = () -> {
             if (lastTime.get() == 0) {
                 lastTime.set(Environment.currentTimeMillis());
                 return;
@@ -459,9 +496,14 @@ public abstract class AbstractObject implements ObjectInterface {
             
             double scale = (double) timeElapsed / 1000;
             rotate(speedVector.scale(scale));
-        });
+        };
         
-        animationTasks.add(task);
+        animationTasks.put(taskId, task);
+        if (animationTask == null) {
+            animationTask = Environment.addTask(this::runAnimationTasks);
+        }
+        rotationAnimations.add(new double[] {rollSpeed, pitchSpeed, yawSpeed});
+        return taskId;
     }
     
     /**
@@ -471,9 +513,10 @@ public abstract class AbstractObject implements ObjectInterface {
      * @param pitchRotation The total pitch rotation in radians.
      * @param yawRotation   The total yaw rotation in radians.
      * @param period        The period over which to perform the transition in milliseconds.
+     * @return The id of the animation task.
      */
     @Override
-    public void addRotationTransformation(double rollRotation, double pitchRotation, double yawRotation, long period) {
+    public UUID addRotationTransformation(double rollRotation, double pitchRotation, double yawRotation, long period) {
         inRotationTransformation.set(true);
         
         final Vector rotationVector = new Vector(rollRotation, pitchRotation, yawRotation);
@@ -481,8 +524,8 @@ public abstract class AbstractObject implements ObjectInterface {
         final AtomicLong lastTime = new AtomicLong(0);
         final AtomicLong totalTime = new AtomicLong(0);
         
-        EnvironmentBase.Task task = new EnvironmentBase.Task();
-        task.action = () -> {
+        final UUID taskId = UUID.randomUUID();
+        Runnable task = () -> {
             if (lastTime.get() == 0) {
                 lastTime.set(Environment.currentTimeMillis());
                 return;
@@ -495,7 +538,7 @@ public abstract class AbstractObject implements ObjectInterface {
             
             if (totalTime.get() >= period) {
                 rotateAndTransform(rotationVector.minus(totalRotation));
-                Environment.removeTask(task.id);
+                animationTasks.remove(taskId);
                 inRotationTransformation.set(false);
             } else {
                 double scale = (double) timeElapsed / period;
@@ -505,7 +548,11 @@ public abstract class AbstractObject implements ObjectInterface {
             }
         };
         
-        Environment.addTask(task);
+        animationTasks.put(taskId, task);
+        if (animationTask == null) {
+            animationTask = Environment.addTask(this::runAnimationTasks);
+        }
+        return taskId;
     }
     
     /**
@@ -513,12 +560,14 @@ public abstract class AbstractObject implements ObjectInterface {
      *
      * @param period The period of the color animation in milliseconds.
      * @param offset The offset of the color animation in milliseconds.
+     * @return The id of the animation task.
      */
     @Override
-    public void addColorAnimation(long period, long offset) {
+    public UUID addColorAnimation(long period, long offset) {
         final AtomicLong firstTime = new AtomicLong(0);
         
-        UUID task = Environment.addTask(() -> {
+        final UUID taskId = UUID.randomUUID();
+        Runnable task = () -> {
             if (firstTime.get() == 0) {
                 firstTime.set(Environment.currentTimeMillis() - offset);
             }
@@ -528,29 +577,13 @@ public abstract class AbstractObject implements ObjectInterface {
             
             float hue = (float) timeElapsed / period;
             setColor(ColorUtility.getColorByHue(hue));
-        });
+        };
         
-        animationTasks.add(task);
-    }
-    
-    /**
-     * Adds a constant orbit animation to and Object.
-     *
-     * @param point       The point to orbit around.
-     * @param orbitPeriod The period of the orbit in milliseconds.
-     */
-    public void addOrbitAnimation(Vector point, double orbitPeriod) {
-        addOrbitAnimation(new Object(point, Color.BLACK), orbitPeriod);
-    }
-    
-    /**
-     * Adds a constant orbit animation to an Object.
-     *
-     * @param object      The Object to orbit around.
-     * @param orbitPeriod The period of the orbit in milliseconds.
-     */
-    public void addOrbitAnimation(Object object, double orbitPeriod) {
-        addOrbitAnimation(object, orbitPeriod, true);
+        animationTasks.put(taskId, task);
+        if (animationTask == null) {
+            animationTask = Environment.addTask(this::runAnimationTasks);
+        }
+        return taskId;
     }
     
     /**
@@ -559,17 +592,20 @@ public abstract class AbstractObject implements ObjectInterface {
      * @param object      The Object to orbit around.
      * @param orbitPeriod The period of the orbit in milliseconds.
      * @param clockwise   Whether the orbit around the Object should be clockwise or counterclockwise.
+     * @return The id of the animation task.
      */
-    public void addOrbitAnimation(Object object, double orbitPeriod, boolean clockwise) {
+    @Override
+    public UUID addOrbitAnimation(Object object, double orbitPeriod, boolean clockwise) {
         final AbstractObject o = this;
         final Vector lastObjectCenter = object.center.clone();
-        final Vector normal = Environment.ORIGIN;
+        final Vector normal = Environment.ORIGIN.clone();
         final AtomicInteger wise = new AtomicInteger(-1);
         final AtomicLong lastTime = new AtomicLong(0);
         final AtomicLong originalRho = new AtomicLong(0);
         final AtomicLong circumference = new AtomicLong(0);
         
-        UUID task = Environment.addTask(() -> {
+        final UUID taskId = UUID.randomUUID();
+        Runnable task = () -> {
             Vector currentObjectCenter = object.center.clone();
             Vector objectMovement = currentObjectCenter.minus(lastObjectCenter);
             Vector.copyVector(currentObjectCenter, lastObjectCenter);
@@ -604,31 +640,36 @@ public abstract class AbstractObject implements ObjectInterface {
             Vector adjustment = adjustedLocation.minus(newLocation);
             
             move(translation.plus(adjustment));
-        });
+        };
         
-        animationTasks.add(task);
+        animationTasks.put(taskId, task);
+        if (animationTask == null) {
+            animationTask = Environment.addTask(this::runAnimationTasks);
+        }
+        orbitAnimations.add(new double[] {orbitPeriod, clockwise ? 1 : -1});
+        return taskId;
     }
     
     /**
-     * Adds an orbit transformation to an Object over a period of time.
+     * Adds a constant orbit animation to an Object.
      *
-     * @param point  The point to orbit around.
-     * @param orbits The number of orbits to perform during the transformation.
-     * @param period The period over which to perform the transition in milliseconds.
+     * @param object      The Object to orbit around.
+     * @param orbitPeriod The period of the orbit in milliseconds.
+     * @see #addOrbitAnimation(Object, double, boolean)
      */
-    public void addOrbitTransformation(Vector point, double orbits, double period) {
-        addOrbitTransformation(new Object(point, Color.BLACK), orbits, period);
+    public void addOrbitAnimation(Object object, double orbitPeriod) {
+        addOrbitAnimation(object, orbitPeriod, true);
     }
     
     /**
-     * Adds an orbit transformation to an Object over a period of time.
+     * Adds a constant orbit animation to and Object.
      *
-     * @param object The Object to orbit around.
-     * @param orbits The number of orbits to perform during the transformation.
-     * @param period The period of the orbit in milliseconds.
+     * @param point       The point to orbit around.
+     * @param orbitPeriod The period of the orbit in milliseconds.
+     * @see #addOrbitAnimation(Object, double)
      */
-    public void addOrbitTransformation(Object object, double orbits, double period) {
-        addOrbitTransformation(object, orbits, period, true);
+    public void addOrbitAnimation(Vector point, double orbitPeriod) {
+        addOrbitAnimation(new Object(point, Color.BLACK), orbitPeriod);
     }
     
     /**
@@ -638,21 +679,23 @@ public abstract class AbstractObject implements ObjectInterface {
      * @param orbits    The number of orbits to perform during the transformation.
      * @param period    The period of the orbit in milliseconds.
      * @param clockwise Whether the orbit around the Object should be clockwise or counterclockwise.
+     * @return The id of the animation task.
      */
-    public void addOrbitTransformation(Object object, double orbits, double period, boolean clockwise) {
+    @Override
+    public UUID addOrbitTransformation(Object object, double orbits, double period, boolean clockwise) {
         inOrbitTransformation.set(true);
         
         final double orbitPeriod = period / orbits;
         final Vector lastObjectCenter = object.center.clone();
-        final Vector normal = Environment.ORIGIN;
+        final Vector normal = Environment.ORIGIN.clone();
         final AtomicInteger wise = new AtomicInteger(-1);
         final AtomicLong lastTime = new AtomicLong(0);
         final AtomicLong totalTime = new AtomicLong(0);
         final AtomicLong originalRho = new AtomicLong(0);
         final AtomicLong circumference = new AtomicLong(0);
         
-        EnvironmentBase.Task task = new EnvironmentBase.Task();
-        task.action = () -> {
+        final UUID taskId = UUID.randomUUID();
+        Runnable task = () -> {
             Vector currentObjectCenter = object.center.clone();
             Vector objectMovement = currentObjectCenter.minus(lastObjectCenter);
             Vector.copyVector(currentObjectCenter, lastObjectCenter);
@@ -694,12 +737,40 @@ public abstract class AbstractObject implements ObjectInterface {
             move(translation.plus(adjustment));
             
             if (totalTime.get() >= period) {
-                Environment.removeTask(task.id);
+                animationTasks.remove(taskId);
                 inOrbitTransformation.set(false);
             }
         };
         
-        Environment.addTask(task);
+        animationTasks.put(taskId, task);
+        if (animationTask == null) {
+            animationTask = Environment.addTask(this::runAnimationTasks);
+        }
+        return taskId;
+    }
+    
+    /**
+     * Adds an orbit transformation to an Object over a period of time.
+     *
+     * @param object The Object to orbit around.
+     * @param orbits The number of orbits to perform during the transformation.
+     * @param period The period of the orbit in milliseconds.
+     * @see #addOrbitTransformation(Object, double, double, boolean)
+     */
+    public void addOrbitTransformation(Object object, double orbits, double period) {
+        addOrbitTransformation(object, orbits, period, true);
+    }
+    
+    /**
+     * Adds an orbit transformation to an Object over a period of time.
+     *
+     * @param point  The point to orbit around.
+     * @param orbits The number of orbits to perform during the transformation.
+     * @param period The period over which to perform the transition in milliseconds.
+     * @see #addOrbitTransformation(Object, double, double)
+     */
+    public void addOrbitTransformation(Vector point, double orbits, double period) {
+        addOrbitTransformation(new Object(point, Color.BLACK), orbits, period);
     }
     
     /**

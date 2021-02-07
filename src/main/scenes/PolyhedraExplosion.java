@@ -9,6 +9,7 @@ package main.scenes;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -168,7 +169,8 @@ public class PolyhedraExplosion extends Scene {
         for (RegularPolyhedron polyhedron : polyhedra) {
             registerComponent(polyhedron);
             polyhedron.addRotationAnimation((Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI, (Math.random() * 2 * Math.PI) - Math.PI);
-            polyhedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
+            UUID movementAnimation = polyhedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
+            polyhedron.metadata.put("movementAnimation", movementAnimation);
             polyhedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
             polyhedron.registerFrame(new Frame(polyhedron));
             polyhedron.setFrameColor(new Color(0, 0, 0, 0));
@@ -207,25 +209,23 @@ public class PolyhedraExplosion extends Scene {
                         break;
                     
                     case 1:
-                        if (currentTime > 20000) {
+                        if (currentTime > 19000) {
                             for (RegularPolyhedron polyhedron : polyhedra) {
-                                Environment.removeTask(polyhedron.animationTasks.get(1));
-                                polyhedron.animationTasks.remove(1);
-                                
                                 double[] values = polyhedron.movementAnimations.get(0);
+                                
+                                polyhedron.animationTasks.remove(polyhedron.metadata.get("movementAnimation"));
                                 polyhedron.movementAnimations.remove(0);
                                 
-                                polyhedron.addMovementAnimation(values[0] * -20, values[1] * -20, values[2] * -20);
+                                UUID movementAnimation = polyhedron.addMovementAnimation(values[0] * -20, values[1] * -20, values[2] * -20);
+                                polyhedron.metadata.replace("movementAnimation", movementAnimation);
                             }
                             stage.set(2);
                         }
                     
                     case 2:
-                        if (currentTime > 21000) {
+                        if (currentTime > 20000) {
                             for (RegularPolyhedron polyhedron : polyhedra) {
-                                Environment.removeTask(polyhedron.animationTasks.get(1));
-                                polyhedron.animationTasks.remove(1);
-                                
+                                polyhedron.animationTasks.remove(polyhedron.metadata.get("movementAnimation"));
                                 polyhedron.movementAnimations.remove(0);
                                 
                                 polyhedron.reposition(center);
@@ -236,7 +236,8 @@ public class PolyhedraExplosion extends Scene {
                                     polyhedron.setDisplayMode(AbstractObject.DisplayMode.EDGE);
                                     polyhedron.addFrame(new Color(0, 0, 0, 0));
                                 }
-                                polyhedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
+                                UUID movementAnimation = polyhedron.addMovementAnimation(Math.random() - .5, Math.random() - .5, Math.random() - .5);
+                                polyhedron.metadata.replace("movementAnimation", movementAnimation);
                             }
                             timeOffset.addAndGet(currentTime);
                             stage.set(0);

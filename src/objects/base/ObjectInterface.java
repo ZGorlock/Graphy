@@ -70,6 +70,11 @@ public interface ObjectInterface {
     void render(Graphics2D g2, UUID perspective);
     
     /**
+     * Runes the animation tasks of the Object.
+     */
+    void runAnimationTasks();
+    
+    /**
      * Performs post-rendering steps on the Object.
      *
      * @param perspective The perspective to post-render the Object for.
@@ -136,8 +141,9 @@ public interface ObjectInterface {
      * @param xSpeed The speed of the x movement in units per second.
      * @param ySpeed The speed of the y movement in units per second.
      * @param zSpeed The speed of the z movement in units per second.
+     * @return The id of the animation task.
      */
-    void addMovementAnimation(double xSpeed, double ySpeed, double zSpeed);
+    UUID addMovementAnimation(double xSpeed, double ySpeed, double zSpeed);
     
     /**
      * Adds a movement transformation to an Object over a period of time.
@@ -146,8 +152,9 @@ public interface ObjectInterface {
      * @param yMovement The total y movement in radians.
      * @param zMovement The total z movement in radians.
      * @param period    The period over which to perform the transition in milliseconds.
+     * @return The id of the animation task.
      */
-    void addMovementTransformation(double xMovement, double yMovement, double zMovement, long period);
+    UUID addMovementTransformation(double xMovement, double yMovement, double zMovement, long period);
     
     /**
      * Adds a constant rotation animation to an Object.
@@ -155,8 +162,9 @@ public interface ObjectInterface {
      * @param yawSpeed   The speed of the yaw rotation in radians per second.
      * @param pitchSpeed The speed of the pitch rotation in radians per second.
      * @param rollSpeed  The speed of the roll rotation in radians per second.
+     * @return The id of the animation task.
      */
-    void addRotationAnimation(double yawSpeed, double pitchSpeed, double rollSpeed);
+    UUID addRotationAnimation(double yawSpeed, double pitchSpeed, double rollSpeed);
     
     /**
      * Adds a rotation transformation to an Object over a period of time.
@@ -165,16 +173,39 @@ public interface ObjectInterface {
      * @param pitchRotation The total pitch rotation in radians.
      * @param rollRotation  The total roll rotation in radians.
      * @param period        The period over which to perform the transition in milliseconds.
+     * @return The id of the animation task.
      */
-    void addRotationTransformation(double yawRotation, double pitchRotation, double rollRotation, long period);
+    UUID addRotationTransformation(double yawRotation, double pitchRotation, double rollRotation, long period);
     
     /**
      * Adds a constant color animation to an Object.
      *
      * @param period The period of the color animation in milliseconds.
      * @param offset The offset of the color animation in milliseconds.
+     * @return The id of the animation task.
      */
-    void addColorAnimation(long period, long offset);
+    UUID addColorAnimation(long period, long offset);
+    
+    /**
+     * Adds a constant orbit animation to an Object.
+     *
+     * @param object      The Object to orbit around.
+     * @param orbitPeriod The period of the orbit in milliseconds.
+     * @param clockwise   Whether the orbit around the Object should be clockwise or counterclockwise.
+     * @return The id of the animation task.
+     */
+    UUID addOrbitAnimation(Object object, double orbitPeriod, boolean clockwise);
+    
+    /**
+     * Adds an orbit transformation to an Object over a period of time.
+     *
+     * @param object    The Object to orbit around.
+     * @param orbits    The number of orbits to perform during the transformation.
+     * @param period    The period of the orbit in milliseconds.
+     * @param clockwise Whether the orbit around the Object should be clockwise or counterclockwise.
+     * @return The id of the animation task.
+     */
+    UUID addOrbitTransformation(Object object, double orbits, double period, boolean clockwise);
     
     /**
      * Registers a component with the Object.

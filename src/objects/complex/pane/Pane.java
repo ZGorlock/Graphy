@@ -148,7 +148,7 @@ public abstract class Pane extends BaseObject {
      */
     protected void draw(Graphics2D g2, UUID perspective) {
         if (image != null) {
-            ImageUtility.transformImage(image, ImageUtility.getBoundsForImage(image), g2, Environment.screenWidth, Environment.screenHeight, prepared.get(perspective));
+            ImageUtility.transformImage(image, ImageUtility.getBoundsForImage(image), g2, Environment.screenWidth, Environment.screenHeight, prepared.get(perspective).subList(0, 4));
         }
     }
     

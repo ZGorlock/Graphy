@@ -10,12 +10,12 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import commons.math.CoordinateUtility;
+import commons.math.vector.Vector;
 import graphy.main.Environment;
-import graphy.math.vector.Vector;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.Object;
 import graphy.object.base.polygon.Triangle;
-import graphy.utility.SphericalCoordinateUtility;
 
 /**
  * Defines a Holed Sphere.
@@ -94,7 +94,7 @@ public class HoledSphere extends Object {
         for (double phi = 0; Math.PI - phi > -Environment.OMEGA; phi += step / 2) {
             vertices.add(new ArrayList<>());
             for (double theta = 0; Math.PI * 2 - theta > -Environment.OMEGA; theta += step) {
-                Vector cartesian = SphericalCoordinateUtility.sphericalToCartesian(radius, theta + (offset ? step / 2 : 0), phi);
+                Vector cartesian = CoordinateUtility.sphericalToCartesian(radius, theta + (offset ? step / 2 : 0), phi);
                 vertices.get(layer).add(cartesian.plus(center));
             }
             offset = !offset;

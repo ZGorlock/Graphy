@@ -11,7 +11,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.UUID;
 
-import graphy.math.vector.Vector;
+import commons.math.vector.Vector;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.polygon.Square;
 

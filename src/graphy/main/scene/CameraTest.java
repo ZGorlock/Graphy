@@ -8,9 +8,9 @@ package graphy.main.scene;
 
 import java.awt.Color;
 
+import commons.math.vector.Vector;
 import graphy.camera.Camera;
 import graphy.main.Environment;
-import graphy.math.vector.Vector;
 import graphy.object.base.Scene;
 import graphy.object.polyhedron.regular.RegularPolyhedron;
 import graphy.object.polyhedron.regular.platonic.Icosahedron;

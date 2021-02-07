@@ -8,12 +8,12 @@ package graphy.main.scene;
 
 import java.awt.Color;
 
+import commons.graphics.ColorUtility;
 import graphy.camera.Camera;
 import graphy.main.Environment;
 import graphy.object.base.Frame;
 import graphy.object.base.Scene;
 import graphy.object.polyhedron.regular.platonic.Hexahedron;
-import graphy.utility.ColorUtility;
 
 /**
  * Defines a Animated Cube scene.

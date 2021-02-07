@@ -8,7 +8,7 @@ package graphy.object.polyhedron;
 
 import java.awt.Color;
 
-import graphy.math.vector.Vector;
+import commons.math.vector.Vector;
 import graphy.object.base.Object;
 
 /**

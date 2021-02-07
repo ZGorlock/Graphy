@@ -18,14 +18,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import commons.graphics.ColorUtility;
+import commons.math.CoordinateUtility;
+import commons.math.RotationUtility;
+import commons.math.matrix.Matrix3;
+import commons.math.vector.Vector;
+import commons.math.vector.Vector3;
 import graphy.camera.Camera;
 import graphy.main.Environment;
-import graphy.math.matrix.Matrix3;
-import graphy.math.vector.Vector;
-import graphy.math.vector.Vector3;
-import graphy.utility.ColorUtility;
-import graphy.utility.RotationUtility;
-import graphy.utility.SphericalCoordinateUtility;
 
 /**
  * Defines an abstract implementation of an Object.
@@ -611,9 +611,9 @@ public abstract class AbstractObject implements ObjectInterface {
             Vector.copyVector(currentObjectCenter, lastObjectCenter);
             
             if (lastTime.get() == 0) {
-                Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(center.minus(lastObjectCenter));
+                Vector sphericalLocation = CoordinateUtility.cartesianToSpherical(center.minus(lastObjectCenter));
                 Vector direction = center.minus(lastObjectCenter).normalize();
-                Vector perpendicular = SphericalCoordinateUtility.sphericalToCartesian(sphericalLocation.getX(), sphericalLocation.getY() + (Math.PI / 2), Math.PI / 2).minus(lastObjectCenter).normalize();
+                Vector perpendicular = CoordinateUtility.sphericalToCartesian(sphericalLocation.getX(), sphericalLocation.getY() + (Math.PI / 2), Math.PI / 2).minus(lastObjectCenter).normalize();
                 
                 Vector.copyVector(new Vector3(direction).cross(perpendicular).normalize(), normal);
                 wise.set((clockwise ? 1 : -1) * (((direction.getX() == 0) && (direction.getY() == 0) && (direction.getZ() > 0)) ? 1 : -1));
@@ -635,8 +635,8 @@ public abstract class AbstractObject implements ObjectInterface {
             
             Vector translation = movement.scale(scale).plus(objectMovement);
             Vector newLocation = center.plus(translation);
-            Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(newLocation.minus(lastObjectCenter));
-            Vector adjustedLocation = SphericalCoordinateUtility.sphericalToCartesian(Double.longBitsToDouble(originalRho.get()), sphericalLocation.getY(), sphericalLocation.getZ()).plus(lastObjectCenter);
+            Vector sphericalLocation = CoordinateUtility.cartesianToSpherical(newLocation.minus(lastObjectCenter));
+            Vector adjustedLocation = CoordinateUtility.sphericalToCartesian(Double.longBitsToDouble(originalRho.get()), sphericalLocation.getY(), sphericalLocation.getZ()).plus(lastObjectCenter);
             Vector adjustment = adjustedLocation.minus(newLocation);
             
             move(translation.plus(adjustment));
@@ -701,9 +701,9 @@ public abstract class AbstractObject implements ObjectInterface {
             Vector.copyVector(currentObjectCenter, lastObjectCenter);
             
             if (lastTime.get() == 0) {
-                Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(center.minus(lastObjectCenter));
+                Vector sphericalLocation = CoordinateUtility.cartesianToSpherical(center.minus(lastObjectCenter));
                 Vector direction = center.minus(lastObjectCenter).normalize();
-                Vector perpendicular = SphericalCoordinateUtility.sphericalToCartesian(sphericalLocation.getX(), sphericalLocation.getY() + (Math.PI / 2), Math.PI / 2).minus(lastObjectCenter).normalize();
+                Vector perpendicular = CoordinateUtility.sphericalToCartesian(sphericalLocation.getX(), sphericalLocation.getY() + (Math.PI / 2), Math.PI / 2).minus(lastObjectCenter).normalize();
                 
                 Vector.copyVector(new Vector3(direction).cross(perpendicular).normalize(), normal);
                 wise.set((clockwise ? 1 : -1) * (((direction.getX() == 0) && (direction.getY() == 0) && (direction.getZ() > 0)) ? 1 : -1));
@@ -730,8 +730,8 @@ public abstract class AbstractObject implements ObjectInterface {
             
             Vector translation = movement.scale(scale).plus(objectMovement);
             Vector newLocation = center.plus(translation);
-            Vector sphericalLocation = SphericalCoordinateUtility.cartesianToSpherical(newLocation.minus(lastObjectCenter));
-            Vector adjustedLocation = SphericalCoordinateUtility.sphericalToCartesian(Double.longBitsToDouble(originalRho.get()), sphericalLocation.getY(), sphericalLocation.getZ()).plus(lastObjectCenter);
+            Vector sphericalLocation = CoordinateUtility.cartesianToSpherical(newLocation.minus(lastObjectCenter));
+            Vector adjustedLocation = CoordinateUtility.sphericalToCartesian(Double.longBitsToDouble(originalRho.get()), sphericalLocation.getY(), sphericalLocation.getZ()).plus(lastObjectCenter);
             Vector adjustment = adjustedLocation.minus(newLocation);
             
             move(translation.plus(adjustment));

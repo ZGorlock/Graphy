@@ -29,15 +29,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
+import commons.math.CoordinateUtility;
+import commons.math.vector.Vector;
+import commons.math.vector.Vector3;
 import graphy.main.Environment;
 import graphy.main.EnvironmentBase;
 import graphy.math.Delta;
-import graphy.math.vector.Vector;
-import graphy.math.vector.Vector3;
 import graphy.object.base.BaseObject;
 import graphy.object.base.Scene;
 import graphy.object.base.polygon.Rectangle;
-import graphy.utility.SphericalCoordinateUtility;
 
 /**
  * Defines the functionality of a Camera.
@@ -352,7 +352,7 @@ public class Camera {
             
             
             //cartesian camera location
-            Vector cartesian = SphericalCoordinateUtility.sphericalToCartesian(rho, theta, phi);
+            Vector cartesian = CoordinateUtility.sphericalToCartesian(rho, theta, phi);
             Vector viewport = getViewport(perspective);
             
             

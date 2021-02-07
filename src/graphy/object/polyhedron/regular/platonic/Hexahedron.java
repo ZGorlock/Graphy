@@ -8,7 +8,7 @@ package graphy.object.polyhedron.regular.platonic;
 
 import java.awt.Color;
 
-import graphy.math.vector.Vector;
+import commons.math.vector.Vector;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.polygon.Rectangle;
 import graphy.object.polyhedron.regular.RegularPolyhedron;

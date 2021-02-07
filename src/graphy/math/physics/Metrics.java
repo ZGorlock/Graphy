@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import commons.math.vector.Vector;
 import graphy.main.Environment;
-import graphy.math.vector.Vector;
 import graphy.object.base.ObjectInterface;
 import graphy.object.base.polygon.Polygon;
 import graphy.object.polyhedron.Polyhedron;

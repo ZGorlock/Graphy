@@ -10,7 +10,7 @@ import java.awt.BorderLayout;
 import java.awt.Graphics2D;
 import javax.management.InstanceAlreadyExistsException;
 
-import graphy.math.vector.Vector;
+import commons.math.vector.Vector;
 import graphy.object.base.Drawing;
 
 /**
@@ -41,6 +41,8 @@ public class Environment2D extends EnvironmentBase {
         
         background = null;
         layout = new BorderLayout();
+        
+        initializeCommons();
     }
     
     

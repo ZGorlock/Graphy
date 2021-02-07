@@ -11,11 +11,11 @@ import java.awt.Graphics2D;
 import java.util.List;
 import java.util.UUID;
 
+import commons.math.RotationUtility;
+import commons.math.matrix.Matrix3;
+import commons.math.vector.Vector;
 import graphy.camera.Camera;
 import graphy.main.Environment;
-import graphy.math.matrix.Matrix3;
-import graphy.math.vector.Vector;
-import graphy.utility.RotationUtility;
 
 /**
  * Defines the base properties of an Object.
@@ -35,9 +35,9 @@ public abstract class BaseObject extends AbstractObject {
      */
     public BaseObject(AbstractObject parent, Color color, Vector center, Vector... vertices) throws ArithmeticException {
         if (vertices.length > 0) {
-            int dim = vertices[0].getDimension();
+            int dim = vertices[0].getDimensionality();
             for (Vector vertex : vertices) {
-                if (vertex.getDimension() != dim) {
+                if (vertex.getDimensionality() != dim) {
                     throw new ArithmeticException("Not all of the vertices for the Base Object are in the same spacial dimension.");
                 }
             }

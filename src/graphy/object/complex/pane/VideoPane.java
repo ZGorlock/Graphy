@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import commons.media.ImageUtility;
 import graphy.main.Environment;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.polygon.Rectangle;
-import graphy.utility.ImageUtility;
 
 /**
  * Defines a Video Pane.

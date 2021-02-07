@@ -8,9 +8,9 @@ package graphy.main.scene;
 
 import java.awt.Color;
 
+import commons.math.vector.Vector;
 import graphy.camera.Camera;
 import graphy.main.Environment;
-import graphy.math.vector.Vector;
 import graphy.object.base.Frame;
 import graphy.object.base.Scene;
 import graphy.object.sphere.Sphere;
@@ -25,7 +25,7 @@ public class SphereField extends Scene {
     /**
      * A flag indicating whether or not to run the Sphere Field in simple mode or not.
      */
-    public static boolean simple = true;
+    public static boolean simple = false;
     
     
     //Main Method

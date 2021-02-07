@@ -19,6 +19,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Queue;
 import java.util.UUID;
@@ -32,9 +33,12 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
+import commons.graphics.ScreenSize;
+import commons.log.CommonsLogger;
+import commons.log.CommonsLogging;
+import commons.math.vector.BigVector;
+import commons.math.vector.Vector;
 import graphy.camera.CaptureHandler;
-import graphy.math.vector.Vector;
-import graphy.utility.ScreenUtility;
 
 /**
  * The base of the main Environment.
@@ -51,12 +55,12 @@ public abstract class EnvironmentBase {
     /**
      * The display width of the screen.
      */
-    private static final int DISPLAY_WIDTH = ScreenUtility.DISPLAY_WIDTH;
+    private static final int DISPLAY_WIDTH = ScreenSize.DISPLAY_WIDTH;
     
     /**
      * The display height of the screen.
      */
-    private static final int DISPLAY_HEIGHT = ScreenUtility.DISPLAY_HEIGHT;
+    private static final int DISPLAY_HEIGHT = ScreenSize.DISPLAY_HEIGHT;
     
     /**
      * The maximum width of the Window.
@@ -357,6 +361,33 @@ public abstract class EnvironmentBase {
     }
     
     /**
+     * Initializes Commons.
+     */
+    protected final void initializeCommons() {
+        Vector.setJustificationVector(new Vector(-1, -1, 1));
+        BigVector.setJustificationVector(new BigVector(BigDecimal.valueOf(-1), BigDecimal.valueOf(-1), BigDecimal.valueOf(1)));
+        
+        CommonsLogging.setCommonsLogger(new CommonsLogger() {
+            
+            @Override
+            public boolean logFilesystem() {
+                return false;
+            }
+            
+            @Override
+            public boolean logClipboard() {
+                return false;
+            }
+            
+            @Override
+            public boolean logInternet() {
+                return false;
+            }
+            
+        });
+    }
+    
+    /**
      * Runs the Environment.
      */
     public final void run() {
@@ -418,7 +449,7 @@ public abstract class EnvironmentBase {
     protected void sizeWindow() {
         renderPanel.setSize(new Dimension(width, height));
         renderPanel.setPreferredSize(new Dimension(renderPanel.getSize()));
-        frame.setSize(new Dimension(screenWidth + ScreenUtility.BORDER_WIDTH, screenHeight + ScreenUtility.BORDER_HEIGHT));
+        frame.setSize(new Dimension(screenWidth + ScreenSize.BORDER_WIDTH, screenHeight + ScreenSize.BORDER_HEIGHT));
         frame.setPreferredSize(frame.getSize());
         
         if ((screenWidth == MAX_SCREEN_WIDTH) && (screenHeight == MAX_SCREEN_HEIGHT)) {

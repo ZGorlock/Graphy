@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import graphy.math.vector.Vector;
+import commons.math.vector.Vector;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.BaseObject;
 

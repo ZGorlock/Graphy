@@ -10,7 +10,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.UUID;
 
-import graphy.math.vector.Vector;
+import commons.math.vector.Vector;
 import graphy.object.base.AbstractObject;
 
 /**

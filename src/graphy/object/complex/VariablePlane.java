@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import commons.math.vector.Vector;
 import graphy.main.Environment;
 import graphy.math.vector.UniqueVectorSet;
-import graphy.math.vector.Vector;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.Object;
 import graphy.object.base.polygon.Rectangle;

@@ -15,13 +15,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import commons.graphics.ImageTransformationUtility;
+import commons.math.CoordinateUtility;
+import commons.math.vector.Vector;
 import graphy.camera.Camera;
 import graphy.main.Environment;
-import graphy.math.vector.Vector;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.polygon.Rectangle;
-import graphy.utility.ImageUtility;
-import graphy.utility.SphericalCoordinateUtility;
 
 /**
  * Defines a Mirror Pane.
@@ -130,7 +130,7 @@ public class MirrorPane extends Pane {
         
         Vector viewer = parentCamera.getCameraPosition();
         Vector virtual = viewer.minus(normal.scale(2 * viewer.dot(normal)));
-        camera.setLocation(SphericalCoordinateUtility.cartesianToSpherical(virtual));
+        camera.setLocation(CoordinateUtility.cartesianToSpherical(virtual));
         
         if (!preparedForPerspective(this.perspective)) {
             prePrepare(this.perspective);
@@ -170,7 +170,7 @@ public class MirrorPane extends Pane {
         
         Shape saveClip = g2.getClip();
         g2.setClip(parentView);
-        ImageUtility.transformImage(reflection, bounds, g2, Environment.screenWidth, Environment.screenHeight, parentBounds);
+        ImageTransformationUtility.transformImage(reflection, bounds, g2, Environment.screenWidth, Environment.screenHeight, parentBounds);
         g2.setClip(saveClip);
     }
     

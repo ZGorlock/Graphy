@@ -11,8 +11,8 @@ import java.awt.Graphics2D;
 import java.util.List;
 import java.util.UUID;
 
-import graphy.math.matrix.Matrix3;
-import graphy.math.vector.Vector;
+import commons.math.matrix.Matrix3;
+import commons.math.vector.Vector;
 
 /**
  * The interface that defines the contract for creating an Object class.

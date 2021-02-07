@@ -6,8 +6,8 @@
 
 package graphy.math.physics;
 
+import commons.math.vector.Vector;
 import graphy.main.Environment;
-import graphy.math.vector.Vector;
 import graphy.object.base.polygon.Polygon;
 
 /**

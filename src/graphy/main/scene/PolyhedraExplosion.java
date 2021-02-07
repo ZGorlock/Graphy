@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.IntStream;
 
+import commons.graphics.ColorUtility;
 import graphy.camera.Camera;
 import graphy.main.Environment;
 import graphy.object.base.AbstractObject;
@@ -29,7 +30,6 @@ import graphy.object.polyhedron.regular.platonic.Hexahedron;
 import graphy.object.polyhedron.regular.platonic.Icosahedron;
 import graphy.object.polyhedron.regular.platonic.Octahedron;
 import graphy.object.polyhedron.regular.platonic.Tetrahedron;
-import graphy.utility.ColorUtility;
 
 /**
  * Defines a Polyhedra Explosion scene.

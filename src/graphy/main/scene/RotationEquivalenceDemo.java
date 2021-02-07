@@ -8,14 +8,14 @@ package graphy.main.scene;
 
 import java.awt.Color;
 
+import commons.graphics.ColorUtility;
+import commons.math.vector.Vector;
 import graphy.camera.Camera;
 import graphy.main.Environment;
 import graphy.main.EnvironmentBase;
-import graphy.math.vector.Vector;
 import graphy.object.base.Scene;
 import graphy.object.polyhedron.regular.platonic.Hexahedron;
 import graphy.object.system.Axes;
-import graphy.utility.ColorUtility;
 
 /**
  * Defines a Rotation Equivalence Demo scene.

@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import commons.math.vector.Vector;
 import graphy.main.Environment2D;
-import graphy.math.vector.Vector;
 import graphy.object.base.Drawing;
 
 /**

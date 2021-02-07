@@ -20,10 +20,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import commons.access.CmdLine;
+import commons.media.ImageUtility;
 import graphy.main.Environment;
 import graphy.main.EnvironmentBase;
-import graphy.utility.CmdLineUtility;
-import graphy.utility.ImageUtility;
 
 /**
  * Handles captures and recordings of the Environment.
@@ -441,7 +441,7 @@ public class CaptureHandler {
         }
         
         String cmd = "ffmpeg " + cmdFrameRate + " " + cmdInput + " \"" + recordingVideo.getAbsolutePath() + "\"";
-        String log = CmdLineUtility.executeCmd(cmd, true);
+        String log = CmdLine.executeCmd(cmd, true);
         
         try {
             for (File frame : frames) {

@@ -14,15 +14,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import commons.math.EquationUtility;
+import commons.math.vector.Vector;
 import graphy.camera.Camera;
 import graphy.main.Environment;
 import graphy.math.vector.UniqueVectorSet;
-import graphy.math.vector.Vector;
 import graphy.object.base.Object;
 import graphy.object.base.Scene;
 import graphy.object.base.polygon.Rectangle;
 import graphy.object.system.Axes;
-import graphy.utility.EquationUtility;
 
 /**
  * Defines a Graph scene.

@@ -41,15 +41,15 @@ import javax.swing.JMenuItem;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
+import commons.math.vector.BigVector;
+import commons.math.vector.Vector;
+import commons.math.vector.Vector2;
+import commons.media.ImageUtility;
 import graphy.camera.CaptureHandler;
 import graphy.main.Environment;
 import graphy.main.Environment2D;
 import graphy.main.EnvironmentBase;
-import graphy.math.vector.BigVector;
-import graphy.math.vector.Vector;
-import graphy.math.vector.Vector2;
 import graphy.object.base.Drawing;
-import graphy.utility.ImageUtility;
 
 /**
  * A Mandelbrot drawing.

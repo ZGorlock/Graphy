@@ -13,13 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import commons.graphics.ImageTransformationUtility;
+import commons.math.vector.Vector;
+import commons.math.vector.Vector3;
 import graphy.main.Environment;
-import graphy.math.vector.Vector;
-import graphy.math.vector.Vector3;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.BaseObject;
 import graphy.object.base.polygon.Rectangle;
-import graphy.utility.ImageUtility;
 
 /**
  * Defines a Pane.
@@ -148,7 +148,7 @@ public abstract class Pane extends BaseObject {
      */
     protected void draw(Graphics2D g2, UUID perspective) {
         if (image != null) {
-            ImageUtility.transformImage(image, ImageUtility.getBoundsForImage(image), g2, Environment.screenWidth, Environment.screenHeight, prepared.get(perspective).subList(0, 4));
+            ImageTransformationUtility.transformImage(image, ImageTransformationUtility.getBoundsForImage(image), g2, Environment.screenWidth, Environment.screenHeight, prepared.get(perspective).subList(0, 4));
         }
     }
     

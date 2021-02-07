@@ -9,9 +9,9 @@ package graphy.object.complex.pane;
 import java.awt.Color;
 import java.io.File;
 
+import commons.media.ImageUtility;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.polygon.Rectangle;
-import graphy.utility.ImageUtility;
 
 /**
  * Defines a Picture Pane.

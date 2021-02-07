@@ -17,10 +17,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
+import commons.math.RotationUtility;
+import commons.math.matrix.Matrix3;
+import commons.math.vector.Vector;
 import graphy.main.Environment;
-import graphy.math.matrix.Matrix3;
-import graphy.math.vector.Vector;
-import graphy.utility.RotationUtility;
 
 /**
  * Defines the base properties of an Object.

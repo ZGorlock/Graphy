@@ -10,9 +10,10 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import commons.math.CoordinateUtility;
+import commons.math.vector.Vector;
 import graphy.camera.Camera;
 import graphy.main.Environment;
-import graphy.math.vector.Vector;
 import graphy.object.base.Frame;
 import graphy.object.base.Scene;
 import graphy.object.base.polygon.Rectangle;
@@ -23,7 +24,6 @@ import graphy.object.polyhedron.regular.platonic.Icosahedron;
 import graphy.object.polyhedron.regular.platonic.Octahedron;
 import graphy.object.polyhedron.regular.platonic.Tetrahedron;
 import graphy.object.sphere.Sphere;
-import graphy.utility.SphericalCoordinateUtility;
 
 public class PerspectiveDice extends Scene {
     
@@ -68,7 +68,7 @@ public class PerspectiveDice extends Scene {
         
         List<Vector> diceLocations = new ArrayList<>();
         for (double theta = 0; theta - (Math.PI * 8 / 5) < Environment.OMEGA; theta += Math.PI * 2 / 5) {
-            diceLocations.add(SphericalCoordinateUtility.sphericalToCartesian(5, theta, Math.PI / 2).plus(Environment.ORIGIN));
+            diceLocations.add(CoordinateUtility.sphericalToCartesian(5, theta, Math.PI / 2).plus(Environment.ORIGIN));
         }
         
         Tetrahedron d4 = new Tetrahedron(diceLocations.get(0), Color.BLACK, 1);

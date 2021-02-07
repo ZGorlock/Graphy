@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import commons.math.vector.Vector;
+
 /**
  * Defines a set of unique vectors.
  */

@@ -8,8 +8,8 @@ package graphy.object.system;
 
 import java.awt.Color;
 
+import commons.math.vector.Vector;
 import graphy.main.Environment;
-import graphy.math.vector.Vector;
 import graphy.object.base.Object;
 import graphy.object.base.simple.Edge;
 import graphy.object.base.simple.Text;

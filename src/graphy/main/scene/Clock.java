@@ -10,14 +10,14 @@ import java.awt.Color;
 import java.util.Calendar;
 import java.util.Date;
 
+import commons.math.CoordinateUtility;
+import commons.math.vector.Vector;
 import graphy.camera.Camera;
 import graphy.main.Environment;
-import graphy.math.vector.Vector;
 import graphy.object.base.Scene;
 import graphy.object.base.group.LockedEdge;
 import graphy.object.base.simple.Text;
 import graphy.object.polyhedron.regular.platonic.Hexahedron;
-import graphy.utility.SphericalCoordinateUtility;
 
 /**
  * Defines an Clock scene.
@@ -61,7 +61,7 @@ public class Clock extends Scene {
         registerComponent(c);
         
         for (int i = 1; i <= 12; i++) {
-            Hexahedron number = new Hexahedron(SphericalCoordinateUtility.sphericalToCartesian(10, (Math.PI / 2) - (Math.PI / 6 * i), Math.PI / 2), Color.WHITE, 1);
+            Hexahedron number = new Hexahedron(CoordinateUtility.sphericalToCartesian(10, (Math.PI / 2) - (Math.PI / 6 * i), Math.PI / 2), Color.WHITE, 1);
             number.addFrame(Color.BLACK);
             Text text = new Text(number, number.getCenter().plus(new Vector(0 - ((i > 9) ? .15 : 0), -.15, 1)), String.valueOf(i));
             registerComponent(number);
@@ -83,9 +83,9 @@ public class Clock extends Scene {
         double minute = ((nowMinute * 60) + (nowSecond)) / 3600.0;
         double second = nowSecond / 60.0;
         
-        Hexahedron hourMark = new Hexahedron(SphericalCoordinateUtility.sphericalToCartesian(4, (Math.PI / 2) - (hour * Math.PI * 2), Math.PI / 2), Color.BLACK, .5);
-        Hexahedron minuteMark = new Hexahedron(SphericalCoordinateUtility.sphericalToCartesian(6, (Math.PI / 2) - (minute * Math.PI * 2), Math.PI / 2), Color.BLACK, .25);
-        Hexahedron secondMark = new Hexahedron(SphericalCoordinateUtility.sphericalToCartesian(8, (Math.PI / 2) - (second * Math.PI * 2), Math.PI / 2), Color.BLACK, .125);
+        Hexahedron hourMark = new Hexahedron(CoordinateUtility.sphericalToCartesian(4, (Math.PI / 2) - (hour * Math.PI * 2), Math.PI / 2), Color.BLACK, .5);
+        Hexahedron minuteMark = new Hexahedron(CoordinateUtility.sphericalToCartesian(6, (Math.PI / 2) - (minute * Math.PI * 2), Math.PI / 2), Color.BLACK, .25);
+        Hexahedron secondMark = new Hexahedron(CoordinateUtility.sphericalToCartesian(8, (Math.PI / 2) - (second * Math.PI * 2), Math.PI / 2), Color.BLACK, .125);
         hourMark.addFrame(Color.WHITE);
         minuteMark.addFrame(Color.WHITE);
         secondMark.addFrame(Color.WHITE);

@@ -19,8 +19,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
 
+import commons.math.vector.Vector;
 import graphy.main.Environment2D;
-import graphy.math.vector.Vector;
 import graphy.object.base.Drawing;
 import graphy.object.base.polygon.Rectangle;
 

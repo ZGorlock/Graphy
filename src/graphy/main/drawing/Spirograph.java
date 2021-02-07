@@ -12,8 +12,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+import commons.math.vector.Vector;
 import graphy.main.Environment2D;
-import graphy.math.vector.Vector;
 import graphy.object.base.Drawing;
 import graphy.object.base.Object;
 

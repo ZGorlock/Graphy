@@ -28,7 +28,7 @@ public final class RotationUtility {
     //Functions
     
     /**
-     * Creates the rotation transformation matrix for an Object.
+     * Calculates a rotation transformation matrix.
      *
      * @param roll  The roll angle to rotate by.
      * @param pitch The pitch angle to rotate by.
@@ -55,7 +55,7 @@ public final class RotationUtility {
     }
     
     /**
-     * Performs the rotation transformation on a Vector.
+     * Performs a rotation transformation on a Vector.
      *
      * @param vector         The Vector to rotate.
      * @param rotationMatrix The rotation transformation matrix to apply.
@@ -71,10 +71,10 @@ public final class RotationUtility {
                 0, 0, 1, -justifiedCenter.getZ(),
                 0, 0, 0, 1
         });
-        Vector v4 = new Vector(vector, 1.0);
-        v4 = translationMatrix.multiply(v4);
+        Vector result = new Vector(vector, 1);
+        result = translationMatrix.multiply(result);
         
-        Vector v = rotationMatrix.transform(new Vector(v4.getX(), v4.getY(), v4.getZ()));
+        Vector v = rotationMatrix.transform(new Vector(result.getX(), result.getY(), result.getZ()));
         
         Matrix4 untranslationMatrix = new Matrix4(new double[] {
                 1, 0, 0, justifiedCenter.getX(),
@@ -82,10 +82,10 @@ public final class RotationUtility {
                 0, 0, 1, justifiedCenter.getZ(),
                 0, 0, 0, 1
         });
-        v4 = new Vector(v, 1);
-        v4 = untranslationMatrix.multiply(v4);
+        result = new Vector(v, 1);
+        result = untranslationMatrix.multiply(result);
         
-        return new Vector(v4.getX(), v4.getY(), v4.getZ());
+        return new Vector(result.getX(), result.getY(), result.getZ());
     }
     
 }

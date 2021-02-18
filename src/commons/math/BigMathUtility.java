@@ -79,6 +79,19 @@ public final class BigMathUtility {
     }
     
     
+    //Constants
+    
+    /**
+     * The default precision to use for math operations.
+     */
+    public static final int DEFAULT_MATH_PRECISION = PrecisionMode.HIGH_PRECISION.getPrecision();
+    
+    /**
+     * The default rounding mode to use for math operations.
+     */
+    public static final RoundingMode DEFAULT_ROUNDING_MODE = RoundingMode.HALF_UP;
+    
+    
     //Functions
     
     /**
@@ -86,7 +99,7 @@ public final class BigMathUtility {
      *
      * @param n1        The first number.
      * @param n2        The second number.
-     * @param precision The number of decimal points to return.
+     * @param precision The number of significant figures to return.
      * @return The first number added to the second number, represented as a string.
      * @throws NumberFormatException When a number string does not represent a number.
      */
@@ -96,7 +109,7 @@ public final class BigMathUtility {
         
         BigDecimal br = b1.add(b2);
         if (precision != PrecisionMode.DEFAULT_PRECISION.getPrecision()) {
-            br = br.setScale(precision, RoundingMode.HALF_UP);
+            br = br.setScale(precision, DEFAULT_ROUNDING_MODE);
         }
         return br.toPlainString();
     }
@@ -106,7 +119,7 @@ public final class BigMathUtility {
      *
      * @param n1            The first number.
      * @param n2            The second number.
-     * @param precisionMode The precision mode specifying the number of decimal points to return.
+     * @param precisionMode The precision mode specifying the number of significant figures to return.
      * @return The first number added to the second number, represented as a string.
      * @throws NumberFormatException When a number string does not represent a number.
      * @see #add(String, String, int)
@@ -133,7 +146,7 @@ public final class BigMathUtility {
      *
      * @param n1        The first number.
      * @param n2        The second number.
-     * @param precision The number of decimal points to return.
+     * @param precision The number of significant figures to return.
      * @return The second number subtracted from the first number, represented as a string.
      * @throws NumberFormatException When a number string does not represent a number.
      */
@@ -143,7 +156,7 @@ public final class BigMathUtility {
         
         BigDecimal br = b1.subtract(b2);
         if (precision != PrecisionMode.DEFAULT_PRECISION.getPrecision()) {
-            br = br.setScale(precision, RoundingMode.HALF_UP);
+            br = br.setScale(precision, DEFAULT_ROUNDING_MODE);
         }
         return br.toPlainString();
     }
@@ -153,7 +166,7 @@ public final class BigMathUtility {
      *
      * @param n1            The first number.
      * @param n2            The second number.
-     * @param precisionMode The precision mode specifying the number of decimal points to return.
+     * @param precisionMode The precision mode specifying the number of significant figures to return.
      * @return The second number subtracted from the first number, represented as a string.
      * @throws NumberFormatException When a number string does not represent a number.
      * @see #subtract(String, String, int)
@@ -180,7 +193,7 @@ public final class BigMathUtility {
      *
      * @param n1        The first number.
      * @param n2        The second number.
-     * @param precision The number of decimal points to return.
+     * @param precision The number of significant figures to return.
      * @return The first number multiplied with the second number, represented as a string.
      * @throws NumberFormatException When a number string does not represent a number.
      */
@@ -190,7 +203,7 @@ public final class BigMathUtility {
         
         BigDecimal br = b1.multiply(b2);
         if (precision != PrecisionMode.DEFAULT_PRECISION.getPrecision()) {
-            br = br.setScale(precision, RoundingMode.HALF_UP);
+            br = br.setScale(precision, DEFAULT_ROUNDING_MODE);
         }
         return br.toPlainString();
     }
@@ -200,7 +213,7 @@ public final class BigMathUtility {
      *
      * @param n1            The first number.
      * @param n2            The second number.
-     * @param precisionMode The precision mode specifying the number of decimal points to return.
+     * @param precisionMode The precision mode specifying the number of significant figures to return.
      * @return The first number multiplied with the second number, represented as a string.
      * @throws NumberFormatException When a number string does not represent a number.
      * @see #multiply(String, String, int)
@@ -227,7 +240,7 @@ public final class BigMathUtility {
      *
      * @param n1        The first number.
      * @param n2        The second number.
-     * @param precision The number of decimal points to return.
+     * @param precision The number of significant figures to return.
      * @return The first number divided by the second number, represented as a string.
      * @throws NumberFormatException When a number string does not represent a number.
      * @throws ArithmeticException   When the dividend is zero.
@@ -241,10 +254,10 @@ public final class BigMathUtility {
         }
         
         if (precision == PrecisionMode.DEFAULT_PRECISION.getPrecision()) {
-            String result = b1.divide(b2, PrecisionMode.HIGH_PRECISION.getPrecision(), RoundingMode.HALF_UP).toPlainString();
+            String result = b1.divide(b2, DEFAULT_MATH_PRECISION, DEFAULT_ROUNDING_MODE).toPlainString();
             return NumberStringUtility.cleanNumberString(result);
         } else {
-            return b1.divide(b2, precision, RoundingMode.HALF_UP).toPlainString();
+            return b1.divide(b2, precision, DEFAULT_ROUNDING_MODE).toPlainString();
         }
     }
     
@@ -253,7 +266,7 @@ public final class BigMathUtility {
      *
      * @param n1            The first number.
      * @param n2            The second number.
-     * @param precisionMode The precision mode specifying the number of decimal points to return.
+     * @param precisionMode The precision mode specifying the number of significant figures to return.
      * @return The first number divided by the second number, represented as a string.
      * @throws NumberFormatException When a number string does not represent a number.
      * @throws ArithmeticException   When the dividend is zero.
@@ -282,7 +295,7 @@ public final class BigMathUtility {
      *
      * @param n1        The first number.
      * @param n2        The second number.
-     * @param precision The number of decimal points to return.
+     * @param precision The number of significant figures to return.
      * @return The first number modulus the second number, represented as a string.
      * @throws NumberFormatException When a number string does not represent a number.
      * @throws ArithmeticException   When the dividend is zero.
@@ -299,10 +312,10 @@ public final class BigMathUtility {
         BigDecimal remainder = x.remainder(new BigDecimal(20));
         
         if (precision == PrecisionMode.DEFAULT_PRECISION.getPrecision()) {
-            String result = b1.remainder(b2).setScale(PrecisionMode.HIGH_PRECISION.getPrecision(), RoundingMode.HALF_UP).toPlainString();
+            String result = b1.remainder(b2).setScale(DEFAULT_MATH_PRECISION, DEFAULT_ROUNDING_MODE).toPlainString();
             return NumberStringUtility.cleanNumberString(result);
         } else {
-            return b1.remainder(b2).setScale(precision, RoundingMode.HALF_UP).toPlainString();
+            return b1.remainder(b2).setScale(precision, DEFAULT_ROUNDING_MODE).toPlainString();
         }
     }
     
@@ -311,7 +324,7 @@ public final class BigMathUtility {
      *
      * @param n1            The first number.
      * @param n2            The second number.
-     * @param precisionMode The precision mode specifying the number of decimal points to return.
+     * @param precisionMode The precision mode specifying the number of significant figures to return.
      * @return The first number modulus the second number, represented as a string.
      * @throws NumberFormatException When a number string does not represent a number.
      * @throws ArithmeticException   When the dividend is zero.
@@ -340,7 +353,7 @@ public final class BigMathUtility {
      *
      * @param n1        The first number.
      * @param n2        The second number.
-     * @param precision The number of decimal points to return.
+     * @param precision The number of significant figures to return.
      * @return The first number raised to the power of the second number, represented as a string.
      * @throws NumberFormatException When a number string does not represent a number.
      */
@@ -348,12 +361,12 @@ public final class BigMathUtility {
         BigDecimal b1 = new BigDecimal(n1);
         BigDecimal b2 = new BigDecimal(n2);
         
-        MathContext context = new MathContext(PrecisionMode.MAX_PRECISION.getPrecision(), RoundingMode.HALF_UP);
+        MathContext context = new MathContext(PrecisionMode.MAX_PRECISION.getPrecision(), DEFAULT_ROUNDING_MODE);
         BigDecimal result = BigDecimalMath.pow(b1, b2, context);
         if (precision == PrecisionMode.DEFAULT_PRECISION.getPrecision()) {
-            return result.setScale(PrecisionMode.HIGH_PRECISION.getPrecision(), RoundingMode.HALF_UP).stripTrailingZeros().toPlainString();
+            return result.setScale(DEFAULT_MATH_PRECISION, DEFAULT_ROUNDING_MODE).stripTrailingZeros().toPlainString();
         } else {
-            return result.setScale(precision, RoundingMode.HALF_UP).toPlainString();
+            return result.setScale(precision, DEFAULT_ROUNDING_MODE).toPlainString();
         }
     }
     
@@ -362,7 +375,7 @@ public final class BigMathUtility {
      *
      * @param n1            The first number.
      * @param n2            The second number.
-     * @param precisionMode The precision mode specifying the number of decimal points to return.
+     * @param precisionMode The precision mode specifying the number of significant figures to return.
      * @return The first number raised to the power of the second number, represented as a string.
      * @throws NumberFormatException When a number string does not represent a number.
      * @see #power(String, String, int)
@@ -389,7 +402,7 @@ public final class BigMathUtility {
      *
      * @param n1        The first number.
      * @param n2        The second number.
-     * @param precision The number of decimal points to return.
+     * @param precision The number of significant figures to return.
      * @return The second number root of the first number, represented as a string.
      * @throws NumberFormatException When a number string does not represent a number.
      * @throws ArithmeticException   When the first number is less than zero.
@@ -398,12 +411,12 @@ public final class BigMathUtility {
         BigDecimal b1 = new BigDecimal(n1);
         BigDecimal b2 = new BigDecimal(n2);
         
-        MathContext context = new MathContext(PrecisionMode.MAX_PRECISION.getPrecision(), RoundingMode.HALF_UP);
+        MathContext context = new MathContext(PrecisionMode.MAX_PRECISION.getPrecision(), DEFAULT_ROUNDING_MODE);
         BigDecimal result = BigDecimalMath.root(b1, b2, context);
         if (precision == PrecisionMode.DEFAULT_PRECISION.getPrecision()) {
-            return result.setScale(PrecisionMode.HIGH_PRECISION.getPrecision(), RoundingMode.HALF_UP).stripTrailingZeros().toPlainString();
+            return result.setScale(DEFAULT_MATH_PRECISION, DEFAULT_ROUNDING_MODE).stripTrailingZeros().toPlainString();
         } else {
-            return result.setScale(precision, RoundingMode.HALF_UP).toPlainString();
+            return result.setScale(precision, DEFAULT_ROUNDING_MODE).toPlainString();
         }
     }
     
@@ -412,7 +425,7 @@ public final class BigMathUtility {
      *
      * @param n1            The first number.
      * @param n2            The second number.
-     * @param precisionMode The precision mode specifying the number of decimal points to return.
+     * @param precisionMode The precision mode specifying the number of significant figures to return.
      * @return The second number root of the first number, represented as a string.
      * @throws NumberFormatException When a number string does not represent a number.
      * @throws ArithmeticException   When the first number is less than zero.
@@ -437,11 +450,59 @@ public final class BigMathUtility {
     }
     
     /**
+     * Performs the square root operation on a number represented by strings.
+     *
+     * @param n         The number.
+     * @param precision The number of significant figures to return.
+     * @return The square root of the number, represented as a string.
+     * @throws NumberFormatException When a number string does not represent a number.
+     * @throws ArithmeticException   When the number is less than zero.
+     */
+    public static String sqrt(String n, int precision) throws NumberFormatException, ArithmeticException {
+        BigDecimal b = new BigDecimal(n);
+        
+        MathContext context = new MathContext(PrecisionMode.MAX_PRECISION.getPrecision(), DEFAULT_ROUNDING_MODE);
+        BigDecimal result = BigDecimalMath.sqrt(b, context);
+        if (precision == PrecisionMode.DEFAULT_PRECISION.getPrecision()) {
+            return result.setScale(DEFAULT_MATH_PRECISION, DEFAULT_ROUNDING_MODE).stripTrailingZeros().toPlainString();
+        } else {
+            return result.setScale(precision, DEFAULT_ROUNDING_MODE).toPlainString();
+        }
+    }
+    
+    /**
+     * Performs the square root operation on a number represented by strings.
+     *
+     * @param n             The number.
+     * @param precisionMode The precision mode specifying the number of significant figures to return.
+     * @return The square root of the number, represented as a string.
+     * @throws NumberFormatException When a number string does not represent a number.
+     * @throws ArithmeticException   When the number is less than zero.
+     * @see #sqrt(String, int)
+     */
+    public static String sqrt(String n, PrecisionMode precisionMode) throws NumberFormatException, ArithmeticException {
+        return sqrt(n, precisionMode.getPrecision());
+    }
+    
+    /**
+     * Performs the square root operation on a number represented by strings.
+     *
+     * @param n The number.
+     * @return The square root of the number, represented as a string.
+     * @throws NumberFormatException When a number string does not represent a number.
+     * @throws ArithmeticException   When the number is less than zero.
+     * @see #sqrt(String, PrecisionMode)
+     */
+    public static String sqrt(String n) throws NumberFormatException, ArithmeticException {
+        return sqrt(n, PrecisionMode.DEFAULT_PRECISION);
+    }
+    
+    /**
      * Computes the log of a number represented by a string to a specified base.
      *
      * @param n         The number.
      * @param base      The log base.
-     * @param precision The number of decimal points to return.
+     * @param precision The number of significant figures to return.
      * @return The log of the number to the specified base, represented as a string.
      * @throws NumberFormatException When the number string does not represent a number.
      * @throws ArithmeticException   When the number is less than or equal to zero or the base of the log is invalid.
@@ -457,10 +518,10 @@ public final class BigMathUtility {
         }
         
         if (precision == PrecisionMode.DEFAULT_PRECISION.getPrecision()) {
-            precision = PrecisionMode.HIGH_PRECISION.getPrecision();
+            precision = DEFAULT_MATH_PRECISION;
         }
         
-        MathContext context = new MathContext(PrecisionMode.MAX_PRECISION.getPrecision(), RoundingMode.HALF_UP);
+        MathContext context = new MathContext(PrecisionMode.MAX_PRECISION.getPrecision(), DEFAULT_ROUNDING_MODE);
         String numerator = BigDecimalMath.log10(input, context).toPlainString();
         String denominator = BigDecimalMath.log10(new BigDecimal(base), context).toPlainString();
         return divide(numerator, denominator, precision);
@@ -471,7 +532,7 @@ public final class BigMathUtility {
      *
      * @param n             The number.
      * @param base          The log base.
-     * @param precisionMode The precision mode specifying the number of decimal points to return.
+     * @param precisionMode The precision mode specifying the number of significant figures to return.
      * @return The log of the number to the specified base, represented as a string.
      * @throws NumberFormatException When the number string does not represent a number.
      * @throws ArithmeticException   When the number is less than or equal to zero or the base of the log is invalid.
@@ -499,7 +560,7 @@ public final class BigMathUtility {
      * Computes the natural log of a number represented by a string.
      *
      * @param n         The number.
-     * @param precision The number of decimal points to return.
+     * @param precision The number of significant figures to return.
      * @return The natural log of the number, represented as a string.
      * @throws NumberFormatException When the number string does not represent a number.
      * @throws ArithmeticException   When the number is less than or equal to zero.
@@ -512,10 +573,10 @@ public final class BigMathUtility {
         }
         
         if (precision == PrecisionMode.DEFAULT_PRECISION.getPrecision()) {
-            precision = PrecisionMode.HIGH_PRECISION.getPrecision();
+            precision = DEFAULT_MATH_PRECISION;
         }
         
-        MathContext context = new MathContext(PrecisionMode.MAX_PRECISION.getPrecision(), RoundingMode.HALF_UP);
+        MathContext context = new MathContext(PrecisionMode.MAX_PRECISION.getPrecision(), DEFAULT_ROUNDING_MODE);
         String numerator = BigDecimalMath.log(input, context).toPlainString();
         String denominator = BigDecimalMath.log10(BigDecimalMath.e(context), context).toPlainString();
         return divide(numerator, denominator, precision);
@@ -525,7 +586,7 @@ public final class BigMathUtility {
      * Computes the natural log of a number represented by a string.
      *
      * @param n             The number.
-     * @param precisionMode The precision mode specifying the number of decimal points to return.
+     * @param precisionMode The precision mode specifying the number of significant figures to return.
      * @return The natural log of the number, represented as a string.
      * @throws NumberFormatException When the number string does not represent a number.
      * @throws ArithmeticException   When the number is less than or equal to zero.
@@ -546,6 +607,44 @@ public final class BigMathUtility {
      */
     public static String ln(String n) throws NumberFormatException, ArithmeticException {
         return ln(n, PrecisionMode.DEFAULT_PRECISION);
+    }
+    
+    /**
+     * Computes pi.
+     *
+     * @param precision The number of significant figures to return.
+     * @return Pi, represented as a string.
+     */
+    public static String pi(int precision) {
+        if (precision == PrecisionMode.DEFAULT_PRECISION.getPrecision()) {
+            precision = DEFAULT_MATH_PRECISION;
+        } else if (precision == PrecisionMode.NO_PRECISION.getPrecision()) {
+            precision = 1;
+        }
+        
+        MathContext context = new MathContext(precision, DEFAULT_ROUNDING_MODE);
+        return BigDecimalMath.pi(context).toPlainString();
+    }
+    
+    /**
+     * Computes pi.
+     *
+     * @param precisionMode The precision mode specifying the number of significant figures to return.
+     * @return Pi, represented as a string.
+     * @see #pi(int)
+     */
+    public static String pi(PrecisionMode precisionMode) {
+        return pi(precisionMode.getPrecision());
+    }
+    
+    /**
+     * Computes pi.
+     *
+     * @return Pi, represented as a string.
+     * @see #pi(PrecisionMode)
+     */
+    public static String pi() {
+        return pi(PrecisionMode.DEFAULT_PRECISION);
     }
     
     /**

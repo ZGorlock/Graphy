@@ -543,10 +543,10 @@ public class Mandelbrot extends Drawing {
                 if (doScaling) {
                     int sizeScale = size.scale();
                     if (offset.getX().scale() > (sizeScale + 4)) {
-                        offset.setX(offset.getX().setScale(sizeScale + 4, BigDecimal.ROUND_HALF_DOWN));
+                        offset.setX(offset.getX().setScale(sizeScale + 4, RoundingMode.HALF_DOWN));
                     }
                     if (offset.getY().scale() > (sizeScale + 4)) {
-                        offset.setY(offset.getY().setScale(sizeScale + 4, BigDecimal.ROUND_HALF_DOWN));
+                        offset.setY(offset.getY().setScale(sizeScale + 4, RoundingMode.HALF_DOWN));
                     }
                     
                     if (SwingUtilities.isRightMouseButton(e)) {

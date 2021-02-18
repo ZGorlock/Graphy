@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import commons.list.ListUtility;
 import commons.math.BoundUtility;
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
@@ -29,12 +30,20 @@ public class Vector {
     private static final Logger logger = LoggerFactory.getLogger(Vector.class);
     
     
+    //Constants
+    
+    /**
+     * The precision to use in comparisons.
+     */
+    public static final double PRECISION = 0.000000000000001;
+    
+    
     //Static Fields
     
     /**
      * The Vector used for justification.
      */
-    public static final Vector justificationVector = new Vector(1, 1, 1);
+    private static Vector JUSTIFICATION_VECTOR = new Vector(1, 1, 1);
     
     
     //Fields
@@ -122,7 +131,7 @@ public class Vector {
         }
         
         for (int c = 0; c < getDimensionality(); c++) {
-            if (Math.abs(get(c) - vector.get(c)) > 0.000000000001) {
+            if (Math.abs(get(c) - vector.get(c)) > PRECISION) {
                 return false;
             }
         }
@@ -136,7 +145,7 @@ public class Vector {
      * @return Whether the two Vectors' dimensionality is equal or not.
      */
     public boolean dimensionalityEqual(Vector vector) {
-        return (getDimensionality() == vector.getDimensionality());
+        return (vector != null) && (getDimensionality() == vector.getDimensionality());
     }
     
     /**
@@ -167,9 +176,10 @@ public class Vector {
      * Justifies a Vector.
      *
      * @return The justified Vector.
+     * @throws ArithmeticException When the two Vectors do not have the same dimensionality.
      */
-    public Vector justify() {
-        return this.times(justificationVector);
+    public Vector justify() throws ArithmeticException {
+        return this.times(JUSTIFICATION_VECTOR);
     }
     
     /**
@@ -181,7 +191,7 @@ public class Vector {
      */
     public double distance(Vector vector) throws ArithmeticException {
         if (!dimensionalityEqual(vector)) {
-            throw new ArithmeticException(dimensionalityNotEqualErrorMessage(this, vector));
+            throw new ArithmeticException(dimensionalityNotSameErrorMessage(this, vector));
         }
         
         double distance = 0;
@@ -213,7 +223,7 @@ public class Vector {
     public Vector average(List<Vector> vectors) throws ArithmeticException {
         for (Vector vector : vectors) {
             if (!dimensionalityEqual(vector)) {
-                throw new ArithmeticException(dimensionalityNotEqualErrorMessage(this, vector));
+                throw new ArithmeticException(dimensionalityNotSameErrorMessage(this, vector));
             }
         }
         
@@ -249,7 +259,7 @@ public class Vector {
      */
     public double dot(Vector vector) throws ArithmeticException {
         if (!dimensionalityEqual(vector)) {
-            throw new ArithmeticException(dimensionalityNotEqualErrorMessage(this, vector));
+            throw new ArithmeticException(dimensionalityNotSameErrorMessage(this, vector));
         }
         
         double dot = 0;
@@ -265,7 +275,9 @@ public class Vector {
      * @return The normalized Vector.
      */
     public Vector normalize() {
-        return scale(1.0 / hypotenuse());
+        double hypotenuse = hypotenuse();
+        return (Math.abs(hypotenuse) <= PRECISION) ? clone() :
+               scale(1.0 / hypotenuse());
     }
     
     /**
@@ -312,7 +324,7 @@ public class Vector {
      */
     public Vector plus(Vector vector) throws ArithmeticException {
         if (!dimensionalityEqual(vector)) {
-            throw new ArithmeticException(dimensionalityNotEqualErrorMessage(this, vector));
+            throw new ArithmeticException(dimensionalityNotSameErrorMessage(this, vector));
         }
         
         double[] newComponents = new double[getDimensionality()];
@@ -331,7 +343,7 @@ public class Vector {
      */
     public Vector minus(Vector vector) throws ArithmeticException {
         if (!dimensionalityEqual(vector)) {
-            throw new ArithmeticException(dimensionalityNotEqualErrorMessage(this, vector));
+            throw new ArithmeticException(dimensionalityNotSameErrorMessage(this, vector));
         }
         
         double[] newComponents = new double[getDimensionality()];
@@ -350,7 +362,7 @@ public class Vector {
      */
     public Vector times(Vector vector) throws ArithmeticException {
         if (!dimensionalityEqual(vector)) {
-            throw new ArithmeticException(dimensionalityNotEqualErrorMessage(this, vector));
+            throw new ArithmeticException(dimensionalityNotSameErrorMessage(this, vector));
         }
         
         double[] newComponents = new double[getDimensionality()];
@@ -379,11 +391,14 @@ public class Vector {
      *
      * @param vector The other Vector.
      * @return The Vector produced as a result of the division.
-     * @throws ArithmeticException When the two Vectors do not have the same dimensionality.
+     * @throws ArithmeticException When the two Vectors do not have the same dimensionality, or if a component in the divisor Vector is 0.
      */
     public Vector dividedBy(Vector vector) throws ArithmeticException {
         if (!dimensionalityEqual(vector)) {
-            throw new ArithmeticException(dimensionalityNotEqualErrorMessage(this, vector));
+            throw new ArithmeticException(dimensionalityNotSameErrorMessage(this, vector));
+        }
+        if (Arrays.stream(vector.components).anyMatch(e -> Math.abs(e) <= PRECISION)) {
+            throw new ArithmeticException("Attempted to divide by 0");
         }
         
         double[] newComponents = new double[getDimensionality()];
@@ -412,9 +427,44 @@ public class Vector {
      * @param newDim The new dimensionality of the Vector.
      */
     public void redim(int newDim) {
+        if (newDim <= 0) {
+            components = new double[0];
+            return;
+        }
+        
         double[] newComponents = new double[newDim];
-        System.arraycopy(components, 0, newComponents, 0, newDim);
+        System.arraycopy(components, 0, newComponents, 0, Math.min(newDim, getDimensionality()));
         components = newComponents;
+    }
+    
+    /**
+     * Creates a sub Vector from the Vector.
+     *
+     * @param from The index to start the sub Vector from.
+     * @param to   The index to end the sub Vector at.
+     * @return The sub Vector.
+     * @throws IndexOutOfBoundsException When the from or to indices are out of bounds of the Vector.
+     */
+    public Vector subVector(int from, int to) throws IndexOutOfBoundsException {
+        int dim = to - from;
+        if ((dim > getDimensionality()) || (from > to) || (from < 0) || (to > getDimensionality())) {
+            throw new IndexOutOfBoundsException(componentRangeOutOfBoundsErrorMessage(this, from, to));
+        }
+        
+        List<Double> componentsList = Arrays.stream(components).boxed().collect(Collectors.toList());
+        return new Vector(ListUtility.subList(componentsList, from, to));
+    }
+    
+    /**
+     * Creates a sub Vector from the Vector.
+     *
+     * @param from The index to start the sub Vector from.
+     * @return The sub Vector.
+     * @throws IndexOutOfBoundsException When the from or to indices are out of bounds of the Vector.
+     * @see #subVector(int, int)
+     */
+    public Vector subVector(int from) throws IndexOutOfBoundsException {
+        return subVector(from, getDimensionality());
     }
     
     
@@ -483,7 +533,7 @@ public class Vector {
      */
     public double get(int index) throws IndexOutOfBoundsException {
         if (!BoundUtility.inBounds(index, 0, components.length, true, false)) {
-            throw new IndexOutOfBoundsException(componentIndexOutOfRangeError(this, index));
+            throw new IndexOutOfBoundsException(componentIndexOutOfBoundsErrorMessage(this, index));
         }
         
         return components[index];
@@ -495,7 +545,7 @@ public class Vector {
      * @return The Vector used for justification.
      */
     public static Vector getJustificationVector() {
-        return justificationVector;
+        return JUSTIFICATION_VECTOR.clone();
     }
     
     
@@ -554,7 +604,7 @@ public class Vector {
      */
     public void set(int index, double value) throws IndexOutOfBoundsException {
         if (!BoundUtility.inBounds(index, 0, components.length, true, false)) {
-            throw new IndexOutOfBoundsException(componentIndexOutOfRangeError(this, index));
+            throw new IndexOutOfBoundsException(componentIndexOutOfBoundsErrorMessage(this, index));
         }
         
         components[index] = value;
@@ -566,7 +616,7 @@ public class Vector {
      * @param justificationVector The Vector to be used for justification.
      */
     public static void setJustificationVector(Vector justificationVector) {
-        copyVector(justificationVector, Vector.justificationVector);
+        JUSTIFICATION_VECTOR = justificationVector.clone();
     }
     
     
@@ -580,14 +630,36 @@ public class Vector {
      * @throws ArithmeticException When the Vectors do not have the same dimensionality.
      */
     public static void copyVector(Vector source, Vector dest) throws ArithmeticException {
-        int dim = source.getDimensionality();
-        if (dest.getDimensionality() != dim) {
-            throw new ArithmeticException(dimensionalityNotEqualErrorMessage(source, dest));
+        if (!dest.dimensionalityEqual(source)) {
+            throw new ArithmeticException(dimensionalityNotSameErrorMessage(source, dest));
         }
         
-        for (int i = 0; i < dim; i++) {
+        for (int i = 0; i < source.getDimensionality(); i++) {
             dest.set(i, source.get(i));
         }
+    }
+    
+    /**
+     * Creates a unit Vector of a certain dimensionality.
+     *
+     * @param dim The dimensionality of the unit Vector
+     * @return The unit Vector.
+     */
+    public static Vector unit(int dim) {
+        double[] components = new double[Math.max(dim, 0)];
+        Arrays.fill(components, 1);
+        return new Vector(components);
+    }
+    
+    /**
+     * Creates an origin Vector of a certain dimensionality.
+     *
+     * @param dim The dimensionality of the unit Vector
+     * @return The origin Vector.
+     */
+    public static Vector origin(int dim) {
+        double[] components = new double[Math.max(dim, 0)];
+        return new Vector(components);
     }
     
     /**
@@ -598,16 +670,16 @@ public class Vector {
      * @throws ArithmeticException When the Vectors do not all have the same dimensionality.
      */
     public static Vector averageVector(List<Vector> vectors) throws ArithmeticException {
-        int dim = 0;
+        int dim = -1;
         for (Vector vector : vectors) {
-            if (dim == 0) {
+            if (dim == -1) {
                 dim = vector.getDimensionality();
-            } else if (vector.getDimensionality() != dim) {
-                throw new ArithmeticException(dimensionalityNotEqualErrorMessage(vectors.get(0), vector));
+            } else if (!vector.dimensionalityEqual(vectors.get(0))) {
+                throw new ArithmeticException(dimensionalityNotSameErrorMessage(vectors.get(0), vector));
             }
         }
-        if (dim == 0) {
-            return new Vector(0, 0, 0);
+        if (dim == -1) {
+            return new Vector();
         }
         
         double[] newComponents = new double[vectors.get(0).getDimensionality()];
@@ -641,15 +713,15 @@ public class Vector {
      * @throws ArithmeticException When the Vectors do not all have the same dimensionality.
      */
     public static List<Vector> calculateMinMax(List<Vector> vectors) throws ArithmeticException {
-        int dim = 0;
+        int dim = -1;
         for (Vector vector : vectors) {
-            if (dim == 0) {
+            if (dim == -1) {
                 dim = vector.getDimensionality();
-            } else if (vector.getDimensionality() != dim) {
-                throw new ArithmeticException(dimensionalityNotEqualErrorMessage(vectors.get(0), vector));
+            } else if (!vector.dimensionalityEqual(vectors.get(0))) {
+                throw new ArithmeticException(dimensionalityNotSameErrorMessage(vectors.get(0), vector));
             }
         }
-        if (dim == 0) {
+        if (dim == -1) {
             return new ArrayList<>();
         }
         
@@ -685,8 +757,19 @@ public class Vector {
      * @param vector2 The second Vector.
      * @return The error message.
      */
-    protected static String dimensionalityNotEqualErrorMessage(Vector vector1, Vector vector2) {
-        return "The vectors: " + vector1 + " and " + vector2 + " do not have the same dimensionality.";
+    protected static String dimensionalityNotSameErrorMessage(Vector vector1, Vector vector2) {
+        return "The vectors: " + vector1 + " and " + vector2 + " do not have the same dimensionality";
+    }
+    
+    /**
+     * Returns the error message to display when a Vectors do not have the expected dimensionality.
+     *
+     * @param vector         The Vector.
+     * @param dimensionality The dimensionality.
+     * @return The error message.
+     */
+    protected static String dimensionalityNotEqualErrorMessage(Vector vector, int dimensionality) {
+        return "The vector: " + vector + " does not have the expected dimensionality of: " + dimensionality;
     }
     
     /**
@@ -697,18 +780,30 @@ public class Vector {
      * @return The error message.
      */
     protected static String dimensionalityMinimumNotMetErrorMessage(Vector vector, int minimum) {
-        return "The vector: " + vector + " do not have the minimum dimensionality of: " + minimum + ".";
+        return "The vector: " + vector + " does not have the minimum dimensionality of: " + minimum;
     }
     
     /**
-     * Returns the error message to display when the component index of a Vector is out of range.
+     * Returns the error message to display when the component index of a Vector is out of bounds.
      *
      * @param vector The Vector.
      * @param index  The index of the component.
      * @return The error message.
      */
-    protected static String componentIndexOutOfRangeError(Vector vector, int index) {
+    protected static String componentIndexOutOfBoundsErrorMessage(Vector vector, int index) {
         return "The vector: " + vector + " does not have a component at index: " + index;
+    }
+    
+    /**
+     * Returns the error message to display when a sub range of a Vector is out of bounds.
+     *
+     * @param vector The Vector.
+     * @param from   The starting index of the range.
+     * @param to     The ending index of the range.
+     * @return The error message.
+     */
+    protected static String componentRangeOutOfBoundsErrorMessage(Vector vector, int from, int to) {
+        return "The range: [" + from + "," + to + ") is out of bounds of the vector: " + vector;
     }
     
 }

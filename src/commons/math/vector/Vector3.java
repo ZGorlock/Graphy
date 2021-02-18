@@ -70,14 +70,10 @@ public class Vector3 extends Vector {
      *
      * @param vector The other Vector.
      * @return The cross product.
-     * @throws ArithmeticException When the Vectors do not have the same dimensionality, or the Vector does not have a dimensionality of at least 3.
      */
     public Vector3 cross(Vector vector) throws ArithmeticException {
-        if (!dimensionalityEqual(vector)) {
-            throw new ArithmeticException(dimensionalityNotEqualErrorMessage(this, vector));
-        }
-        if (vector.getDimensionality() < 3) {
-            throw new ArithmeticException(dimensionalityMinimumNotMetErrorMessage(vector, 3));
+        if (vector.getDimensionality() != 3) {
+            throw new ArithmeticException(dimensionalityNotEqualErrorMessage(vector, 3));
         }
         
         return new Vector3(

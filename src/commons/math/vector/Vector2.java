@@ -63,11 +63,11 @@ public class Vector2 extends Vector {
      * @throws ArithmeticException When either of the Vectors do not have a dimensionality of at least 2.
      */
     public static Vector2 dotFlop(Vector vector1, Vector vector2) throws ArithmeticException {
-        if (vector1.getDimensionality() < 2) {
-            throw new ArithmeticException(dimensionalityMinimumNotMetErrorMessage(vector1, 2));
+        if (vector1.getDimensionality() != 2) {
+            throw new ArithmeticException(dimensionalityNotEqualErrorMessage(vector1, 2));
         }
-        if (vector2.getDimensionality() < 2) {
-            throw new ArithmeticException(dimensionalityMinimumNotMetErrorMessage(vector2, 2));
+        if (vector2.getDimensionality() != 2) {
+            throw new ArithmeticException(dimensionalityNotEqualErrorMessage(vector2, 2));
         }
         
         return new Vector2(
@@ -85,11 +85,11 @@ public class Vector2 extends Vector {
      * @throws ArithmeticException When either of the Vectors do not have a dimensionality of at least 2.
      */
     public static Vector2 dotFlopNegative(Vector vector1, Vector vector2) throws ArithmeticException {
-        if (vector1.getDimensionality() < 2) {
-            throw new ArithmeticException(dimensionalityMinimumNotMetErrorMessage(vector1, 2));
+        if (vector1.getDimensionality() != 2) {
+            throw new ArithmeticException(dimensionalityNotEqualErrorMessage(vector1, 2));
         }
-        if (vector2.getDimensionality() < 2) {
-            throw new ArithmeticException(dimensionalityMinimumNotMetErrorMessage(vector2, 2));
+        if (vector2.getDimensionality() != 2) {
+            throw new ArithmeticException(dimensionalityNotEqualErrorMessage(vector2, 2));
         }
         
         return new Vector2(
@@ -105,7 +105,11 @@ public class Vector2 extends Vector {
      * @return The square sum of the Vector.
      */
     public static double squareSum(Vector vector) {
-        return vector.squareSum();
+        if (vector.getDimensionality() != 2) {
+            throw new ArithmeticException(dimensionalityNotEqualErrorMessage(vector, 2));
+        }
+        
+        return Math.pow(vector.getX(), 2) + Math.pow(vector.getY(), 2);
     }
     
     /**
@@ -116,8 +120,8 @@ public class Vector2 extends Vector {
      * @throws ArithmeticException When the Vector does not have a dimensionality of at least 2.
      */
     public static double squareDifference(Vector vector) throws ArithmeticException {
-        if (vector.getDimensionality() < 2) {
-            throw new ArithmeticException(dimensionalityMinimumNotMetErrorMessage(vector, 2));
+        if (vector.getDimensionality() != 2) {
+            throw new ArithmeticException(dimensionalityNotEqualErrorMessage(vector, 2));
         }
         
         return Math.pow(vector.getX(), 2) - Math.pow(vector.getY(), 2);

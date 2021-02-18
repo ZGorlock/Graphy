@@ -12,10 +12,11 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
-import ch.obermuhlner.math.big.BigDecimalMath;
+import commons.list.ListUtility;
+import commons.math.BigMathUtility;
+import commons.math.BoundUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,14 +36,19 @@ public class BigVector {
     //Constants
     
     /**
+     * The precision to use in comparisons.
+     */
+    public static final BigDecimal PRECISION = new BigDecimal("0.000000000000000000000000000001");
+    
+    /**
      * The default value of the precision of a Big Vector math context.
      */
-    public static final int DEFAULT_PRECISION = 32;
+    public static final int DEFAULT_MATH_PRECISION = BigMathUtility.DEFAULT_MATH_PRECISION / 2;
     
     /**
      * The default rounding mode of a Big Vector math context.
      */
-    public static final RoundingMode DEFAULT_ROUNDING_MODE = RoundingMode.HALF_UP;
+    public static final RoundingMode DEFAULT_ROUNDING_MODE = BigMathUtility.DEFAULT_ROUNDING_MODE;
     
     
     //Static Fields
@@ -50,7 +56,7 @@ public class BigVector {
     /**
      * The Big Vector used for justification.
      */
-    public static final BigVector justificationVector = new BigVector(BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE);
+    public static BigVector JUSTIFICATION_VECTOR = new BigVector(BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE);
     
     
     //Fields
@@ -63,7 +69,7 @@ public class BigVector {
     /**
      * The MathContext to use when doing Big Vector math.
      */
-    public MathContext mathContext = new MathContext(DEFAULT_PRECISION, DEFAULT_ROUNDING_MODE);
+    public MathContext mathContext = new MathContext(DEFAULT_MATH_PRECISION, DEFAULT_ROUNDING_MODE);
     
     
     //Constructors
@@ -72,31 +78,45 @@ public class BigVector {
      * The constructor for a Big Vector.
      *
      * @param components The components that define the Big Vector.
+     * @param <T>        A Number type for the components.
      */
-    public BigVector(BigDecimal... components) {
+    @SafeVarargs
+    public <T extends Number> BigVector(T... components) {
         this.components = new BigDecimal[components.length];
-        System.arraycopy(components, 0, this.components, 0, components.length);
+        for (int i = 0; i < components.length; i++) {
+            this.components[i] =
+                    (components[i] instanceof BigDecimal ?
+                     (BigDecimal) components[i] :
+                     BigDecimal.valueOf(components[i].doubleValue()));
+        }
+    }
+    
+    /**
+     * The constructor for a Big Vector.
+     *
+     * @param components The string components that define the Big Vector.
+     * @throws NumberFormatException If the string components provided are not numbers.
+     */
+    public BigVector(String... components) throws NumberFormatException {
+        this.components = new BigDecimal[components.length];
+        for (int i = 0; i < components.length; i++) {
+            this.components[i] = new BigDecimal(components[i]);
+        }
     }
     
     /**
      * The constructor for a Big Vector from a list of components.
      *
      * @param components The components that define the Big Vector, as a list.
+     * @param <T>        A Number type for the components.
      */
-    public BigVector(List<BigDecimal> components) {
+    public <T extends Number> BigVector(List<T> components) {
         this.components = new BigDecimal[components.size()];
-        System.arraycopy(components.toArray(new BigDecimal[] {}), 0, this.components, 0, components.size());
-    }
-    
-    /**
-     * The constructor for a Big Vector from a Vector.
-     *
-     * @param vector The Vector.
-     */
-    public BigVector(Vector vector) {
-        this.components = new BigDecimal[vector.getDimensionality()];
-        for (int i = 0; i < vector.getDimensionality(); i++) {
-            this.components[i] = BigDecimal.valueOf(vector.components[i]);
+        for (int i = 0; i < components.size(); i++) {
+            this.components[i] =
+                    (components.get(i) instanceof BigDecimal ?
+                     (BigDecimal) components.get(i) :
+                     BigDecimal.valueOf(components.get(i).doubleValue()));
         }
     }
     
@@ -112,16 +132,94 @@ public class BigVector {
     }
     
     /**
+     * The constructor for a Big Vector from a Vector.
+     *
+     * @param vector The Vector.
+     */
+    public BigVector(Vector vector) {
+        this.components = new BigDecimal[vector.getDimensionality()];
+        for (int i = 0; i < vector.getDimensionality(); i++) {
+            this.components[i] = BigDecimal.valueOf(vector.components[i]);
+        }
+    }
+    
+    /**
      * The constructor for a Big Vector from another Big Vector with added components.
      *
      * @param vector     The Big Vector.
      * @param components The components to add.
+     * @param <T>        A Number type for the components.
      */
-    public BigVector(BigVector vector, BigDecimal... components) {
+    @SafeVarargs
+    public <T extends Number> BigVector(BigVector vector, T... components) {
         this.components = new BigDecimal[vector.getDimensionality() + components.length];
         System.arraycopy(vector.components, 0, this.components, 0, vector.getDimensionality());
-        System.arraycopy(components, 0, this.components, vector.getDimensionality(), components.length);
+        for (int i = 0; i < components.length; i++) {
+            this.components[vector.getDimensionality() + i] =
+                    (components[i] instanceof BigDecimal ?
+                     (BigDecimal) components[i] :
+                     BigDecimal.valueOf(components[i].doubleValue()));
+        }
         this.mathContext = vector.mathContext;
+    }
+    
+    /**
+     * The constructor for a Big Vector from another Big Vector with added components.
+     *
+     * @param vector     The Big Vector.
+     * @param components The string components to add.
+     */
+    public BigVector(BigVector vector, String... components) {
+        this.components = new BigDecimal[vector.getDimensionality() + components.length];
+        System.arraycopy(vector.components, 0, this.components, 0, vector.getDimensionality());
+        for (int i = 0; i < components.length; i++) {
+            this.components[vector.getDimensionality() + i] = new BigDecimal(components[i]);
+        }
+        this.mathContext = vector.mathContext;
+    }
+    
+    /**
+     * The constructor for a Big Vector from another Vector with added components.
+     *
+     * @param vector     The Vector.
+     * @param components The components to add.
+     * @param <T>        A Number type for the components.
+     */
+    @SafeVarargs
+    public <T extends Number> BigVector(Vector vector, T... components) {
+        this.components = new BigDecimal[vector.getDimensionality() + components.length];
+        for (int i = 0; i < vector.getDimensionality(); i++) {
+            this.components[i] = BigDecimal.valueOf(vector.components[i]);
+        }
+        for (int i = 0; i < components.length; i++) {
+            this.components[vector.getDimensionality() + i] =
+                    (components[i] instanceof BigDecimal ?
+                     (BigDecimal) components[i] :
+                     BigDecimal.valueOf(components[i].doubleValue()));
+        }
+    }
+    
+    /**
+     * The constructor for a Big Vector from another Vector with added components.
+     *
+     * @param vector     The Vector.
+     * @param components The string components to add.
+     */
+    public BigVector(Vector vector, String... components) {
+        this.components = new BigDecimal[vector.getDimensionality() + components.length];
+        for (int i = 0; i < vector.getDimensionality(); i++) {
+            this.components[i] = BigDecimal.valueOf(vector.components[i]);
+        }
+        for (int i = 0; i < components.length; i++) {
+            this.components[vector.getDimensionality() + i] = new BigDecimal(components[i]);
+        }
+    }
+    
+    /**
+     * The default no-argument constructor for a Big Vector.
+     */
+    public BigVector() {
+        this.components = new BigDecimal[0];
     }
     
     
@@ -139,32 +237,38 @@ public class BigVector {
     }
     
     /**
+     * Determines if another Big Vector is equal to this Big Vector.
+     *
+     * @param o The other Big Vector.
+     * @return Whether the two Big Vectors are equal or not.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof BigVector)) {
+            return false;
+        }
+        BigVector vector = (BigVector) o;
+        
+        if (!dimensionalityEqual(vector)) {
+            return false;
+        }
+        
+        for (int c = 0; c < getDimensionality(); c++) {
+            if (get(c).subtract(vector.get(c)).abs().compareTo(PRECISION) > 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /**
      * Determines if another Big Vector's dimensionality is equal to this Big Vector's dimensionality.
      *
      * @param vector The other Big Vector.
      * @return Whether the two Big Vectors' dimensionality is equal or not.
      */
     public boolean dimensionalityEqual(BigVector vector) {
-        return (getDimensionality() == vector.getDimensionality());
-    }
-    
-    /**
-     * Determines if another Big Vector is equal to this Big Vector.
-     *
-     * @param vector The other Big Vector.
-     * @return Whether the two Big Vectors are equal or not.
-     */
-    public boolean equals(BigVector vector) {
-        if (!dimensionalityEqual(vector)) {
-            return false;
-        }
-        
-        for (int c = 0; c < getDimensionality(); c++) {
-            if (!Objects.equals(get(c), vector.get(c))) {
-                return false;
-            }
-        }
-        return true;
+        return (vector != null) && (getDimensionality() == vector.getDimensionality());
     }
     
     /**
@@ -199,9 +303,10 @@ public class BigVector {
      * Justifies a Big Vector.
      *
      * @return The justified Big Vector.
+     * @throws ArithmeticException When the two Big Vectors do not have the same dimensionality.
      */
-    public BigVector justify() {
-        return this.times(justificationVector);
+    public BigVector justify() throws ArithmeticException {
+        return this.times(JUSTIFICATION_VECTOR);
     }
     
     /**
@@ -220,7 +325,7 @@ public class BigVector {
         for (int c = 0; c < getDimensionality(); c++) {
             distance = distance.add(vector.get(c).subtract(get(c)).pow(2, mathContext));
         }
-        return BigDecimalMath.sqrt(distance, mathContext);
+        return new BigDecimal(BigMathUtility.sqrt(distance.toPlainString(), mathContext.getPrecision())).stripTrailingZeros();
     }
     
     /**
@@ -290,7 +395,7 @@ public class BigVector {
         for (int c = 0; c < getDimensionality(); c++) {
             dot = dot.add(get(c).multiply(vector.get(c)));
         }
-        return dot;
+        return dot.stripTrailingZeros();
     }
     
     /**
@@ -299,7 +404,9 @@ public class BigVector {
      * @return The normalized Big Vector.
      */
     public BigVector normalize() {
-        return scale(hypotenuse().pow(-1, mathContext));
+        BigDecimal hypotenuse = hypotenuse();
+        return (hypotenuse.compareTo(PRECISION) < 0) ? clone() :
+               scale(hypotenuse().pow(-1, mathContext));
     }
     
     /**
@@ -308,7 +415,7 @@ public class BigVector {
      * @return The square root of the sum of the squares of the components.
      */
     public BigDecimal hypotenuse() {
-        return BigDecimalMath.sqrt(squareSum(), mathContext);
+        return new BigDecimal(BigMathUtility.sqrt(squareSum().toPlainString(), mathContext.getPrecision())).stripTrailingZeros();
     }
     
     /**
@@ -479,11 +586,14 @@ public class BigVector {
      *
      * @param vector The other Big Vector.
      * @return The Big Vector produced as a result of the division.
-     * @throws ArithmeticException When the two Big Vectors do not have the same dimensionality.
+     * @throws ArithmeticException When the two Big Vectors do not have the same dimensionality, or if a component in the divisor Big Vector is 0.
      */
     public BigVector dividedBy(BigVector vector) throws ArithmeticException {
         if (!dimensionalityEqual(vector)) {
             throw new ArithmeticException(dimensionalityNotEqualErrorMessage(this, vector));
+        }
+        if (Arrays.stream(vector.components).anyMatch(e -> e.abs().compareTo(PRECISION) < 0)) {
+            throw new ArithmeticException("Attempted to divide by 0");
         }
         
         BigDecimal[] newComponents = new BigDecimal[getDimensionality()];
@@ -516,9 +626,45 @@ public class BigVector {
      * @param newDim The new dimension of the Big Vector.
      */
     public void redim(int newDim) {
+        if (newDim <= 0) {
+            components = new BigDecimal[0];
+            return;
+        }
+        
         BigDecimal[] newComponents = new BigDecimal[newDim];
-        System.arraycopy(components, 0, newComponents, 0, newDim);
+        Arrays.fill(newComponents, BigDecimal.ZERO);
+        System.arraycopy(components, 0, newComponents, 0, Math.min(newDim, getDimensionality()));
         components = newComponents;
+    }
+    
+    /**
+     * Creates a sub Big Vector from the Big Vector.
+     *
+     * @param from The index to start the sub Big Vector from.
+     * @param to   The index to end the sub Big Vector at.
+     * @return The sub Big Vector.
+     * @throws IndexOutOfBoundsException When the from or to indices are out of bounds of the Big Vector.
+     */
+    public BigVector subVector(int from, int to) throws IndexOutOfBoundsException {
+        int dim = to - from;
+        if ((dim > getDimensionality()) || (from > to) || (from < 0) || (to > getDimensionality())) {
+            throw new IndexOutOfBoundsException(componentRangeOutOfBoundsErrorMessage(this, from, to));
+        }
+        
+        List<BigDecimal> componentList = Arrays.asList(components);
+        return new BigVector(ListUtility.subList(componentList, from, to));
+    }
+    
+    /**
+     * Creates a sub Vector from the Big Vector.
+     *
+     * @param from The index to start the sub Big Vector from.
+     * @return The sub Big Vector.
+     * @throws IndexOutOfBoundsException When the from or to indices are out of bounds of the Big Vector.
+     * @see #subVector(int, int)
+     */
+    public BigVector subVector(int from) throws IndexOutOfBoundsException {
+        return subVector(from, getDimensionality());
     }
     
     
@@ -586,8 +732,8 @@ public class BigVector {
      * @throws IndexOutOfBoundsException When the Big Vector does not contain a component at the specified index.
      */
     public BigDecimal get(int index) throws IndexOutOfBoundsException {
-        if (index >= getDimensionality() || index < 0) {
-            throw new ArithmeticException(componentIndexOutOfRangeError(this, index));
+        if (!BoundUtility.inBounds(index, 0, components.length, true, false)) {
+            throw new IndexOutOfBoundsException(componentIndexOutOfBoundsErrorMessage(this, index));
         }
         
         return components[index];
@@ -608,7 +754,7 @@ public class BigVector {
      * @return The Big Vector used for justification.
      */
     public static BigVector getJustificationVector() {
-        return justificationVector;
+        return JUSTIFICATION_VECTOR.clone();
     }
     
     
@@ -666,8 +812,8 @@ public class BigVector {
      * @throws IndexOutOfBoundsException When the Big Vector does not contain a component at the specified index.
      */
     public void set(int index, BigDecimal value) throws IndexOutOfBoundsException {
-        if (index >= getDimensionality() || index < 0) {
-            throw new ArithmeticException(componentIndexOutOfRangeError(this, index));
+        if (!BoundUtility.inBounds(index, 0, components.length, true, false)) {
+            throw new IndexOutOfBoundsException(componentIndexOutOfBoundsErrorMessage(this, index));
         }
         
         components[index] = value;
@@ -688,7 +834,7 @@ public class BigVector {
      * @param justificationVector The Big Vector to be used for justification.
      */
     public static void setJustificationVector(BigVector justificationVector) {
-        copyVector(justificationVector, BigVector.justificationVector);
+        JUSTIFICATION_VECTOR = justificationVector.clone();
     }
     
     
@@ -702,14 +848,37 @@ public class BigVector {
      * @throws ArithmeticException When the Big Vectors do not have the same dimensionality.
      */
     public static void copyVector(BigVector source, BigVector dest) throws ArithmeticException {
-        int dim = source.getDimensionality();
-        if (dest.getDimensionality() != dim) {
+        if (!dest.dimensionalityEqual(source)) {
             throw new ArithmeticException(dimensionalityNotEqualErrorMessage(source, dest));
         }
         
-        for (int i = 0; i < dim; i++) {
+        for (int i = 0; i < source.getDimensionality(); i++) {
             dest.set(i, source.get(i));
         }
+    }
+    
+    /**
+     * Creates a unit Big Vector of a certain dimensionality.
+     *
+     * @param dim The dimensionality of the unit Big Vector
+     * @return The unit Big Vector.
+     */
+    public static BigVector unit(int dim) {
+        BigDecimal[] components = new BigDecimal[Math.max(dim, 0)];
+        Arrays.fill(components, BigDecimal.ONE);
+        return new BigVector(components);
+    }
+    
+    /**
+     * Creates an origin Big Vector of a certain dimensionality.
+     *
+     * @param dim The dimensionality of the unit Big Vector
+     * @return The origin Big Vector.
+     */
+    public static BigVector origin(int dim) {
+        BigDecimal[] components = new BigDecimal[Math.max(dim, 0)];
+        Arrays.fill(components, BigDecimal.ZERO);
+        return new BigVector(components);
     }
     
     /**
@@ -720,16 +889,16 @@ public class BigVector {
      * @throws ArithmeticException When the Big Vectors do not all have the same dimensionality.
      */
     public static BigVector averageVector(List<BigVector> vectors) throws ArithmeticException {
-        int dim = 0;
+        int dim = -1;
         for (BigVector vector : vectors) {
-            if (dim == 0) {
+            if (dim == -1) {
                 dim = vector.getDimensionality();
-            } else if (vector.getDimensionality() != dim) {
+            } else if (!vector.dimensionalityEqual(vectors.get(0))) {
                 throw new ArithmeticException(dimensionalityNotEqualErrorMessage(vectors.get(0), vector));
             }
         }
-        if (dim == 0) {
-            return new BigVector(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
+        if (dim == -1) {
+            return new BigVector();
         }
         
         BigDecimal[] newComponents = new BigDecimal[vectors.get(0).getDimensionality()];
@@ -765,15 +934,15 @@ public class BigVector {
      * @throws ArithmeticException When the Big Vectors do not all have the same dimensionality.
      */
     public static List<BigVector> calculateMinMax(List<BigVector> vectors) throws ArithmeticException {
-        int dim = 0;
+        int dim = -1;
         for (BigVector vector : vectors) {
-            if (dim == 0) {
+            if (dim == -1) {
                 dim = vector.getDimensionality();
-            } else if (vector.getDimensionality() != dim) {
+            } else if (!vector.dimensionalityEqual(vectors.get(0))) {
                 throw new ArithmeticException(dimensionalityNotEqualErrorMessage(vectors.get(0), vector));
             }
         }
-        if (dim == 0) {
+        if (dim == -1) {
             return new ArrayList<>();
         }
         
@@ -812,7 +981,7 @@ public class BigVector {
      * @return The error message.
      */
     protected static String dimensionalityNotEqualErrorMessage(BigVector vector1, BigVector vector2) {
-        return "The vectors: " + vector1 + " and " + vector2 + " do not have the same dimensionality.";
+        return "The big vectors: " + vector1 + " and " + vector2 + " do not have the same dimensionality";
     }
     
     /**
@@ -823,18 +992,30 @@ public class BigVector {
      * @return The error message.
      */
     protected static String dimensionalityMinimumNotMetErrorMessage(BigVector vector, int minimum) {
-        return "The vector: " + vector + " do not have the minimum dimensionality of: " + minimum + ".";
+        return "The big vector: " + vector + " does not have the minimum dimensionality of: " + minimum;
     }
     
     /**
-     * Returns the error message to display when the component index of a Big Vector is out of range.
+     * Returns the error message to display when the component index of a Big Vector is out of bounds.
      *
      * @param vector The Big Vector.
      * @param index  The index of the component.
      * @return The error message.
      */
-    protected static String componentIndexOutOfRangeError(BigVector vector, int index) {
-        return "The vector: " + vector + " does not have a component at index: " + index;
+    protected static String componentIndexOutOfBoundsErrorMessage(BigVector vector, int index) {
+        return "The big vector: " + vector + " does not have a component at index: " + index;
+    }
+    
+    /**
+     * Returns the error message to display when a sub range of a Big Vector is out of bounds.
+     *
+     * @param vector The Big Vector.
+     * @param from   The starting index of the range.
+     * @param to     The ending index of the range.
+     * @return The error message.
+     */
+    protected static String componentRangeOutOfBoundsErrorMessage(BigVector vector, int from, int to) {
+        return "The range: [" + from + "," + to + ") is out of bounds of the big vector: " + vector;
     }
     
 }

@@ -57,7 +57,7 @@ public class Matrix {
      */
     @Override
     public String toString() {
-        return ListUtility.split(ListUtility.arrayToList(ArrayUtils.toObject(getValues())), getDimensionality()).stream()
+        return ListUtility.split(ListUtility.toList(ArrayUtils.toObject(getValues())), getDimensionality()).stream()
                 .map(e -> new Vector(e).toString())
                 .collect(Collectors.joining(", ", "(", ")"));
     }

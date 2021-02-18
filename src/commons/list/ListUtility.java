@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import commons.math.BoundUtility;
+import commons.math.MathUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,8 +41,66 @@ public final class ListUtility {
      * @param <T>   The type of the array.
      * @return The list built from the array.
      */
-    public static <T> List<T> arrayToList(T[] array) {
-        return new ArrayList<>(Arrays.asList(array));
+    public static <T> List<T> toList(T[] array) {
+        return clone(Arrays.asList(array));
+    }
+    
+    /**
+     * Clones a list.
+     *
+     * @param list The list.
+     * @param <T>  The type of the list.
+     * @return The clone of the list.
+     */
+    public static <T> List<T> clone(List<T> list) {
+        return new ArrayList<>(list);
+    }
+    
+    /**
+     * Creates a sub list from the list.
+     *
+     * @param list The list.
+     * @param from The index to start the sub list at.
+     * @param to   The index to end the sub list at.
+     * @param <T>  The type of the list.
+     * @return The sub list.
+     * @throws IndexOutOfBoundsException When the from or to indices are out of bounds of the list.
+     */
+    public static <T> List<T> subList(List<T> list, int from, int to) throws IndexOutOfBoundsException {
+        if ((from > to) || (from < 0) || to > list.size()) {
+            throw new IndexOutOfBoundsException("The range [" + from + "," + to + ") is out of bounds of the list");
+        }
+        
+        return clone(list.subList(from, to));
+    }
+    
+    /**
+     * Creates a sub list from the list.
+     *
+     * @param list The list.
+     * @param from The index to start the sub list at.
+     * @param <T>  The type of the list.
+     * @return The sub list.
+     * @throws IndexOutOfBoundsException When the from or to indices are out of bounds of the list.
+     * @see #subList(List, int, int)
+     */
+    public static <T> List<T> subList(List<T> list, int from) throws IndexOutOfBoundsException {
+        return subList(list, from, list.size());
+    }
+    
+    /**
+     * Merges two lists.
+     *
+     * @param list1 The first list.
+     * @param list2 The second list.
+     * @param <T>   The type of the lists.
+     * @return The merged list.
+     */
+    public static <T> List<T> merge(List<T> list1, List<T> list2) {
+        List<T> result = new ArrayList<>();
+        result.addAll(list1);
+        result.addAll(list2);
+        return result;
     }
     
     /**
@@ -57,11 +116,11 @@ public final class ListUtility {
         
         List<List<T>> result = new ArrayList<>();
         for (int i = 0; i < (int) Math.ceil(list.size() / (double) length); i++) {
-            result.add(new ArrayList<>());
+            result.add(new ArrayList<>(Collections.nCopies(length, null)));
         }
         
         for (int i = 0; i < list.size(); i++) {
-            result.get(i / length).add(list.get(i));
+            result.get(i / length).set((i % length), list.get(i));
         }
         return result;
     }
@@ -108,14 +167,14 @@ public final class ListUtility {
      *
      * @param list The list to select from.
      * @param <T>  The type of the list.
-     * @return The random element from the list.
+     * @return A random element from the list.
      */
     public static <T> T selectRandom(List<T> list) {
         if (list.isEmpty()) {
             return null;
         }
         
-        return selectNFromList(list, 1).get(0);
+        return list.get(MathUtility.random(list.size() - 1));
     }
     
     /**
@@ -124,19 +183,21 @@ public final class ListUtility {
      * @param list The list to select from.
      * @param n    The number of elements to select.
      * @param <T>  The type of the list.
-     * @return The random subset of the list.
+     * @return A random subset of the list.
      */
-    @SuppressWarnings({"UnsecureRandomNumberGeneration", "StatementWithEmptyBody"})
-    public static <T> List<T> selectNFromList(List<T> list, int n) {
+    @SuppressWarnings("StatementWithEmptyBody")
+    public static <T> List<T> selectN(List<T> list, int n) {
         if (n >= list.size()) {
-            return list;
+            List<T> shuffle = clone(list);
+            Collections.shuffle(shuffle);
+            return shuffle;
         }
         
         List<Integer> previousChoices = new ArrayList<>();
         List<T> choices = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             int index;
-            while (previousChoices.contains(index = (int) (Math.random() * (list.size() - 1)))) {
+            while (previousChoices.contains(index = MathUtility.random(list.size() - 1))) {
             }
             choices.add(list.get(index));
             previousChoices.add(index);
@@ -152,13 +213,16 @@ public final class ListUtility {
      * @param <T>   The type of the list.
      * @return A list of double size with duplicated elements.
      */
-    public static <T> List<T> duplicateListInOrder(List<T> list, int times) {
+    public static <T> List<T> duplicateInOrder(List<T> list, int times) {
         if (times <= 0) {
             return new ArrayList<>();
         }
+        if (times == 1) {
+            return clone(list);
+        }
         
         List<T> finalList = new ArrayList<>(list.size() * times);
-        for (int t = 0; t < times; t++) {
+        for (int time = 0; time < times; time++) {
             finalList.addAll(list);
         }
         return finalList;
@@ -170,21 +234,21 @@ public final class ListUtility {
      * @param list The list to duplicate.
      * @param <T>  The type of the list.
      * @return A list of double size with duplicated elements.
-     * @see #duplicateListInOrder(List, int)
+     * @see #duplicateInOrder(List, int)
      */
-    public static <T> List<T> duplicateListInOrder(List<T> list) {
-        return duplicateListInOrder(list, 2);
+    public static <T> List<T> duplicateInOrder(List<T> list) {
+        return duplicateInOrder(list, 2);
     }
     
     /**
-     * Sorts a list by the number of occurrences of each entry in the list and returning the list.
+     * Sorts a list by the number of occurrences of each entry in the list.
      *
      * @param list    The list to sort.
      * @param reverse Whether to sort in reverse or not.
      * @param <T>     The type of the list.
-     * @return A list of sorted by the number of occurrences of each entry in the list.
+     * @return The list sorted by the number of occurrences of each entry in the list.
      */
-    public static <T> List<T> sortListByNumberOfOccurrences(List<T> list, boolean reverse) {
+    public static <T> List<T> sortByNumberOfOccurrences(List<T> list, boolean reverse) {
         Map<T, Integer> store = new LinkedHashMap<>();
         for (T entry : list) {
             if (store.containsKey(entry)) {
@@ -212,15 +276,15 @@ public final class ListUtility {
     }
     
     /**
-     * Sorts a list by the number of occurrences of each entry in the list and returning the list.
+     * Sorts a list by the number of occurrences of each entry in the list.
      *
      * @param list The list to sort.
      * @param <T>  The type of the list.
-     * @return A list of sorted by the number of occurrences of each entry in the list.
-     * @see #sortListByNumberOfOccurrences(List, boolean)
+     * @return The list sorted by the number of occurrences of each entry in the list.
+     * @see #sortByNumberOfOccurrences(List, boolean)
      */
-    public static <T> List<T> sortListByNumberOfOccurrences(List<T> list) {
-        return sortListByNumberOfOccurrences(list, false);
+    public static <T> List<T> sortByNumberOfOccurrences(List<T> list) {
+        return sortByNumberOfOccurrences(list, false);
     }
     
 }

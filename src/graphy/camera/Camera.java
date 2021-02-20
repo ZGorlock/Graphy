@@ -191,7 +191,7 @@ public class Camera {
     /**
      * The current rho movement speed of the Camera.
      */
-    private double rhoSpeed = 1;
+    private double rhoSpeed = .1;
     
     /**
      * The current origin movement speed of the Camera.

@@ -86,6 +86,11 @@ public class CaptureHandler {
     private final AtomicBoolean copyCapture = new AtomicBoolean(false);
     
     /**
+     * A flag that stores the selected time system to restore after recording.
+     */
+    private boolean timeSystem;
+    
+    /**
      * The Task that takes the capture.
      */
     private UUID captureTask = null;
@@ -212,8 +217,10 @@ public class CaptureHandler {
         
         recordingFrame.set(0);
         recording.set(true);
+        timeSystem = Environment.useSystemTime;
         
         Environment.setFps(Environment.fps / 2);
+        Environment.useSystemTime = false;
         recordingTask = Environment.addTask(this::handleRecording);
     }
     
@@ -231,6 +238,7 @@ public class CaptureHandler {
         recordingTask = null;
         
         Environment.setFps(Environment.fps * 2);
+        Environment.useSystemTime = timeSystem;
         
         if (wait) {
             encodeRecording();

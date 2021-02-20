@@ -146,6 +146,7 @@ public class PolyhedraExplosion extends Scene {
         super(environment);
         
         Environment.enableRenderBuffering = false;
+        Environment.useSystemTime = true;
     }
     
     

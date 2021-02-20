@@ -141,6 +141,16 @@ public abstract class EnvironmentBase {
     private static long time = 0;
     
     /**
+     * Whether to use the System time instead of the Environment time.
+     */
+    public static boolean useSystemTime = false;
+    
+    /**
+     * The last time of execution in System time.
+     */
+    public static long lastTime = System.currentTimeMillis();
+    
+    /**
      * A list of Tasks to be run after each frame of the Environment.
      */
     private static final Map<UUID, Task> tasks = new ConcurrentHashMap<>();
@@ -432,7 +442,8 @@ public abstract class EnvironmentBase {
      * Runs the Tasks in the Environment.
      */
     private void runTasks() {
-        time += (1000 / fps);
+        time += useSystemTime ? (System.currentTimeMillis() - lastTime) : (1000 / fps);
+        lastTime = System.currentTimeMillis();
         tasks.values().stream().filter(e -> e.active.get()).forEach(e -> e.action.run());
     }
     

@@ -8,7 +8,6 @@
 package commons.math.matrix;
 
 import commons.math.vector.Vector;
-import commons.math.vector.Vector3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,35 +54,15 @@ public class Matrix3 extends Matrix {
      * @return The 3D matrix result of the multiplication.
      */
     public Matrix3 multiply(Matrix3 other) {
-    
-        if (!dimensionalityEqual(other)) {
-            throw new ArithmeticException("");
-        }
-
-        Matrix3 result = new Matrix3(new double[values.length]);
-        for (int row = 0; row < DIMENSIONALITY; row++) {
-            for (int col = 0; col < DIMENSIONALITY; col++) {
-                for (int i = 0; i < DIMENSIONALITY; i++) {
-                    result.set(col, row, (result.get(col, row) + (get(i, row) * other.get(col, i))));
+        double[] result = new double[9];
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                for (int i = 0; i < 3; i++) {
+                    result[row * 3 + col] += get(row * 3 + i) * other.get(i * 3 + col);
                 }
             }
         }
-
-        try {
-            return new Matrix3(result.getValues());
-        } catch (ArithmeticException ignored) {
-        }
-        return null;
-        
-//        double[] result = new double[9];
-//        for (int row = 0; row < 3; row++) {
-//            for (int col = 0; col < 3; col++) {
-//                for (int i = 0; i < 3; i++) {
-//                    result[row * 3 + col] += get(row * 3 + i) * other.get(i * 3 + col);
-//                }
-//            }
-//        }
-//        return new Matrix3(result);
+        return new Matrix3(result);
     }
     
     /**
@@ -94,37 +73,17 @@ public class Matrix3 extends Matrix {
      * @throws ArithmeticException When the vector is not of the proper size.
      */
     public Vector multiply(Vector other) throws ArithmeticException {
-    
         if (other.getDimensionality() != getDimensionality()) {
-            throw new ArithmeticException("");
+            throw new ArithmeticException("The vector: " + other + " is of improper size for multiplication with a 3D matrix.");
         }
-
-        Vector result = new Vector();
-        int dimensionality = getDimensionality();
-        for (int row = 0; row < dimensionality; row++) {
-            for (int col = 0; col < dimensionality; col++) {
-                result.set(row, (result.get(row) + (get(col, row) * other.get(col))));
+        
+        double[] result = new double[3];
+        for (int row = 0; row < 3; row++) {
+            for (int col = 0; col < 3; col++) {
+                result[row] += get(row * 3 + col) * other.get(col);
             }
         }
-
-        try {
-            return new Vector3(result);
-        } catch (ArithmeticException ignored) {
-        }
-        return null;
-        
-        
-//        if (other.getDimensionality() != getDimensionality()) {
-//            throw new ArithmeticException("The vector: " + other + " is of improper size for multiplication with a 3D matrix.");
-//        }
-//
-//        double[] result = new double[3];
-//        for (int row = 0; row < 3; row++) {
-//            for (int col = 0; col < 3; col++) {
-//                result[row] += get(row * 3 + col) * other.get(col);
-//            }
-//        }
-//        return new Vector(result[0], result[1], result[2]);
+        return new Vector(result[0], result[1], result[2]);
     }
     
     /**

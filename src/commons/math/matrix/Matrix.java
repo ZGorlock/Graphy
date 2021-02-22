@@ -2,6 +2,7 @@
  * File:    Matrix.java
  * Package: commons.math.matrix
  * Author:  Zachary Gill
+ * Repo:    https://github.com/ZGorlock/Java-Commons
  */
 
 package commons.math.matrix;
@@ -39,12 +40,18 @@ public class Matrix {
     //Constructors
     
     /**
-     * The constructor for a Matrix.
+     * The constructor for a Matrix from components.
      *
-     * @param values The elements of the matrix.
+     * @param components The components that define the Matrix.
      */
-    public Matrix(double[] values) {
-        this.values = values;
+    public Matrix(double... components) {
+        int dimensionality = (int) Math.sqrt(components.length);
+        if ((dimensionality * dimensionality) != components.length) {
+            dimensionality++;
+        }
+        
+        this.values = new double[dimensionality * dimensionality];
+        System.arraycopy(components, 0, this.values, 0, components.length);
     }
     
     
@@ -133,6 +140,23 @@ public class Matrix {
         return values[index];
     }
     
+    /**
+     * Returns a component of the Matrix.
+     *
+     * @param x The x coordinate of the component.
+     * @param y The y coordinate of the component.
+     * @return The component of the Matrix at the specified coordinate.
+     * @throws IndexOutOfBoundsException When the Matrix does not contain a component at the specified coordinate.
+     * @see #get(int)
+     */
+    public double get(int x, int y) {
+        try {
+            return get((y * getDimensionality()) + x);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IndexOutOfBoundsException("");
+        }
+    }
+    
     
     //Setters
     
@@ -149,6 +173,23 @@ public class Matrix {
         }
         
         values[index] = value;
+    }
+    
+    /**
+     * Sets the value of a component of the Matrix.
+     *
+     * @param x     The x coordinate of the component to set.
+     * @param y     The y coordinate of the component to set.
+     * @param value The new value of the component.
+     * @throws IndexOutOfBoundsException When the Matrix does not contain a component at the specified coordinate.
+     * @see #set(int, double)
+     */
+    public void set(int x, int y, double value) throws IndexOutOfBoundsException {
+        try {
+            set(((y * getDimensionality()) + x), value);
+        } catch (IndexOutOfBoundsException e) {
+            throw new IndexOutOfBoundsException("");
+        }
     }
     
     

@@ -146,7 +146,7 @@ public class PolyhedraExplosion extends Scene {
         super(environment);
         
         Environment.enableRenderBuffering = false;
-        Environment.useSystemTime = true;
+        Environment.useSystemTime = false;
     }
     
     
@@ -190,27 +190,35 @@ public class PolyhedraExplosion extends Scene {
         final AtomicInteger cameraStage = new AtomicInteger(1);
         final AtomicBoolean processing = new AtomicBoolean(false);
         
+        final AtomicLong t = new AtomicLong(0);
+        final AtomicLong total = new AtomicLong(0);
+        final AtomicInteger c = new AtomicInteger(0);
+        
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
             if (processing.compareAndSet(false, true)) {
                 long currentTime = Environment.currentTimeMillis() - timeOffset.get();
                 
                 switch (stage.get()) {
                     case 0:
-                        if (currentTime > 9000) {
+                        if (currentTime > 2000) {
                             Camera camera = Camera.getActiveCameraView(environment.perspective);
                             if (camera != null) {
                                 if ((cameraStage.compareAndSet(0, 1)) || (cameraStage.compareAndSet(1, 2))) {
-                                    camera.addFluidTransition(0, -Math.PI / 2, -Math.PI / 4, 10000);
+                                    camera.addFluidTransition(0, -Math.PI / 2, -Math.PI / 4, 2000);
                                 } else if ((cameraStage.compareAndSet(2, 3)) || (cameraStage.compareAndSet(3, 0))) {
-                                    camera.addFluidTransition(0, -Math.PI / 2, Math.PI / 4, 10000);
+                                    camera.addFluidTransition(0, -Math.PI / 2, Math.PI / 4, 2000);
                                 }
                             }
+                            t.set(System.currentTimeMillis());
                             stage.set(1);
                         }
                         break;
                     
                     case 1:
-                        if (currentTime > 19000) {
+                        if (currentTime > 4000) {
+                            long elapse = System.currentTimeMillis() - t.get();
+                            total.set(total.get() + elapse);
+                            System.out.println(elapse + " : " + (total.get() / c.incrementAndGet()));
                             for (RegularPolyhedron polyhedron : polyhedra) {
                                 double[] values = polyhedron.movementAnimations.get(0);
                                 
@@ -224,7 +232,7 @@ public class PolyhedraExplosion extends Scene {
                         }
                     
                     case 2:
-                        if (currentTime > 20000) {
+                        if (currentTime > 5000) {
                             for (RegularPolyhedron polyhedron : polyhedra) {
                                 polyhedron.animationTasks.remove(polyhedron.metadata.get("movementAnimation"));
                                 polyhedron.movementAnimations.remove(0);

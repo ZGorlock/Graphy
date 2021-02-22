@@ -200,13 +200,13 @@ public class PolyhedraExplosion extends Scene {
                 
                 switch (stage.get()) {
                     case 0:
-                        if (currentTime > 2000) {
+                        if (currentTime > 9000) {
                             Camera camera = Camera.getActiveCameraView(environment.perspective);
                             if (camera != null) {
                                 if ((cameraStage.compareAndSet(0, 1)) || (cameraStage.compareAndSet(1, 2))) {
-                                    camera.addFluidTransition(0, -Math.PI / 2, -Math.PI / 4, 2000);
+                                    camera.addFluidTransition(0, -Math.PI / 2, -Math.PI / 4, 10000);
                                 } else if ((cameraStage.compareAndSet(2, 3)) || (cameraStage.compareAndSet(3, 0))) {
-                                    camera.addFluidTransition(0, -Math.PI / 2, Math.PI / 4, 2000);
+                                    camera.addFluidTransition(0, -Math.PI / 2, Math.PI / 4, 10000);
                                 }
                             }
                             t.set(System.currentTimeMillis());
@@ -215,7 +215,7 @@ public class PolyhedraExplosion extends Scene {
                         break;
                     
                     case 1:
-                        if (currentTime > 4000) {
+                        if (currentTime > 19000) {
                             long elapse = System.currentTimeMillis() - t.get();
                             total.set(total.get() + elapse);
                             System.out.println(elapse + " : " + (total.get() / c.incrementAndGet()));
@@ -232,7 +232,7 @@ public class PolyhedraExplosion extends Scene {
                         }
                     
                     case 2:
-                        if (currentTime > 5000) {
+                        if (currentTime > 20000) {
                             for (RegularPolyhedron polyhedron : polyhedra) {
                                 polyhedron.animationTasks.remove(polyhedron.metadata.get("movementAnimation"));
                                 polyhedron.movementAnimations.remove(0);

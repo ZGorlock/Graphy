@@ -10,8 +10,20 @@
 ## Usage
 
 You can run any:
--    Scene in graphy.main.scene
--    Drawing in graphy.main.drawing
+-    Scene in *graphy.main.scene*
+-    Drawing in *graphy.main.drawing*
+
+&nbsp;
+
+You can run them with an IDE or using the *graphy.bat* file in the main directory
+
+The syntax for the bat file is: *'graphy.bat (scene|drawing) \<Class\>'*
+-    *'graphy.bat scene PolyhedraExplosion'*
+-    *'graphy.bat drawing Mandelbrot'*
+ 
+&nbsp;
+
+Compilation requires Java JDK 13 and Maven 3
 
 &nbsp;
 

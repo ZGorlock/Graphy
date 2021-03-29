@@ -39,14 +39,6 @@ public class Vector {
     public static final double PRECISION = 0.000000000000001;
     
     
-    //Static Fields
-    
-    /**
-     * The Vector used for justification.
-     */
-    private static Vector JUSTIFICATION_VECTOR = new Vector(1, 1, 1);
-    
-    
     //Fields
     
     /**
@@ -171,16 +163,6 @@ public class Vector {
             reversedComponents[getDimensionality() - 1 - i] = components[i];
         }
         return new Vector(reversedComponents);
-    }
-    
-    /**
-     * Justifies a Vector.
-     *
-     * @return The justified Vector.
-     * @throws ArithmeticException When the two Vectors do not have the same dimensionality.
-     */
-    public Vector justify() throws ArithmeticException {
-        return this.times(JUSTIFICATION_VECTOR);
     }
     
     /**
@@ -540,15 +522,6 @@ public class Vector {
         return components[index];
     }
     
-    /**
-     * Returns the Vector used for justification.
-     *
-     * @return The Vector used for justification.
-     */
-    public static Vector getJustificationVector() {
-        return JUSTIFICATION_VECTOR.clone();
-    }
-    
     
     //Setters
     
@@ -609,15 +582,6 @@ public class Vector {
         }
         
         components[index] = value;
-    }
-    
-    /**
-     * Sets the Vector used for justification.
-     *
-     * @param justificationVector The Vector to be used for justification.
-     */
-    public static void setJustificationVector(Vector justificationVector) {
-        JUSTIFICATION_VECTOR = justificationVector.clone();
     }
     
     

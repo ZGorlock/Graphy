@@ -35,6 +35,7 @@ import commons.math.vector.Vector3;
 import graphy.main.Environment;
 import graphy.main.EnvironmentBase;
 import graphy.math.Delta;
+import graphy.math.vector.JustificationUtil;
 import graphy.object.base.BaseObject;
 import graphy.object.base.Scene;
 import graphy.object.base.polygon.Rectangle;
@@ -357,7 +358,7 @@ public class Camera {
             
             
             //center of screen, m
-            Vector cameraOrigin = Environment.origin.plus(offset).justify();
+            Vector cameraOrigin = JustificationUtil.justify(Environment.origin.plus(offset));
             m = cartesian.plus(cameraOrigin);
             
             
@@ -377,8 +378,8 @@ public class Camera {
             } else {
                 c = m.plus(n.scale(h));
             }
-            cameraObject.camera.setPoint(c.justify());
-            cameraObject.setCenter(c.justify());
+            cameraObject.camera.setPoint(JustificationUtil.justify(c));
+            cameraObject.setCenter(JustificationUtil.justify(c));
             
             
             //vector equation of plane of screen
@@ -416,10 +417,10 @@ public class Camera {
                 s.setP4(tmp);
             }
             
-            cameraObject.screen.setP1(s.getP1().justify());
-            cameraObject.screen.setP2(s.getP2().justify());
-            cameraObject.screen.setP3(s.getP3().justify());
-            cameraObject.screen.setP4(s.getP4().justify());
+            cameraObject.screen.setP1(JustificationUtil.justify(s.getP1()));
+            cameraObject.screen.setP2(JustificationUtil.justify(s.getP2()));
+            cameraObject.screen.setP3(JustificationUtil.justify(s.getP3()));
+            cameraObject.screen.setP4(JustificationUtil.justify(s.getP4()));
             
             
             //find scalar equation of screen
@@ -429,13 +430,13 @@ public class Camera {
             
             
             //draw local coordinate system normals
-            cameraObject.screenNormal.setPoints(c.justify(), c.plus(n.scale(viewport.getX() * 2 / 3)).justify());
-            cameraObject.screenXNormal.setPoints(c.justify(), c.plus(lx.scale(viewport.getX() * 2 / 3)).justify());
-            cameraObject.screenYNormal.setPoints(c.justify(), c.minus(ly.scale(viewport.getX() * 2 / 3)).justify());
+            cameraObject.screenNormal.setPoints(JustificationUtil.justify(c), c.plus(JustificationUtil.justify(n.scale(viewport.getX() * 2 / 3))));
+            cameraObject.screenXNormal.setPoints(JustificationUtil.justify(c), c.plus(JustificationUtil.justify(lx.scale(viewport.getX() * 2 / 3))));
+            cameraObject.screenYNormal.setPoints(JustificationUtil.justify(c), c.minus(JustificationUtil.justify(ly.scale(viewport.getX() * 2 / 3))));
             
             
             //draw camera enclosure
-            cameraObject.cameraEnclosure.setComponents(cameraObject.screen, c.justify());
+            cameraObject.cameraEnclosure.setComponents(cameraObject.screen, JustificationUtil.justify(c));
             cameraObject.cameraEnclosure.setColor(new Color(192, 192, 192, 64));
             cameraObject.cameraEnclosure.setFaceColor(5, Color.RED);
             
@@ -746,7 +747,7 @@ public class Camera {
                     delta.x = e.getX();
                     delta.y = e.getY();
                     
-                    Environment.origin = Environment.origin.plus(new Vector(deltaX, deltaY, 0).justify().scale(rho / 1000));
+                    Environment.origin = Environment.origin.plus(JustificationUtil.justify(new Vector(deltaX, deltaY, 0)).scale(rho / 1000));
                     updateRequired = true;
                 }
             }
@@ -1157,8 +1158,8 @@ public class Camera {
         if (activeView.get(perspective) == null) {
             return false;
         }
-        Vector cm = activeView.get(perspective).m.justify();
-        Vector cc = activeView.get(perspective).c.justify();
+        Vector cm = JustificationUtil.justify(activeView.get(perspective).m);
+        Vector cc = JustificationUtil.justify(activeView.get(perspective).c);
         
         //ensure Vectors are not behind Camera
         boolean behind = false;

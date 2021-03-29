@@ -21,6 +21,7 @@ import commons.math.RotationUtility;
 import commons.math.matrix.Matrix3;
 import commons.math.vector.Vector;
 import graphy.main.Environment;
+import graphy.math.vector.JustificationUtil;
 
 /**
  * Defines the base properties of an Object.
@@ -166,7 +167,7 @@ public class Object extends AbstractObject {
         }
         
         Matrix3 rotationTransformationMatrix = RotationUtility.getRotationMatrix(offset.getX(), offset.getY(), offset.getZ());
-        this.center = RotationUtility.performRotation(this.center, rotationTransformationMatrix, center.justify());
+        this.center = RotationUtility.performRotation(this.center, rotationTransformationMatrix, JustificationUtil.justify(center));
     }
     
     /**

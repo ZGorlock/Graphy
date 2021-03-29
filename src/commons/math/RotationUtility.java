@@ -10,6 +10,7 @@ package commons.math;
 import commons.math.matrix.Matrix3;
 import commons.math.matrix.Matrix4;
 import commons.math.vector.Vector;
+import graphy.math.vector.JustificationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +65,7 @@ public final class RotationUtility {
      * @return The rotated Vector.
      */
     public static Vector performRotation(Vector vector, Matrix3 rotationMatrix, Vector center) {
-        Vector justifiedCenter = center.justify();
+        Vector justifiedCenter = JustificationUtil.justify(center);
         
         Matrix4 translationMatrix = new Matrix4(new double[] {
                 1, 0, 0, -justifiedCenter.getX(),

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 import commons.math.vector.Vector;
+import graphy.math.vector.JustificationUtil;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.BaseObject;
 
@@ -59,7 +60,7 @@ public class Polygon extends BaseObject {
         
         perspectivePrepared.clear();
         for (Vector vertex : vertices) {
-            perspectivePrepared.add(vertex.clone().justify());
+            perspectivePrepared.add(JustificationUtil.justify(vertex.clone()));
         }
         
         performRotationTransformation(perspectivePrepared);

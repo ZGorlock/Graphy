@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 import commons.math.vector.Vector;
+import graphy.math.vector.JustificationUtil;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.BaseObject;
 
@@ -82,8 +83,8 @@ public class Edge extends BaseObject {
         List<Vector> perspectivePrepared = prepared.get(perspective);
         
         perspectivePrepared.clear();
-        perspectivePrepared.add(vertices[0].clone().justify());
-        perspectivePrepared.add(vertices[1].clone().justify());
+        perspectivePrepared.add(JustificationUtil.justify(vertices[0].clone()));
+        perspectivePrepared.add(JustificationUtil.justify(vertices[1].clone()));
         
         performRotationTransformation(perspectivePrepared);
         

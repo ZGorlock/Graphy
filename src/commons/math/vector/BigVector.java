@@ -52,14 +52,6 @@ public class BigVector {
     public static final RoundingMode DEFAULT_ROUNDING_MODE = BigMathUtility.DEFAULT_ROUNDING_MODE;
     
     
-    //Static Fields
-    
-    /**
-     * The Big Vector used for justification.
-     */
-    public static BigVector JUSTIFICATION_VECTOR = new BigVector(BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE);
-    
-    
     //Fields
     
     /**
@@ -298,16 +290,6 @@ public class BigVector {
         BigVector bigVector = new BigVector(reversedComponents);
         bigVector.setMathContext(mathContext);
         return bigVector;
-    }
-    
-    /**
-     * Justifies a Big Vector.
-     *
-     * @return The justified Big Vector.
-     * @throws ArithmeticException When the two Big Vectors do not have the same dimensionality.
-     */
-    public BigVector justify() throws ArithmeticException {
-        return this.times(JUSTIFICATION_VECTOR);
     }
     
     /**
@@ -749,15 +731,6 @@ public class BigVector {
         return mathContext;
     }
     
-    /**
-     * Returns the Big Vector used for justification.
-     *
-     * @return The Big Vector used for justification.
-     */
-    public static BigVector getJustificationVector() {
-        return JUSTIFICATION_VECTOR.clone();
-    }
-    
     
     //Setters
     
@@ -827,15 +800,6 @@ public class BigVector {
      */
     public void setMathContext(MathContext mathContext) {
         this.mathContext = mathContext;
-    }
-    
-    /**
-     * Sets the Big Vector used for justification.
-     *
-     * @param justificationVector The Big Vector to be used for justification.
-     */
-    public static void setJustificationVector(BigVector justificationVector) {
-        JUSTIFICATION_VECTOR = justificationVector.clone();
     }
     
     

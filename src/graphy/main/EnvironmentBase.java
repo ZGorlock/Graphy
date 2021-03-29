@@ -19,7 +19,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Queue;
 import java.util.UUID;
@@ -36,7 +35,6 @@ import javax.swing.WindowConstants;
 import commons.graphics.ScreenSize;
 import commons.log.CommonsLogger;
 import commons.log.CommonsLogging;
-import commons.math.vector.BigVector;
 import commons.math.vector.Vector;
 import graphy.camera.CaptureHandler;
 
@@ -374,9 +372,6 @@ public abstract class EnvironmentBase {
      * Initializes Commons.
      */
     protected final void initializeCommons() {
-        Vector.setJustificationVector(new Vector(-1, -1, 1));
-        BigVector.setJustificationVector(new BigVector(BigDecimal.valueOf(-1), BigDecimal.valueOf(-1), BigDecimal.valueOf(1)));
-        
         CommonsLogging.setCommonsLogger(new CommonsLogger() {
             
             @Override

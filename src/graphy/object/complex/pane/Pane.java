@@ -17,6 +17,7 @@ import commons.graphics.ImageTransformationUtility;
 import commons.math.vector.Vector;
 import commons.math.vector.Vector3;
 import graphy.main.Environment;
+import graphy.math.vector.JustificationUtil;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.BaseObject;
 import graphy.object.base.polygon.Rectangle;
@@ -77,7 +78,7 @@ public abstract class Pane extends BaseObject {
         
         perspectivePrepared.clear();
         for (Vector vertex : vertices) {
-            perspectivePrepared.add(vertex.clone().justify());
+            perspectivePrepared.add(JustificationUtil.justify(vertex.clone()));
         }
         
         perspectivePrepared.add(Vector.averageVector(perspectivePrepared));

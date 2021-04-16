@@ -41,7 +41,7 @@ public class PolyhedraExplosion extends Scene {
     /**
      * The number of each polyhedron species to put in the scene.
      */
-    public static final int SPECIES_COUNT = 150;
+    public static final int SPECIES_COUNT = 100;
     
     /**
      * The radius of the enclosing sphere of each polyhedron.
@@ -64,27 +64,27 @@ public class PolyhedraExplosion extends Scene {
     /**
      * The number of tetrahedron to include in the scene.
      */
-    private int tetrahedronCount = SPECIES_COUNT;
+    private final int tetrahedronCount = SPECIES_COUNT;
     
     /**
      * The number of hexahedron to include in the scene.
      */
-    private int hexahedronCount = SPECIES_COUNT;
+    private final int hexahedronCount = SPECIES_COUNT;
     
     /**
      * The number of octahedron to include in the scene.
      */
-    private int octahedronCount = SPECIES_COUNT;
+    private final int octahedronCount = SPECIES_COUNT;
     
     /**
      * The number of dodecahedron to include in the scene.
      */
-    private int dodecahedronCount = SPECIES_COUNT;
+    private final int dodecahedronCount = SPECIES_COUNT;
     
     /**
      * The number of icosahedron to include in the scene.
      */
-    private int icosahedronCount = SPECIES_COUNT;
+    private final int icosahedronCount = SPECIES_COUNT;
     
     /**
      * The color of the tetrahedron, null for random colors.
@@ -114,12 +114,12 @@ public class PolyhedraExplosion extends Scene {
     /**
      * The radius of the enclosing sphere of each polyhedron.
      */
-    private double radius = SPECIES_RADIUS;
+    private final double radius = SPECIES_RADIUS;
     
     /**
      * The alpha of the colors of each polyhedron.
      */
-    private int alpha = SPECIES_ALPHA;
+    private final int alpha = SPECIES_ALPHA;
     
     
     //Main Method
@@ -146,7 +146,7 @@ public class PolyhedraExplosion extends Scene {
         super(environment);
         
         Environment.enableRenderBuffering = false;
-        Environment.useSystemTime = false;
+        Environment.useSystemTime = true;
     }
     
     
@@ -190,10 +190,6 @@ public class PolyhedraExplosion extends Scene {
         final AtomicInteger cameraStage = new AtomicInteger(1);
         final AtomicBoolean processing = new AtomicBoolean(false);
         
-        final AtomicLong t = new AtomicLong(0);
-        final AtomicLong total = new AtomicLong(0);
-        final AtomicInteger c = new AtomicInteger(0);
-        
         Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
             if (processing.compareAndSet(false, true)) {
                 long currentTime = Environment.currentTimeMillis() - timeOffset.get();
@@ -209,16 +205,12 @@ public class PolyhedraExplosion extends Scene {
                                     camera.addFluidTransition(0, -Math.PI / 2, Math.PI / 4, 10000);
                                 }
                             }
-                            t.set(System.currentTimeMillis());
                             stage.set(1);
                         }
                         break;
                     
                     case 1:
                         if (currentTime > 19000) {
-                            long elapse = System.currentTimeMillis() - t.get();
-                            total.set(total.get() + elapse);
-                            System.out.println(elapse + " : " + (total.get() / c.incrementAndGet()));
                             for (RegularPolyhedron polyhedron : polyhedra) {
                                 double[] values = polyhedron.movementAnimations.get(0);
                                 

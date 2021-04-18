@@ -49,6 +49,8 @@ public class PerspectiveDice extends Scene {
      */
     public PerspectiveDice(Environment environment) {
         super(environment);
+        
+        Environment.enableRenderBuffering = false;
     }
     
     
@@ -76,7 +78,7 @@ public class PerspectiveDice extends Scene {
         Octahedron d8 = new Octahedron(diceLocations.get(2), Color.BLACK, 1);
         Dodecahedron d12 = new Dodecahedron(diceLocations.get(3), Color.BLACK, 1);
         Icosahedron d20 = new Icosahedron(diceLocations.get(4), Color.BLACK, 1);
-        Sphere dx = new Sphere(Environment.ORIGIN, Color.BLACK, .25, Math.PI / 32);
+        Sphere dx = new Sphere(Environment.ORIGIN, Color.BLACK, .25, Math.PI / 16);
         
         d4.addRotationAnimation(0, 0, 2);
         d6.addRotationAnimation(0, 0, -2);

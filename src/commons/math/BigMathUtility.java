@@ -51,7 +51,7 @@ public final class BigMathUtility {
         /**
          * The number of decimal places for the PrecisionMode.
          */
-        private int precision;
+        private final int precision;
         
         
         //Constructors

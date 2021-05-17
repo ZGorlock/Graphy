@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import commons.math.vector.Vector;
+import commons.math.component.vector.Vector;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.BaseObject;
 import graphy.object.base.Object;

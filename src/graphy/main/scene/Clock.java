@@ -11,7 +11,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import commons.math.CoordinateUtility;
-import commons.math.vector.Vector;
+import commons.math.component.vector.Vector;
 import graphy.camera.Camera;
 import graphy.main.Environment;
 import graphy.object.base.Scene;

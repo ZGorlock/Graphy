@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 import java.lang.reflect.Constructor;
 import javax.management.InstanceAlreadyExistsException;
 
+import commons.graphics.DrawUtility;
 import graphy.main.Environment2D;
 
 /**
@@ -62,14 +63,14 @@ public class Drawing {
     /**
      * Renders the Drawing.
      *
-     * @param g The graphics output.
+     * @param g2 The graphics output.
      */
-    public void render(Graphics2D g) {
-        environment.colorBackground(g);
+    public void render(Graphics2D g2) {
+        environment.colorBackground(g2);
         
         BufferedImage img = draw();
-        g.drawImage(img, 0, 0, null);
-        overlay(g);
+        DrawUtility.drawImage(g2, img);
+        overlay(g2);
     }
     
     /**

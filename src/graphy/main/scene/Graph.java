@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 import commons.math.EquationUtility;
-import commons.math.vector.Vector;
+import commons.math.component.vector.Vector;
 import graphy.camera.Camera;
 import graphy.main.Environment;
 import graphy.math.vector.UniqueVectorSet;
@@ -106,17 +106,17 @@ public class Graph extends Scene {
         
         for (Vector v : vs) {
             Map<String, Number> vars = new HashMap<>();
-            vars.put("x", v.getX());
-            vars.put("y", v.getY());
+            vars.put("x", v.getRawX());
+            vars.put("y", v.getRawY());
             v.setZ(equation.evaluate(vars).doubleValue());
-            if (v.getZ() != v.getZ()) {
-                v.setZ(0);
+            if (v.getRawZ() != v.getRawZ()) {
+                v.setZ(0.0);
             }
-            if (v.getZ() > boundDiameter) {
-                v.setZ(boundDiameter);
+            if (v.getRawZ() > boundDiameter) {
+                v.setZ((double) boundDiameter);
             }
-            if (v.getZ() < -boundDiameter) {
-                v.setZ(-boundDiameter);
+            if (v.getRawZ() < -boundDiameter) {
+                v.setZ((double) -boundDiameter);
             }
         }
         

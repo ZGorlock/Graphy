@@ -41,9 +41,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
-import commons.math.vector.BigVector;
-import commons.math.vector.Vector;
-import commons.math.vector.Vector2;
+import commons.access.OperatingSystem;
+import commons.graphics.DrawUtility;
+import commons.math.component.vector.BigVector;
+import commons.math.component.vector.IntVector;
+import commons.math.component.vector.Vector;
+import commons.math.component.vector.Vector2;
 import commons.media.ImageUtility;
 import graphy.camera.CaptureHandler;
 import graphy.main.Environment;
@@ -103,17 +106,17 @@ public class Mandelbrot extends Drawing {
     /**
      * The size of the screen to render the Mandelbrot on.
      */
-    public static final Vector SCREEN_SIZE = new Vector(Environment.MAX_SCREEN_WIDTH, Environment.MAX_SCREEN_HEIGHT);
+    public static final IntVector SCREEN_SIZE = new IntVector(Environment.MAX_SCREEN_WIDTH, Environment.MAX_SCREEN_HEIGHT);
     
     /**
      * The number of threads to use while rendering the Mandelbrot.
      */
-    public static final int NUM_THREADS = Runtime.getRuntime().availableProcessors() * 2;
+    public static final int NUM_THREADS = OperatingSystem.getProcessorCount() * 2;
     
     /**
      * The number of sectors to divide the screen into.
      */
-    public static final Vector SECTOR_COUNT = new Vector(8, 6);
+    public static final IntVector SECTOR_COUNT = new IntVector(8, 6);
     
     /**
      * The available palettes.
@@ -309,12 +312,12 @@ public class Mandelbrot extends Drawing {
     /**
      * The coordinates of the last mouse click.
      */
-    private Vector mousePressed;
+    private IntVector mousePressed;
     
     /**
      * The coordinates of the last location the mouse was dragged to.
      */
-    private Vector mouseSelected;
+    private IntVector mouseSelected;
     
     /**
      * The size of the last window created my dragging the mouse.
@@ -389,7 +392,7 @@ public class Mandelbrot extends Drawing {
      */
     public Mandelbrot(Environment2D environment) {
         super(environment);
-        environment.setSize((int) SCREEN_SIZE.getX(), (int) SCREEN_SIZE.getY());
+        environment.setSize(SCREEN_SIZE.getRawX(), SCREEN_SIZE.getRawY());
         EnvironmentBase.registerShutdownTask(this::shutdown);
     }
     
@@ -524,13 +527,13 @@ public class Mandelbrot extends Drawing {
                 } else {
                     if ((mouseDraggedSize > 0) && !SwingUtilities.isRightMouseButton(e)) {
                         int s = mouseDraggedSize / 2;
-                        if (((x - mouseSelected.getX()) <= s) && ((mouseSelected.getX() - x) <= s)) {
+                        if (((x - mouseSelected.getRawX()) <= s) && ((mouseSelected.getRawX() - x) <= s)) {
                             s = (mouseDraggedSize * Environment2D.screenHeight) / Environment2D.screenWidth / 2;
-                            if (((y - mouseSelected.getY()) < s) && ((mouseSelected.getY() - y) < s)) {
+                            if (((y - mouseSelected.getRawY()) < s) && ((mouseSelected.getRawY() - y) < s)) {
                                 
                                 Vector mul = new Vector(
-                                        (mouseSelected.getX() / Environment2D.screenHeight) - (Environment2D.screenWidth * 0.5 / Environment2D.screenHeight),
-                                        (0.5 * Environment2D.screenHeight - mouseSelected.getY()) / Environment2D.screenHeight);
+                                        ((double) mouseSelected.getRawX() / Environment2D.screenHeight) - (Environment2D.screenWidth * 0.5 / Environment2D.screenHeight),
+                                        (0.5 * Environment2D.screenHeight - mouseSelected.getRawY()) / Environment2D.screenHeight);
                                 offset = new BigVector(mul).scale(size);
                                 leftSizeScale = BigDecimal.valueOf(mouseDraggedSize / (double) Environment2D.screenWidth);
                                 rightSizeScale = BigDecimal.valueOf(Environment2D.screenWidth / (double) mouseDraggedSize);
@@ -542,11 +545,11 @@ public class Mandelbrot extends Drawing {
                 
                 if (doScaling) {
                     int sizeScale = size.scale();
-                    if (offset.getX().scale() > (sizeScale + 4)) {
-                        offset.setX(offset.getX().setScale(sizeScale + 4, RoundingMode.HALF_DOWN));
+                    if (offset.getRawX().scale() > (sizeScale + 4)) {
+                        offset.setX(offset.getRawX().setScale(sizeScale + 4, RoundingMode.HALF_DOWN));
                     }
-                    if (offset.getY().scale() > (sizeScale + 4)) {
-                        offset.setY(offset.getY().setScale(sizeScale + 4, RoundingMode.HALF_DOWN));
+                    if (offset.getRawY().scale() > (sizeScale + 4)) {
+                        offset.setY(offset.getRawY().setScale(sizeScale + 4, RoundingMode.HALF_DOWN));
                     }
                     
                     if (SwingUtilities.isRightMouseButton(e)) {
@@ -581,7 +584,7 @@ public class Mandelbrot extends Drawing {
             @Override
             public void mousePressed(MouseEvent e) {
                 mouseIsPressed = true;
-                mousePressed = new Vector(e.getX(), e.getY());
+                mousePressed = new IntVector(e.getX(), e.getY());
             }
             
             @Override
@@ -598,11 +601,11 @@ public class Mandelbrot extends Drawing {
                 int x = e.getX();
                 int y = e.getY();
                 
-                mouseDraggedSize = 2 * Math.abs(x - (int) mousePressed.getX());
-                int ds2 = (Math.abs(y - (int) mousePressed.getY()) * 2 * Environment2D.screenWidth) / Environment2D.screenHeight;
+                mouseDraggedSize = 2 * Math.abs(x - mousePressed.getRawX());
+                int ds2 = (Math.abs(y - mousePressed.getRawY()) * 2 * Environment2D.screenWidth) / Environment2D.screenHeight;
                 mouseDraggedSize = Math.max(mouseDraggedSize, ds2);
                 environment.run();
-                mouseSelected = mousePressed.clone();
+                mouseSelected = mousePressed.cloned();
             }
             
             @Override
@@ -693,27 +696,27 @@ public class Mandelbrot extends Drawing {
      */
     @Override
     public void overlay(Graphics2D g) {
-        g.setColor(Color.GRAY);
+        DrawUtility.setColor(g, Color.GRAY);
         if (mouseDraggedSize > 0) {
             int width = mouseDraggedSize;
             int height = (mouseDraggedSize * Environment2D.screenHeight) / Environment2D.screenWidth;
-            g.draw3DRect((int) mousePressed.getX() - width / 2, (int) mousePressed.getY() - height / 2, width, height, true);
+            DrawUtility.draw3DRect(g, new Vector(mousePressed.getRawX() - (width / 2.0), mousePressed.getRawY() - (height / 2.0)), width, height, true);
         }
         
         if (displayMetrics) {
-            g.setColor(Color.WHITE);
+            DrawUtility.setColor(g, Color.WHITE);
             String[] data = new String[] {
-                    "r = " + centre.getX().toPlainString(),
-                    "i = " + centre.getY().toPlainString(),
+                    "r = " + centre.getRawX().toPlainString(),
+                    "i = " + centre.getRawY().toPlainString(),
                     "s = " + size.toPlainString(),
                     "iteration_limit = " + iterationLimit,
                     "calculation_time = " + ((calculationTime == null) ? "0.0 s" : calculationTime)
             };
-            g.setFont(new Font("Console", Font.PLAIN, FONT_SIZE));
+            DrawUtility.setFont(g, new Font("Console", Font.PLAIN, FONT_SIZE));
             
             int y = Environment2D.screenHeight - (FONT_SIZE * (data.length + 4));
             for (String d : data) {
-                g.drawString(d, FONT_SIZE, y += FONT_SIZE);
+                DrawUtility.drawString(g, d, new Vector(FONT_SIZE, y += FONT_SIZE));
             }
         }
     }
@@ -773,8 +776,8 @@ public class Mandelbrot extends Drawing {
                         }
                         
                         List<String> zoomData = new ArrayList<>();
-                        zoomData.add(centre.getX().toPlainString());
-                        zoomData.add(centre.getY().toPlainString());
+                        zoomData.add(centre.getRawX().toPlainString());
+                        zoomData.add(centre.getRawY().toPlainString());
                         zoomData.add(size.toPlainString());
                         zoomData.add(String.valueOf(zoomFactor));
                         zoomData.add(String.valueOf(iterationLimit));
@@ -824,7 +827,7 @@ public class Mandelbrot extends Drawing {
         } else {
             imageSize = size.doubleValue();
         }
-        actualWidth = ((imageSize / 2) * (int) SCREEN_SIZE.getX()) / (int) SCREEN_SIZE.getY();
+        actualWidth = ((imageSize / 2) * SCREEN_SIZE.getRawX()) / SCREEN_SIZE.getRawY();
         sizeExtraExponent = exp;
         
         centreApproximation = new Approximation();
@@ -855,7 +858,7 @@ public class Mandelbrot extends Drawing {
                         }
                         return;
                     }
-                    if (sector >= (int) (SECTOR_COUNT.getX() * SECTOR_COUNT.getY())) {
+                    if (sector >= (SECTOR_COUNT.getRawX() * SECTOR_COUNT.getRawY())) {
                         break;
                     }
                     calculateSector(sector);
@@ -900,19 +903,19 @@ public class Mandelbrot extends Drawing {
         }
         
         Vector p0 = new Vector(
-                (int) (buffer.width * ((sector % (int) SECTOR_COUNT.getX()) / SECTOR_COUNT.getX())),
-                (int) (adjustedHeight * ((sector / (int) SECTOR_COUNT.getX()) / SECTOR_COUNT.getY())));
+                (int) (buffer.width * ((sector % SECTOR_COUNT.getRawX()) / (double) SECTOR_COUNT.getRawX())),
+                (int) (adjustedHeight * ((sector / SECTOR_COUNT.getRawX()) / (double) SECTOR_COUNT.getRawY())));
         Vector p1 = new Vector(
-                (int) (buffer.width * (((sector % (int) SECTOR_COUNT.getX()) + 1) / SECTOR_COUNT.getX())),
-                (int) (adjustedHeight * (((sector / (int) SECTOR_COUNT.getX()) + 1) / SECTOR_COUNT.getY())));
+                (int) (buffer.width * (((sector % SECTOR_COUNT.getRawX()) + 1) / (double) SECTOR_COUNT.getRawX())),
+                (int) (adjustedHeight * (((sector / SECTOR_COUNT.getRawX()) + 1) / (double) SECTOR_COUNT.getRawY())));
         
         Vector corner = new Vector(-screenWidth / 2, -screenWidth / 2 * adjustedHeight / buffer.width).plus(
                 centreApproximation.screenOffsetFromCenter).minus(
                 centreApproximation.screenOffset);
         Vector center = corner.plus(new Vector(screenWidth, screenWidth).times(
-                new Vector((p0.getX() + p1.getX()), (p0.getY() + p1.getY()))).scale(0.5 / buffer.width));
+                new Vector((p0.getRawX() + p1.getRawX()), (p0.getRawY() + p1.getRawY()))).scale(0.5 / buffer.width));
         
-        double newScreenWidth = (screenWidth * (p1.getX() - p0.getX())) / buffer.width;
+        double newScreenWidth = (screenWidth * (p1.getRawX() - p0.getRawX())) / buffer.width;
         Approximation approximation = new Approximation();
         approximation.initializeCubic(centreApproximation, center, newScreenWidth, centreApproximation);
         
@@ -976,38 +979,36 @@ public class Mandelbrot extends Drawing {
         p[0] = new Vector(0, 0);
         p[1] = new Vector(0, 0);
         p[2] = new Vector(0, 0);
-        Vector count = new Vector(0, 0);
+        IntVector count = new IntVector(0, 0);
         
         if (buffer.width > 1) {
             count.setX(2);
-            //noinspection IntegerDivisionInFloatingPointContext
-            p[1].setX(buffer.width / 2);
-            p[2].setX(buffer.width);
+            p[1].setX((double) (buffer.width / 2));
+            p[2].setX((double) buffer.width);
         } else {
             count.setX(1);
-            p[1].setX(buffer.width);
+            p[1].setX((double) buffer.width);
         }
         if (buffer.height > 1) {
             count.setY(2);
-            //noinspection IntegerDivisionInFloatingPointContext
-            p[1].setY(buffer.height / 2);
-            p[2].setY(buffer.height);
+            p[1].setY((double) (buffer.height / 2));
+            p[2].setY((double) buffer.height);
         } else {
             count.setY(1);
-            p[1].setY(buffer.height);
+            p[1].setY((double) buffer.height);
         }
         
         Approximation newApproximation = new Approximation();
-        for (int y = 0; y < count.getY(); y++) {
-            for (int x = 0; x < count.getX(); x++) {
+        for (int y = 0; y < count.getRawY(); y++) {
+            for (int x = 0; x < count.getRawX(); x++) {
                 Vector center = corner.plus(new Vector(screenWidth, screenWidth).times(
-                        new Vector((p[x].getX() + p[x + 1].getX()), (p[y].getY() + p[y + 1].getY())).scale(0.5 / buffer.width)));
+                        new Vector((p[x].getRawX() + p[x + 1].getRawX()), (p[y].getRawY() + p[y + 1].getRawY())).scale(0.5 / buffer.width)));
                 
-                double newScreenWidth = (screenWidth * (p[x + 1].getX() - p[x].getX())) / buffer.width;
+                double newScreenWidth = (screenWidth * (p[x + 1].getRawX() - p[x].getRawX())) / buffer.width;
                 newApproximation.initializeCubic(approximation, center, newScreenWidth, centreApproximation);
                 
                 subCalculate(newScreenWidth, adjustedHeight, newApproximation,
-                        buffer.subBuffer(new Vector(p[x].getX(), p[y].getY()), new Vector(p[x + 1].getX(), p[y + 1].getY())));
+                        buffer.subBuffer(new Vector(p[x].getRawX(), p[y].getRawY()), new Vector(p[x + 1].getRawX(), p[y + 1].getRawY())));
             }
         }
     }
@@ -1018,19 +1019,19 @@ public class Mandelbrot extends Drawing {
     private void createBuffer() {
         switch (sampleType) {
             case SUPER_SAMPLE_NONE:
-                buffer = new IndexBuffer2D((int) SCREEN_SIZE.getX(), (int) SCREEN_SIZE.getY());
+                buffer = new IndexBuffer2D(SCREEN_SIZE.getRawX(), SCREEN_SIZE.getRawY());
                 break;
             case SUPER_SAMPLE_2X:
-                buffer = new IndexBuffer2D((int) SCREEN_SIZE.getX() + 1, ((int) SCREEN_SIZE.getY() * 2) + 1);
+                buffer = new IndexBuffer2D(SCREEN_SIZE.getRawX() + 1, (SCREEN_SIZE.getRawY() * 2) + 1);
                 break;
             case SUPER_SAMPLE_4X:
-                buffer = new IndexBuffer2D((int) SCREEN_SIZE.getX() * 2, (int) SCREEN_SIZE.getY() * 2);
+                buffer = new IndexBuffer2D(SCREEN_SIZE.getRawX() * 2, SCREEN_SIZE.getRawY() * 2);
                 break;
             case SUPER_SAMPLE_4X_9:
-                buffer = new IndexBuffer2D(((int) SCREEN_SIZE.getX() * 2) + 1, ((int) SCREEN_SIZE.getY() * 2) + 1);
+                buffer = new IndexBuffer2D((SCREEN_SIZE.getRawX() * 2) + 1, (SCREEN_SIZE.getRawY() * 2) + 1);
                 break;
             case SUPER_SAMPLE_9X:
-                buffer = new IndexBuffer2D((int) SCREEN_SIZE.getX() * 3, (int) SCREEN_SIZE.getY() * 3);
+                buffer = new IndexBuffer2D(SCREEN_SIZE.getRawX() * 3, SCREEN_SIZE.getRawY() * 3);
                 break;
             default:
                 buffer = null;
@@ -1180,7 +1181,7 @@ public class Mandelbrot extends Drawing {
          * @return A sub buffer for the rectangular area specified.
          */
         public IndexBuffer2D subBuffer(Vector p1, Vector p2) {
-            return new IndexBuffer2D(buffer, (int) (p2.getX() - p1.getX()), (int) (p2.getY() - p1.getY()), stride, (int) ((p1.getY() * stride) + p1.getX() + offset));
+            return new IndexBuffer2D(buffer, (int) (p2.getRawX() - p1.getRawX()), (int) (p2.getRawY() - p1.getRawY()), stride, (int) ((p1.getRawY() * stride) + p1.getRawX() + offset));
         }
         
         /**
@@ -1339,7 +1340,7 @@ public class Mandelbrot extends Drawing {
         /**
          * The number of steps used when calculating the best reference point.
          */
-        private Vector steps;
+        private IntVector steps;
         
         /**
          * The starting points to use when calculating the best reference point.
@@ -1376,7 +1377,7 @@ public class Mandelbrot extends Drawing {
             Approximation centerCheckApproximation = null;
             
             Vector point = new Vector(0, 0);
-            Vector initialPoint = approximation.screenOffset.clone();
+            Vector initialPoint = approximation.screenOffset.cloned();
             Vector oldMaxPoint = new Vector(0, 0);
             
             double range = 2.0;
@@ -1405,7 +1406,7 @@ public class Mandelbrot extends Drawing {
                 }
                 point = (top.get(0).getValue()).total.scale(1.0 / (top.get(0).getValue()).count);
                 
-                if ((pass == 0) && ((Math.abs(point.getX()) > 0.3) || (Math.abs(point.getY()) > 0.3))) {
+                if ((pass == 0) && ((Math.abs(point.getRawX()) > 0.3) || (Math.abs(point.getRawY()) > 0.3))) {
                     centerCheckApproximation = new Approximation(approximation);
                 }
                 
@@ -1424,25 +1425,25 @@ public class Mandelbrot extends Drawing {
                     }
                     
                     if ((initial >= approximation.numIterationsN) || (initial == -1)) {
-                        point = (top.get(0).getValue()).nonAveraged.clone();
+                        point = (top.get(0).getValue()).nonAveraged.cloned();
                         approximation.reFillInCubic(point);
                     }
                     
                     if ((((top.get(0).getValue()).count > 10) || (countAboveAccuracyLimit > 10)) || skipZoomBodge || (approximation.numIterationsN < initial)) {
                         double delta = range * 0.025;
                         point = oldMaxPoint.plus(new Vector(
-                                delta * ((point.getX() > oldMaxPoint.getX()) ? 1 : -1),
-                                delta * ((point.getY() > oldMaxPoint.getY()) ? 1 : -1)));
+                                delta * ((point.getRawX() > oldMaxPoint.getRawX()) ? 1 : -1),
+                                delta * ((point.getRawY() > oldMaxPoint.getRawY()) ? 1 : -1)));
                         range *= 0.95;
                         skipZoomBodge = true;
                     }
                 } else {
                     int test;
-                    if (((Math.abs((top.get(0).getValue()).nonAveraged.getX() - approximation.screenOffset.getX()) > (range / 8)) ||
-                            (Math.abs((top.get(0).getValue()).nonAveraged.getY() - approximation.screenOffset.getY()) > (range / 8))) &&
+                    if (((Math.abs((top.get(0).getValue()).nonAveraged.getRawX() - approximation.screenOffset.getRawX()) > (range / 8)) ||
+                            (Math.abs((top.get(0).getValue()).nonAveraged.getRawY() - approximation.screenOffset.getRawY()) > (range / 8))) &&
                             ((top.get(0).getValue()).count >= 3)) {
                         if (-top.get(0).getKey() > (approximation.calculateIterations(approximation, new Vector(0.001, 0.001)) + 500)) {
-                            point = (top.get(0).getValue()).nonAveraged.clone();
+                            point = (top.get(0).getValue()).nonAveraged.cloned();
                             approximation.reFillInCubic(point);
                         }
                     }
@@ -1463,19 +1464,19 @@ public class Mandelbrot extends Drawing {
                 store = new TreeMap<>();
                 countAboveAccuracyLimit = 0;
                 
-                if ((Math.abs(oldMaxPoint.getX() - point.getX()) * 2) > range) {
-                    range = Math.abs(oldMaxPoint.getX() - point.getX()) * 2.1;
+                if ((Math.abs(oldMaxPoint.getRawX() - point.getRawX()) * 2) > range) {
+                    range = Math.abs(oldMaxPoint.getRawX() - point.getRawX()) * 2.1;
                 }
-                if ((Math.abs(oldMaxPoint.getY() - point.getY()) * 2) > range) {
-                    range = Math.abs(oldMaxPoint.getY() - point.getY()) * 2.1;
+                if ((Math.abs(oldMaxPoint.getRawY() - point.getRawY()) * 2) > range) {
+                    range = Math.abs(oldMaxPoint.getRawY() - point.getRawY()) * 2.1;
                 }
                 
-                oldMaxPoint = point.clone();
+                oldMaxPoint = point.cloned();
                 doAPass(point, range, 10);
             }
             
             if (centerCheckApproximation != null) {
-                if ((Math.abs(point.getX()) > 0.3) || (Math.abs(point.getY()) > 0.3)) {
+                if ((Math.abs(point.getRawX()) > 0.3) || (Math.abs(point.getRawY()) > 0.3)) {
                     point = new Vector(0, 0);
                     range = 0.6;
                     
@@ -1497,23 +1498,23 @@ public class Mandelbrot extends Drawing {
                         top.add(maxCount);
                         
                         if (((top.get(0).getValue()).count == 1) && ((top.get(1).getValue()).count == 1) &&
-                                ((Math.abs((top.get(0).getValue()).total.getX() - (top.get(1).getValue()).total.getX()) > (range / 13.5)) ||
-                                        (Math.abs((top.get(0).getValue()).total.getY() - (top.get(1).getValue()).total.getY()) > (range / 13.5))) &&
+                                ((Math.abs((top.get(0).getValue()).total.getRawX() - (top.get(1).getValue()).total.getRawX()) > (range / 13.5)) ||
+                                        (Math.abs((top.get(0).getValue()).total.getRawY() - (top.get(1).getValue()).total.getRawY()) > (range / 13.5))) &&
                                 ((top.get(2).getValue().count < 10) || (-top.get(2).getKey() < centerCheckApproximation.numIterationsN))) {
                             int maxIterations = -1;
-                            Vector maxPoint = new Vector(0, 0);
+                            IntVector maxPoint = new IntVector(0, 0);
                             
                             Vector repeater = initialPoint.minus(start.dividedBy(step));
-                            for (int y = 0; y < steps.getX() - 1; y++) {
-                                for (int x = 0; x < steps.getY() - 1; x++) {
+                            for (int y = 0; y < steps.getRawX() - 1; y++) {
+                                for (int x = 0; x < steps.getRawY() - 1; x++) {
                                     int i = data[y][x] + data[y][x + 1] + data[y + 1][x + 1] + data[y + 1][x];
                                     i -= Math.max(Math.max(data[y][x], data[y][x + 1]), Math.max(data[y + 1][x + 1], data[y + 1][x]));
                                     
-                                    if ((repeater.getX() >= x) && (repeater.getX() <= (x + 1)) && (repeater.getY() >= y) && (repeater.getY() <= (y + 1))) {
+                                    if ((repeater.getRawX() >= x) && (repeater.getRawX() <= (x + 1)) && (repeater.getRawY() >= y) && (repeater.getRawY() <= (y + 1))) {
                                         i -= 1000;
                                     }
                                     if (i > maxIterations) {
-                                        maxPoint = new Vector(x, y);
+                                        maxPoint = new IntVector(x, y);
                                         maxIterations = i;
                                     }
                                 }
@@ -1523,15 +1524,15 @@ public class Mandelbrot extends Drawing {
                             for (int i = 0; i <= 1; i++) {
                                 for (int j = 0; j <= 1; j++) {
                                     point = point.plus(start.plus(
-                                            step.times(new Vector(maxPoint.getX() + i, maxPoint.getY() + j)).scale(
-                                                    data[(int) maxPoint.getY() + j][(int) maxPoint.getX() + i] - store.lastKey())));
+                                            step.times(new Vector(maxPoint.getRawX() + i, maxPoint.getRawY() + j)).scale(
+                                                    data[(int) maxPoint.getRawY() + j][(int) maxPoint.getRawX() + i] - store.lastKey())));
                                 }
                             }
                             point = point.scale(1.0 / ((-4 * store.lastKey()) +
-                                    data[(int) maxPoint.getY()][(int) maxPoint.getX()] +
-                                    data[(int) maxPoint.getY()][(int) maxPoint.getX() + 1] +
-                                    data[(int) maxPoint.getY() + 1][(int) maxPoint.getX() + 1] +
-                                    data[(int) maxPoint.getY() + 1][(int) maxPoint.getX()]));
+                                    data[(int) maxPoint.getRawY()][(int) maxPoint.getRawX()] +
+                                    data[(int) maxPoint.getRawY()][(int) maxPoint.getRawX() + 1] +
+                                    data[(int) maxPoint.getRawY() + 1][(int) maxPoint.getRawX() + 1] +
+                                    data[(int) maxPoint.getRawY() + 1][(int) maxPoint.getRawX()]));
                             
                             range *= 0.5;
                             if (range <= 0.02) {
@@ -1579,7 +1580,7 @@ public class Mandelbrot extends Drawing {
                                 }
                                 
                                 if ((initial >= approximation.numIterationsN) || (initial == -1)) {
-                                    point = (top.get(0).getValue()).nonAveraged.clone();
+                                    point = (top.get(0).getValue()).nonAveraged.cloned();
                                     approximation.reFillInCubic(point);
                                 }
                             }
@@ -1613,14 +1614,14 @@ public class Mandelbrot extends Drawing {
         private void doAPass(Vector point, double dim, int numRows) {
             Vector dimension = new Vector(dim, dim);
             step = dimension.scale(1.0 / (numRows - 1));
-            steps = new Vector(numRows, numRows);
+            steps = new IntVector(numRows, numRows);
             start = point.minus(dimension.scale(0.5));
             Vector end = point.plus(dimension.plus(step).scale(0.5));
             
             int y = 0;
-            for (double q = start.getY(); q < end.getY(); q += step.getY()) {
+            for (double q = start.getRawY(); q < end.getRawY(); q += step.getRawY()) {
                 int x = 0;
-                for (double p = start.getX(); p < end.getX(); p += step.getX()) {
+                for (double p = start.getRawX(); p < end.getRawX(); p += step.getRawX()) {
                     Vector currentPoint = new Vector(p, q);
                     
                     int i = approximation.calculateIterations(approximation, currentPoint.minus(approximation.screenOffset));
@@ -1644,7 +1645,7 @@ public class Mandelbrot extends Drawing {
                     
                     double d = Vector2.squareSum(currentPoint);
                     if (d < entry.d) {
-                        entry.nonAveraged = currentPoint.clone();
+                        entry.nonAveraged = currentPoint.cloned();
                         entry.d = d;
                     }
                     
@@ -1786,28 +1787,28 @@ public class Mandelbrot extends Drawing {
             numIterationsN = clone.numIterationsN;
             numIterations = clone.numIterations;
             
-            screenOffsetFromCenter = clone.screenOffsetFromCenter.clone();
-            approximationOffsetFromCenter = clone.approximationOffsetFromCenter.clone();
+            screenOffsetFromCenter = clone.screenOffsetFromCenter.cloned();
+            approximationOffsetFromCenter = clone.approximationOffsetFromCenter.cloned();
             
-            coefficients[0] = clone.coefficients[0].clone();
-            coefficients[1] = clone.coefficients[1].clone();
-            coefficients[2] = clone.coefficients[2].clone();
+            coefficients[0] = clone.coefficients[0].cloned();
+            coefficients[1] = clone.coefficients[1].cloned();
+            coefficients[2] = clone.coefficients[2].cloned();
             
-            x0 = clone.x0.clone();
+            x0 = clone.x0.cloned();
             x = new Vector[iterationLimit - numIterationsN];
             distanceToEdge = new double[iterationLimit - numIterationsN];
             for (int i = 0; i < iterationLimit - numIterationsN; i++) {
                 if (clone.x[i] != null) {
-                    x[i] = clone.x[i].clone();
+                    x[i] = clone.x[i].cloned();
                 } else {
                     x[i] = new Vector(0, 0);
                 }
                 distanceToEdge[i] = clone.distanceToEdge[i];
             }
             
-            screenOffset = clone.screenOffset.clone();
+            screenOffset = clone.screenOffset.cloned();
             
-            fullPointAfterApproximation = clone.fullPointAfterApproximation.clone();
+            fullPointAfterApproximation = clone.fullPointAfterApproximation.cloned();
             fullPointAfterApproximation.setMathContext(Mandelbrot.mathContext);
             
             originalApproximation = null;
@@ -1828,19 +1829,19 @@ public class Mandelbrot extends Drawing {
          * @param approximation  The current approximation.
          */
         public void initializeCubic(Approximation parent, Vector referencePoint, double screenWidth, Approximation approximation) {
-            this.screenOffsetFromCenter = referencePoint.clone();
+            this.screenOffsetFromCenter = referencePoint.cloned();
             double accuracy = 0.00001 * Math.pow(2 / screenWidth, 2);
             
             Vector negateY = new Vector(1, -1);
             
             Vector[] screenDif = new Vector[3];
             screenDif[0] = referencePoint.minus(parent.screenOffsetFromCenter);
-            screenDif[1] = new Vector(Math.pow(screenDif[0].getX(), 2) - Math.pow(screenDif[0].getY(), 2), 2 * screenDif[0].getX() * screenDif[0].getY());
+            screenDif[1] = new Vector(Math.pow(screenDif[0].getRawX(), 2) - Math.pow(screenDif[0].getRawY(), 2), 2 * screenDif[0].getRawX() * screenDif[0].getRawY());
             screenDif[2] = new Vector(screenDif[0].dot(screenDif[1].times(negateY)), screenDif[0].dot(screenDif[1].reverse()));
             
             coefficients[0] = parent.coefficients[0].plus(Vector2.dotFlop(parent.coefficients[1], screenDif[0]).scale(2)).plus(Vector2.dotFlop(parent.coefficients[2], screenDif[1]).scale(3));
             coefficients[1] = parent.coefficients[1].plus(Vector2.dotFlop(parent.coefficients[2], screenDif[0]).scale(3));
-            coefficients[2] = parent.coefficients[2].clone();
+            coefficients[2] = parent.coefficients[2].cloned();
             
             approximationOffsetFromCenter =
                     Vector2.dotFlop(parent.coefficients[0], screenDif[0]).plus(
@@ -1852,9 +1853,9 @@ public class Mandelbrot extends Drawing {
             Vector delta = referencePoint.scale(Mandelbrot.actualWidth * Math.pow(10, -Mandelbrot.sizeExtraExponent));
             
             Vector[] tmpCoefficients = new Vector[3];
-            tmpCoefficients[0] = coefficients[0].clone();
-            tmpCoefficients[1] = coefficients[1].clone();
-            tmpCoefficients[2] = coefficients[2].clone();
+            tmpCoefficients[0] = coefficients[0].cloned();
+            tmpCoefficients[1] = coefficients[1].cloned();
+            tmpCoefficients[2] = coefficients[2].cloned();
             
             int extra = 0;
             int offset = parent.numIterationsN - approximation.numIterationsN;
@@ -1868,7 +1869,7 @@ public class Mandelbrot extends Drawing {
                 tmpCoefficients[0] = Vector2.dotFlop(localX, tmpCoefficients[0]).scale(2).plus(
                         new Vector(Mandelbrot.actualWidth * Math.pow(10, -Mandelbrot.sizeExtraExponent), 0));
                 tmpCoefficients[1] = Vector2.dotFlop(localX, tmpCoefficients[1]).scale(2).plus(
-                        new Vector(Vector2.squareDifference(coefficients[0]), 2 * coefficients[0].getX() * coefficients[0].getY()));
+                        new Vector(Vector2.squareDifference(coefficients[0]), 2 * coefficients[0].getRawX() * coefficients[0].getRawY()));
                 tmpCoefficients[2] = Vector2.dotFlop(localX, tmpCoefficients[2]).scale(2).plus(
                         Vector2.dotFlop(coefficients[0], coefficients[1]).scale(2));
                 
@@ -1876,18 +1877,18 @@ public class Mandelbrot extends Drawing {
                     break;
                 }
                 
-                double accuracyMunge = 1 / (Math.abs(tmpCoefficients[0].getX()) + Math.abs(tmpCoefficients[0].getY()));
+                double accuracyMunge = 1 / (Math.abs(tmpCoefficients[0].getRawX()) + Math.abs(tmpCoefficients[0].getRawY()));
                 if (Vector2.squareSum(tmpCoefficients[2].scale(accuracyMunge)) > (Math.pow(accuracy, 2) * Vector2.squareSum(tmpCoefficients[0].scale(accuracyMunge)))) {
                     break;
                 }
                 
-                coefficients[0] = tmpCoefficients[0].clone();
-                coefficients[1] = tmpCoefficients[1].clone();
-                coefficients[2] = tmpCoefficients[2].clone();
+                coefficients[0] = tmpCoefficients[0].cloned();
+                coefficients[1] = tmpCoefficients[1].cloned();
+                coefficients[2] = tmpCoefficients[2].cloned();
                 
                 approximationOffsetFromCenter =
                         Vector2.dotFlop(approximation.x[extra + offset], approximationOffsetFromCenter).scale(2).plus(
-                                new Vector(Vector2.squareDifference(approximationOffsetFromCenter), 2 * approximationOffsetFromCenter.getX() * approximationOffsetFromCenter.getY()).plus(
+                                new Vector(Vector2.squareDifference(approximationOffsetFromCenter), 2 * approximationOffsetFromCenter.getRawX() * approximationOffsetFromCenter.getRawY()).plus(
                                         delta));
                 numIterationsN = parent.numIterationsN + (++extra);
             }
@@ -1899,7 +1900,7 @@ public class Mandelbrot extends Drawing {
          * @param referencePoint The reference point of the parent.
          */
         public void fillInCubic(Vector referencePoint, int iterationLimit) {
-            this.screenOffset = referencePoint.clone();
+            this.screenOffset = referencePoint.cloned();
             this.iterationLimit = iterationLimit;
             
             coefficients[0] = new Vector(Mandelbrot.actualWidth, 0);
@@ -1915,9 +1916,9 @@ public class Mandelbrot extends Drawing {
             }
             c = c.plus(Mandelbrot.centre);
             
-            BigVector pFullCurrent = c.clone();
-            Vector pCurrent = new Vector2(c.getX().doubleValue(), c.getY().doubleValue());
-            x0 = pCurrent.clone();
+            BigVector pFullCurrent = c.cloned();
+            Vector pCurrent = new Vector2(c.getRawX().doubleValue(), c.getRawY().doubleValue());
+            x0 = pCurrent.cloned();
             
             double screenOffsetLimit = Math.pow((2 - x0.hypotenuse()), 2) * 0.99;
             double aspectRatio = ((double) Mandelbrot.buffer.width / Mandelbrot.buffer.height);
@@ -1933,10 +1934,10 @@ public class Mandelbrot extends Drawing {
             if (Vector2.squareSum(coefficients[0]) <= screenOffsetLimit) {
                 do {
                     tmpCoefficients[0] = Vector2.dotFlop(pCurrent, coefficients[0]).scale(2).plus(new Vector(width, 0));
-                    tmpCoefficients[1] = Vector2.dotFlop(pCurrent, coefficients[1]).scale(2).plus(new Vector(Vector2.squareDifference(coefficients[0]), 2 * coefficients[0].getX() * coefficients[0].getY()));
+                    tmpCoefficients[1] = Vector2.dotFlop(pCurrent, coefficients[1]).scale(2).plus(new Vector(Vector2.squareDifference(coefficients[0]), 2 * coefficients[0].getRawX() * coefficients[0].getRawY()));
                     tmpCoefficients[2] = Vector2.dotFlop(pCurrent, coefficients[2]).plus(Vector2.dotFlop(coefficients[0], coefficients[1])).scale(2);
                     
-                    double accuracyMungeRcp = (Math.abs(tmpCoefficients[0].getX()) + Math.abs(tmpCoefficients[0].getY()));
+                    double accuracyMungeRcp = (Math.abs(tmpCoefficients[0].getRawX()) + Math.abs(tmpCoefficients[0].getRawY()));
                     double accuracyMunge = 1 / accuracyMungeRcp;
                     
                     double tmpCoefficientASquared = Vector2.squareSum(tmpCoefficients[0].scale(accuracyMunge));
@@ -1968,17 +1969,17 @@ public class Mandelbrot extends Drawing {
                         }
                     }
                     
-                    coefficients[0] = tmpCoefficients[0].clone();
-                    coefficients[1] = tmpCoefficients[1].clone();
-                    coefficients[2] = tmpCoefficients[2].clone();
+                    coefficients[0] = tmpCoefficients[0].cloned();
+                    coefficients[1] = tmpCoefficients[1].cloned();
+                    coefficients[2] = tmpCoefficients[2].cloned();
                     
                     BigVector p2 = pFullCurrent.times(pFullCurrent);
-                    p2.setX(p2.getX().add(c.getX().subtract(p2.getY(), Mandelbrot.mathContext), Mandelbrot.mathContext));
-                    p2.setY(pFullCurrent.getX().multiply(pFullCurrent.getY(), Mandelbrot.mathContext));
-                    p2.setY(p2.getY().add(c.getY().add(p2.getY(), Mandelbrot.mathContext), Mandelbrot.mathContext));
+                    p2.setX(p2.getRawX().add(c.getRawX().subtract(p2.getRawY(), Mandelbrot.mathContext), Mandelbrot.mathContext));
+                    p2.setY(pFullCurrent.getRawX().multiply(pFullCurrent.getRawY(), Mandelbrot.mathContext));
+                    p2.setY(p2.getRawY().add(c.getRawY().add(p2.getRawY(), Mandelbrot.mathContext), Mandelbrot.mathContext));
                     
-                    pFullCurrent = p2.clone();
-                    pCurrent = new Vector(pFullCurrent.getX().doubleValue(), pFullCurrent.getY().doubleValue());
+                    pFullCurrent = p2.cloned();
+                    pCurrent = new Vector(pFullCurrent.getRawX().doubleValue(), pFullCurrent.getRawY().doubleValue());
                     
                     if (++count >= this.iterationLimit - 1) {
                         break;
@@ -1996,7 +1997,7 @@ public class Mandelbrot extends Drawing {
                     screen[0] = Vector2.dotFlop(coefficients[0], pCurrent.scale(-1)).scale(1.0 / Vector2.squareSum(coefficients[0]));
                     
                     for (int i = 0; i < 1000; i++) {
-                        screen[1] = new Vector2(Vector2.squareDifference(screen[0]), 2 * screen[0].getX() * screen[0].getY());
+                        screen[1] = new Vector2(Vector2.squareDifference(screen[0]), 2 * screen[0].getRawX() * screen[0].getRawY());
                         screen[2] = Vector2.dotFlop(screen[0], screen[1]);
                         
                         Vector f = Vector2.dotFlop(coefficients[0], screen[0]).plus(
@@ -2004,7 +2005,7 @@ public class Mandelbrot extends Drawing {
                                 Vector2.dotFlop(coefficients[2], screen[2])).plus(pCurrent);
                         double originalFSquared = Vector2.squareSum(f);
                         
-                        Vector num = f.clone();
+                        Vector num = f.cloned();
                         Vector den = coefficients[0].plus(
                                 Vector2.dotFlop(screen[0], coefficients[1]).scale(2)).plus(
                                 Vector2.dotFlop(screen[1], coefficients[2]).scale(3));
@@ -2015,7 +2016,7 @@ public class Mandelbrot extends Drawing {
                         do {
                             Vector[] tmpScreen = new Vector[3];
                             tmpScreen[0] = screen[0].minus(num).scale(Vector2.squareSum(den) * factor);
-                            tmpScreen[1] = new Vector2(Vector2.squareDifference(tmpScreen[0]), 2 * tmpScreen[0].getX() * tmpScreen[0].getY());
+                            tmpScreen[1] = new Vector2(Vector2.squareDifference(tmpScreen[0]), 2 * tmpScreen[0].getRawX() * tmpScreen[0].getRawY());
                             tmpScreen[2] = Vector2.dotFlop(tmpScreen[0], tmpScreen[1]);
                             
                             f = Vector2.dotFlop(coefficients[0], tmpScreen[0]).plus(
@@ -2023,17 +2024,17 @@ public class Mandelbrot extends Drawing {
                                     Vector2.dotFlop(coefficients[2], tmpScreen[2])).plus(pCurrent);
                             
                             if ((Vector2.squareSum(f) < originalFSquared) || (factor <= 0.000001f)) {
-                                currentScreen = tmpScreen[0].clone();
+                                currentScreen = tmpScreen[0].cloned();
                                 break;
                             }
                             factor *= 0.5;
                         } while (true);
                         
-                        screen[0] = currentScreen.clone();
+                        screen[0] = currentScreen.cloned();
                     }
                     
                     if (Vector2.squareSum(screen[0]) < 2) {
-                        fullPointAfterApproximation = pFullCurrent.clone();
+                        fullPointAfterApproximation = pFullCurrent.cloned();
                         x = new Vector[iterationLimit - count];
                         distanceToEdge = new double[iterationLimit - count];
                         
@@ -2043,18 +2044,18 @@ public class Mandelbrot extends Drawing {
                 }
             }
             
-            fullPointAfterApproximation = pFullCurrent.clone();
+            fullPointAfterApproximation = pFullCurrent.cloned();
             
             x = new Vector[iterationLimit - count];
             distanceToEdge = new double[iterationLimit - count];
             
             int i = 0;
-            x[i] = pCurrent.clone();
+            x[i] = pCurrent.cloned();
             distanceToEdge[i] = 2.0 - x[i].hypotenuse();
             distanceToEdge[i] = distanceToEdge[i] * Math.abs(distanceToEdge[i]);
             if (distanceToEdge[i] < 1e-7) {
                 BigVector pSquared = pFullCurrent.times(pFullCurrent);
-                BigDecimal distanceToEdge = BigDecimal.valueOf(4).subtract((pSquared.getX().add(pSquared.getY(), Mandelbrot.mathContext)), Mandelbrot.mathContext);
+                BigDecimal distanceToEdge = BigDecimal.valueOf(4).subtract((pSquared.getRawX().add(pSquared.getRawY(), Mandelbrot.mathContext)), Mandelbrot.mathContext);
                 double distance = (distanceToEdge.doubleValue() / 4) + (Math.pow(distanceToEdge.doubleValue(), 2) / 32);
                 this.distanceToEdge[i] = distance * Math.abs(distance);
             }
@@ -2063,22 +2064,22 @@ public class Mandelbrot extends Drawing {
                 i++;
                 
                 BigVector p2 = pFullCurrent.times(pFullCurrent);
-                p2.setX(p2.getX().add(c.getX().subtract(p2.getY(), Mandelbrot.mathContext), Mandelbrot.mathContext));
-                p2.setY(pFullCurrent.getX().multiply(pFullCurrent.getY(), Mandelbrot.mathContext));
-                p2.setY(p2.getY().add(c.getY().add(p2.getY(), Mandelbrot.mathContext), Mandelbrot.mathContext));
+                p2.setX(p2.getRawX().add(c.getRawX().subtract(p2.getRawY(), Mandelbrot.mathContext), Mandelbrot.mathContext));
+                p2.setY(pFullCurrent.getRawX().multiply(pFullCurrent.getRawY(), Mandelbrot.mathContext));
+                p2.setY(p2.getRawY().add(c.getRawY().add(p2.getRawY(), Mandelbrot.mathContext), Mandelbrot.mathContext));
                 
-                pFullCurrent = p2.clone();
+                pFullCurrent = p2.cloned();
                 
                 if (++count >= this.iterationLimit) {
                     break;
                 }
                 
-                x[i] = new Vector(pFullCurrent.getX().doubleValue(), pFullCurrent.getY().doubleValue());
+                x[i] = new Vector(pFullCurrent.getRawX().doubleValue(), pFullCurrent.getRawY().doubleValue());
                 distanceToEdge[i] = 2.00 - x[i].hypotenuse();
                 distanceToEdge[i] = distanceToEdge[i] * Math.abs(distanceToEdge[i]);
                 if (distanceToEdge[i] < 1e-7) {
                     BigVector pSquared = pFullCurrent.times(pFullCurrent);
-                    BigDecimal distanceToEdge = BigDecimal.valueOf(4).subtract((pSquared.getX().add(pSquared.getY(), Mandelbrot.mathContext)), Mandelbrot.mathContext);
+                    BigDecimal distanceToEdge = BigDecimal.valueOf(4).subtract((pSquared.getRawX().add(pSquared.getRawY(), Mandelbrot.mathContext)), Mandelbrot.mathContext);
                     double distance = (distanceToEdge.doubleValue() / 4) + (Math.pow(distanceToEdge.doubleValue(), 2) / 32);
                     this.distanceToEdge[i] = distance * Math.abs(distance);
                 }
@@ -2094,7 +2095,7 @@ public class Mandelbrot extends Drawing {
          * @param referencePoint The original reference point.
          */
         public void reFillInCubic(Vector referencePoint) {
-            screenOffset = referencePoint.clone();
+            screenOffset = referencePoint.cloned();
             
             Vector delta;
             if (originalApproximation != null) {
@@ -2110,8 +2111,8 @@ public class Mandelbrot extends Drawing {
             }
             
             Vector[] screenOffset = new Vector[3];
-            screenOffset[0] = referencePoint.clone();
-            screenOffset[1] = new Vector2(Vector2.squareDifference(screenOffset[0]), 2 * screenOffset[0].getX() * screenOffset[0].getY());
+            screenOffset[0] = referencePoint.cloned();
+            screenOffset[1] = new Vector2(Vector2.squareDifference(screenOffset[0]), 2 * screenOffset[0].getRawX() * screenOffset[0].getRawY());
             screenOffset[2] = Vector2.dotFlop(screenOffset[0], screenOffset[1]);
             
             coefficients[0] = originalApproximation.coefficients[0].plus(
@@ -2119,18 +2120,18 @@ public class Mandelbrot extends Drawing {
                     Vector2.dotFlop(originalApproximation.coefficients[2], screenOffset[1]).scale(3));
             coefficients[1] = originalApproximation.coefficients[1].plus(
                     Vector2.dotFlop(originalApproximation.coefficients[2], screenOffset[0]).scale(3));
-            coefficients[2] = originalApproximation.coefficients[2].clone();
+            coefficients[2] = originalApproximation.coefficients[2].cloned();
             
             approximationOffsetFromCenter = new Vector(0, 0);
             numIterationsN = originalApproximation.numIterationsN;
             
             int i = 0;
-            x[i] = new Vector(pFullCurrent.getX().doubleValue(), pFullCurrent.getY().doubleValue());
+            x[i] = new Vector(pFullCurrent.getRawX().doubleValue(), pFullCurrent.getRawY().doubleValue());
             distanceToEdge[i] = 2.0 - x[i].hypotenuse();
             distanceToEdge[i] = distanceToEdge[i] * Math.abs(distanceToEdge[i]);
             if (distanceToEdge[i] < 1e-7) {
                 BigVector pSquared = pFullCurrent.times(pFullCurrent);
-                BigDecimal distanceToEdge = BigDecimal.valueOf(4).subtract((pSquared.getX().add(pSquared.getY(), Mandelbrot.mathContext)), Mandelbrot.mathContext);
+                BigDecimal distanceToEdge = BigDecimal.valueOf(4).subtract((pSquared.getRawX().add(pSquared.getRawY(), Mandelbrot.mathContext)), Mandelbrot.mathContext);
                 double distance = (distanceToEdge.doubleValue() / 4) + (Math.pow(distanceToEdge.doubleValue(), 2) / 32);
                 this.distanceToEdge[i] = distance * Math.abs(distance);
             }
@@ -2141,29 +2142,29 @@ public class Mandelbrot extends Drawing {
             } else {
                 c = Mandelbrot.centre.plus(new BigVector(referencePoint.scale(Mandelbrot.actualWidth)));
             }
-            x0 = new Vector(c.getX().doubleValue(), c.getY().doubleValue());
+            x0 = new Vector(c.getRawX().doubleValue(), c.getRawY().doubleValue());
             
             int count = numIterationsN;
             do {
                 i++;
                 
                 BigVector p = pFullCurrent.times(pFullCurrent);
-                p.setX(p.getX().add(c.getX().subtract(p.getY(), Mandelbrot.mathContext), Mandelbrot.mathContext));
-                p.setY(pFullCurrent.getX().multiply(pFullCurrent.getY(), Mandelbrot.mathContext));
-                p.setY(p.getY().add(c.getY().add(p.getY(), Mandelbrot.mathContext), Mandelbrot.mathContext));
+                p.setX(p.getRawX().add(c.getRawX().subtract(p.getRawY(), Mandelbrot.mathContext), Mandelbrot.mathContext));
+                p.setY(pFullCurrent.getRawX().multiply(pFullCurrent.getRawY(), Mandelbrot.mathContext));
+                p.setY(p.getRawY().add(c.getRawY().add(p.getRawY(), Mandelbrot.mathContext), Mandelbrot.mathContext));
                 
-                pFullCurrent = p.clone();
+                pFullCurrent = p.cloned();
                 
                 if (++count >= this.iterationLimit) {
                     break;
                 }
                 
-                x[i] = new Vector(pFullCurrent.getX().doubleValue(), pFullCurrent.getY().doubleValue());
+                x[i] = new Vector(pFullCurrent.getRawX().doubleValue(), pFullCurrent.getRawY().doubleValue());
                 distanceToEdge[i] = 2.0 - x[i].hypotenuse();
                 distanceToEdge[i] *= Math.abs(distanceToEdge[i]);
                 if (distanceToEdge[i] < 1e-7) {
                     BigVector pSquared = pFullCurrent.times(pFullCurrent);
-                    BigDecimal distanceToEdge = BigDecimal.valueOf(4).subtract((pSquared.getX().add(pSquared.getY(), Mandelbrot.mathContext)), Mandelbrot.mathContext);
+                    BigDecimal distanceToEdge = BigDecimal.valueOf(4).subtract((pSquared.getRawX().add(pSquared.getRawY(), Mandelbrot.mathContext)), Mandelbrot.mathContext);
                     double distance = (distanceToEdge.doubleValue() / 4) + (Math.pow(distanceToEdge.doubleValue(), 2) / 32);
                     this.distanceToEdge[i] = distance * Math.abs(distance);
                 }
@@ -2181,8 +2182,8 @@ public class Mandelbrot extends Drawing {
          */
         public Vector calculateApproximation(Vector startDelta) {
             Vector[] delta = new Vector[3];
-            delta[0] = startDelta.clone();
-            delta[1] = new Vector2(Vector2.squareDifference(delta[0]), 2 * delta[0].getX() * delta[0].getY());
+            delta[0] = startDelta.cloned();
+            delta[1] = new Vector2(Vector2.squareDifference(delta[0]), 2 * delta[0].getRawX() * delta[0].getRawY());
             delta[2] = Vector2.dotFlop(delta[0], delta[1]);
             
             return Vector2.dotFlop(coefficients[0], delta[0]).plus(
@@ -2213,7 +2214,7 @@ public class Mandelbrot extends Drawing {
                     break;
                 }
                 
-                Vector currentX = approximation.x[extra].clone();
+                Vector currentX = approximation.x[extra].cloned();
                 
                 if (dxSquared > approximation.distanceToEdge[extra]) {
                     if (dxSquared > 1E-10) {
@@ -2226,7 +2227,7 @@ public class Mandelbrot extends Drawing {
                 }
                 
                 dx = Vector2.dotFlop(currentX, dx).scale(2).plus(delta).plus(
-                        new Vector2(Vector2.squareDifference(dx), 2 * dx.getX() * dx.getY()));
+                        new Vector2(Vector2.squareDifference(dx), 2 * dx.getRawX() * dx.getRawY()));
                 extra++;
             }
             dx = dx.plus(approximation.x[extra]);
@@ -2235,8 +2236,8 @@ public class Mandelbrot extends Drawing {
             double dxX, dxY;
             int count = approximation.numIterationsN + extra;
             while (Vector2.squareSum(dx) < 4) {
-                dxX = Vector2.squareDifference(dx) + c.getX();
-                dxY = 2 * dx.getX() * dx.getY() + c.getY();
+                dxX = Vector2.squareDifference(dx) + c.getRawX();
+                dxY = 2 * dx.getRawX() * dx.getRawY() + c.getRawY();
                 dx.setX(dxX);
                 dx.setY(dxY);
                 if (++count >= approximation.iterationLimit) {
@@ -2276,32 +2277,32 @@ public class Mandelbrot extends Drawing {
         /**
          * The rate of decay of colors in the palette.
          */
-        private Vector decay;
+        private IntVector decay;
         
         /**
          * The starts of the bands used to calculate the colors in the palette.
          */
-        private Vector bandStarts;
+        private IntVector bandStarts;
         
         /**
          * The widths of the bands used to calculate the colors in the palette.
          */
-        private Vector bandWidths;
+        private IntVector bandWidths;
         
         /**
          * The periods of the bands used to calculate the colors in the palette.
          */
-        private Vector bandPeriods;
+        private IntVector bandPeriods;
         
         /**
          * The color increment values of the bands used to calculate the colors in the palette.
          */
-        private Vector[] bandIncrements;
+        private IntVector[] bandIncrements;
         
         /**
          * The color scale values of the bands used to calculate the colors in the palette.
          */
-        private Vector[] bandScales;
+        private IntVector[] bandScales;
         
         
         //Constructors
@@ -2317,27 +2318,27 @@ public class Mandelbrot extends Drawing {
             division[1] = new Vector(0.0274356756F, 0.0224356756F);
             division[2] = new Vector(0.0039432465F, 0.0079432465F);
             
-            decay = new Vector(5000, 20000, 10000);
+            decay = new IntVector(5000, 20000, 10000);
             
-            bandStarts = new Vector(5000, 3000, 7000, 8500, 0, 0);
-            bandWidths = new Vector(256, 256, 512, 256, 0, 0);
-            bandPeriods = new Vector(5000, 4444, 7777, 9532, 0, 0);
+            bandStarts = new IntVector(5000, 3000, 7000, 8500, 0, 0);
+            bandWidths = new IntVector(256, 256, 512, 256, 0, 0);
+            bandPeriods = new IntVector(5000, 4444, 7777, 9532, 0, 0);
             
-            bandIncrements = new Vector[NUM_BANDS];
-            bandIncrements[0] = new Vector(0, 0, 0);
-            bandIncrements[1] = new Vector(28, 0, 0);
-            bandIncrements[2] = new Vector(0, 0, 0);
-            bandIncrements[3] = new Vector(0, 0, 0);
-            bandIncrements[4] = new Vector(0, 0, 0);
-            bandIncrements[5] = new Vector(0, 0, 0);
+            bandIncrements = new IntVector[NUM_BANDS];
+            bandIncrements[0] = new IntVector(0, 0, 0);
+            bandIncrements[1] = new IntVector(28, 0, 0);
+            bandIncrements[2] = new IntVector(0, 0, 0);
+            bandIncrements[3] = new IntVector(0, 0, 0);
+            bandIncrements[4] = new IntVector(0, 0, 0);
+            bandIncrements[5] = new IntVector(0, 0, 0);
             
-            bandScales = new Vector[NUM_BANDS];
-            bandScales[0] = new Vector(208, 255, 255);
-            bandScales[1] = new Vector(255, 191, 191);
-            bandScales[2] = new Vector(255, 255, 224);
-            bandScales[3] = new Vector(221, 221, 255);
-            bandScales[4] = new Vector(255, 255, 255);
-            bandScales[5] = new Vector(255, 255, 255);
+            bandScales = new IntVector[NUM_BANDS];
+            bandScales[0] = new IntVector(208, 255, 255);
+            bandScales[1] = new IntVector(255, 191, 191);
+            bandScales[2] = new IntVector(255, 255, 224);
+            bandScales[3] = new IntVector(221, 221, 255);
+            bandScales[4] = new IntVector(255, 255, 255);
+            bandScales[5] = new IntVector(255, 255, 255);
         }
         
         
@@ -2359,27 +2360,27 @@ public class Mandelbrot extends Drawing {
                 return palette[index];
             }
             
-            int r = (int) (256 * (index * (division[0].getX() + (1 - Math.exp(-index / decay.getX())) * (division[0].getY() - division[0].getX()))));
-            int g = (int) (256 * (index * (division[1].getX() + (1 - Math.exp(-index / decay.getY())) * (division[1].getY() - division[1].getX()))));
-            int b = (int) (256 * (index * (division[2].getX() + (1 - Math.exp(-index / decay.getZ())) * (division[2].getY() - division[2].getX()))));
+            int r = (int) (256 * (index * (division[0].getRawX() + (1 - Math.exp(-index / (double) decay.getRawX())) * (division[0].getRawY() - division[0].getRawX()))));
+            int g = (int) (256 * (index * (division[1].getRawX() + (1 - Math.exp(-index / (double) decay.getRawY())) * (division[1].getRawY() - division[1].getRawX()))));
+            int b = (int) (256 * (index * (division[2].getRawX() + (1 - Math.exp(-index / (double) decay.getRawZ())) * (division[2].getRawY() - division[2].getRawX()))));
             
-            Vector color = new Vector(r & 255, g & 255, b & 255);
+            IntVector color = new IntVector(r & 255, g & 255, b & 255);
             for (int i = 0; i < NUM_BANDS; i++) {
-                if ((int) bandWidths.get(i) == 0) {
+                if ((int) bandWidths.getRaw(i) == 0) {
                     continue;
                 }
                 
-                int c = index - (int) bandStarts.get(i);
-                if (bandPeriods.get(i) != 0) {
-                    c %= bandPeriods.get(i);
+                int c = index - (int) bandStarts.getRaw(i);
+                if (bandPeriods.getRaw(i) != 0) {
+                    c %= bandPeriods.getRaw(i);
                 }
                 
-                if ((c > 0) && (c < bandWidths.get(i))) {
+                if ((c > 0) && (c < bandWidths.getRaw(i))) {
                     color = color.times(bandScales[i]).plus(bandIncrements[i]);
                 }
             }
             
-            palette[index] = ((int) color.getX() << 16) + ((int) color.getY() << 8) + (int) color.getZ();
+            palette[index] = ((int) color.getRawX() << 16) + ((int) color.getRawY() << 8) + (int) color.getRawZ();
             return palette[index];
         }
         

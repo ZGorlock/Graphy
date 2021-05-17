@@ -8,16 +8,16 @@ package graphy.object.complex.pane;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import commons.graphics.DrawUtility;
 import commons.graphics.ImageTransformationUtility;
 import commons.math.CoordinateUtility;
-import commons.math.vector.Vector;
+import commons.math.component.vector.Vector;
 import graphy.camera.Camera;
 import graphy.main.Environment;
 import graphy.object.base.AbstractObject;
@@ -141,18 +141,13 @@ public class MirrorPane extends Pane {
         Camera.projectVectorsToCamera(this.perspective, bounds);
         Camera.collapseVectorsToViewport(this.perspective, bounds);
         Camera.scaleVectorsToScreen(this.perspective, bounds);
-        Polygon view = new Polygon(
-                bounds.stream().map(e -> (int) e.getX()).mapToInt(Integer::valueOf).toArray(),
-                bounds.stream().map(e -> (int) e.getY()).mapToInt(Integer::valueOf).toArray(),
-                4
-        );
         
         Vector screenSize = Camera.getScreenSize(this.perspective);
-        BufferedImage reflection = new BufferedImage((int) Math.max(screenSize.getX(), 1), (int) Math.max(screenSize.getY(), 1), BufferedImage.TYPE_INT_RGB);
+        BufferedImage reflection = new BufferedImage((int) Math.max(screenSize.getRawX(), 1), (int) Math.max(screenSize.getRawY(), 1), BufferedImage.TYPE_INT_RGB);
         Graphics2D g2Reflection = reflection.createGraphics();
-        g2Reflection.setClip(view);
+        DrawUtility.setClip(g2Reflection, bounds);
         camera.render(g2Reflection);
-        g2Reflection.dispose();
+        DrawUtility.dispose(g2Reflection);
         
         if (!preparedForPerspective(this.parentPerspective)) {
             prePrepare(this.parentPerspective);
@@ -162,16 +157,11 @@ public class MirrorPane extends Pane {
         Camera.projectVectorsToCamera(this.parentPerspective, parentBounds);
         Camera.collapseVectorsToViewport(this.parentPerspective, parentBounds);
         Camera.scaleVectorsToScreen(this.parentPerspective, parentBounds);
-        Polygon parentView = new Polygon(
-                parentBounds.stream().map(e -> (int) e.getX()).mapToInt(Integer::valueOf).toArray(),
-                parentBounds.stream().map(e -> (int) e.getY()).mapToInt(Integer::valueOf).toArray(),
-                4
-        );
         
-        Shape saveClip = g2.getClip();
-        g2.setClip(parentView);
+        Shape saveClip = DrawUtility.getClip(g2);
+        DrawUtility.setClip(g2, parentBounds);
         ImageTransformationUtility.transformImage(reflection, bounds, g2, Environment.screenWidth, Environment.screenHeight, parentBounds);
-        g2.setClip(saveClip);
+        DrawUtility.setClip(g2, saveClip);
     }
     
     

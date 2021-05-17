@@ -19,7 +19,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.imageio.ImageIO;
 import javax.swing.SwingUtilities;
 
-import commons.math.vector.Vector;
+import commons.math.component.vector.IntVector;
+import commons.math.component.vector.Vector;
 import graphy.main.Environment2D;
 import graphy.object.base.Drawing;
 import graphy.object.base.polygon.Rectangle;
@@ -72,7 +73,7 @@ public class MandelbrotOld extends Drawing {
     /**
      * The offset of the drawing.
      */
-    public final Vector offset = new Vector(0, 0);
+    public final IntVector offset = new IntVector(0, 0);
     
     /**
      * The mathematical bounds of the Mandelbrot.
@@ -206,8 +207,8 @@ public class MandelbrotOld extends Drawing {
     @Override
     public void run() {
         this.dimension = Math.max(Environment2D.screenWidth, Environment2D.screenHeight);
-        this.offset.setX((dimension > Environment2D.screenWidth) ? (Environment2D.screenWidth - dimension) / 2.0 : 0);
-        this.offset.setY((dimension > Environment2D.screenHeight) ? (Environment2D.screenHeight - dimension) / 2.0 : 0);
+        this.offset.setX((dimension > Environment2D.screenWidth) ? (Environment2D.screenWidth - dimension) / 2 : 0);
+        this.offset.setY((dimension > Environment2D.screenHeight) ? (Environment2D.screenHeight - dimension) / 2 : 0);
         
         if (slowZoomEnabled) {
             zoomEnabled = false;
@@ -246,13 +247,13 @@ public class MandelbrotOld extends Drawing {
         System.out.println("Rendering");
         
         for (int row = 0; row < dimension; row++) {
-            int trueRow = row + (int) offset.getY();
+            int trueRow = row + offset.getRawY();
             if ((trueRow < 0) || (trueRow >= Environment2D.screenHeight)) {
                 continue;
             }
             
             for (int col = 0; col < dimension; col++) {
-                int trueCol = col + (int) offset.getX();
+                int trueCol = col + offset.getRawX();
                 if ((trueCol < 0) || (trueCol >= Environment2D.screenWidth)) {
                     continue;
                 }
@@ -263,8 +264,8 @@ public class MandelbrotOld extends Drawing {
                 double y = 0;
                 int iteration = 0;
                 while ((((x * x) + (y * y)) < 4) && (iteration < MAX_ITERATIONS)) {
-                    double xNew = ((x * x) - (y * y)) + coordinate.getX();
-                    y = (2 * x * y) + coordinate.getY();
+                    double xNew = ((x * x) - (y * y)) + coordinate.getRawX();
+                    y = (2 * x * y) + coordinate.getRawY();
                     x = xNew;
                     iteration++;
                 }
@@ -322,10 +323,10 @@ public class MandelbrotOld extends Drawing {
         double newWidth = bounds.getP1().distance(bounds.getP2()) * zoom;
         double newHeight = bounds.getP1().distance(bounds.getP4()) * zoom;
         
-        bounds.setP1(new Vector(bounds.getCenter().getX() - (newWidth / 2.0), bounds.getCenter().getY() + (newHeight / 2.0)));
-        bounds.setP2(new Vector(bounds.getCenter().getX() + (newWidth / 2.0), bounds.getCenter().getY() + (newHeight / 2.0)));
-        bounds.setP3(new Vector(bounds.getCenter().getX() + (newWidth / 2.0), bounds.getCenter().getY() - (newHeight / 2.0)));
-        bounds.setP4(new Vector(bounds.getCenter().getX() - (newWidth / 2.0), bounds.getCenter().getY() - (newHeight / 2.0)));
+        bounds.setP1(new Vector(bounds.getCenter().getRawX() - (newWidth / 2.0), bounds.getCenter().getRawY() + (newHeight / 2.0)));
+        bounds.setP2(new Vector(bounds.getCenter().getRawX() + (newWidth / 2.0), bounds.getCenter().getRawY() + (newHeight / 2.0)));
+        bounds.setP3(new Vector(bounds.getCenter().getRawX() + (newWidth / 2.0), bounds.getCenter().getRawY() - (newHeight / 2.0)));
+        bounds.setP4(new Vector(bounds.getCenter().getRawX() - (newWidth / 2.0), bounds.getCenter().getRawY() - (newHeight / 2.0)));
         
         environment.run();
     }
@@ -347,8 +348,8 @@ public class MandelbrotOld extends Drawing {
      */
     public Vector screenToMandelbrot(Vector point) {
         return new Vector(
-                mapValue(point.getX(), 0, dimension, bounds.getP1().getX(), bounds.getP2().getX()),
-                mapValue(point.getY(), 0, dimension, bounds.getP1().getY(), bounds.getP4().getY())
+                mapValue(point.getRawX(), 0, dimension, bounds.getP1().getRawX(), bounds.getP2().getRawX()),
+                mapValue(point.getRawY(), 0, dimension, bounds.getP1().getRawY(), bounds.getP4().getRawY())
         );
     }
     
@@ -360,8 +361,8 @@ public class MandelbrotOld extends Drawing {
      */
     public Vector clickToMandelbrot(Vector point) {
         return new Vector(
-                mapValue(point.getX(), 0, Environment2D.screenWidth, bounds.getP1().getX(), bounds.getP2().getX()),
-                mapValue(point.getY(), 0, Environment2D.screenHeight, bounds.getP1().getY(), bounds.getP4().getY())
+                mapValue(point.getRawX(), 0, Environment2D.screenWidth, bounds.getP1().getRawX(), bounds.getP2().getRawX()),
+                mapValue(point.getRawY(), 0, Environment2D.screenHeight, bounds.getP1().getRawY(), bounds.getP4().getRawY())
         );
     }
     
@@ -373,8 +374,8 @@ public class MandelbrotOld extends Drawing {
      */
     public Vector mandelbrotToScreen(Vector point) {
         return new Vector(
-                mapValue(point.getX(), bounds.getP1().getX(), bounds.getP2().getX(), 0, dimension),
-                mapValue(point.getY(), bounds.getP1().getY(), bounds.getP4().getY(), 0, dimension)
+                mapValue(point.getRawX(), bounds.getP1().getRawX(), bounds.getP2().getRawX(), 0, dimension),
+                mapValue(point.getRawY(), bounds.getP1().getRawY(), bounds.getP4().getRawY(), 0, dimension)
         );
     }
     

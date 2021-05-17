@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import commons.math.vector.Vector;
+import commons.graphics.DrawUtility;
+import commons.math.component.vector.Vector;
 import graphy.math.vector.JustificationUtil;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.BaseObject;
@@ -60,7 +61,7 @@ public class Polygon extends BaseObject {
         
         perspectivePrepared.clear();
         for (Vector vertex : vertices) {
-            perspectivePrepared.add(JustificationUtil.justify(vertex.clone()));
+            perspectivePrepared.add(JustificationUtil.justify(vertex.cloned()));
         }
         
         performRotationTransformation(perspectivePrepared);
@@ -77,11 +78,11 @@ public class Polygon extends BaseObject {
      */
     @Override
     public void render(Graphics2D g2, UUID perspective) {
-        g2.setColor(getColor());
+        DrawUtility.setColor(g2, getColor());
         switch (displayMode) {
             case VERTEX:
                 for (Vector v : prepared.get(perspective)) {
-                    g2.drawRect((int) v.getX(), (int) v.getY(), 1, 1);
+                    DrawUtility.drawPoint(g2, v);
                 }
                 break;
             
@@ -91,9 +92,9 @@ public class Polygon extends BaseObject {
                 }
                 
                 for (int i = 1; i < numVertices; i++) {
-                    g2.drawLine((int) prepared.get(perspective).get(i - 1).getX(), (int) prepared.get(perspective).get(i - 1).getY(), (int) prepared.get(perspective).get(i).getX(), (int) prepared.get(perspective).get(i).getY());
+                    g2.drawLine((int) prepared.get(perspective).get(i - 1).getRawX().intValue(), (int) prepared.get(perspective).get(i - 1).getRawY().intValue(), (int) prepared.get(perspective).get(i).getRawX().intValue(), (int) prepared.get(perspective).get(i).getRawY().intValue());
                 }
-                g2.drawLine((int) prepared.get(perspective).get(numVertices - 1).getX(), (int) prepared.get(perspective).get(numVertices - 1).getY(), (int) prepared.get(perspective).get(0).getX(), (int) prepared.get(perspective).get(0).getY());
+                g2.drawLine((int) prepared.get(perspective).get(numVertices - 1).getRawX().intValue(), (int) prepared.get(perspective).get(numVertices - 1).getRawY().intValue(), (int) prepared.get(perspective).get(0).getRawX().intValue(), (int) prepared.get(perspective).get(0).getRawY().intValue());
                 break;
             
             case FACE:
@@ -101,19 +102,7 @@ public class Polygon extends BaseObject {
                     break;
                 }
                 
-                int[] xPoints = new int[numVertices];
-                int[] yPoints = new int[numVertices];
-                for (int i = 0; i < numVertices; i++) {
-                    xPoints[i] = (int) prepared.get(perspective).get(i).getX();
-                    yPoints[i] = (int) prepared.get(perspective).get(i).getY();
-                }
-                
-                java.awt.Polygon face = new java.awt.Polygon(
-                        xPoints,
-                        yPoints,
-                        numVertices
-                );
-                g2.fillPolygon(face);
+                DrawUtility.fillPolygon(g2, prepared.get(perspective));
                 break;
         }
     }
@@ -131,7 +120,7 @@ public class Polygon extends BaseObject {
         if (n < 1 || n > numVertices) {
             return new Vector(0, 0, 0);
         }
-        return vertices[n - 1].clone();
+        return vertices[n - 1].cloned();
     }
     
     

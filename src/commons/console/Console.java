@@ -94,12 +94,12 @@ public final class Console {
         /**
          * The code of the Console Effect.
          */
-        private int code;
+        private final int code;
         
         /**
          * The key of the Console Effect.
          */
-        private String key;
+        private final String key;
         
         
         //Constructors
@@ -143,7 +143,7 @@ public final class Console {
          *
          * @param string The string to apply the effect to.
          * @return The string with the Console Effect applied.
-         * @see #stringEffect(String, commons.console.Console.ConsoleEffect)
+         * @see #stringEffect(String, ConsoleEffect)
          */
         public String apply(String string) {
             return stringEffect(string, this);

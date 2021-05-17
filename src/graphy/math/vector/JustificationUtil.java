@@ -8,8 +8,8 @@ package graphy.math.vector;
 
 import java.math.BigDecimal;
 
-import commons.math.vector.BigVector;
-import commons.math.vector.Vector;
+import commons.math.component.vector.BigVector;
+import commons.math.component.vector.Vector;
 
 /**
  * Handles the justification of Vectors.
@@ -38,7 +38,7 @@ public final class JustificationUtil {
      * @return The Vector used for justification.
      */
     public static Vector getJustificationVector() {
-        return JUSTIFICATION_VECTOR.clone();
+        return JUSTIFICATION_VECTOR.cloned();
     }
     
     /**
@@ -47,7 +47,7 @@ public final class JustificationUtil {
      * @return The Big Vector used for justification.
      */
     public static BigVector getBigJustificationVector() {
-        return BIG_JUSTIFICATION_VECTOR.clone();
+        return BIG_JUSTIFICATION_VECTOR.cloned();
     }
     
     
@@ -59,7 +59,7 @@ public final class JustificationUtil {
      * @param justificationVector The Vector to be used for justification.
      */
     public static void setJustificationVector(Vector justificationVector) {
-        JUSTIFICATION_VECTOR = justificationVector.clone();
+        JUSTIFICATION_VECTOR = justificationVector.cloned();
     }
     
     /**
@@ -68,7 +68,7 @@ public final class JustificationUtil {
      * @param justificationVector The  BigVector to be used for justification.
      */
     public static void setBigJustificationVector(BigVector justificationVector) {
-        BIG_JUSTIFICATION_VECTOR = justificationVector.clone();
+        BIG_JUSTIFICATION_VECTOR = justificationVector.cloned();
     }
     
     

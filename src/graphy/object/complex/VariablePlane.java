@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import commons.math.vector.Vector;
+import commons.math.component.vector.Vector;
 import graphy.main.Environment;
 import graphy.math.vector.UniqueVectorSet;
 import graphy.object.base.AbstractObject;
@@ -134,10 +134,10 @@ public class VariablePlane extends Object {
         UniqueVectorSet uniqueVectorSet = new UniqueVectorSet();
         Map<Vector, Double> vsm = new HashMap<>();
         Map<Vector, Double> vsmi = new HashMap<>();
-        for (double x = p1.getX(); x <= p2.getX(); x += density) {
-            for (double y = p1.getY(); y <= p2.getY(); y += density) {
+        for (double x = p1.getRawX(); x <= p2.getRawX(); x += density) {
+            for (double y = p1.getRawY(); y <= p2.getRawY(); y += density) {
                 for (double n = -density; n <= density; n += density * 2) {
-                    double z = p1.getZ() + ((x / (p2.getX() - p1.getX())) * (p2.getZ() - p1.getZ()));
+                    double z = p1.getRawZ() + ((x / (p2.getRawX() - p1.getRawX())) * (p2.getRawZ() - p1.getRawZ()));
                     
                     List<Vector> vt = new ArrayList<>();
                     vt.add(new Vector(x, y, z));
@@ -157,14 +157,14 @@ public class VariablePlane extends Object {
             for (Vector v : vs) {
                 if (vsm.containsKey(v)) {
                     double m = vsm.get(v);
-                    v.setZ(v.getZ() + m);
+                    v.setZ(v.getRawZ() + m);
                     
-                    if (Math.abs(v.getZ() - vsmi.get(v)) >= variabilityRange) {
+                    if (Math.abs(v.getRawZ() - vsmi.get(v)) >= variabilityRange) {
                         m = -m;
                         vsm.replace(v, m);
                     }
                 } else {
-                    vsmi.put(v, v.getZ());
+                    vsmi.put(v, v.getRawZ());
                     vsm.put(v, (Math.random() - .5) / 400 * speed);
                 }
             }

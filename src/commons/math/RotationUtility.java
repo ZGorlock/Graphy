@@ -7,10 +7,9 @@
 
 package commons.math;
 
-import commons.math.matrix.Matrix3;
-import commons.math.matrix.Matrix4;
-import commons.math.vector.Vector;
-import graphy.math.vector.JustificationUtil;
+import commons.math.component.matrix.Matrix;
+import commons.math.component.matrix.Matrix3;
+import commons.math.component.vector.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,22 +37,22 @@ public final class RotationUtility {
      * @return The rotation transformation matrix.
      */
     public static Matrix3 getRotationMatrix(double roll, double pitch, double yaw) {
-        Matrix3 rollRotation = new Matrix3(new double[] {
+        Matrix rollRotation = new Matrix3(
                 1, 0, 0,
                 0, Math.cos(roll), -Math.sin(roll),
                 0, Math.sin(roll), Math.cos(roll)
-        });
-        Matrix3 pitchRotation = new Matrix3(new double[] {
+        );
+        Matrix pitchRotation = new Matrix3(
                 Math.cos(pitch), 0, Math.sin(pitch),
                 0, 1, 0,
                 -Math.sin(pitch), 0, Math.cos(pitch)
-        });
-        Matrix3 yawRotation = new Matrix3(new double[] {
+        );
+        Matrix yawRotation = new Matrix3(
                 Math.cos(yaw), -Math.sin(yaw), 0,
                 Math.sin(yaw), Math.cos(yaw), 0,
                 0, 0, 1
-        });
-        return rollRotation.multiply(pitchRotation).multiply(yawRotation);
+        );
+        return (Matrix3) rollRotation.times(pitchRotation).times(yawRotation);
     }
     
     /**
@@ -65,29 +64,7 @@ public final class RotationUtility {
      * @return The rotated Vector.
      */
     public static Vector performRotation(Vector vector, Matrix3 rotationMatrix, Vector center) {
-        Vector justifiedCenter = JustificationUtil.justify(center);
-        
-        Matrix4 translationMatrix = new Matrix4(new double[] {
-                1, 0, 0, -justifiedCenter.getX(),
-                0, 1, 0, -justifiedCenter.getY(),
-                0, 0, 1, -justifiedCenter.getZ(),
-                0, 0, 0, 1
-        });
-        Vector result = new Vector(vector, 1);
-        result = translationMatrix.multiply(result);
-        
-        Vector v = rotationMatrix.transform(new Vector(result.getX(), result.getY(), result.getZ()));
-        
-        Matrix4 untranslationMatrix = new Matrix4(new double[] {
-                1, 0, 0, justifiedCenter.getX(),
-                0, 1, 0, justifiedCenter.getY(),
-                0, 0, 1, justifiedCenter.getZ(),
-                0, 0, 0, 1
-        });
-        result = new Vector(v, 1);
-        result = untranslationMatrix.multiply(result);
-        
-        return new Vector(result.getX(), result.getY(), result.getZ());
+        return rotationMatrix.transform(vector.minus(center)).plus(center);
     }
     
 }

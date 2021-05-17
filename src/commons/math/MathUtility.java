@@ -7,6 +7,9 @@
 
 package commons.math;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,6 +79,76 @@ public class MathUtility {
      */
     public static int dice(int sides) {
         return dice(sides, 1);
+    }
+    
+    /**
+     * Determines if a number is a perfect square or not.
+     *
+     * @param value The number.
+     * @return Whether the number is a perfect square or not.
+     */
+    public static boolean isSquare(long value) {
+        if (value < 0) {
+            return false;
+        }
+        
+        double sqrt = Math.sqrt(value);
+        return sqrt - Math.floor(sqrt) == 0;
+    }
+    
+    /**
+     * Determines if a number is prime or not.
+     *
+     * @param value The number.
+     * @return Whether the number is prime or not.
+     */
+    public static boolean isPrime(long value) {
+        if (value < 2) {
+            return false;
+        }
+        
+        for (long i = 2; i <= value / 2; i++) {
+            if (value % i == 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * Rounds a decimal number with a certain precision.
+     *
+     * @param value     The number.
+     * @param precision The maximum number of decimal places of the result.
+     * @return The rounded number.
+     */
+    public static double roundWithPrecision(double value, int precision) {
+        double inversePrecision = Math.pow(10.0, precision);
+        return (double) Math.round(value * inversePrecision) / inversePrecision;
+    }
+    
+    /**
+     * Rounds a Big Decimal number with a certain precision.
+     *
+     * @param value        The number.
+     * @param precision    The maximum number of decimal places of the result.
+     * @param roundingMode The rounding mode to use when rounding the result.
+     * @return The rounded number.
+     */
+    public static BigDecimal roundWithPrecision(BigDecimal value, int precision, RoundingMode roundingMode) {
+        return new BigDecimal(value.setScale(precision, roundingMode).stripTrailingZeros().toPlainString());
+    }
+    
+    /**
+     * Rounds a Big Decimal number with a certain precision.
+     *
+     * @param value     The number.
+     * @param precision The maximum number of decimal places of the result.
+     * @return The rounded number.
+     * @see #roundWithPrecision(BigDecimal, int, RoundingMode)
+     */
+    public static BigDecimal roundWithPrecision(BigDecimal value, int precision) {
+        return roundWithPrecision(value, precision, RoundingMode.HALF_UP);
     }
     
     /**

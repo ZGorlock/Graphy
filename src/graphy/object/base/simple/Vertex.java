@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import commons.math.vector.Vector;
+import commons.graphics.DrawUtility;
+import commons.math.component.vector.Vector;
 import graphy.math.vector.JustificationUtil;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.BaseObject;
@@ -80,7 +81,7 @@ public class Vertex extends BaseObject {
         List<Vector> perspectivePrepared = prepared.get(perspective);
         
         perspectivePrepared.clear();
-        perspectivePrepared.add(JustificationUtil.justify(vertices[0].clone()));
+        perspectivePrepared.add(JustificationUtil.justify(vertices[0].cloned()));
         
         performRotationTransformation(perspectivePrepared);
         
@@ -96,8 +97,8 @@ public class Vertex extends BaseObject {
      */
     @Override
     public void render(Graphics2D g2, UUID perspective) {
-        g2.setColor(getColor());
-        g2.drawRect((int) prepared.get(perspective).get(0).getX(), (int) prepared.get(perspective).get(0).getY(), 1, 1);
+        DrawUtility.setColor(g2, getColor());
+        DrawUtility.drawPoint(g2, prepared.get(perspective).get(0));
     }
     
     /**
@@ -109,7 +110,7 @@ public class Vertex extends BaseObject {
     public String toString() {
         StringBuilder vertex = new StringBuilder();
         
-        for (Double component : getPoint().getComponents()) {
+        for (Double component : getPoint().getRawComponents()) {
             if (!vertex.toString().isEmpty()) {
                 vertex.append(", ");
             }

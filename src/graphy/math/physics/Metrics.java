@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import commons.math.vector.Vector;
+import commons.math.component.vector.Vector;
 import graphy.main.Environment;
 import graphy.object.base.ObjectInterface;
 import graphy.object.base.polygon.Polygon;
@@ -100,15 +100,15 @@ public class Metrics {
         long within = 0L;
         for (long i = 0; i < SAMPLE_SET_FOR_VOLUME_APPROXIMATION; i++) {
             Vector p = new Vector(
-                    Math.random() * (b.get(1) - b.get(0)) + b.get(0),
-                    Math.random() * (b.get(3) - b.get(2)) + b.get(2),
-                    Math.random() * (b.get(5) - b.get(4)) + b.get(4)
+                    Math.random() * (b.getRaw(1) - b.getRaw(0)) + b.getRaw(0),
+                    Math.random() * (b.getRaw(3) - b.getRaw(2)) + b.getRaw(2),
+                    Math.random() * (b.getRaw(5) - b.getRaw(4)) + b.getRaw(4)
             );
             if (Space.pointInsidePolyhedron(polyhedron, p)) {
                 within++;
             }
         }
-        volume = ((double) within / SAMPLE_SET_FOR_VOLUME_APPROXIMATION) * ((b.get(1) - b.get(0)) * (b.get(3) - b.get(2)) * (b.get(5) - b.get(4)));
+        volume = ((double) within / SAMPLE_SET_FOR_VOLUME_APPROXIMATION) * ((b.getRaw(1) - b.getRaw(0)) * (b.getRaw(3) - b.getRaw(2)) * (b.getRaw(5) - b.getRaw(4)));
     }
     
     /**
@@ -159,23 +159,23 @@ public class Metrics {
         
         double xMin = 0, xMax = 0, yMin = 0, yMax = 0, zMin = 0, zMax = 0;
         for (Vector vertex : vertices) {
-            if (vertex.getX() < xMin) {
-                xMin = vertex.getX();
+            if (vertex.getRawX() < xMin) {
+                xMin = vertex.getRawX();
             }
-            if (vertex.getX() > xMax) {
-                xMax = vertex.getX();
+            if (vertex.getRawX() > xMax) {
+                xMax = vertex.getRawX();
             }
-            if (vertex.getY() < yMin) {
-                yMin = vertex.getY();
+            if (vertex.getRawY() < yMin) {
+                yMin = vertex.getRawY();
             }
-            if (vertex.getY() > yMax) {
-                yMax = vertex.getY();
+            if (vertex.getRawY() > yMax) {
+                yMax = vertex.getRawY();
             }
-            if (vertex.getZ() < zMin) {
-                zMin = vertex.getZ();
+            if (vertex.getRawZ() < zMin) {
+                zMin = vertex.getRawZ();
             }
-            if (vertex.getZ() > zMax) {
-                zMax = vertex.getZ();
+            if (vertex.getRawZ() > zMax) {
+                zMax = vertex.getRawZ();
             }
         }
         

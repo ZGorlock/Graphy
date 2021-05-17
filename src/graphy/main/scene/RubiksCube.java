@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import commons.math.vector.Vector;
+import commons.math.component.vector.Vector;
 import graphy.camera.Camera;
 import graphy.main.Environment;
 import graphy.object.base.Object;
@@ -451,7 +451,7 @@ public class RubiksCube extends Scene {
         List<Object> f = retrieveFace(face);
         RotationGroup frontGroup = new RotationGroup(this, f.get(4), f);
         
-        frontGroup.rotateGroup(rotation.getX() * dir, rotation.getY() * dir, rotation.getZ() * dir, FLIP_SPEED);
+        frontGroup.rotateGroup(rotation.getRawX() * dir, rotation.getRawY() * dir, rotation.getRawZ() * dir, FLIP_SPEED);
         matrix = rotate(matrix, face, dir);
         
         printCube();

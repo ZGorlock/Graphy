@@ -9,7 +9,7 @@ package graphy.main.scene;
 import java.awt.Color;
 import java.io.File;
 
-import commons.math.vector.Vector;
+import commons.math.component.vector.Vector;
 import graphy.camera.Camera;
 import graphy.main.Environment;
 import graphy.object.base.Scene;

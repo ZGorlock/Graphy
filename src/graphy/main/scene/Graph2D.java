@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import commons.math.EquationUtility;
-import commons.math.vector.Vector;
+import commons.math.component.vector.Vector;
 import graphy.camera.Camera;
 import graphy.main.Environment;
 import graphy.math.vector.UniqueVectorSet;
@@ -114,16 +114,16 @@ public class Graph2D extends Scene {
         
         for (Vector v : vs) {
             Map<String, Number> vars = new HashMap<>();
-            vars.put("x", v.getX());
-            v.setX(v.getX() * scale);
+            vars.put("x", v.getRawX());
+            v.setX(v.getRawX() * scale);
             v.setY(equation.evaluate(vars).doubleValue() * scale);
-            if (v.getY() != v.getY()) {
-                v.setY(0);
+            if (v.getRawY() != v.getRawY()) {
+                v.setY(0.0);
             }
-            if (v.getY() > radius) {
+            if (v.getRawY() > radius) {
                 v.setY(radius);
             }
-            if (v.getY() < -radius) {
+            if (v.getRawY() < -radius) {
                 v.setY(-radius);
             }
         }

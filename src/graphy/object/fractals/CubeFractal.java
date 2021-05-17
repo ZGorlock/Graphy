@@ -10,7 +10,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import commons.math.vector.Vector;
+import commons.math.component.vector.Vector;
 import graphy.object.base.Object;
 import graphy.object.polyhedron.regular.platonic.Hexahedron;
 

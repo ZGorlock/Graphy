@@ -10,7 +10,7 @@ import java.awt.BorderLayout;
 import java.awt.Graphics2D;
 import javax.management.InstanceAlreadyExistsException;
 
-import commons.math.vector.Vector;
+import commons.math.component.vector.Vector;
 import graphy.object.base.Drawing;
 
 /**

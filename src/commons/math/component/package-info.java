@@ -1,10 +1,10 @@
 /*
  * File:    package-info.java
- * Package: commons.math.matrix
+ * Package: commons.math.component
  * Author:  Zachary Gill
  * Repo:    https://github.com/ZGorlock/Java-Commons
  *
- * Contains common matrix resource classes.
+ * Contains common component resource classes.
  */
 
-package commons.math.matrix;
+package commons.math.component;

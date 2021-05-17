@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import commons.math.vector.Vector;
+import commons.graphics.DrawUtility;
+import commons.math.component.vector.Vector;
 import graphy.math.vector.JustificationUtil;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.BaseObject;
@@ -83,8 +84,8 @@ public class Edge extends BaseObject {
         List<Vector> perspectivePrepared = prepared.get(perspective);
         
         perspectivePrepared.clear();
-        perspectivePrepared.add(JustificationUtil.justify(vertices[0].clone()));
-        perspectivePrepared.add(JustificationUtil.justify(vertices[1].clone()));
+        perspectivePrepared.add(JustificationUtil.justify(vertices[0].cloned()));
+        perspectivePrepared.add(JustificationUtil.justify(vertices[1].cloned()));
         
         performRotationTransformation(perspectivePrepared);
         
@@ -100,15 +101,15 @@ public class Edge extends BaseObject {
      */
     @Override
     public void render(Graphics2D g2, UUID perspective) {
-        g2.setColor(getColor());
+        DrawUtility.setColor(g2, getColor());
         switch (displayMode) {
             case VERTEX:
-                g2.drawRect((int) prepared.get(perspective).get(0).getX(), (int) prepared.get(perspective).get(0).getY(), 0, 1);
-                g2.drawRect((int) prepared.get(perspective).get(1).getX(), (int) prepared.get(perspective).get(1).getY(), 0, 1);
+                DrawUtility.drawPoint(g2, prepared.get(perspective).get(0));
+                DrawUtility.drawPoint(g2, prepared.get(perspective).get(1));
                 break;
             case EDGE:
             case FACE:
-                g2.drawLine((int) prepared.get(perspective).get(0).get(0), (int) prepared.get(perspective).get(0).get(1), (int) prepared.get(perspective).get(1).get(0), (int) prepared.get(perspective).get(1).get(1));
+                DrawUtility.drawLine(g2, prepared.get(perspective).get(0), prepared.get(perspective).get(1));
                 break;
         }
     }

@@ -32,10 +32,12 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
+import commons.graphics.DrawUtility;
 import commons.graphics.ScreenSize;
 import commons.log.CommonsLogger;
 import commons.log.CommonsLogging;
-import commons.math.vector.Vector;
+import commons.math.component.vector.IntVector;
+import commons.math.component.vector.Vector;
 import graphy.camera.CaptureHandler;
 
 /**
@@ -131,7 +133,7 @@ public abstract class EnvironmentBase {
     /**
      * The coordinates to center the Environment at.
      */
-    public static Vector origin = ORIGIN.clone();
+    public static Vector origin = ORIGIN.cloned();
     
     /**
      * The Environment time in milliseconds.
@@ -291,10 +293,10 @@ public abstract class EnvironmentBase {
                                 BufferedImage bufferImage = new BufferedImage(renderPanel.getWidth(), renderPanel.getHeight(), BufferedImage.TYPE_INT_RGB);
                                 g2b = bufferImage.createGraphics();
                                 print(g2b);
-                                g2b.dispose();
+                                DrawUtility.dispose(g2b);
                                 g2b = null;
                                 buffer.add(bufferImage);
-                                g2.drawImage(bufferImage, 0, 0, null);
+                                DrawUtility.drawImage(g2, bufferImage);
                             } else {
                                 buffer.clear();
                                 print(g2);
@@ -302,10 +304,10 @@ public abstract class EnvironmentBase {
                         } catch (Exception ignored) {
                         } finally {
                             if (g2 != null) {
-                                g2.dispose();
+                                DrawUtility.dispose(g2);
                             }
                             if (g2b != null) {
-                                g2b.dispose();
+                                DrawUtility.dispose(g2b);
                             }
                         }
                     } while (bufferStrategy.contentsRestored());
@@ -326,10 +328,10 @@ public abstract class EnvironmentBase {
                         BufferedImage bufferImage = new BufferedImage(renderPanel.getWidth(), renderPanel.getHeight(), BufferedImage.TYPE_INT_RGB);
                         g2b = bufferImage.createGraphics();
                         print(g2b);
-                        g2b.dispose();
+                        DrawUtility.dispose(g2b);
                         g2b = null;
                         buffer.add(bufferImage);
-                        g2.drawImage(bufferImage, 0, 0, null);
+                        DrawUtility.drawImage(g2, bufferImage);
                     } else {
                         buffer.clear();
                         print(g2);
@@ -337,7 +339,7 @@ public abstract class EnvironmentBase {
                 } catch (Exception ignored) {
                 } finally {
                     if (g2b != null) {
-                        g2b.dispose();
+                        DrawUtility.dispose(g2b);
                     }
                 }
             }
@@ -472,10 +474,10 @@ public abstract class EnvironmentBase {
      */
     public void colorBackground(Graphics2D g2) {
         if (background != null) {
-            Color cacheColor = g2.getColor();
-            g2.setColor(background);
-            g2.fillRect(0, 0, renderPanel.getWidth(), renderPanel.getHeight());
-            g2.setColor(cacheColor);
+            Color cacheColor = DrawUtility.getColor(g2);
+            DrawUtility.setColor(g2, background);
+            DrawUtility.fillRect(g2, new IntVector(0, 0), renderPanel.getWidth() + 1, renderPanel.getHeight() + 1);
+            DrawUtility.setColor(g2, cacheColor);
         }
     }
     

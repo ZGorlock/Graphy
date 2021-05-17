@@ -21,11 +21,12 @@ import java.util.concurrent.atomic.AtomicLong;
 import commons.graphics.ColorUtility;
 import commons.math.CoordinateUtility;
 import commons.math.RotationUtility;
-import commons.math.matrix.Matrix3;
-import commons.math.vector.Vector;
-import commons.math.vector.Vector3;
+import commons.math.component.matrix.Matrix3;
+import commons.math.component.vector.Vector;
+import commons.math.component.vector.Vector3;
 import graphy.camera.Camera;
 import graphy.main.Environment;
+import graphy.math.vector.JustificationUtil;
 
 /**
  * Defines an abstract implementation of an Object.
@@ -458,7 +459,7 @@ public abstract class AbstractObject implements ObjectInterface {
                 double scale = (double) timeElapsed / period;
                 Vector movementFrame = movementVector.scale(scale);
                 move(movementFrame);
-                Vector.copyVector(totalMovement.plus(movementFrame), totalMovement);
+                Vector.copy(totalMovement.plus(movementFrame), totalMovement);
             }
         };
         
@@ -544,7 +545,7 @@ public abstract class AbstractObject implements ObjectInterface {
                 double scale = (double) timeElapsed / period;
                 Vector rotationFrame = rotationVector.scale(scale);
                 rotateAndTransform(rotationFrame);
-                Vector.copyVector(totalRotation.plus(rotationFrame), totalRotation);
+                Vector.copy(totalRotation.plus(rotationFrame), totalRotation);
             }
         };
         
@@ -597,8 +598,8 @@ public abstract class AbstractObject implements ObjectInterface {
     @Override
     public UUID addOrbitAnimation(Object object, double orbitPeriod, boolean clockwise) {
         final AbstractObject o = this;
-        final Vector lastObjectCenter = object.center.clone();
-        final Vector normal = Environment.ORIGIN.clone();
+        final Vector lastObjectCenter = object.center.cloned();
+        final Vector normal = Environment.ORIGIN.cloned();
         final AtomicInteger wise = new AtomicInteger(-1);
         final AtomicLong lastTime = new AtomicLong(0);
         final AtomicLong originalRho = new AtomicLong(0);
@@ -606,19 +607,19 @@ public abstract class AbstractObject implements ObjectInterface {
         
         final UUID taskId = UUID.randomUUID();
         Runnable task = () -> {
-            Vector currentObjectCenter = object.center.clone();
+            Vector currentObjectCenter = object.center.cloned();
             Vector objectMovement = currentObjectCenter.minus(lastObjectCenter);
-            Vector.copyVector(currentObjectCenter, lastObjectCenter);
+            Vector.copy(currentObjectCenter, lastObjectCenter);
             
             if (lastTime.get() == 0) {
                 Vector sphericalLocation = CoordinateUtility.cartesianToSpherical(center.minus(lastObjectCenter));
                 Vector direction = center.minus(lastObjectCenter).normalize();
-                Vector perpendicular = CoordinateUtility.sphericalToCartesian(sphericalLocation.getX(), sphericalLocation.getY() + (Math.PI / 2), Math.PI / 2).minus(lastObjectCenter).normalize();
+                Vector perpendicular = CoordinateUtility.sphericalToCartesian(sphericalLocation.getRawX(), sphericalLocation.getRawY() + (Math.PI / 2), Math.PI / 2).minus(lastObjectCenter).normalize();
                 
-                Vector.copyVector(new Vector3(direction).cross(perpendicular).normalize(), normal);
-                wise.set((clockwise ? 1 : -1) * (((direction.getX() == 0) && (direction.getY() == 0) && (direction.getZ() > 0)) ? 1 : -1));
-                originalRho.set(Double.doubleToLongBits(sphericalLocation.getX()));
-                circumference.set(Double.doubleToLongBits(Math.PI * 2 * sphericalLocation.getX()));
+                Vector.copy(new Vector3(direction).cross(perpendicular).normalize(), normal);
+                wise.set((clockwise ? 1 : -1) * (((direction.getRawX() == 0) && (direction.getRawY() == 0) && (direction.getRawZ() > 0)) ? 1 : -1));
+                originalRho.set(Double.doubleToLongBits(sphericalLocation.getRawX()));
+                circumference.set(Double.doubleToLongBits(Math.PI * 2 * sphericalLocation.getRawX()));
                 
                 lastTime.set(Environment.currentTimeMillis());
                 return;
@@ -636,7 +637,7 @@ public abstract class AbstractObject implements ObjectInterface {
             Vector translation = movement.scale(scale).plus(objectMovement);
             Vector newLocation = center.plus(translation);
             Vector sphericalLocation = CoordinateUtility.cartesianToSpherical(newLocation.minus(lastObjectCenter));
-            Vector adjustedLocation = CoordinateUtility.sphericalToCartesian(Double.longBitsToDouble(originalRho.get()), sphericalLocation.getY(), sphericalLocation.getZ()).plus(lastObjectCenter);
+            Vector adjustedLocation = CoordinateUtility.sphericalToCartesian(Double.longBitsToDouble(originalRho.get()), sphericalLocation.getRawY(), sphericalLocation.getRawZ()).plus(lastObjectCenter);
             Vector adjustment = adjustedLocation.minus(newLocation);
             
             move(translation.plus(adjustment));
@@ -686,8 +687,8 @@ public abstract class AbstractObject implements ObjectInterface {
         inOrbitTransformation.set(true);
         
         final double orbitPeriod = period / orbits;
-        final Vector lastObjectCenter = object.center.clone();
-        final Vector normal = Environment.ORIGIN.clone();
+        final Vector lastObjectCenter = object.center.cloned();
+        final Vector normal = Environment.ORIGIN.cloned();
         final AtomicInteger wise = new AtomicInteger(-1);
         final AtomicLong lastTime = new AtomicLong(0);
         final AtomicLong totalTime = new AtomicLong(0);
@@ -696,19 +697,19 @@ public abstract class AbstractObject implements ObjectInterface {
         
         final UUID taskId = UUID.randomUUID();
         Runnable task = () -> {
-            Vector currentObjectCenter = object.center.clone();
+            Vector currentObjectCenter = object.center.cloned();
             Vector objectMovement = currentObjectCenter.minus(lastObjectCenter);
-            Vector.copyVector(currentObjectCenter, lastObjectCenter);
+            Vector.copy(currentObjectCenter, lastObjectCenter);
             
             if (lastTime.get() == 0) {
                 Vector sphericalLocation = CoordinateUtility.cartesianToSpherical(center.minus(lastObjectCenter));
                 Vector direction = center.minus(lastObjectCenter).normalize();
-                Vector perpendicular = CoordinateUtility.sphericalToCartesian(sphericalLocation.getX(), sphericalLocation.getY() + (Math.PI / 2), Math.PI / 2).minus(lastObjectCenter).normalize();
+                Vector perpendicular = CoordinateUtility.sphericalToCartesian(sphericalLocation.getRawX(), sphericalLocation.getRawY() + (Math.PI / 2), Math.PI / 2).minus(lastObjectCenter).normalize();
                 
-                Vector.copyVector(new Vector3(direction).cross(perpendicular).normalize(), normal);
-                wise.set((clockwise ? 1 : -1) * (((direction.getX() == 0) && (direction.getY() == 0) && (direction.getZ() > 0)) ? 1 : -1));
-                originalRho.set(Double.doubleToLongBits(sphericalLocation.getX()));
-                circumference.set(Double.doubleToLongBits(Math.PI * 2 * sphericalLocation.getX()));
+                Vector.copy(new Vector3(direction).cross(perpendicular).normalize(), normal);
+                wise.set((clockwise ? 1 : -1) * (((direction.getRawX() == 0) && (direction.getRawY() == 0) && (direction.getRawZ() > 0)) ? 1 : -1));
+                originalRho.set(Double.doubleToLongBits(sphericalLocation.getRawX()));
+                circumference.set(Double.doubleToLongBits(Math.PI * 2 * sphericalLocation.getRawX()));
                 
                 lastTime.set(Environment.currentTimeMillis());
                 return;
@@ -731,7 +732,7 @@ public abstract class AbstractObject implements ObjectInterface {
             Vector translation = movement.scale(scale).plus(objectMovement);
             Vector newLocation = center.plus(translation);
             Vector sphericalLocation = CoordinateUtility.cartesianToSpherical(newLocation.minus(lastObjectCenter));
-            Vector adjustedLocation = CoordinateUtility.sphericalToCartesian(Double.longBitsToDouble(originalRho.get()), sphericalLocation.getY(), sphericalLocation.getZ()).plus(lastObjectCenter);
+            Vector adjustedLocation = CoordinateUtility.sphericalToCartesian(Double.longBitsToDouble(originalRho.get()), sphericalLocation.getRawY(), sphericalLocation.getRawZ()).plus(lastObjectCenter);
             Vector adjustment = adjustedLocation.minus(newLocation);
             
             move(translation.plus(adjustment));
@@ -791,7 +792,7 @@ public abstract class AbstractObject implements ObjectInterface {
         }
         
         for (int i = 0; i < vs.size(); i++) {
-            vs.set(i, RotationUtility.performRotation(vs.get(i), rotationMatrix, getRootCenter()));
+            vs.set(i, RotationUtility.performRotation(vs.get(i), rotationMatrix, JustificationUtil.justify(getRootCenter())));
         }
     }
     
@@ -920,7 +921,7 @@ public abstract class AbstractObject implements ObjectInterface {
      * @return The angle that defines the roll rotation of the Object.
      */
     public double getRotationRoll() {
-        return rotation.get(0);
+        return rotation.getRaw(0);
     }
     
     /**
@@ -929,7 +930,7 @@ public abstract class AbstractObject implements ObjectInterface {
      * @return The angle that defines the pitch rotation of the Object.
      */
     public double getRotationPitch() {
-        return rotation.get(1);
+        return rotation.getRaw(1);
     }
     
     /**
@@ -938,7 +939,7 @@ public abstract class AbstractObject implements ObjectInterface {
      * @return The angle that defines the yaw rotation of the Object.
      */
     public double getRotationYaw() {
-        return rotation.get(2);
+        return rotation.getRaw(2);
     }
     
     /**
@@ -1050,9 +1051,9 @@ public abstract class AbstractObject implements ObjectInterface {
      */
     @Override
     public synchronized void setRotationWithoutUpdate(Vector rotation) {
-        setRotationRollWithoutUpdate(rotation.getX());
-        setRotationPitchWithoutUpdate(rotation.getY());
-        setRotationYawWithoutUpdate(rotation.getZ());
+        setRotationRollWithoutUpdate(rotation.getRawX());
+        setRotationPitchWithoutUpdate(rotation.getRawY());
+        setRotationYawWithoutUpdate(rotation.getRawZ());
     }
     
     /**

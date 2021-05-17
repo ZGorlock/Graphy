@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import commons.math.vector.Vector;
+import commons.graphics.DrawUtility;
+import commons.math.component.vector.Vector;
 import graphy.main.Environment2D;
 import graphy.object.base.Drawing;
 
@@ -94,7 +95,7 @@ public class PrimordialParticleSystem extends Drawing {
             Graphics2D g2 = img.createGraphics();
             particles.step();
             particles.render(g2);
-            g2.dispose();
+            DrawUtility.dispose(g2);
         }
         
         return img;
@@ -238,7 +239,7 @@ public class PrimordialParticleSystem extends Drawing {
 //                delta.setY(delta.getY() - PrimordialParticleSystem.screenY);
 //            }
                 
-                double neighborAngle = Math.atan2(delta.getX(), delta.getY());
+                double neighborAngle = Math.atan2(delta.getRawX(), delta.getRawY());
                 if ((neighborAngle <= (particleLeftAngle + sensorAperture)) && (neighborAngle >= particleLeftAngle)) {
                     neighborState.left++;
                 }
@@ -286,7 +287,7 @@ public class PrimordialParticleSystem extends Drawing {
             Vector pb = particle.getHeading().scale(10);
             Vector pc = neighbor.getPosition();
             
-            double determinant = ((pb.getX() - pa.getX()) * (pc.getY() - pa.getY()) - (pb.getY() - pa.getY()) * (pc.getX() - pa.getX()));
+            double determinant = ((pb.getRawX() - pa.getRawX()) * (pc.getRawY() - pa.getRawY()) - (pb.getRawY() - pa.getRawY()) * (pc.getRawX() - pa.getRawX()));
             return (determinant < 0) ? -1 : ((determinant > 0) ? 1 : 0);
         }
         
@@ -411,8 +412,8 @@ public class PrimordialParticleSystem extends Drawing {
             velocity = heading.scale(speed);
             
             position = position.plus(velocity);
-            position.setX(position.getX() % Environment2D.screenWidth);
-            position.setY(position.getY() % Environment2D.screenHeight);
+            position.setX(position.getRawX() % Environment2D.screenWidth);
+            position.setY(position.getRawY() % Environment2D.screenHeight);
         }
         
         /**
@@ -425,10 +426,10 @@ public class PrimordialParticleSystem extends Drawing {
             
             Vector renderPosition = position;
             int renderSize = (int) size + 2;
-            img.setColor(color);
-            img.fillOval((int) (renderPosition.getX() - renderSize), (int) (renderPosition.getY() - renderSize), renderSize * 2, renderSize * 2);
-//        g.setColor(Color.WHITE);
-//        g.drawLine((int) renderPosition.getX(), (int) renderPosition.getY(), (int) (renderPosition.getX() + heading.getX() * 10), (int) (renderPosition.getY() + heading.getY() * 10));
+            DrawUtility.setColor(img, color);
+            DrawUtility.fillCircle(img, renderPosition, renderSize);
+//            DrawUtility.setColor(g, Color.WHITE);
+//            DrawUtility.drawLine(g, renderPosition, renderPosition.plus(heading.scale(10.0)));
         }
         
         /**

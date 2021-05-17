@@ -38,6 +38,9 @@
         
         <!-- MATH -->
         <big-math.version>2.1.0</big-math.version>
+        
+        <!-- MEDIA -->
+        <metadata-extractor.version>2.15.0</metadata-extractor.version>
     </properties>
     
     
@@ -100,6 +103,13 @@
             <groupId>ch.obermuhlner</groupId>
             <artifactId>big-math</artifactId>
             <version>${big-math.version}</version>
+        </dependency>
+        
+        <!-- MEDIA -->
+        <dependency>
+            <groupId>com.drewnoakes</groupId>
+            <artifactId>metadata-extractor</artifactId>
+            <version>${metadata-extractor.version}</version>
         </dependency>
     </dependencies>
     

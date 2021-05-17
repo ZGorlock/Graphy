@@ -12,11 +12,10 @@ import java.util.List;
 import java.util.UUID;
 
 import commons.math.RotationUtility;
-import commons.math.matrix.Matrix3;
-import commons.math.vector.Vector;
+import commons.math.component.matrix.Matrix3;
+import commons.math.component.vector.Vector;
 import graphy.camera.Camera;
 import graphy.main.Environment;
-import graphy.math.vector.JustificationUtil;
 
 /**
  * Defines the base properties of an Object.
@@ -150,12 +149,12 @@ public abstract class BaseObject extends AbstractObject {
      */
     @Override
     public synchronized void rotateAndTransform(Vector offset, Vector center) {
-        Matrix3 rotationTransformationMatrix = RotationUtility.getRotationMatrix(offset.getX(), offset.getY(), offset.getZ());
+        Matrix3 rotationTransformationMatrix = RotationUtility.getRotationMatrix(offset.getRawX(), offset.getRawY(), offset.getRawZ());
         
         for (int i = 0; i < vertices.length; i++) {
-            vertices[i] = RotationUtility.performRotation(vertices[i], rotationTransformationMatrix, JustificationUtil.justify(center));
+            vertices[i] = RotationUtility.performRotation(vertices[i], rotationTransformationMatrix, center);
         }
-        this.center = RotationUtility.performRotation(this.center, rotationTransformationMatrix, JustificationUtil.justify(center));
+        this.center = RotationUtility.performRotation(this.center, rotationTransformationMatrix, center);
     }
     
     /**

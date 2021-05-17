@@ -7,7 +7,7 @@
 
 package commons.math;
 
-import commons.math.vector.Vector;
+import commons.math.component.vector.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,7 +83,7 @@ public final class CoordinateUtility {
      * @see #cartesianToSpherical(double, double, double)
      */
     public static Vector cartesianToSpherical(Vector cartesian) {
-        return cartesianToSpherical(cartesian.getX(), cartesian.getY(), cartesian.getZ());
+        return cartesianToSpherical(cartesian.getRawX(), cartesian.getRawY(), cartesian.getRawZ());
     }
     
     /**
@@ -110,7 +110,7 @@ public final class CoordinateUtility {
      * @see #cartesianToCylindrical(double, double, double)
      */
     public static Vector cartesianToCylindrical(Vector cartesian) {
-        return cartesianToCylindrical(cartesian.getX(), cartesian.getY(), cartesian.getZ());
+        return cartesianToCylindrical(cartesian.getRawX(), cartesian.getRawY(), cartesian.getRawZ());
     }
     
     /**
@@ -135,7 +135,7 @@ public final class CoordinateUtility {
      * @see #cartesianToPolar(double, double)
      */
     public static Vector cartesianToPolar(Vector cartesian) {
-        return cartesianToPolar(cartesian.getX(), cartesian.getY());
+        return cartesianToPolar(cartesian.getRawX(), cartesian.getRawY());
     }
     
     /**
@@ -162,7 +162,7 @@ public final class CoordinateUtility {
      * @see #sphericalToCartesian(double, double, double)
      */
     public static Vector sphericalToCartesian(Vector spherical) {
-        return sphericalToCartesian(spherical.getX(), spherical.getY(), spherical.getZ());
+        return sphericalToCartesian(spherical.getRawX(), spherical.getRawY(), spherical.getRawZ());
     }
     
     /**
@@ -189,7 +189,7 @@ public final class CoordinateUtility {
      * @see #sphericalToCylindrical(double, double, double)
      */
     public static Vector sphericalToCylindrical(Vector spherical) {
-        return sphericalToCylindrical(spherical.getX(), spherical.getY(), spherical.getZ());
+        return sphericalToCylindrical(spherical.getRawX(), spherical.getRawY(), spherical.getRawZ());
     }
     
     /**
@@ -215,7 +215,7 @@ public final class CoordinateUtility {
      * @see #sphericalToPolar(double, double, double)
      */
     public static Vector sphericalToPolar(Vector spherical) {
-        return sphericalToPolar(spherical.getX(), spherical.getY(), spherical.getZ());
+        return sphericalToPolar(spherical.getRawX(), spherical.getRawY(), spherical.getRawZ());
     }
     
     /**
@@ -242,7 +242,7 @@ public final class CoordinateUtility {
      * @see #cylindricalToCartesian(double, double, double)
      */
     public static Vector cylindricalToCartesian(Vector cylindrical) {
-        return cylindricalToCartesian(cylindrical.getX(), cylindrical.getY(), cylindrical.getZ());
+        return cylindricalToCartesian(cylindrical.getRawX(), cylindrical.getRawY(), cylindrical.getRawZ());
     }
     
     /**
@@ -269,7 +269,7 @@ public final class CoordinateUtility {
      * @see #cylindricalToSpherical(double, double, double)
      */
     public static Vector cylindricalToSpherical(Vector cylindrical) {
-        return cylindricalToSpherical(cylindrical.getX(), cylindrical.getY(), cylindrical.getZ());
+        return cylindricalToSpherical(cylindrical.getRawX(), cylindrical.getRawY(), cylindrical.getRawZ());
     }
     
     /**
@@ -295,7 +295,7 @@ public final class CoordinateUtility {
      * @see #cylindricalToPolar(double, double, double)
      */
     public static Vector cylindricalToPolar(Vector cylindrical) {
-        return cylindricalToPolar(cylindrical.getX(), cylindrical.getY(), cylindrical.getZ());
+        return cylindricalToPolar(cylindrical.getRawX(), cylindrical.getRawY(), cylindrical.getRawZ());
     }
     
     /**
@@ -320,7 +320,7 @@ public final class CoordinateUtility {
      * @see #polarToCartesian(double, double)
      */
     public static Vector polarToCartesian(Vector polar) {
-        return polarToCartesian(polar.getX(), polar.getY());
+        return polarToCartesian(polar.getRawX(), polar.getRawY());
     }
     
     /**
@@ -346,7 +346,7 @@ public final class CoordinateUtility {
      * @see #polarToSpherical(double, double)
      */
     public static Vector polarToSpherical(Vector polar) {
-        return polarToSpherical(polar.getX(), polar.getY());
+        return polarToSpherical(polar.getRawX(), polar.getRawY());
     }
     
     /**
@@ -372,7 +372,7 @@ public final class CoordinateUtility {
      * @see #polarToCylindrical(double, double)
      */
     public static Vector polarToCylindrical(Vector polar) {
-        return polarToCylindrical(polar.getX(), polar.getY());
+        return polarToCylindrical(polar.getRawX(), polar.getRawY());
     }
     
     /**

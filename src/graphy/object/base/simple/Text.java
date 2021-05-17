@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import commons.math.vector.Vector;
+import commons.graphics.DrawUtility;
+import commons.math.component.vector.Vector;
 import graphy.math.vector.JustificationUtil;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.BaseObject;
@@ -27,7 +28,7 @@ public class Text extends BaseObject {
     /**
      * The text to display.
      */
-    protected char[] text;
+    protected String text;
     
     
     //Constructor
@@ -42,7 +43,7 @@ public class Text extends BaseObject {
      */
     public Text(AbstractObject parent, Color color, Vector v, String text) {
         super(parent, color, v, v);
-        this.text = text.toCharArray();
+        this.text = text;
     }
     
     /**
@@ -92,7 +93,7 @@ public class Text extends BaseObject {
         List<Vector> perspectivePrepared = prepared.get(perspective);
         
         perspectivePrepared.clear();
-        perspectivePrepared.add(JustificationUtil.justify(vertices[0].clone()));
+        perspectivePrepared.add(JustificationUtil.justify(vertices[0].cloned()));
         
         performRotationTransformation(perspectivePrepared);
         
@@ -108,8 +109,8 @@ public class Text extends BaseObject {
      */
     @Override
     public void render(Graphics2D g2, UUID perspective) {
-        g2.setColor(color);
-        g2.drawChars(text, 0, text.length, (int) prepared.get(perspective).get(0).getX(), (int) prepared.get(perspective).get(0).getY());
+        DrawUtility.setColor(g2, color);
+        DrawUtility.drawString(g2, text, prepared.get(perspective).get(0));
     }
     
     
@@ -121,7 +122,7 @@ public class Text extends BaseObject {
      * @param text The new text.
      */
     public void setText(String text) {
-        this.text = text.toCharArray();
+        this.text = text;
     }
     
 }

@@ -18,10 +18,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 import commons.math.RotationUtility;
-import commons.math.matrix.Matrix3;
-import commons.math.vector.Vector;
+import commons.math.component.matrix.Matrix3;
+import commons.math.component.vector.Vector;
 import graphy.main.Environment;
-import graphy.math.vector.JustificationUtil;
 
 /**
  * Defines the base properties of an Object.
@@ -166,8 +165,8 @@ public class Object extends AbstractObject {
             component.rotateAndTransform(offset, center);
         }
         
-        Matrix3 rotationTransformationMatrix = RotationUtility.getRotationMatrix(offset.getX(), offset.getY(), offset.getZ());
-        this.center = RotationUtility.performRotation(this.center, rotationTransformationMatrix, JustificationUtil.justify(center));
+        Matrix3 rotationTransformationMatrix = RotationUtility.getRotationMatrix(offset.getRawX(), offset.getRawY(), offset.getRawZ());
+        this.center = RotationUtility.performRotation(this.center, rotationTransformationMatrix, center);
     }
     
     /**

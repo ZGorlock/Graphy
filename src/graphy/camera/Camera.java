@@ -30,8 +30,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import commons.math.CoordinateUtility;
-import commons.math.vector.Vector;
-import commons.math.vector.Vector3;
+import commons.math.component.vector.Vector;
+import commons.math.component.vector.Vector3;
 import graphy.main.Environment;
 import graphy.main.EnvironmentBase;
 import graphy.math.Delta;
@@ -371,7 +371,7 @@ public class Camera {
             
             
             //position camera behind screen a distance, h
-            double h = viewport.getX() * Math.tan(Math.toRadians(90 - (angleOfView / 2))) / 2;
+            double h = viewport.getRawX() * Math.tan(Math.toRadians(90 - (angleOfView / 2))) / 2;
             if (mode == Perspective.FIRST_PERSON) {
                 c = m;
                 m = c.minus(n.scale(h));
@@ -388,10 +388,10 @@ public class Camera {
             
             
             //satisfy equation to determine second point
-            double p2x = cameraOrigin.getX();
-            double p2y = cameraOrigin.getY();
+            double p2x = cameraOrigin.getRawX();
+            double p2y = cameraOrigin.getRawY();
             Vector p2 = new Vector(p2x, p2y,
-                    ((n.getX() * (p2x - m.getX()) + (n.getY() * (p2y - m.getY())) - (n.getZ() * m.getZ()))) / -n.getZ());
+                    ((n.getRawX() * (p2x - m.getRawX()) + (n.getRawY() * (p2y - m.getRawY())) - (n.getRawZ() * m.getRawZ()))) / -n.getRawZ());
             
             
             //calculate local coordinate system
@@ -403,13 +403,13 @@ public class Camera {
             
             //calculate screen viewport
             s = new Rectangle(
-                    lx.scale(-viewport.getX() / 2).plus(ly.scale(-viewport.getY() / 2)).plus(m),
-                    lx.scale(viewport.getX() / 2).plus(ly.scale(-viewport.getY() / 2)).plus(m),
-                    lx.scale(viewport.getX() / 2).plus(ly.scale(viewport.getY() / 2)).plus(m),
-                    lx.scale(-viewport.getX() / 2).plus(ly.scale(viewport.getY() / 2)).plus(m));
+                    lx.scale(-viewport.getRawX() / 2).plus(ly.scale(-viewport.getRawY() / 2)).plus(m),
+                    lx.scale(viewport.getRawX() / 2).plus(ly.scale(-viewport.getRawY() / 2)).plus(m),
+                    lx.scale(viewport.getRawX() / 2).plus(ly.scale(viewport.getRawY() / 2)).plus(m),
+                    lx.scale(-viewport.getRawX() / 2).plus(ly.scale(viewport.getRawY() / 2)).plus(m));
             
             if (mode == Perspective.FIRST_PERSON) {
-                Vector tmp = s.getP1().clone();
+                Vector tmp = s.getP1().cloned();
                 s.setP1(s.getP3());
                 s.setP3(tmp);
                 tmp = s.getP2();
@@ -426,13 +426,13 @@ public class Camera {
             //find scalar equation of screen
             //e.x*x + e.y*y + e.z*z = 1            
             double d = n.dot(m);
-            e = new Vector(n.getX(), n.getY(), n.getZ()).scale(1.0 / d);
+            e = new Vector(n.getRawX(), n.getRawY(), n.getRawZ()).scale(1.0 / d);
             
             
             //draw local coordinate system normals
-            cameraObject.screenNormal.setPoints(JustificationUtil.justify(c), c.plus(JustificationUtil.justify(n.scale(viewport.getX() * 2 / 3))));
-            cameraObject.screenXNormal.setPoints(JustificationUtil.justify(c), c.plus(JustificationUtil.justify(lx.scale(viewport.getX() * 2 / 3))));
-            cameraObject.screenYNormal.setPoints(JustificationUtil.justify(c), c.minus(JustificationUtil.justify(ly.scale(viewport.getX() * 2 / 3))));
+            cameraObject.screenNormal.setPoints(JustificationUtil.justify(c), JustificationUtil.justify(c.plus(n.scale(viewport.getRawX() * 2 / 3))));
+            cameraObject.screenXNormal.setPoints(JustificationUtil.justify(c), JustificationUtil.justify(c.plus(lx.scale(viewport.getRawX() * 2 / 3))));
+            cameraObject.screenYNormal.setPoints(JustificationUtil.justify(c), JustificationUtil.justify(c.minus(ly.scale(viewport.getRawX() * 2 / 3))));
             
             
             //draw camera enclosure
@@ -443,10 +443,10 @@ public class Camera {
             
             //verify screen
             if (verifyViewport) {
-                if (Math.abs(viewport.getX() - s.getP1().distance(s.getP2())) > Environment.OMEGA) {
+                if (Math.abs(viewport.getRawX() - s.getP1().distance(s.getP2())) > Environment.OMEGA) {
                     System.err.println("Camera: " + cameraId + " - Screen viewportX does not match the actual viewport width");
                 }
-                if (Math.abs(viewport.getY() - s.getP1().distance(s.getP3())) > Environment.OMEGA) {
+                if (Math.abs(viewport.getRawY() - s.getP1().distance(s.getP3())) > Environment.OMEGA) {
                     System.err.println("Camera: " + cameraId + " - Screen viewportY does not match the actual viewport height");
                 }
             }
@@ -629,7 +629,7 @@ public class Camera {
                 double oldPhi = phi;
                 double oldTheta = theta;
                 double oldRho = rho;
-                Vector oldOrigin = Environment.origin.clone();
+                Vector oldOrigin = Environment.origin.cloned();
                 
                 Vector headingMovement = heading.scale(movementSpeed);
                 Vector perpendicularMovement = new Vector3(0, 0, 1).cross(heading).scale(movementSpeed);
@@ -807,7 +807,7 @@ public class Camera {
                 double scale = (double) timeElapsed / period;
                 Vector movementFrame = movementVector.scale(scale);
                 moveCamera(movementFrame);
-                Vector.copyVector(totalMovement.plus(movementFrame), totalMovement);
+                Vector.copy(totalMovement.plus(movementFrame), totalMovement);
             }
             
         };
@@ -888,7 +888,7 @@ public class Camera {
      * @return The Camera position.
      */
     public Vector getCameraPosition() {
-        return c.clone();
+        return c.cloned();
     }
     
     /**
@@ -924,7 +924,7 @@ public class Camera {
      * @return The heading Vector of the Camera.
      */
     public Vector getHeading() {
-        return heading.clone();
+        return heading.cloned();
     }
     
     
@@ -952,7 +952,7 @@ public class Camera {
      * @param location The location of the Camera in spherical coordinates.
      */
     public void setLocation(Vector location) {
-        setLocation(location.getX(), location.getY(), location.getZ());
+        setLocation(location.getRawX(), location.getRawY(), location.getRawZ());
     }
     
     /**
@@ -997,7 +997,7 @@ public class Camera {
      * @param offset The relative offsets to move the Camera.
      */
     public void moveCamera(Vector offset) {
-        setLocation(rho + offset.getX(), theta + offset.getY(), phi + offset.getZ());
+        setLocation(rho + offset.getRawX(), theta + offset.getRawY(), phi + offset.getRawZ());
     }
     
     /**
@@ -1006,7 +1006,7 @@ public class Camera {
      * @param offset The offsets of the Camera.
      */
     public void setOffset(Vector offset) {
-        this.offset = offset.clone();
+        this.offset = offset.cloned();
         
         updateRequired = true;
     }
@@ -1187,8 +1187,8 @@ public class Camera {
         //ensure Vectors are in field of view
         boolean inView = false;
         for (Vector v : vs) {
-            if ((v.getX() >= 0) && (v.getX() < viewportDim.getX()) &&
-                    (v.getY() >= 0) && (v.getY() < viewportDim.getY())) {
+            if ((v.getRawX() >= 0) && (v.getRawX() < viewportDim.getRawX()) &&
+                    (v.getRawY() >= 0) && (v.getRawY() < viewportDim.getRawY())) {
                 inView = true;
                 break;
             }
@@ -1208,8 +1208,8 @@ public class Camera {
         //ensure Vectors are in field of view
         boolean inView = true;
         for (Vector v : vs) {
-            if (!((v.getX() >= 0) && (v.getX() < viewportDim.getX()) &&
-                    (v.getY() >= 0) && (v.getY() < viewportDim.getY()))) {
+            if (!((v.getRawX() >= 0) && (v.getRawX() < viewportDim.getRawX()) &&
+                    (v.getRawY() >= 0) && (v.getRawY() < viewportDim.getRawY()))) {
                 inView = false;
                 break;
             }
@@ -1227,9 +1227,9 @@ public class Camera {
         Vector screenDim = getScreenSize(perspective);
         Vector viewportDim = getViewport(perspective);
         Vector scale = new Vector(
-                screenDim.getX() / viewportDim.getX(),
-                screenDim.getY() / viewportDim.getY(),
-                screenDim.getZ()
+                screenDim.getRawX() / viewportDim.getRawX(),
+                screenDim.getRawY() / viewportDim.getRawY(),
+                screenDim.getRawZ()
         );
         
         for (int i = 0; i < vs.size(); i++) {

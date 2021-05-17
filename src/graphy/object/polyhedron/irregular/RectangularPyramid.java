@@ -9,7 +9,7 @@ package graphy.object.polyhedron.irregular;
 import java.awt.Color;
 import java.util.Arrays;
 
-import commons.math.vector.Vector;
+import commons.math.component.vector.Vector;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.Object;
 import graphy.object.base.polygon.Rectangle;

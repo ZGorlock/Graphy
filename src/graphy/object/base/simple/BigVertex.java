@@ -10,7 +10,8 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.UUID;
 
-import commons.math.vector.Vector;
+import commons.graphics.DrawUtility;
+import commons.math.component.vector.Vector;
 import graphy.object.base.AbstractObject;
 
 /**
@@ -84,10 +85,10 @@ public class BigVertex extends Vertex {
      */
     @Override
     public void render(Graphics2D g2, UUID perspective) {
-        g2.setColor(getColor());
+        DrawUtility.setColor(g2, getColor());
         for (int i = -size; i <= size; i++) {
             for (int j = -size; j <= size; j++) {
-                g2.drawRect((int) prepared.get(perspective).get(0).getX() + i, (int) prepared.get(perspective).get(0).getY() + j, 1, 1);
+                DrawUtility.drawPoint(g2, prepared.get(perspective).get(0));
             }
         }
     }

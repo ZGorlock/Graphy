@@ -9,8 +9,8 @@ package graphy.math.physics;
 import java.util.ArrayList;
 import java.util.List;
 
-import commons.math.vector.Vector;
-import commons.math.vector.Vector3;
+import commons.math.component.vector.Vector;
+import commons.math.component.vector.Vector3;
 import graphy.object.base.ObjectInterface;
 import graphy.object.base.polygon.Polygon;
 import graphy.object.polyhedron.Polyhedron;

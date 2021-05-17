@@ -12,7 +12,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import commons.math.vector.Vector;
+import commons.graphics.DrawUtility;
+import commons.math.component.vector.Vector;
 import graphy.main.Environment2D;
 import graphy.main.EnvironmentBase;
 import graphy.object.base.Drawing;
@@ -28,7 +29,7 @@ public class Spirograph extends Drawing {
     /**
      * The radius of the circle.
      */
-    private int radius = 600;
+    private int radius = 500;
     
     /**
      * The number of points around the circle.
@@ -92,7 +93,7 @@ public class Spirograph extends Drawing {
         
         EnvironmentBase.setFps(60);
         environment.setDoubleBuffering(true);
-        environment.setSize(1250, 1250);
+        environment.setSize(1024, 1024);
         environment.setBackground(Color.BLACK);
     }
     
@@ -131,7 +132,7 @@ public class Spirograph extends Drawing {
         double slice = 2 * Math.PI / pointCount;
         Vector c = environment.getCenterPosition();
         
-        graphics.setColor(colorAnimation.getColor());
+        DrawUtility.setColor(graphics, colorAnimation.getColor());
         
         for (int i = 0; i < points.size(); i++) {
             Vector p = points.get(i);
@@ -140,15 +141,15 @@ public class Spirograph extends Drawing {
             value %= pointCount;
             Vector destination = new Vector(Math.cos(slice * value), Math.sin(slice * value)).scale(radius).plus(c);
             
-            graphics.drawLine((int) p.getX(), (int) p.getY(), (int) destination.getX(), (int) destination.getY());
+            DrawUtility.drawLine(graphics, p, destination);
         }
         
-        graphics.setColor(Color.WHITE);
-        graphics.drawOval((int) c.getX() - radius, (int) c.getY() - radius, radius * 2, radius * 2);
+        DrawUtility.setColor(graphics, Color.WHITE);
+        DrawUtility.drawCircle(graphics, c, radius);
         
         multiplier += multiplierStep;
         
-        graphics.dispose();
+        DrawUtility.dispose(graphics);
         return img;
     }
     

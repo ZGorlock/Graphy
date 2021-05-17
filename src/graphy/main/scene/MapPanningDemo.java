@@ -8,7 +8,7 @@ package graphy.main.scene;
 
 import java.awt.Color;
 
-import commons.math.vector.Vector;
+import commons.math.component.vector.Vector;
 import graphy.camera.Camera;
 import graphy.main.Environment;
 import graphy.object.base.Scene;
@@ -24,7 +24,7 @@ public class MapPanningDemo extends Scene {
     /**
      * The dimensions of the map.
      */
-    public static final Vector MAP_DIM = new Vector(250, 250);
+    public static final Vector MAP_DIM = new Vector(100, 100);
     
     /**
      * The size of each piece of the map.
@@ -64,9 +64,9 @@ public class MapPanningDemo extends Scene {
      */
     @Override
     public void calculate() {
-        for (int x = 0; x < MAP_DIM.getX(); x++) {
-            for (int y = 0; y < MAP_DIM.getY(); y++) {
-                Square square = new Square(Color.WHITE, new Vector((x - (MAP_DIM.getX() / 2)) * PIECE_SIZE, (y - (MAP_DIM.getY() / 2)) * PIECE_SIZE, 0), PIECE_SIZE);
+        for (int x = 0; x < MAP_DIM.getRawX(); x++) {
+            for (int y = 0; y < MAP_DIM.getRawY(); y++) {
+                Square square = new Square(Color.WHITE, new Vector((x - (MAP_DIM.getRawX() / 2)) * PIECE_SIZE, (y - (MAP_DIM.getRawY() / 2)) * PIECE_SIZE, 0), PIECE_SIZE);
                 square.addFrame(Color.BLACK);
                 registerComponent(square);
             }

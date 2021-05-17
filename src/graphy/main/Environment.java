@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.UUID;
 import javax.management.InstanceAlreadyExistsException;
 
-import commons.math.vector.Vector;
+import commons.math.component.vector.Vector;
 import graphy.camera.Camera;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.ObjectInterface;

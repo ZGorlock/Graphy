@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import commons.math.CoordinateUtility;
-import commons.math.vector.Vector;
+import commons.math.component.vector.Vector;
 import graphy.main.Environment;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.Object;

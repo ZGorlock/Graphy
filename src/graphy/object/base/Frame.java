@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import commons.math.vector.Vector;
+import commons.graphics.DrawUtility;
+import commons.math.component.vector.Vector;
 
 /**
  * Defines a Frame Object for Objects.
@@ -80,17 +81,17 @@ public class Frame extends Object {
      * @param vs The list of vectors of the Object that owns the frame.
      */
     public void render(Graphics2D g2, List<Vector> vs) {
-        if (!visible || base.displayMode == DisplayMode.VERTEX) {
+        if (!visible || base.displayMode != DisplayMode.FACE) {
             return;
         }
         
-        g2.setColor(color);
+        DrawUtility.setColor(g2, color);
         
         if (vs.size() > 1) {
             for (int i = 1; i < vs.size(); i++) {
-                g2.drawLine((int) vs.get(i - 1).getX(), (int) vs.get(i - 1).getY(), (int) vs.get(i).getX(), (int) vs.get(i).getY());
+                DrawUtility.drawLine(g2, vs.get(i - 1), vs.get(i));
                 if (i == vs.size() - 1 && i > 1) {
-                    g2.drawLine((int) vs.get(i).getX(), (int) vs.get(i).getY(), (int) vs.get(0).getX(), (int) vs.get(0).getY());
+                    DrawUtility.drawLine(g2, vs.get(i), vs.get(0));
                 }
             }
         }

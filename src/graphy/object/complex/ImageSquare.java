@@ -11,7 +11,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.UUID;
 
-import commons.math.vector.Vector;
+import commons.graphics.DrawUtility;
+import commons.math.component.vector.Vector;
 import graphy.object.base.AbstractObject;
 import graphy.object.base.polygon.Square;
 
@@ -87,8 +88,8 @@ public class ImageSquare extends Square {
     public void render(Graphics2D g2, UUID perspective) {
         super.render(g2, perspective);
         if (image != null) {
-            g2.drawImage(image, (int) prepared.get(perspective).get(0).getX(), (int) prepared.get(perspective).get(0).getY(),
-                    Math.abs((int) (prepared.get(perspective).get(1).getX() - prepared.get(perspective).get(0).getX())), Math.abs((int) (prepared.get(perspective).get(3).getY() - prepared.get(perspective).get(0).getY())), null);
+            DrawUtility.drawImage(g2, image, prepared.get(perspective).get(0),
+                    Math.abs((int) (prepared.get(perspective).get(1).getRawX() - prepared.get(perspective).get(0).getRawX())), Math.abs((int) (prepared.get(perspective).get(3).getRawY() - prepared.get(perspective).get(0).getRawY())));
         }
     }
     

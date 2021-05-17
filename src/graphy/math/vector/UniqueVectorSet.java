@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import commons.math.vector.Vector;
+import commons.math.component.vector.Vector;
 
 /**
  * Defines a set of unique vectors.
@@ -51,7 +51,7 @@ public class UniqueVectorSet {
      * @return The key for the vector.
      */
     private String getKeyForVector(Vector vector) {
-        return vector.getX() + ":" + vector.getY() + ":" + vector.getZ();
+        return vector.getRawX() + ":" + vector.getRawY() + ":" + vector.getRawZ();
     }
     
 }

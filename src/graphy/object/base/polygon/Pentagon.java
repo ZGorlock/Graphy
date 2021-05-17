@@ -8,7 +8,7 @@ package graphy.object.base.polygon;
 
 import java.awt.Color;
 
-import commons.math.vector.Vector;
+import commons.math.component.vector.Vector;
 import graphy.object.base.AbstractObject;
 
 /**

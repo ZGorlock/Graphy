@@ -10,7 +10,6 @@ package commons.graphics;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Polygon;
 import java.awt.Shape;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
@@ -21,8 +20,10 @@ import java.util.Set;
 import java.util.Stack;
 
 import commons.math.BoundUtility;
-import commons.math.matrix.Matrix3;
-import commons.math.vector.Vector;
+import commons.math.component.matrix.Matrix;
+import commons.math.component.matrix.Matrix3;
+import commons.math.component.vector.IntVector;
+import commons.math.component.vector.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +53,7 @@ public class ImageTransformationUtility {
     public static void transformImage(BufferedImage src, List<Vector> srcBounds, BufferedImage dest, List<Vector> destBounds) {
         Graphics2D destGraphics = dest.createGraphics();
         transformImage(src, srcBounds, destGraphics, dest.getWidth(), dest.getHeight(), destBounds);
-        destGraphics.dispose();
+        DrawUtility.dispose(destGraphics);
     }
     
     /**
@@ -72,7 +73,7 @@ public class ImageTransformationUtility {
             return;
         }
         
-        Matrix3 projectiveMatrix = calculateProjectiveMatrix(srcBounds, destBounds);
+        Matrix projectiveMatrix = calculateProjectiveMatrix(srcBounds, destBounds);
         if (projectiveMatrix == null) {
             return;
         }
@@ -80,18 +81,14 @@ public class ImageTransformationUtility {
         final int filterColor = new Color(0, 255, 0).getRGB();
         
         BufferedImage maskImage = new BufferedImage(destWidth, destHeight, BufferedImage.TYPE_INT_RGB);
+        IntVector maskCenter = new IntVector(Vector.averageVector(destBounds));
+        
         Graphics2D maskGraphics = maskImage.createGraphics();
-        maskGraphics.setColor(new Color(filterColor));
-        maskGraphics.fillRect(0, 0, maskImage.getWidth(), maskImage.getHeight());
-        Polygon mask = new Polygon(
-                destBounds.stream().map(e -> (int) e.getX()).mapToInt(Integer::valueOf).toArray(),
-                destBounds.stream().map(e -> (int) e.getY()).mapToInt(Integer::valueOf).toArray(),
-                4
-        );
-        Vector maskCenter = Vector.averageVector(destBounds);
-        maskGraphics.setColor(new Color(0, 0, 0));
-        maskGraphics.fillPolygon(mask);
-        maskGraphics.dispose();
+        DrawUtility.setColor(maskGraphics, new Color(filterColor));
+        DrawUtility.fillRect(maskGraphics, new IntVector(0, 0), maskImage.getWidth(), maskImage.getHeight());
+        DrawUtility.setColor(maskGraphics, new Color(0, 0, 0));
+        DrawUtility.fillPolygon(maskGraphics, destBounds);
+        DrawUtility.dispose(maskGraphics);
         
         int srcWidth = src.getWidth();
         int srcHeight = src.getHeight();
@@ -103,7 +100,7 @@ public class ImageTransformationUtility {
         
         Set<Integer> visited = new HashSet<>();
         Stack<Point> stack = new Stack<>();
-        stack.push(new Point((int) maskCenter.getX(), (int) maskCenter.getY()));
+        stack.push(new Point(maskCenter.getX(), maskCenter.getY()));
         while (!stack.isEmpty()) {
             Point p = stack.pop();
             int x = (int) p.getX();
@@ -123,17 +120,17 @@ public class ImageTransformationUtility {
         }
         
         visited.parallelStream().forEach(p -> {
-            Vector homogeneousSourcePoint = projectiveMatrix.multiply(new Vector(p % maskWidth, p / maskWidth, 1.0));
-            int sX = BoundUtility.truncateNum(homogeneousSourcePoint.getX() / homogeneousSourcePoint.getZ(), 0, srcWidth - 1).intValue();
-            int sY = BoundUtility.truncateNum(homogeneousSourcePoint.getY() / homogeneousSourcePoint.getZ(), 0, srcHeight - 1).intValue();
+            Vector homogeneousSourcePoint = projectiveMatrix.times(new Vector(p % maskWidth, p / maskWidth, 1.0));
+            int sX = BoundUtility.truncateNum(homogeneousSourcePoint.getRawX() / homogeneousSourcePoint.getRawZ(), 0, srcWidth - 1).intValue();
+            int sY = BoundUtility.truncateNum(homogeneousSourcePoint.getRawY() / homogeneousSourcePoint.getRawZ(), 0, srcHeight - 1).intValue();
             maskData[p] = srcData[sY * srcWidth + sX];
         });
         visited.clear();
         
-        Shape saveClip = dest.getClip();
-        dest.setClip(mask);
-        dest.drawImage(maskImage, 0, 0, maskWidth, maskHeight, null);
-        dest.setClip(saveClip);
+        Shape saveClip = DrawUtility.getClip(dest);
+        DrawUtility.setClip(dest, destBounds);
+        DrawUtility.drawImage(dest, maskImage);
+        DrawUtility.setClip(dest, saveClip);
     }
     
     /**
@@ -143,31 +140,31 @@ public class ImageTransformationUtility {
      * @param dest The bounds of the quad in the destination.
      * @return The projective matrix.
      */
-    private static Matrix3 calculateProjectiveMatrix(List<Vector> src, List<Vector> dest) {
-        Matrix3 projectiveMatrixSrc = new Matrix3(new double[] {
-                src.get(0).getX(), src.get(1).getX(), src.get(3).getX(),
-                src.get(0).getY(), src.get(1).getY(), src.get(3).getY(),
-                1.0, 1.0, 1.0});
-        Vector solutionSrc = new Vector(src.get(2).getX(), src.get(2).getY(), 1.0);
+    public static Matrix calculateProjectiveMatrix(List<Vector> src, List<Vector> dest) {
+        Matrix projectiveMatrixSrc = new Matrix3(
+                src.get(0).getRawX(), src.get(1).getRawX(), src.get(3).getRawX(),
+                src.get(0).getRawY(), src.get(1).getRawY(), src.get(3).getRawY(),
+                1.0, 1.0, 1.0);
+        Vector solutionSrc = new Vector(src.get(2).getRawX(), src.get(2).getRawY(), 1.0);
         Vector coordinateSystemSrc = projectiveMatrixSrc.solveSystem(solutionSrc);
-        Matrix3 coordinateMatrixSrc = new Matrix3(new double[] {
-                coordinateSystemSrc.getX(), coordinateSystemSrc.getY(), coordinateSystemSrc.getZ(),
-                coordinateSystemSrc.getX(), coordinateSystemSrc.getY(), coordinateSystemSrc.getZ(),
-                coordinateSystemSrc.getX(), coordinateSystemSrc.getY(), coordinateSystemSrc.getZ()
-        });
+        Matrix coordinateMatrixSrc = new Matrix3(
+                coordinateSystemSrc.getRawX(), coordinateSystemSrc.getRawY(), coordinateSystemSrc.getRawZ(),
+                coordinateSystemSrc.getRawX(), coordinateSystemSrc.getRawY(), coordinateSystemSrc.getRawZ(),
+                coordinateSystemSrc.getRawX(), coordinateSystemSrc.getRawY(), coordinateSystemSrc.getRawZ()
+        );
         projectiveMatrixSrc = projectiveMatrixSrc.scale(coordinateMatrixSrc);
         
-        Matrix3 projectiveMatrixDest = new Matrix3(new double[] {
-                dest.get(0).getX(), dest.get(1).getX(), dest.get(3).getX(),
-                dest.get(0).getY(), dest.get(1).getY(), dest.get(3).getY(),
-                1.0, 1.0, 1.0});
-        Vector solutionDest = new Vector(dest.get(2).getX(), dest.get(2).getY(), 1.0);
+        Matrix projectiveMatrixDest = new Matrix3(
+                dest.get(0).getRawX(), dest.get(1).getRawX(), dest.get(3).getRawX(),
+                dest.get(0).getRawY(), dest.get(1).getRawY(), dest.get(3).getRawY(),
+                1.0, 1.0, 1.0);
+        Vector solutionDest = new Vector(dest.get(2).getRawX(), dest.get(2).getRawY(), 1.0);
         Vector coordinateSystemDest = projectiveMatrixDest.solveSystem(solutionDest);
-        Matrix3 coordinateMatrixDest = new Matrix3(new double[] {
-                coordinateSystemDest.getX(), coordinateSystemDest.getY(), coordinateSystemDest.getZ(),
-                coordinateSystemDest.getX(), coordinateSystemDest.getY(), coordinateSystemDest.getZ(),
-                coordinateSystemDest.getX(), coordinateSystemDest.getY(), coordinateSystemDest.getZ()
-        });
+        Matrix coordinateMatrixDest = new Matrix3(
+                coordinateSystemDest.getRawX(), coordinateSystemDest.getRawY(), coordinateSystemDest.getRawZ(),
+                coordinateSystemDest.getRawX(), coordinateSystemDest.getRawY(), coordinateSystemDest.getRawZ(),
+                coordinateSystemDest.getRawX(), coordinateSystemDest.getRawY(), coordinateSystemDest.getRawZ()
+        );
         projectiveMatrixDest = projectiveMatrixDest.scale(coordinateMatrixDest);
         
         try {
@@ -175,7 +172,7 @@ public class ImageTransformationUtility {
         } catch (ArithmeticException ignored) {
             return null;
         }
-        return projectiveMatrixSrc.multiply(projectiveMatrixDest);
+        return projectiveMatrixSrc.times(projectiveMatrixDest);
     }
     
     /**

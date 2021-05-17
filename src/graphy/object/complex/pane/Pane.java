@@ -13,9 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import commons.graphics.DrawUtility;
 import commons.graphics.ImageTransformationUtility;
-import commons.math.vector.Vector;
-import commons.math.vector.Vector3;
+import commons.math.component.vector.Vector;
+import commons.math.component.vector.Vector3;
 import graphy.main.Environment;
 import graphy.math.vector.JustificationUtil;
 import graphy.object.base.AbstractObject;
@@ -78,7 +79,7 @@ public abstract class Pane extends BaseObject {
         
         perspectivePrepared.clear();
         for (Vector vertex : vertices) {
-            perspectivePrepared.add(JustificationUtil.justify(vertex.clone()));
+            perspectivePrepared.add(JustificationUtil.justify(vertex.cloned()));
         }
         
         perspectivePrepared.add(Vector.averageVector(perspectivePrepared));
@@ -110,11 +111,11 @@ public abstract class Pane extends BaseObject {
     @Override
     public void render(Graphics2D g2, UUID perspective) {
         calculateNormal();
-        g2.setColor(getColor());
+        DrawUtility.setColor(g2, getColor());
         switch (displayMode) {
             case VERTEX:
                 for (Vector v : prepared.get(perspective)) {
-                    g2.drawRect((int) v.getX(), (int) v.getY(), 1, 1);
+                    DrawUtility.drawPoint(g2, v);
                 }
                 break;
             
@@ -123,9 +124,9 @@ public abstract class Pane extends BaseObject {
             
             case EDGE:
                 for (int i = 1; i < 4; i++) {
-                    g2.drawLine((int) prepared.get(perspective).get(i - 1).getX(), (int) prepared.get(perspective).get(i - 1).getY(), (int) prepared.get(perspective).get(i).getX(), (int) prepared.get(perspective).get(i).getY());
+                    DrawUtility.drawLine(g2, prepared.get(perspective).get(i - 1), prepared.get(perspective).get(i));
                 }
-                g2.drawLine((int) prepared.get(perspective).get(3).getX(), (int) prepared.get(perspective).get(3).getY(), (int) prepared.get(perspective).get(0).getX(), (int) prepared.get(perspective).get(0).getY());
+                DrawUtility.drawLine(g2, prepared.get(perspective).get(3), prepared.get(perspective).get(0));
                 
                 break;
         }

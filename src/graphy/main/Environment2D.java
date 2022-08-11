@@ -58,24 +58,6 @@ public class Environment2D extends EnvironmentBase {
         Drawing.doRender(drawing, g2);
     }
     
-    /**
-     * Returns a random position on the screen.
-     *
-     * @return A random position on the screen.
-     */
-    public Vector getRandomPosition() {
-        return new Vector(Math.random() * Environment2D.width, Math.random() * Environment2D.height);
-    }
-    
-    /**
-     * Returns the center position on the screen.
-     *
-     * @return The center position on the screen.
-     */
-    public Vector getCenterPosition() {
-        return new Vector(Environment2D.width, Environment2D.height).scale(0.5);
-    }
-    
     
     //Setters
     
@@ -86,6 +68,27 @@ public class Environment2D extends EnvironmentBase {
      */
     public void setDrawing(Drawing drawing) {
         this.drawing = drawing;
+    }
+    
+    
+    //Static Methods
+    
+    /**
+     * Returns a random position on the screen.
+     *
+     * @return A random position on the screen.
+     */
+    public static Vector getRandomPosition() {
+        return new Vector(width, height).times(new Vector(Math.random(), Math.random()));
+    }
+    
+    /**
+     * Returns the center position on the screen.
+     *
+     * @return The center position on the screen.
+     */
+    public static Vector getCenterPosition() {
+        return new Vector(width, height).scale(0.5);
     }
     
 }

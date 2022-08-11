@@ -10,12 +10,12 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import commons.graphics.DrawUtility;
 import commons.math.component.vector.Vector;
 import graphy.main.Environment2D;
+import graphy.main.EnvironmentBase;
 import graphy.object.base.Drawing;
 
 /**
@@ -26,9 +26,9 @@ public class PrimordialParticleSystem extends Drawing {
     //Fields
     
     /**
-     * The particle state.
+     * The Particle State.
      */
-    public ParticleState particles;
+    private ParticleState particleState;
     
     
     //Main Method
@@ -63,7 +63,11 @@ public class PrimordialParticleSystem extends Drawing {
      */
     @Override
     public void initComponents() {
-        environment.setSize(1000, 1000);
+        environment.frame.setTitle("Primordial Particle System");
+        
+        EnvironmentBase.setFps(60);
+        environment.setDoubleBuffering(false);
+        environment.setSize(1024, 1024);
         environment.setBackground(Color.BLACK);
     }
     
@@ -79,7 +83,8 @@ public class PrimordialParticleSystem extends Drawing {
      */
     @Override
     public void run() {
-        particles = new ParticleState(this, 0.0011, 0, 4.0, 0.67, Math.toRadians(180), Math.toRadians(17), 10.0);
+//        particleState = new ParticleState(0.0015, 0, 4.0, 10.72, 180, 17, 550);
+        particleState = new ParticleState(0.0015, 0, 180, 17, 550);
     }
     
     /**
@@ -91,10 +96,10 @@ public class PrimordialParticleSystem extends Drawing {
     public BufferedImage draw() {
         BufferedImage img = new BufferedImage(Environment2D.width, Environment2D.height, BufferedImage.TYPE_INT_RGB);
         
-        if (particles != null) {
+        if (particleState != null) {
             Graphics2D g2 = img.createGraphics();
-            particles.step();
-            particles.render(g2);
+            particleState.step();
+            particleState.render(g2);
             DrawUtility.dispose(g2);
         }
         
@@ -118,40 +123,12 @@ public class PrimordialParticleSystem extends Drawing {
      */
     public class ParticleState {
         
-        //Constants
-        
-        /**
-         * The sensor angle for left neighbors.
-         */
-        private final double sensorLeftAngle = Math.toRadians(-135);
-        
-        /**
-         * The sensor angle for right neighbors.
-         */
-        private final double sensorRightAngle = Math.toRadians(45);
-        
-        /**
-         * The sensor angle of the aperture.
-         */
-        private final double sensorAperture = Math.toRadians(179.9999);
-        
-        
         //Fields
-        
-        /**
-         * The Primordial Particle System.
-         */
-        public PrimordialParticleSystem pps;
         
         /**
          * The list of Particles in the state.
          */
         private final List<Particle> particles = new ArrayList<>();
-        
-        /**
-         * The reactive radius of Particles in the state.
-         */
-        private double reactiveRadius;
         
         
         //Constructors
@@ -159,27 +136,37 @@ public class PrimordialParticleSystem extends Drawing {
         /**
          * The constructor for a Particle State.
          *
-         * @param pps               The Primordial Particle System.
          * @param populationDensity The density of Particles.
          * @param centerCount       The number of Particles to start in the center of the screen.
          * @param size              The size of a Particle.
          * @param speed             The speed of the Particles in the state.
          * @param alpha             The intrinsic rotation of the Particles in the state.
-         * @param beta              The turn of the Particles in the state.
-         * @param reactiveRadius    The reactive radius of Particles in the state.
+         * @param beta              The intrinsic turn of the Particles in the state.
+         * @param gamma             The intrinsic attraction of Particles in the state.
          */
-        public ParticleState(PrimordialParticleSystem pps, double populationDensity, int centerCount, double size, double speed, double alpha, double beta, double reactiveRadius) {
-            this.pps = pps;
-            this.reactiveRadius = reactiveRadius * size;
-            
-            int particleCount = (int) (Environment2D.screenWidth * Environment2D.screenHeight * populationDensity) - centerCount;
-            
-            for (int i = 0; i < particleCount; i++) {
-                particles.add(new Particle(this, pps.environment.getRandomPosition(), getRandomOrientation(), size, speed, alpha, beta));
+        public ParticleState(double populationDensity, int centerCount, double size, double speed, double alpha, double beta, double gamma) {
+            int population = (int) (Environment2D.screenWidth * Environment2D.screenHeight * populationDensity);
+            for (int i = 0; i < population; i++) {
+                this.particles.add(new Particle(this,
+                        ((centerCount-- > 0) ? Environment2D.getCenterPosition() : Environment2D.getRandomPosition()),
+                        (Math.random() * Math.PI * 2),
+                        (size > 0) ? size : (Math.random() * 4 + 2),
+                        (speed > 0) ? speed : (Math.random() * 15 + 1),
+                        Math.toRadians(alpha), Math.toRadians(beta), Math.toRadians(gamma)));
             }
-            for (int i = 0; i < centerCount; i++) {
-                particles.add(new Particle(this, pps.environment.getCenterPosition(), getRandomOrientation(), size, speed, alpha, beta));
-            }
+        }
+        
+        /**
+         * The constructor for a Particle State.
+         *
+         * @param populationDensity The density of Particles.
+         * @param centerCount       The number of Particles to start in the center of the screen.
+         * @param alpha             The intrinsic rotation of the Particles in the state.
+         * @param beta              The intrinsic turn of the Particles in the state.
+         * @param gamma             The intrinsic attraction of Particles in the state.
+         */
+        public ParticleState(double populationDensity, int centerCount, double alpha, double beta, double gamma) {
+            this(populationDensity, centerCount, -1, -1, alpha, beta, gamma);
         }
         
         
@@ -189,7 +176,6 @@ public class PrimordialParticleSystem extends Drawing {
          * Performs a time step.
          */
         public void step() {
-            Collections.shuffle(particles);
             particles.forEach(Particle::step);
         }
         
@@ -199,9 +185,7 @@ public class PrimordialParticleSystem extends Drawing {
          * @param img The render screen.
          */
         public void render(Graphics2D img) {
-            for (Particle p : particles) {
-                p.render(img);
-            }
+            particles.forEach(p -> p.render(img));
         }
         
         /**
@@ -212,68 +196,20 @@ public class PrimordialParticleSystem extends Drawing {
         public NeighborState getNeighbors(Particle particle) {
             NeighborState neighborState = new NeighborState();
             
-            double particleLeftAngle = particle.getOrientation() + sensorLeftAngle;
-            double particleRightAngle = particle.getOrientation() + sensorRightAngle;
-            
-            for (Particle p : particles) {
-                if (p.equals(particle)) {
-                    continue;
-                }
-                if (p.getPosition().distance(particle.getPosition()) > reactiveRadius) {
-                    continue;
-                }
-                neighborState.count++;
-                
-                Vector delta = p.getPosition().minus(particle.getPosition());
-
-//            while (delta.getX() < -PrimordialParticleSystem.screenX / 2) {
-//                delta.setX(delta.getX() + PrimordialParticleSystem.screenX);
-//            }
-//            while (delta.getY() < -PrimordialParticleSystem.screenY / 2) {
-//                delta.setY(delta.getY() + PrimordialParticleSystem.screenY);
-//            }
-//            while (delta.getX() > PrimordialParticleSystem.screenX / 2) {
-//                delta.setX(delta.getX() - PrimordialParticleSystem.screenX);
-//            }
-//            while (delta.getY() > PrimordialParticleSystem.screenY / 2) {
-//                delta.setY(delta.getY() - PrimordialParticleSystem.screenY);
-//            }
-                
-                double neighborAngle = Math.atan2(delta.getRawX(), delta.getRawY());
-                if ((neighborAngle <= (particleLeftAngle + sensorAperture)) && (neighborAngle >= particleLeftAngle)) {
-                    neighborState.left++;
-                }
-                if ((neighborAngle <= (particleRightAngle + sensorAperture)) && (neighborAngle >= particleRightAngle)) {
-                    neighborState.right++;
-                }
-            }
+            particles.stream()
+                    .filter(p -> !p.equals(particle))
+                    .filter(p -> (p.position.distance(particle.position) < (p.gamma * p.size)))
+                    .forEach(p -> {
+                        neighborState.count++;
+                        if (findSide(particle, p) > 0) {
+                            neighborState.left++;
+                        } else {
+                            neighborState.right++;
+                        }
+                    });
             
             return neighborState;
         }
-
-//    /**
-//     * Returns the number of neighbors of a Particle.
-//     *
-//     * @return The number of neighbors of a Particle.
-//     */
-//    public NeighborState getNeighbors(Particle particle) {
-//        NeighborState neighborState = new NeighborState();
-//        for (Particle p : particles) {
-//            if (p.equals(particle)) {
-//                continue;
-//            }
-//            if (particle.getPosition().distance(p.getPosition()) <= reactiveRadius) {
-//                neighborState.count++;
-//                int side = findSide(particle, p);
-//                if (side > 0) {
-//                    neighborState.left++;
-//                } else if (side < 0) {
-//                    neighborState.right++;
-//                }
-//            }
-//        }
-//        return neighborState;
-//    }
         
         /**
          * Determines the side of the orientation that a neighbor is on.
@@ -283,21 +219,11 @@ public class PrimordialParticleSystem extends Drawing {
          * @return 1 if the neighbor is on the left, -1 if it is on the right, 0 if it is on the orientation.
          */
         private int findSide(Particle particle, Particle neighbor) {
-            Vector pa = particle.getHeading().scale(-10);
-            Vector pb = particle.getHeading().scale(10);
-            Vector pc = neighbor.getPosition();
+            Vector pLine = particle.heading;
+            Vector nLine = neighbor.position.minus(particle.position);
             
-            double determinant = ((pb.getRawX() - pa.getRawX()) * (pc.getRawY() - pa.getRawY()) - (pb.getRawY() - pa.getRawY()) * (pc.getRawX() - pa.getRawX()));
-            return (determinant < 0) ? -1 : ((determinant > 0) ? 1 : 0);
-        }
-        
-        /**
-         * Returns a random orientation for a Particle.
-         *
-         * @return A random orientation for a Particle.
-         */
-        private double getRandomOrientation() {
-            return Math.random() * Math.PI * 2;
+            double determinant = ((pLine.getRawX() * nLine.getRawY()) - (pLine.getRawY() * nLine.getRawX()));
+            return (int) Math.signum(determinant);
         }
         
     }
@@ -317,7 +243,7 @@ public class PrimordialParticleSystem extends Drawing {
         /**
          * The orientation of the Particle.
          */
-        private double phi;
+        private double orientation;
         
         /**
          * The heading of the Particle.
@@ -345,9 +271,14 @@ public class PrimordialParticleSystem extends Drawing {
         private double alpha;
         
         /**
-         * The turn of the Particle.
+         * The intrinsic turn of the Particle.
          */
         private double beta;
+        
+        /**
+         * The intrinsic attraction of the Particle.
+         */
+        private double gamma;
         
         /**
          * The state of neighbors near the Particle.
@@ -370,24 +301,26 @@ public class PrimordialParticleSystem extends Drawing {
         /**
          * The constructor for a Particle.
          *
-         * @param state    The Particle State of the Particle.
-         * @param position The position of the Particle.
-         * @param phi      The orientation of the Particle.
-         * @param size     The size of the Particle.
-         * @param speed    The speed of the Particle.
-         * @param alpha    The intrinsic rotation of the Particle.
-         * @param beta     The turn of the Particle.
+         * @param state       The Particle State of the Particle.
+         * @param position    The position of the Particle.
+         * @param orientation The orientation of the Particle.
+         * @param size        The size of the Particle.
+         * @param speed       The speed of the Particle.
+         * @param alpha       The intrinsic rotation of the Particle.
+         * @param beta        The intrinsic turn of the Particle.
+         * @param gamma       The intrinsic attraction of the Particle.
          */
-        public Particle(ParticleState state, Vector position, double phi, double size, double speed, double alpha, double beta) {
+        public Particle(ParticleState state, Vector position, double orientation, double size, double speed, double alpha, double beta, double gamma) {
             this.state = state;
             this.position = position;
-            this.phi = phi;
+            this.orientation = orientation;
             this.size = size;
-            this.speed = speed * size;
+            this.speed = speed / size;
             this.velocity = new Vector(0, 0);
+            this.heading = new Vector(0, 0);
             this.alpha = alpha;
             this.beta = beta;
-            this.heading = new Vector();
+            this.gamma = gamma;
             this.neighbors = new NeighborState();
         }
         
@@ -400,17 +333,18 @@ public class PrimordialParticleSystem extends Drawing {
         public void step() {
             neighbors = state.getNeighbors(this);
             
-            phi += alpha + beta * neighbors.count * (((neighbors.right > neighbors.left) ? 1 : -1));
-//        while (phi <= -Math.PI) {
-//            phi += Math.PI * 2;
-//        }
-//        while (phi > Math.PI) {
-//            phi -= Math.PI * 2;
-//        }
+            orientation += (alpha + (beta * Math.signum(neighbors.right - neighbors.left) * neighbors.count));
             
-            heading = new Vector(Math.cos(phi), Math.sin(phi));
+            heading = new Vector(Math.cos(orientation), Math.sin(orientation));
             velocity = heading.scale(speed);
             
+            move();
+        }
+        
+        /**
+         * Performs a move.
+         */
+        public void move() {
             position = position.plus(velocity);
             position.setX(position.getRawX() % Environment2D.screenWidth);
             position.setY(position.getRawY() % Environment2D.screenHeight);
@@ -424,29 +358,26 @@ public class PrimordialParticleSystem extends Drawing {
         public void render(Graphics2D img) {
             calculateColor();
             
-            Vector renderPosition = position;
-            int renderSize = (int) size + 2;
             DrawUtility.setColor(img, color);
-            DrawUtility.fillCircle(img, renderPosition, renderSize);
-//            DrawUtility.setColor(g, Color.WHITE);
-//            DrawUtility.drawLine(g, renderPosition, renderPosition.plus(heading.scale(10.0)));
+            DrawUtility.fillCircle(img, position, (int) (size + 2));
+//            DrawUtility.drawLine(img, position, position.plus(heading.times(velocity)));
         }
         
         /**
          * Calculates the color of the Particle.
          */
         private void calculateColor() {
-            color = new Color(Integer.MAX_VALUE - Color.HSBtoRGB((float) (neighbors.count / 20.0), 1.0f, 1.0f));
+//            color = new Color(Integer.MAX_VALUE - Color.HSBtoRGB((float) (neighbors.count / 20.0), 1.0f, 1.0f));
             
-            if (neighbors.count > 50) {
-                color = Color.ORANGE;
-            } else if (neighbors.count > 25) {
+            if (neighbors.count > 30) {
                 color = Color.RED;
             } else if (neighbors.count > 20) {
-                color = Color.MAGENTA;
-            } else if (neighbors.count > 10) {
+                color = Color.ORANGE;
+            } else if (neighbors.count > 15) {
                 color = Color.YELLOW;
-            } else if (neighbors.count > 4) {
+            } else if (neighbors.count > 7) {
+                color = Color.MAGENTA;
+            } else if (neighbors.count > 3) {
                 color = Color.BLUE;
             } else {
                 color = Color.GREEN;
@@ -466,15 +397,6 @@ public class PrimordialParticleSystem extends Drawing {
         }
         
         /**
-         * Returns the orientation of the Particle.
-         *
-         * @return The orientation of the Particle.
-         */
-        public double getOrientation() {
-            return phi;
-        }
-        
-        /**
          * Returns the heading of the Particle.
          *
          * @return The heading of the Particle.
@@ -488,7 +410,7 @@ public class PrimordialParticleSystem extends Drawing {
     /**
      * Defines a neighbor state.
      */
-    public static class NeighborState {
+    private static class NeighborState {
         
         //Fields
         
